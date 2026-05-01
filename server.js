@@ -12,6 +12,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Root Health Check (For Cron-jobs and Render keep-alive)
+app.get('/', (req, res) => {
+  res.json({ status: 'active', message: 'Satvastones API is running beautifully.' });
+});
+
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/satvastones';
 mongoose.connect(MONGODB_URI)
