@@ -29,6 +29,7 @@ export default function AdminPanel({
   const [tempCMSData, setTempCMSData] = useState<any>(cmsData);
   const [isSaving, setIsSaving] = useState(false);
   const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Check DB Connection
   React.useEffect(() => {
@@ -92,9 +93,29 @@ export default function AdminPanel({
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 flex">
+    <div className="min-h-screen bg-stone-50 flex flex-col md:flex-row">
+      {/* Mobile Header */}
+      <header className="md:hidden bg-stone-900 text-white p-4 flex justify-between items-center sticky top-0 z-[60]">
+        <h2 className="font-display text-lg font-bold tracking-tighter uppercase">Satva Admin</h2>
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2">
+          {isSidebarOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+      </header>
+
+      {/* Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-stone-900 text-white flex flex-col sticky top-0 h-screen">
+      <aside className={`
+        fixed inset-y-0 left-0 w-72 bg-stone-900 text-white flex flex-col z-[80] transition-transform duration-300 transform
+        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:relative md:translate-x-0 md:flex md:w-64 md:sticky md:top-0 md:h-screen
+      `}>
         <div className="p-8 border-b border-stone-800">
           <h2 className="font-display text-2xl font-bold tracking-tighter">SATVA ADMIN</h2>
           <div className="flex items-center gap-2 mt-2">
@@ -105,7 +126,7 @@ export default function AdminPanel({
           </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           {[
             { id: 'dashboard', icon: TrendingUp, label: 'Dashboard' },
             { id: 'content', icon: ImageIcon, label: 'Home Content' },
@@ -116,7 +137,7 @@ export default function AdminPanel({
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => { setActiveTab(tab.id); setIsSidebarOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 text-[11px] font-bold uppercase tracking-widest transition-all rounded-sm ${activeTab === tab.id ? 'bg-white text-black' : 'hover:bg-stone-800 text-stone-400'}`}
             >
               <tab.icon className="h-4 w-4" />
@@ -136,11 +157,11 @@ export default function AdminPanel({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 md:p-12 overflow-y-auto">
-        <header className="mb-12 flex justify-between items-end">
+      <main className="flex-1 p-4 md:p-12 overflow-y-auto">
+        <header className="mb-8 md:mb-12 flex flex-col md:flex-row md:justify-between md:items-end gap-6">
           <div>
             <h1 className="font-display text-4xl font-bold uppercase tracking-tight text-stone-900">{activeTab}</h1>
-            <p className="text-xs text-stone-500 uppercase tracking-widest mt-2">Manage your website {activeTab} here</p>
+            <p className="text-[10px] md:text-xs text-stone-500 uppercase tracking-widest mt-2">Manage your website {activeTab} here</p>
           </div>
           {activeTab === 'products' && (
             <button 
@@ -182,8 +203,8 @@ export default function AdminPanel({
 
               <section>
                 <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-6">Recent Sales Activity</h3>
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left">
+                <div className="overflow-x-auto -mx-8 px-8">
+                  <table className="w-full text-left min-w-[600px]">
                     <thead>
                       <tr className="border-b border-stone-100">
                         <th className="py-4 text-[9px] font-bold uppercase tracking-widest text-stone-400">Order ID</th>
@@ -397,7 +418,7 @@ export default function AdminPanel({
           {/* PRODUCTS TAB */}
           {activeTab === 'products' && (
             <div className="overflow-x-auto">
-              <table className="w-full text-left">
+              <table className="w-full text-left min-w-[700px]">
                 <thead>
                   <tr className="border-b border-stone-200 bg-stone-50">
                     <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">Image</th>
