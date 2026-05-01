@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
 import { Search, ChevronDown, Filter, LayoutGrid, Square, ArrowUpRight } from 'lucide-react';
 
-const products = [
-  { id: 1, title: 'KOREAN VELVET CHOKER', price: 299, oldPrice: 450, rating: 4.9, reviews: 89, image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=800', category: 'NECKLACES' },
-  { id: 2, title: 'AESTHETIC BUTTERFLY STUDS', price: 199, oldPrice: 350, rating: 4.8, reviews: 54, image: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=800', category: 'EARRINGS' },
-  { id: 3, title: 'WESTERN MINIMALIST RING', price: 249, oldPrice: 399, rating: 4.7, reviews: 120, image: 'https://images.unsplash.com/photo-1590548784585-643d2b9f2912?auto=format&fit=crop&q=80&w=800', category: 'RINGS' },
-  { id: 4, title: 'KAWAII PEARL HAIRPIN', price: 149, oldPrice: 250, rating: 4.9, reviews: 210, image: 'https://images.unsplash.com/photo-1630030532634-1dc30c729bc1?auto=format&fit=crop&q=80&w=800', category: 'ACCESSORIES' },
-  { id: 5, title: 'VINTAGE FLOWER EARRINGS', price: 279, oldPrice: 400, rating: 4.6, reviews: 45, image: 'https://images.unsplash.com/photo-1543294001-f7cd5d7fb516?auto=format&fit=crop&q=80&w=800', category: 'EARRINGS' },
-  { id: 6, title: 'Y2K STAR PENDANT', price: 329, oldPrice: 499, rating: 4.9, reviews: 112, image: 'https://images.unsplash.com/photo-1599643477877-530eb83abc8e?auto=format&fit=crop&q=80&w=800', category: 'NECKLACES' },
-  { id: 7, title: 'SOFT GIRL BRACELET', price: 189, oldPrice: 299, rating: 4.5, reviews: 32, image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=800', category: 'BRACELETS' },
-  { id: 8, title: 'DREAMY CLOUD STUDS', price: 219, oldPrice: 320, rating: 4.8, reviews: 76, image: 'https://images.unsplash.com/photo-1635767798638-3e25273a8236?auto=format&fit=crop&q=80&w=800', category: 'EARRINGS' },
-];
 
-const categories = ['ALL', 'NECKLACES', 'EARRINGS', 'RINGS', 'BRACELETS', 'ACCESSORIES'];
 
-export default function ShopPage({ onSelectProduct }: { onSelectProduct: (p: any) => void }) {
+export default function ShopPage({ 
+  products,
+  onSelectProduct 
+}: { 
+  products: any[],
+  onSelectProduct: (p: any) => void 
+}) {
   const [activeCategory, setActiveCategory] = useState('ALL');
   const [viewMode, setViewMode] = useState<'grid' | 'large'>('grid');
+
+  const categories = ['ALL', 'NECKLACES', 'EARRINGS', 'RINGS', 'BRACELETS', 'ACCESSORIES', 'PENDANT', 'GIFTS', 'HAMPERS', "MOTHER'S DAY"];
 
   const filteredProducts = activeCategory === 'ALL' 
     ? products 

@@ -682,7 +682,12 @@ export default function App() {
               </>
             )}
 
-            {currentView === 'shop' && <ShopPage onSelectProduct={(p) => navigateTo('product', p)} />}
+            {currentView === 'shop' && (
+              <ShopPage 
+                products={cmsData.products} 
+                onSelectProduct={(p) => navigateTo('product', p)} 
+              />
+            )}
 
             {currentView === 'wishlist' && (
               <WishlistPage 
