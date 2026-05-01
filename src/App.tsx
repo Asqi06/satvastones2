@@ -337,6 +337,30 @@ export default function App() {
     }
   };
 
+  const handleAddReview = async (productId: string, review: any) => {
+    try {
+      const res = await fetch(`${API_URL}/products/${productId}/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(review)
+      });
+      if (res.ok) {
+        const updatedProduct = await res.json();
+        setCmsData(prev => ({
+          ...prev,
+          products: prev.products.map((p: any) => 
+            (p._id === productId || p.id === productId) ? updatedProduct : p
+          )
+        }));
+        if (selectedProduct && (selectedProduct._id === productId || selectedProduct.id === productId)) {
+          setSelectedProduct(updatedProduct);
+        }
+      }
+    } catch (err) {
+      console.error('Error adding review:', err);
+    }
+  };
+
   const handleAdminLogout = () => {
     setIsLoggedIn(false);
     setIsAdminMode(false);

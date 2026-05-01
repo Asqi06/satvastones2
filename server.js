@@ -160,19 +160,24 @@ app.delete('/api/products/:id', async (req, res) => {
   res.json({ message: 'Deleted' });
 });
 
-app.post('/api/products/:id/review', async (req, res) => {
+app.post('/api/products/:id/reviews', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-    if (!product) return res.status(404).json({ error: 'Product not found' });
+    if (!product) return res.status(404).json({ message: 'Product not found' });
     
-    const { name, rating, comment } = req.body;
-    product.reviews.push({ name, rating, comment });
-    
-    const totalRating = product.reviews.reduce((acc, curr) => acc + curr.rating, 0);
-    product.rating = Number((totalRating / product.reviews.length).toFixed(1));
+    product.reviews.push(req.body);
+    // Update average rating
+    const total = product.reviews.reduce((acc, r) => acc + r.rating, 0);
+    product.rating = Math.round((total / product.reviews.length) * 10) / 10;
     product.reviewsCount = product.reviews.length;
     
     await product.save();
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
     res.json(product);
   } catch (err) {
     res.status(500).json({ error: err.message });
