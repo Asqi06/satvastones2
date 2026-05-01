@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CreditCard, Truck, ShieldCheck, Zap, ArrowLeft, ArrowRight, Wallet } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function CheckoutPage({ 
   cart, 
@@ -32,6 +32,10 @@ export default function CheckoutPage({
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
+      if ((window as any).Razorpay) {
+        resolve(true);
+        return;
+      }
       const script = document.createElement('script');
       script.src = 'https://checkout.razorpay.com/v1/checkout.js';
       script.onload = () => resolve(true);
@@ -46,79 +50,109 @@ export default function CheckoutPage({
       return;
     }
 
-    if (paymentMethod === 'cod') {
-      const orderDetails = {
-        customer: formData,
-        items: cart,
-        amount: total,
-        paymentMethod: 'COD'
-      };
-      await fetch(`${API_URL}/verify-payment`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ razorpay_order_id: 'COD_'+Date.now(), razorpay_payment_id: 'COD', razorpay_signature: 'COD', orderDetails })
-      });
-      onComplete();
-      return;
-    }
-
     setIsProcessing(true);
-    const res = await loadRazorpay();
 
-    if (!res) {
-      alert('Razorpay SDK failed to load. Are you online?');
-      setIsProcessing(false);
-      return;
-    }
-
-    const orderRes = await fetch(`${API_URL}/create-order`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: total })
-    });
-    const orderData = await orderRes.json();
-
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID || "your-razorpay-key-id",
-      amount: orderData.amount,
-      currency: "INR",
-      name: "SATVASTONES",
-      description: "Jewelry Purchase",
-      order_id: orderData.id,
-      handler: async function (response: any) {
-        const verifyRes = await fetch(`${API_URL}/verify-payment`, {
+    try {
+      if (paymentMethod === 'cod') {
+        const orderDetails = {
+          customer: formData,
+          items: cart,
+          amount: total,
+          paymentMethod: 'COD'
+        };
+        const res = await fetch(`${API_URL}/verify-payment`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...response,
-            orderDetails: {
-              customer: formData,
-              items: cart,
-              amount: total,
-              paymentMethod: 'Razorpay'
-            }
+          body: JSON.stringify({ 
+            razorpay_order_id: 'COD_'+Date.now(), 
+            razorpay_payment_id: 'COD', 
+            razorpay_signature: 'COD', 
+            orderDetails 
           })
         });
-        const verifyData = await verifyRes.json();
-        if (verifyData.status === 'success') {
+
+        if (res.ok) {
           onComplete();
         } else {
-          alert('Payment verification failed');
+          alert('Failed to place COD order. Please try again.');
         }
-      },
-      prefill: {
-        name: formData.name,
-        email: formData.email,
-        contact: formData.phone
-      },
-      theme: {
-        color: "#000000"
+        return;
       }
-    };
 
-    const paymentObject = new (window as any).Razorpay(options);
-    paymentObject.open();
-    setIsProcessing(false);
+      // Razorpay Flow
+      const sdkLoaded = await loadRazorpay();
+      if (!sdkLoaded) {
+        alert('Razorpay SDK failed to load. Are you online?');
+        return;
+      }
+
+      const orderRes = await fetch(`${API_URL}/create-order`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: total })
+      });
+
+      if (!orderRes.ok) {
+        throw new Error('Failed to create order on server');
+      }
+
+      const orderData = await orderRes.json();
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_your_key",
+        amount: orderData.amount,
+        currency: "INR",
+        name: "SATVASTONES",
+        description: "Jewelry Purchase",
+        order_id: orderData.id,
+        handler: async function (response: any) {
+          try {
+            const verifyRes = await fetch(`${API_URL}/verify-payment`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                ...response,
+                orderDetails: {
+                  customer: formData,
+                  items: cart,
+                  amount: total,
+                  paymentMethod: 'Razorpay'
+                }
+              })
+            });
+            const verifyData = await verifyRes.json();
+            if (verifyData.status === 'success') {
+              onComplete();
+            } else {
+              alert('Payment verification failed');
+            }
+          } catch (err) {
+            alert('Error verifying payment');
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.phone
+        },
+        theme: {
+          color: "#000000"
+        },
+        modal: {
+          ondismiss: function() {
+            setIsProcessing(false);
+          }
+        }
+      };
+
+      const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.open();
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong. Please check your connection.');
+    } finally {
+      if (paymentMethod === 'cod') setIsProcessing(false);
+    }
   };
 
   return (
