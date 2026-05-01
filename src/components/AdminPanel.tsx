@@ -93,6 +93,11 @@ export default function AdminPanel({
     alert('Changes saved successfully!');
   };
 
+  const cloudinaryConfig = {
+    cloudName: cmsData.settings.cloudinaryCloudName,
+    uploadPreset: cmsData.settings.cloudinaryUploadPreset
+  };
+
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col md:flex-row">
       {/* Mobile Header */}
@@ -270,7 +275,7 @@ export default function AdminPanel({
                         className="flex-1 border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
                       />
                       <button 
-                        onClick={() => openUploadWidget((url) => setTempCMSData({ ...tempCMSData, hero: { ...tempCMSData.hero, image: url }}))}
+                        onClick={() => openUploadWidget((url) => setTempCMSData({ ...tempCMSData, hero: { ...tempCMSData.hero, image: url }}), cloudinaryConfig)}
                         className="bg-stone-100 hover:bg-stone-200 px-4 flex items-center gap-2 text-[10px] font-bold uppercase"
                       >
                         <UploadCloud className="h-4 w-4" /> Upload
@@ -294,7 +299,7 @@ export default function AdminPanel({
                             const updated = [...tempCMSData.categories];
                             updated[idx].image = url;
                             setTempCMSData({ ...tempCMSData, categories: updated });
-                          })}
+                          }, cloudinaryConfig)}
                           className="absolute inset-0 bg-black/40 text-white opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-2 text-[10px] font-bold uppercase"
                         >
                           <UploadCloud className="h-4 w-4" /> Replace
@@ -385,7 +390,7 @@ export default function AdminPanel({
                         className="flex-1 border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
                       />
                       <button 
-                        onClick={() => openUploadWidget((url) => setTempCMSData({ ...tempCMSData, specialOffer: { ...tempCMSData.specialOffer, image: url }}))}
+                        onClick={() => openUploadWidget((url) => setTempCMSData({ ...tempCMSData, specialOffer: { ...tempCMSData.specialOffer, image: url }}), cloudinaryConfig)}
                         className="bg-stone-100 hover:bg-stone-200 px-4 flex items-center gap-2 text-[10px] font-bold uppercase"
                       >
                         <UploadCloud className="h-4 w-4" /> Upload
@@ -491,6 +496,35 @@ export default function AdminPanel({
                     </span>
                   </div>
                 </div>
+              </section>
+
+              <section className="pt-12 border-t border-stone-100">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <UploadCloud className="h-4 w-4" /> Image Upload (Cloudinary)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Cloud Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. djx98xyz"
+                      value={tempCMSData.settings.cloudinaryCloudName || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, cloudinaryCloudName: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Upload Preset</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. unsigned_preset"
+                      value={tempCMSData.settings.cloudinaryUploadPreset || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, cloudinaryUploadPreset: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                </div>
+                <p className="text-[9px] text-stone-400 mt-4 italic uppercase tracking-tighter">Enter your Cloudinary details here to enable image uploads across the site.</p>
               </section>
 
               <div className="pt-8 border-t border-stone-100 flex justify-end">
@@ -620,7 +654,7 @@ export default function AdminPanel({
                       const currentImages = editingProduct ? [...editingProduct.images] : [...(newProduct.images || [])];
                       currentImages.push(url);
                       editingProduct ? setEditingProduct({...editingProduct, images: currentImages}) : setNewProduct({...newProduct, images: currentImages});
-                    })}
+                    }, cloudinaryConfig)}
                     className="aspect-square border-2 border-dashed border-stone-200 flex flex-col items-center justify-center gap-2 hover:border-stone-400 transition-all text-stone-400 hover:text-stone-600"
                   >
                     <UploadCloud className="h-5 w-5" />

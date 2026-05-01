@@ -21,16 +21,16 @@ export const optimizeImage = (url: string, width?: number, height?: number) => {
  * Opens the Cloudinary Upload Widget.
  * Requires the script to be loaded in index.html.
  */
-export const openUploadWidget = (callback: (url: string) => void) => {
-  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-  const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
+export const openUploadWidget = (callback: (url: string) => void, config?: { cloudName?: string, uploadPreset?: string }) => {
+  const cloudName = config?.cloudName || import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+  const uploadPreset = config?.uploadPreset || import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
   if (!cloudName || !uploadPreset || cloudName === 'your_cloud_name') {
     const missing = [];
     if (!cloudName || cloudName === 'your_cloud_name') missing.push("VITE_CLOUDINARY_CLOUD_NAME");
     if (!uploadPreset) missing.push("VITE_CLOUDINARY_UPLOAD_PRESET");
     
-    alert(`Cloudinary Configuration Error: Missing ${missing.join(" and ")}. Please check your Vercel Environment Variables.`);
+    alert(`Image Upload Error: Missing ${missing.join(" and ")}. \n\nPlease go to Admin -> Settings and enter your Cloudinary details there!`);
     return;
   }
 
