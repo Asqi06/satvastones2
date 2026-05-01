@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Lock, User, ArrowRight, Github, Chrome } from 'lucide-react';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+
 
 export default function AuthPage({ onLogin }: { onLogin: (user: any) => void }) {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
@@ -13,8 +15,9 @@ export default function AuthPage({ onLogin }: { onLogin: (user: any) => void }) 
     setError('');
     
     try {
-      const endpoint = mode === 'login' ? '/api/login' : '/api/signup';
-      const res = await fetch(`http://localhost:5000${endpoint}`, {
+      const endpoint = mode === 'login' ? '/login' : '/signup';
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${apiUrl}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -32,6 +35,31 @@ export default function AuthPage({ onLogin }: { onLogin: (user: any) => void }) 
       setLoading(false);
     }
   };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setLoading(true);
+    setError('');
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const res = await fetch(`${apiUrl}/google-login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: credentialResponse.credential })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        onLogin(data);
+      } else {
+        setError(data.error || 'Google Authentication failed');
+      }
+    } catch (err) {
+      setError('Server connection failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4">
@@ -116,9 +144,27 @@ export default function AuthPage({ onLogin }: { onLogin: (user: any) => void }) 
             <div className="relative flex justify-center text-[9px] font-bold uppercase tracking-widest"><span className="bg-stone-50 px-4 text-stone-400">Or Continue With</span></div>
           </div>
 
-          <button className="w-full flex items-center justify-center gap-2 border border-stone-200 py-3 text-[9px] font-bold uppercase tracking-widest hover:bg-white transition-all opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
-            <Github className="h-3 w-3" /> Github
-          </button>
+          <div className="space-y-4">
+            <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+              <div className="flex justify-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setError('Google Login Failed')}
+                  useOneTap
+                  theme="outline"
+                  size="large"
+                  text="continue_with"
+                  shape="rectangular"
+                  width="100%"
+                />
+              </div>
+            </GoogleOAuthProvider>
+
+            <button className="w-full flex items-center justify-center gap-2 border border-stone-200 py-3 text-[9px] font-bold uppercase tracking-widest hover:bg-white transition-all opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
+              <Github className="h-3 w-3" /> Github
+            </button>
+          </div>
+
         </div>
 
         <div className="text-center">

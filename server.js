@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import { sendEmail, emailTemplates } from './emailService.js';
+import { OAuth2Client } from 'google-auth-library';
+
 
 dotenv.config();
 
@@ -108,6 +110,9 @@ const customerSchema = new mongoose.Schema({
 });
 
 const Customer = mongoose.model('Customer', customerSchema);
+
+const client = new OAuth2Client(process.env.VITE_GOOGLE_CLIENT_ID);
+
 
 // --- Razorpay Setup ---
 const razorpay = new Razorpay({
@@ -242,25 +247,38 @@ app.post('/api/verify-payment', async (req, res) => {
   }
 });
 
-app.post('/api/signup', async (req, res) => {
+app.post('/api/google-login', async (req, res) => {
   try {
-    const customer = new Customer(req.body);
-    await customer.save();
-    res.json({ message: 'User created' });
+    const { token } = req.body;
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.VITE_GOOGLE_CLIENT_ID
+    });
+    
+    const payload = ticket.getPayload();
+    if (!payload) return res.status(400).json({ error: 'Invalid token' });
+
+    const { email, name, sub: googleId } = payload;
+    
+    let customer = await Customer.findOne({ email });
+    if (!customer) {
+      // Create new customer if doesn't exist (Password is random for Google users)
+      customer = new Customer({ 
+        name, 
+        email, 
+        password: crypto.randomBytes(16).toString('hex') 
+      });
+      await customer.save();
+      await sendEmail(email, 'Welcome to Satvastones!', emailTemplates.welcome(name));
+    }
+
+    const orders = await Order.find({ 'customer.email': email }).sort({ createdAt: -1 });
+    res.json({ success: true, customer, orders });
   } catch (err) {
-    res.status(400).json({ message: 'Email already exists' });
+    res.status(500).json({ error: err.message });
   }
 });
 
-app.post('/api/login', async (req, res) => {
-  const { email, password } = req.body;
-  const user = await Customer.findOne({ email, password });
-  if (user) {
-    res.json(user);
-  } else {
-    res.status(401).json({ message: 'Invalid credentials' });
-  }
-});
 
 // Contact Form
 app.post('/api/contact', async (req, res) => {
@@ -275,11 +293,6 @@ app.post('/api/contact', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
 
 // Customers
@@ -314,3 +327,9 @@ app.post('/api/login', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
+
