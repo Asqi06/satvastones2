@@ -118,9 +118,9 @@ export default function AdminPanel({
 
       {/* Sidebar */}
       <aside className={`
-        fixed inset-y-0 left-0 w-72 bg-stone-900 text-white flex flex-col z-[80] transition-transform duration-300 transform
-        ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:relative md:translate-x-0 md:flex md:w-64 md:sticky md:top-0 md:h-screen
+        fixed inset-y-0 top-0 w-72 bg-stone-900 text-white flex flex-col z-[100] transition-all duration-300 ease-in-out
+        ${isSidebarOpen ? 'left-0' : '-left-full'}
+        md:relative md:left-0 md:flex md:w-64 md:sticky md:h-screen
       `}>
         <div className="p-8 border-b border-stone-800">
           <h2 className="font-display text-2xl font-bold tracking-tighter">SATVA ADMIN</h2>

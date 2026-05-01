@@ -70,7 +70,9 @@ const cmsSchema = new mongoose.Schema({
   settings: {
     announcementText: String,
     showTimer: Boolean,
-    timerDays: Number
+    timerDays: Number,
+    cloudinaryCloudName: String,
+    cloudinaryUploadPreset: String
   }
 });
 
