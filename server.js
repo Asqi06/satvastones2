@@ -236,6 +236,7 @@ app.post('/api/verify-payment', async (req, res) => {
   }
 });
 
+app.post('/api/signup', async (req, res) => {
   try {
     const customer = new Customer(req.body);
     await customer.save();
