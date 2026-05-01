@@ -26,7 +26,11 @@ export const openUploadWidget = (callback: (url: string) => void) => {
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
   if (!cloudName || !uploadPreset || cloudName === 'your_cloud_name') {
-    alert("Please configure Cloudinary in your .env file first!");
+    const missing = [];
+    if (!cloudName || cloudName === 'your_cloud_name') missing.push("VITE_CLOUDINARY_CLOUD_NAME");
+    if (!uploadPreset) missing.push("VITE_CLOUDINARY_UPLOAD_PRESET");
+    
+    alert(`Cloudinary Configuration Error: Missing ${missing.join(" and ")}. Please check your Vercel Environment Variables.`);
     return;
   }
 

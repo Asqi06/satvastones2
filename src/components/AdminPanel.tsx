@@ -508,9 +508,9 @@ export default function AdminPanel({
           {/* ORDERS TAB */}
           {activeTab === 'orders' && (
             <div className="p-8 space-y-6">
-              {orders.length > 0 ? orders.map((order: any) => (
+              {orders && orders.length > 0 ? orders.map((order: any) => (
                 <div 
-                  key={order._id} 
+                  key={order._id || order.id || Math.random()} 
                   onClick={() => setSelectedOrder(order)}
                   className="group bg-white border border-stone-100 p-6 flex items-center justify-between hover:border-black transition-all cursor-pointer"
                 >
@@ -519,15 +519,15 @@ export default function AdminPanel({
                       <ShoppingBag className="h-5 w-5 text-stone-300" />
                     </div>
                     <div>
-                      <p className="text-[11px] font-bold uppercase tracking-widest">{order.customer?.name}</p>
+                      <p className="text-[11px] font-bold uppercase tracking-widest">{order.customer?.name || 'Guest Customer'}</p>
                       <p className="text-[9px] text-stone-400 uppercase tracking-tight">
-                        #{order._id.slice(-6)} • {new Date(order.createdAt).toLocaleDateString()} • {order.paymentMethod}
+                        #{order._id?.slice(-6) || order.id?.slice(-6) || 'ORDER'} • {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'New'} • {order.paymentMethod || 'PREPAID'}
                       </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-8">
                     <div className="text-right">
-                      <p className="text-[11px] font-bold">₹{order.amount}</p>
+                      <p className="text-[11px] font-bold">₹{order.amount || 0}</p>
                       <p className={`text-[9px] uppercase font-bold tracking-widest ${order.paymentMethod === 'COD' ? 'text-orange-600' : 'text-green-600'}`}>
                         {order.paymentMethod === 'COD' ? 'Pending (COD)' : 'Paid'}
                       </p>
@@ -536,7 +536,7 @@ export default function AdminPanel({
                       order.status === 'Delivered' ? 'bg-green-50 text-green-700' : 
                       order.status === 'Cancelled' ? 'bg-red-50 text-red-700' : 'bg-stone-100 text-stone-500'
                     }`}>
-                      <Clock className="h-3 w-3" /> {order.status}
+                      <Clock className="h-3 w-3" /> {order.status || 'Received'}
                     </span>
                     <ChevronRight className="h-5 w-5 text-stone-400 group-hover:text-black transition-colors" />
                   </div>
@@ -721,18 +721,18 @@ export default function AdminPanel({
                   <div className="space-y-4">
                     <div>
                       <p className="text-[9px] font-bold uppercase text-stone-400">Name</p>
-                      <p className="text-sm font-bold text-stone-900 uppercase">{selectedOrder.customer.name}</p>
+                      <p className="text-sm font-bold text-stone-900 uppercase">{selectedOrder.customer?.name || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-[9px] font-bold uppercase text-stone-400">Email & Phone</p>
-                      <p className="text-sm font-bold text-stone-900 uppercase">{selectedOrder.customer.email}</p>
-                      <p className="text-sm font-bold text-stone-900 uppercase">{selectedOrder.customer.phone}</p>
+                      <p className="text-sm font-bold text-stone-900 uppercase">{selectedOrder.customer?.email || 'N/A'}</p>
+                      <p className="text-sm font-bold text-stone-900 uppercase">{selectedOrder.customer?.phone || 'N/A'}</p>
                     </div>
                     <div>
                       <p className="text-[9px] font-bold uppercase text-stone-400">Shipping Address</p>
                       <p className="text-sm font-bold text-stone-900 uppercase leading-relaxed">
-                        {selectedOrder.customer.address}, {selectedOrder.customer.city}<br />
-                        Pincode: {selectedOrder.customer.pincode}
+                        {selectedOrder.customer?.address || 'N/A'}, {selectedOrder.customer?.city || 'N/A'}<br />
+                        Pincode: {selectedOrder.customer?.pincode || 'N/A'}
                       </p>
                     </div>
                   </div>
