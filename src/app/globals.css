@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+:root {
+  /* Satvastones Official Clean Palette */
+  --luxury-cream: #FAF9F6; /* Extremely soft, almost white cream */
+  --luxury-gold: #C5A059; /* Muted elegant gold */
+  --luxury-brown: #241A14; /* Deep, rich brown/black */
+  --luxury-accent: #F4EFEA; /* Slightly darker cream for sections */
+  --luxury-border: #E8E2D9;
+  
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+
+  --background: var(--luxury-cream);
+  --foreground: var(--luxury-brown);
+}
+
+@theme {
+  --color-border: var(--luxury-border);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-luxury-cream: var(--luxury-cream);
+  --color-luxury-gold: var(--luxury-gold);
+  --color-luxury-brown: var(--luxury-brown);
+  --color-luxury-accent: var(--luxury-accent);
+  --color-luxury-border: var(--luxury-border);
+  
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animations */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+.pause-on-hover:hover {
+  animation-play-state: paused;
+}
+
+/* Smooth Fade */
+.animate-fade-in {
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Core Layout Utilities */
+.container-premium {
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .container-premium {
+    padding: 0 4rem;
+  }
+}
+
+/* Typography Scales */
+.heading-hero {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 1;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+
+.heading-section {
+  font-family: var(--font-serif);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.1;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+.label-sm {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-weight: 600;
+}
+
+.label-md {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: 500;
+}
+
+/* Hide scrollbar for clean carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

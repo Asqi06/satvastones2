@@ -1,0 +1,303 @@
+import React, { useState } from 'react';
+import { CreditCard, Truck, ShieldCheck, Zap, ArrowLeft, ArrowRight, Wallet } from 'lucide-react';
+
+const API_URL = 'http://localhost:5000/api';
+
+export default function CheckoutPage({ 
+  cart, 
+  onBack, 
+  onComplete,
+  calculateShipping
+}: { 
+  cart: any[], 
+  onBack: () => void, 
+  onComplete: () => void,
+  calculateShipping: (pincode: string, subtotal: number) => number
+}) {
+  const [paymentMethod, setPaymentMethod] = useState('upi');
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    city: '',
+    pincode: ''
+  });
+  
+  const subtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
+  const shipping = calculateShipping(formData.pincode, subtotal);
+  const codCharge = paymentMethod === 'cod' ? 40 : 0;
+  const total = subtotal + shipping + codCharge;
+
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const handlePlaceOrder = async () => {
+    if (!formData.name || !formData.email || !formData.phone || !formData.address) {
+      alert('Please fill all shipping details');
+      return;
+    }
+
+    if (paymentMethod === 'cod') {
+      const orderDetails = {
+        customer: formData,
+        items: cart,
+        amount: total,
+        paymentMethod: 'COD'
+      };
+      await fetch(`${API_URL}/verify-payment`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ razorpay_order_id: 'COD_'+Date.now(), razorpay_payment_id: 'COD', razorpay_signature: 'COD', orderDetails })
+      });
+      onComplete();
+      return;
+    }
+
+    setIsProcessing(true);
+    const res = await loadRazorpay();
+
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      setIsProcessing(false);
+      return;
+    }
+
+    const orderRes = await fetch(`${API_URL}/create-order`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: total })
+    });
+    const orderData = await orderRes.json();
+
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID || "your-razorpay-key-id",
+      amount: orderData.amount,
+      currency: "INR",
+      name: "SATVASTONES",
+      description: "Jewelry Purchase",
+      order_id: orderData.id,
+      handler: async function (response: any) {
+        const verifyRes = await fetch(`${API_URL}/verify-payment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...response,
+            orderDetails: {
+              customer: formData,
+              items: cart,
+              amount: total,
+              paymentMethod: 'Razorpay'
+            }
+          })
+        });
+        const verifyData = await verifyRes.json();
+        if (verifyData.status === 'success') {
+          onComplete();
+        } else {
+          alert('Payment verification failed');
+        }
+      },
+      prefill: {
+        name: formData.name,
+        email: formData.email,
+        contact: formData.phone
+      },
+      theme: {
+        color: "#000000"
+      }
+    };
+
+    const paymentObject = new (window as any).Razorpay(options);
+    paymentObject.open();
+    setIsProcessing(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-white py-12 md:py-24">
+      <div className="mx-auto max-w-7xl px-4 md:px-8">
+        <button 
+          onClick={onBack}
+          className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-500 hover:text-black transition-colors mb-12"
+        >
+          <ArrowLeft className="h-3 w-3" /> Back to Bag
+        </button>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          <div className="lg:col-span-7 space-y-12">
+            <section>
+              <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-stone-900 mb-8 flex items-center gap-3">
+                <Truck className="h-5 w-5 text-stone-400" /> Shipping Details
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400">Full Name</label>
+                  <input 
+                    type="text" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    className="w-full border-b border-stone-200 py-3 text-sm focus:border-black outline-hidden" 
+                    placeholder="NAME" 
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400">Phone Number</label>
+                  <input 
+                    type="text" 
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    className="w-full border-b border-stone-200 py-3 text-sm focus:border-black outline-hidden" 
+                    placeholder="NUMBER" 
+                  />
+                </div>
+                <div className="col-span-full space-y-1.5">
+                  <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400">Street Address</label>
+                  <input 
+                    type="text" 
+                    value={formData.address}
+                    onChange={(e) => setFormData({...formData, address: e.target.value})}
+                    className="w-full border-b border-stone-200 py-3 text-sm focus:border-black outline-hidden" 
+                    placeholder="ADDRESS" 
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400">Email Address</label>
+                  <input 
+                    type="email" 
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className="w-full border-b border-stone-200 py-3 text-sm focus:border-black outline-hidden" 
+                    placeholder="EMAIL" 
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-[9px] font-bold uppercase tracking-[0.2em] text-stone-400">Pincode</label>
+                  <input 
+                    type="text" 
+                    value={formData.pincode}
+                    onChange={(e) => setFormData({...formData, pincode: e.target.value})}
+                    className="w-full border-b border-stone-200 py-3 text-sm focus:border-black outline-hidden" 
+                    placeholder="ZIP CODE" 
+                  />
+                </div>
+              </div>
+            </section>
+
+            <section>
+              <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-stone-900 mb-8 flex items-center gap-3">
+                <CreditCard className="h-5 w-5 text-stone-400" /> Payment Method
+              </h2>
+              
+              <div className="space-y-4">
+                <button 
+                  onClick={() => setPaymentMethod('upi')}
+                  className={`w-full flex items-center justify-between border p-6 transition-all ${paymentMethod === 'upi' ? 'border-black bg-stone-50' : 'border-stone-200 hover:border-stone-400'}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <Wallet className={`h-5 w-5 ${paymentMethod === 'upi' ? 'text-stone-900' : 'text-stone-300'}`} />
+                    <div className="text-left">
+                      <p className="text-xs font-bold uppercase tracking-widest text-stone-900">Razorpay (UPI / Cards / NetBanking)</p>
+                      <p className="text-[9px] text-green-600 font-bold uppercase mt-1">Recommended • Secure & Instant</p>
+                    </div>
+                  </div>
+                  <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'upi' ? 'border-black bg-black shadow-[inset_0_0_0_2px_white]' : 'border-stone-200'}`} />
+                </button>
+
+                <button 
+                  onClick={() => setPaymentMethod('cod')}
+                  className={`w-full flex items-center justify-between border p-6 transition-all ${paymentMethod === 'cod' ? 'border-black bg-stone-50' : 'border-stone-200 hover:border-stone-400'}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <Truck className={`h-5 w-5 ${paymentMethod === 'cod' ? 'text-stone-900' : 'text-stone-300'}`} />
+                    <div className="text-left">
+                      <p className="text-xs font-bold uppercase tracking-widest text-stone-900">Cash on Delivery</p>
+                      <p className="text-[9px] text-stone-400 uppercase mt-1">Includes ₹40 platform charge</p>
+                    </div>
+                  </div>
+                  <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'cod' ? 'border-black bg-black shadow-[inset_0_0_0_2px_white]' : 'border-stone-200'}`} />
+                </button>
+              </div>
+
+              <div className="mt-8 bg-stone-50 p-6 border-l-4 border-stone-900">
+                <div className="flex items-start gap-3">
+                  <Zap className="h-5 w-5 text-stone-900 mt-1 shrink-0" />
+                  <div className="space-y-2">
+                    <p className="text-xs font-bold uppercase tracking-widest text-stone-900">Payment & Return Policy</p>
+                    <p className="text-[10px] text-stone-500 uppercase leading-relaxed tracking-tight">
+                      To keep our aesthetic collections affordable for everyone, we primarily promote digital payments. 
+                      <span className="text-stone-900 font-bold"> UPI is our most cost-effective and cheap method to pay.</span> 
+                      We only accept COD with a small <span className="text-stone-900 font-bold">₹40 platform charge</span> added to the total.
+                    </p>
+                    <p className="text-[10px] text-red-600 font-bold uppercase mt-2 tracking-widest">
+                      Final Sale: No Refunds, Cancellations or Returns.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="bg-stone-50 p-8 md:p-10 sticky top-28">
+              <h2 className="font-display text-2xl font-bold uppercase tracking-tight text-stone-900 mb-8">Order Overview</h2>
+              
+              <div className="max-h-[300px] overflow-y-auto no-scrollbar mb-8 space-y-4">
+                {cart.map(item => (
+                  <div key={item.id} className="flex gap-4">
+                    <div className="w-16 h-20 bg-white shrink-0 overflow-hidden">
+                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 py-1">
+                      <h4 className="text-[10px] font-bold uppercase tracking-tight text-stone-900">{item.title}</h4>
+                      <p className="text-[9px] text-stone-400 uppercase mt-1">QTY: {item.qty || 1} • {item.style || 'Standard'}</p>
+                      <p className="text-[10px] font-bold text-stone-900 mt-2">₹{item.price * (item.qty || 1)}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-3 border-t border-stone-200 pt-6 mb-8">
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-stone-500">
+                  <span>Subtotal</span>
+                  <span className="text-stone-900">₹{subtotal}</span>
+                </div>
+                <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-stone-500">
+                  <span>Shipping</span>
+                  <span className="text-stone-900">
+                    {shipping === 0 ? (formData.pincode.startsWith('396') ? 'FREE (LOCAL)' : 'FREE') : `₹${shipping}`}
+                  </span>
+                </div>
+                {paymentMethod === 'cod' && (
+                  <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-stone-900">
+                    <span>COD Charge</span>
+                    <span>₹40</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-lg font-bold uppercase tracking-tight text-stone-900 pt-4 border-t border-stone-200 mt-4">
+                  <span>Total</span>
+                  <span>₹{total}</span>
+                </div>
+              </div>
+
+              <button 
+                onClick={handlePlaceOrder}
+                disabled={isProcessing}
+                className="w-full bg-black text-white py-5 text-[11px] font-bold uppercase tracking-[0.2em] hover:bg-stone-800 disabled:bg-stone-400 transition-all flex items-center justify-center gap-3"
+              >
+                {isProcessing ? 'Processing...' : 'Place Order'} <ShieldCheck className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
