@@ -178,12 +178,6 @@ app.post('/api/products/:id/reviews', async (req, res) => {
   }
 });
 
-    res.json(product);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 app.get('/api/orders', async (req, res) => {
   const orders = await Order.find().sort({ createdAt: -1 });
   res.json(orders);
