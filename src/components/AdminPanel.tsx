@@ -530,14 +530,14 @@ export default function AdminPanel({
       {/* Edit Product Modal */}
       {(editingProduct || newProduct) && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-2xl rounded-sm shadow-2xl overflow-hidden">
-            <header className="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+          <div className="bg-white w-full max-w-2xl rounded-sm shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <header className="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50 shrink-0">
               <h2 className="font-display text-2xl font-bold uppercase tracking-tight">
                 {editingProduct ? 'Edit Product' : 'Add New Product'}
               </h2>
               <button onClick={() => { setEditingProduct(null); setNewProduct(null); }} className="text-stone-400 hover:text-black"><X className="h-6 w-6" /></button>
             </header>
-            <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-8 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 no-scrollbar">
               <div className="col-span-full space-y-2">
                 <label className="text-[10px] font-bold uppercase text-stone-500">Product Title</label>
                 <input 
