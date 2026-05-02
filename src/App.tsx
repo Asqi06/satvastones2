@@ -237,17 +237,33 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentView, setCurrentView] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
-  const [cart, setCart] = useState<any[]>([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAdminMode, setIsAdminMode] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
-  const [wishlist, setWishlist] = useState<any[]>([]);
+  const [currentUser, setCurrentUser] = useState<any>(() => {
+    const saved = localStorage.getItem('satvastones_user');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [cart, setCart] = useState<any[]>(() => {
+    const saved = localStorage.getItem('satvastones_cart');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [wishlist, setWishlist] = useState<any[]>(() => {
+    const saved = localStorage.getItem('satvastones_wishlist');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  const toggleWishlist = (product: any) => {
+  // PERSISTENCE
+  useEffect(() => {
+    if (currentUser) localStorage.setItem('satvastones_user', JSON.stringify(currentUser));
+    else localStorage.removeItem('satvastones_user');
+  }, [currentUser]);
+
+  useEffect(() => {
+    localStorage.setItem('satvastones_cart', JSON.stringify(cart));
+  }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem('satvastones_wishlist', JSON.stringify(wishlist));
+  }, [wishlist]);
     setWishlist(prev => {
       const exists = prev.find(p => p.id === product.id || p._id === product._id);
       if (exists) return prev.filter(p => p.id !== product.id && p._id !== product._id);
@@ -795,7 +811,11 @@ export default function App() {
               currentUser ? (
                 <AccountDashboard 
                   user={currentUser} 
-                  onLogout={() => { setCurrentUser(null); navigateTo('home'); }} 
+                  onLogout={() => { 
+                    setCurrentUser(null); 
+                    localStorage.removeItem('satvastones_user');
+                    navigateTo('home'); 
+                  }} 
                   onShop={() => navigateTo('shop')}
                 />
               ) : (
