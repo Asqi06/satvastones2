@@ -224,6 +224,15 @@ app.get('/api/orders', async (req, res) => {
   }
 });
 
+app.get('/api/orders/customer/:email', async (req, res) => {
+  try {
+    const orders = await Order.find({ "customer.email": req.params.email }).sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.put('/api/orders/:id/status', async (req, res) => {
   try {
     const { status, trackingId } = req.body;
@@ -246,9 +255,17 @@ app.post('/api/create-order', async (req, res) => {
     receipt: "order_rcptid_11"
   };
   try {
-    if (!process.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID === 'your-razorpay-key-id') {
-      throw new Error('RAZORPAY_KEY_ID is missing or using placeholder in environment variables');
+    if (!amount || isNaN(amount) || amount <= 0) {
+      console.error("CREATE ORDER ERROR: Invalid amount received:", amount);
+      return res.status(400).json({ error: "Invalid checkout amount" });
     }
+
+    if (!process.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID === 'your-razorpay-key-id') {
+      console.error("RAZORPAY ERROR: Missing API Keys in environment variables");
+      return res.status(500).json({ error: "Razorpay credentials not configured on server" });
+    }
+
+    console.log(`Creating Razorpay order for amount: ₹${amount}`);
     const order = await razorpay.orders.create(options);
     res.json(order);
   } catch (error) {
@@ -283,7 +300,9 @@ app.post('/api/verify-payment', async (req, res) => {
         status: 'Confirmed' 
       });
       await order.save();
-      await sendEmail(orderDetails.customer.email, 'Order Confirmed (COD) - Satvastones', emailTemplates.orderConfirmation(order));
+      // Send emails in background (don't await)
+      sendEmail(orderDetails.customer.email, 'Order Confirmed (COD) - Satvastones', emailTemplates.orderConfirmation(order));
+      sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New COD Order Received!', `<p>New order #${order.orderNumber} received from ${order.customer.name} for ₹${order.amount}</p>`);
       return res.json({ status: 'success', order });
     }
 
@@ -308,8 +327,9 @@ app.post('/api/verify-payment', async (req, res) => {
       });
       await order.save();
   
-      await sendEmail(orderDetails.customer.email, 'Order Confirmed - Satvastones', emailTemplates.orderConfirmation(order));
-      await sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New Order Received!', `<p>New order #${order.orderId} received from ${order.customer.name} for ₹${order.amount}</p>`);
+      // Send emails in background (don't await)
+      sendEmail(orderDetails.customer.email, 'Order Confirmed - Satvastones', emailTemplates.orderConfirmation(order));
+      sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New Order Received!', `<p>New order #${order.orderId} received from ${order.customer.name} for ₹${order.amount}</p>`);
   
       res.json({ status: 'success', order });
     } else {

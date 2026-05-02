@@ -51,14 +51,23 @@ const baseTemplate = (content) => `
 
 export const sendEmail = async (to, subject, html) => {
   try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || `"${process.env.BRAND_NAME || 'Satvastones'}" <${process.env.EMAIL_USER}>`,
+    const fromAddress = process.env.EMAIL_FROM || process.env.EMAIL_USER;
+    console.log(`Attempting to send email to: ${to} from: ${fromAddress}`);
+    
+    const info = await transporter.sendMail({
+      from: `"${process.env.BRAND_NAME || 'Satvastones'}" <${fromAddress}>`,
       to,
       subject,
       html
     });
+    console.log('Email sent successfully:', info.messageId);
   } catch (err) {
-    console.error('Email failed:', err);
+    console.error('CRITICAL EMAIL ERROR:', {
+      message: err.message,
+      code: err.code,
+      command: err.command,
+      response: err.response
+    });
   }
 };
 

@@ -99,6 +99,27 @@ const initialCMSData = {
 };
 
 function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () => void, onShop: () => void }) {
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+        const res = await fetch(`${apiUrl}/orders/customer/${user.email}`);
+        if (res.ok) {
+          const data = await res.json();
+          setOrders(data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch customer orders:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, [user.email]);
+
   return (
     <div className="min-h-screen bg-white py-24">
       <div className="mx-auto max-w-5xl px-4 md:px-8">
@@ -108,7 +129,7 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
           <div className="w-full md:w-80 space-y-8">
             <div className="bg-stone-50 p-10 border border-stone-100 text-center">
               <div className="w-20 h-20 bg-stone-900 rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold mb-6">
-                {user.name[0]}
+                {user.name?.[0] || 'U'}
               </div>
               <h2 className="font-display text-2xl font-bold uppercase tracking-tight">{user.name}</h2>
               <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mt-1">{user.email}</p>
@@ -132,18 +153,35 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
           <div className="flex-1 space-y-12 w-full">
             <section>
               <h3 className="font-display text-3xl font-bold uppercase tracking-tight mb-8">Recent Orders</h3>
-              <div className="space-y-6">
-                {/* For now we show a placeholder, but in a real app we'd fetch orders */}
-                <div className="bg-white border border-stone-100 p-12 text-center space-y-4">
-                  <ShoppingBag className="h-8 w-8 mx-auto text-stone-200" />
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">No recent orders found</p>
-                  <button 
-                    onClick={onShop}
-                    className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-900 underline underline-offset-4"
-                  >
-                    Enter The Shop
-                  </button>
-                </div>
+              <div className="space-y-4">
+                {loading ? (
+                  <div className="p-12 text-center text-[10px] uppercase tracking-widest text-stone-400 animate-pulse">Loading History...</div>
+                ) : orders.length > 0 ? (
+                  orders.map(order => (
+                    <div key={order._id} className="border border-stone-100 p-6 flex items-center justify-between hover:bg-stone-50 transition-colors">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest">Order #{order.orderNumber || order._id?.slice(-8)}</p>
+                        <p className="text-[9px] text-stone-400 uppercase mt-1">
+                          {new Date(order.createdAt).toLocaleDateString()} • {order.items?.length || 0} ITEMS • ₹{order.amount}
+                        </p>
+                      </div>
+                      <span className="px-3 py-1 bg-stone-900 text-white text-[8px] font-bold uppercase tracking-widest rounded-full">
+                        {order.status || 'Received'}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div className="bg-white border border-stone-100 p-12 text-center space-y-4">
+                    <ShoppingBag className="h-8 w-8 mx-auto text-stone-200" />
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">No recent orders found</p>
+                    <button 
+                      onClick={onShop}
+                      className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-900 underline underline-offset-4"
+                    >
+                      Enter The Shop
+                    </button>
+                  </div>
+                )}
               </div>
             </section>
 

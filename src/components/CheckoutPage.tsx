@@ -102,6 +102,7 @@ export default function CheckoutPage({
           onComplete();
         } else {
           alert('Failed to place COD order. Please try again.');
+          setIsProcessing(false);
         }
         return;
       }
@@ -178,9 +179,9 @@ export default function CheckoutPage({
       paymentObject.open();
     } catch (err) {
       console.error(err);
-      alert('Something went wrong. Please check your connection.');
+      alert('An unexpected error occurred. Please check your connection.');
       setIsProcessing(false);
-    } 
+    }
   };
 
   return (
