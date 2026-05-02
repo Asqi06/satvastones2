@@ -113,6 +113,15 @@ const customerSchema = new mongoose.Schema({
 
 const Customer = mongoose.model('Customer', customerSchema);
 
+const cartSchema = new mongoose.Schema({
+  email: { type: String, unique: true },
+  items: Array,
+  lastUpdated: { type: Date, default: Date.now },
+  reminderSent: { type: Boolean, default: false }
+});
+
+const Cart = mongoose.model('Cart', cartSchema);
+
 const client = new OAuth2Client(process.env.VITE_GOOGLE_CLIENT_ID);
 
 
@@ -238,8 +247,10 @@ app.put('/api/orders/:id/status', async (req, res) => {
     const { status, trackingId } = req.body;
     const order = await Order.findByIdAndUpdate(req.params.id, { status, trackingId }, { returnDocument: 'after' });
     
-    if (order && status === 'Shipped') {
-      await sendEmail(order.customer.email, 'Order Shipped - Satvastones', emailTemplates.shippingUpdate(order));
+    if (order) {
+      // Send dynamic status update email
+      const subject = `Order Update: ${status} - Satvastones`;
+      await sendEmail(order.customer.email, subject, emailTemplates.statusUpdate(order, status, trackingId));
     }
     res.json(order);
   } catch (err) {
@@ -300,6 +311,8 @@ app.post('/api/verify-payment', async (req, res) => {
         status: 'Confirmed' 
       });
       await order.save();
+      // Clear saved cart after successful order
+      await Cart.findOneAndDelete({ email: orderDetails.customer.email });
       // Send emails in background (don't await)
       sendEmail(orderDetails.customer.email, 'Order Confirmed (COD) - Satvastones', emailTemplates.orderConfirmation(order));
       sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New COD Order Received!', `<p>New order #${order.orderNumber} received from ${order.customer.name} for ₹${order.amount}</p>`);
@@ -326,7 +339,8 @@ app.post('/api/verify-payment', async (req, res) => {
         status: 'Confirmed' 
       });
       await order.save();
-  
+      // Clear saved cart after successful order
+      await Cart.findOneAndDelete({ email: orderDetails.customer.email });
       // Send emails in background (don't await)
       sendEmail(orderDetails.customer.email, 'Order Confirmed - Satvastones', emailTemplates.orderConfirmation(order));
       sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New Order Received!', `<p>New order #${order.orderId} received from ${order.customer.name} for ₹${order.amount}</p>`);
@@ -368,6 +382,8 @@ app.post('/api/google-login', async (req, res) => {
     }
 
     const orders = await Order.find({ 'customer.email': email }).sort({ createdAt: -1 });
+    // Send Login Notification
+    sendEmail(email, 'New Login - Satvastones', emailTemplates.loginNotification(name, new Date().toLocaleString()));
     res.json({ success: true, customer, orders });
   } catch (err) {
     console.error("GOOGLE LOGIN ERROR:", err);
@@ -418,11 +434,62 @@ app.post('/api/login', async (req, res) => {
     
     // Get orders for this customer
     const orders = await Order.find({ 'customer.email': email }).sort({ createdAt: -1 });
+    // Send Login Notification
+    sendEmail(email, 'New Login - Satvastones', emailTemplates.loginNotification(customer.name, new Date().toLocaleString()));
     res.json({ success: true, customer, orders });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Cart Sync
+app.post('/api/cart/sync', async (req, res) => {
+  try {
+    const { email, items } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email required' });
+
+    // If items are empty, the cart is cleared
+    if (!items || items.length === 0) {
+      await Cart.findOneAndDelete({ email });
+      return res.json({ message: 'Cart cleared' });
+    }
+
+    await Cart.findOneAndUpdate(
+      { email },
+      { items, lastUpdated: new Date(), reminderSent: false },
+      { upsert: true, new: true }
+    );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Background Job: Abandoned Cart Recovery (Runs every 1 hour)
+setInterval(async () => {
+  try {
+    console.log('[WATCHDOG] Checking for abandoned carts...');
+    const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000);
+    
+    const abandonedCarts = await Cart.find({
+      lastUpdated: { $lt: twoHoursAgo },
+      reminderSent: false,
+      items: { $exists: true, $not: { $size: 0 } }
+    });
+
+    for (const cart of abandonedCarts) {
+      const customer = await Customer.findOne({ email: cart.email });
+      if (customer) {
+        console.log(`[WATCHDOG] Sending recovery email to: ${cart.email}`);
+        await sendEmail(cart.email, 'Your Satvastones Bag is Waiting...', emailTemplates.abandonedCart(customer.name));
+        cart.reminderSent = true;
+        await cart.save();
+      }
+    }
+  } catch (err) {
+    console.error('[WATCHDOG ERROR]:', err);
+  }
+}, 60 * 60 * 1000);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

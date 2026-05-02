@@ -363,7 +363,15 @@ function AppContent() {
 
   useEffect(() => {
     localStorage.setItem('satvastones_cart', JSON.stringify(cart));
-  }, [cart]);
+    // Sync cart with server for abandoned cart recovery
+    if (currentUser?.email && cart.length > 0) {
+      fetch(`${API_URL}/cart/sync`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: currentUser.email, items: cart })
+      }).catch(err => console.log('Cart sync failed (expected if offline)'));
+    }
+  }, [cart, currentUser]);
 
   useEffect(() => {
     localStorage.setItem('satvastones_wishlist', JSON.stringify(wishlist));
