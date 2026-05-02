@@ -52,7 +52,7 @@ const baseTemplate = (content) => `
 export const sendEmail = async (to, subject, html) => {
   try {
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || '"Satvastones" <hello@satvastones.com>',
+      from: process.env.EMAIL_FROM || `"${process.env.BRAND_NAME || 'Satvastones'}" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html

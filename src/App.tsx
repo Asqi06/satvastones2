@@ -740,8 +740,15 @@ export default function App() {
             {currentView === 'checkout' && (
               <CheckoutPage 
                 cart={cart} 
+                currentUser={currentUser}
                 onBack={() => navigateTo('cart')}
-                onComplete={() => { setCart([]); navigateTo('order-success'); }}
+                onComplete={() => { 
+                  setCart([]); 
+                  localStorage.removeItem('checkout_form');
+                  localStorage.removeItem('checkout_pending');
+                  navigateTo('order-success'); 
+                }}
+                onLoginRedirect={() => navigateTo('auth')}
                 calculateShipping={calculateShipping}
               />
             )}
@@ -792,7 +799,14 @@ export default function App() {
                   onShop={() => navigateTo('shop')}
                 />
               ) : (
-                <AuthPage onLogin={(data) => { setCurrentUser(data.customer); navigateTo('auth'); }} />
+                <AuthPage onLogin={(data) => { 
+                  setCurrentUser(data.customer); 
+                  if (localStorage.getItem('checkout_pending') === 'true') {
+                    navigateTo('checkout');
+                  } else {
+                    navigateTo('auth'); 
+                  }
+                }} />
               )
             )}
           </motion.div>

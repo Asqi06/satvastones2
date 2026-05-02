@@ -5,26 +5,37 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export default function CheckoutPage({ 
   cart, 
+  currentUser,
   onBack, 
   onComplete,
+  onLoginRedirect,
   calculateShipping
 }: { 
   cart: any[], 
+  currentUser: any,
   onBack: () => void, 
   onComplete: () => void,
+  onLoginRedirect: () => void,
   calculateShipping: (pincode: string, subtotal: number) => number
 }) {
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [isProcessing, setIsProcessing] = useState(false);
   const [showCodDialog, setShowCodDialog] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    pincode: ''
+  const [formData, setFormData] = useState(() => {
+    const saved = localStorage.getItem('checkout_form');
+    return saved ? JSON.parse(saved) : {
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      city: '',
+      pincode: ''
+    };
   });
+
+  React.useEffect(() => {
+    localStorage.setItem('checkout_form', JSON.stringify(formData));
+  }, [formData]);
   
   const subtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
   const shipping = calculateShipping(formData.pincode, subtotal);
@@ -57,6 +68,12 @@ export default function CheckoutPage({
   const handlePlaceOrder = async () => {
     if (!formData.name || !formData.email || !formData.phone || !formData.address) {
       alert('Please fill all shipping details');
+      return;
+    }
+
+    if (!currentUser) {
+      localStorage.setItem('checkout_pending', 'true');
+      onLoginRedirect();
       return;
     }
 
@@ -135,9 +152,11 @@ export default function CheckoutPage({
               onComplete();
             } else {
               alert('Payment verification failed');
+              setIsProcessing(false);
             }
           } catch (err) {
             alert('Error verifying payment');
+            setIsProcessing(false);
           }
         },
         prefill: {
@@ -160,9 +179,8 @@ export default function CheckoutPage({
     } catch (err) {
       console.error(err);
       alert('Something went wrong. Please check your connection.');
-    } finally {
-      if (paymentMethod === 'cod') setIsProcessing(false);
-    }
+      setIsProcessing(false);
+    } 
   };
 
   return (
