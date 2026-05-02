@@ -58,8 +58,6 @@ export const sendEmail = async (to, subject, html) => {
   const fromName = (process.env.BRAND_NAME || 'Satvastones').replace(/['"]+/g, '').trim();
   let fromEmail = (process.env.EMAIL_FROM || process.env.EMAIL_USER || 'orders@satvastones.com').replace(/['"]+/g, '').trim();
 
-  // Smart Detection: If fromEmail already has brackets, use it as is. 
-  // Otherwise, wrap it in the standard "Name <email>" format.
   const finalFrom = fromEmail.includes('<') ? fromEmail : `${fromName} <${fromEmail}>`;
 
   console.log(`[EMAIL SERVICE] Attempting to send to: ${to} | From: ${finalFrom} | Mode: ${resend ? 'RESEND API' : 'SMTP FALLBACK'}`);
@@ -77,25 +75,23 @@ export const sendEmail = async (to, subject, html) => {
         console.error('RESEND API ERROR:', error);
         throw error;
       }
-      console.log('Email sent via Resend:', data.id);
-      return;
+      return data;
     } catch (err) {
       console.warn('Resend failed, falling back to SMTP...');
     }
   }
 
-  // Fallback to SMTP
   try {
-    console.log(`Using SMTP to send email to: ${to}`);
     const info = await transporter.sendMail({
-      from: `"${fromName}" <${fromEmail}>`,
+      from: finalFrom,
       to,
       subject,
       html
     });
-    console.log('Email sent via SMTP:', info.messageId);
+    return info;
   } catch (err) {
-    console.error('CRITICAL EMAIL FAILURE (Both API and SMTP failed):', err.message);
+    console.error('CRITICAL EMAIL FAILURE:', err.message);
+    throw err;
   }
 };
 
@@ -128,13 +124,46 @@ export const emailTemplates = {
     `);
   },
 
-  shippingUpdate: (order) => {
-     return baseTemplate(`
-      <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">YOUR ORDER IS ON THE WAY</h1>
+  statusUpdate: (order, status, trackingId) => {
+    let message = '';
+    let trackingHtml = '';
+
+    switch(status) {
+      case 'Confirmed': message = 'Your order has been confirmed and is being packed with love.'; break;
+      case 'Packed': message = 'Your aesthetic collection is packed and ready for dispatch.'; break;
+      case 'Shipped':
+      case 'In Transit': 
+        message = 'Great news! Your package has left our hub and is in transit.'; 
+        if (trackingId) trackingHtml = `<p style="background: #f9f9f9; padding: 20px; text-align: center; font-size: 14px;">Tracking ID: <b>${trackingId}</b></p>`;
+        break;
+      case 'Out for Delivery': message = 'Your Satvastones package is out for delivery and will reach you today.'; break;
+      case 'Delivered': message = 'Your order has been delivered. We hope you love your new aesthetic vibe!'; break;
+      default: message = `Your order status has been updated to: ${status}`;
+    }
+
+    return baseTemplate(`
+      <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">ORDER STATUS: ${status.toUpperCase()}</h1>
       <p>Order ID: <b>#${order.orderId?.slice(-8).toUpperCase()}</b></p>
-      <p>Great news! Your Satvastones package has been shipped and is heading to your aesthetic space.</p>
-      ${order.trackingId ? `<p style="background: #f9f9f9; padding: 20px; text-align: center;">Tracking ID: <b>${order.trackingId}</b></p>` : ''}
-      <p style="margin-top: 30px;"><a href="https://satvastones.in/account" class="button">Track My Order</a></p>
+      <p>${message}</p>
+      ${trackingHtml}
+      <p style="margin-top: 30px;"><a href="${process.env.FRONTEND_URL || 'https://satvastones.in'}/account" class="button">Track Order</a></p>
     `);
-  }
+  },
+
+  abandonedCart: (name) => baseTemplate(`
+    <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">YOUR AESTHETIC VIBE IS WAITING</h1>
+    <p>Hi ${name.toUpperCase()}, we noticed you left some pieces in your bag.</p>
+    <p>These pieces are currently in high demand, but we've held them for you as part of our **Exclusive Member Access**. Don't let your curated look slip away.</p>
+    <div style="background: #f9f9f9; padding: 20px; margin: 20px 0; border-left: 4px solid #000;">
+      <p style="margin: 0; font-size: 12px; font-weight: bold; letter-spacing: 1px;">LIMITED TIME OFFER: COMPLETE YOUR BAG NOW</p>
+    </div>
+    <p style="margin-top: 30px;"><a href="${process.env.FRONTEND_URL || 'https://satvastones.in'}/cart" class="button">Complete My Order</a></p>
+  `),
+
+  loginNotification: (name, time) => baseTemplate(`
+    <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">NEW LOGIN DETECTED</h1>
+    <p>Hi ${name.toUpperCase()}, your Satvastones account was just accessed.</p>
+    <p style="font-size: 12px; color: #666;">Time: ${time}</p>
+    <p>If this was you, you can safely ignore this email. If not, please contact our support team immediately.</p>
+  `)
 };

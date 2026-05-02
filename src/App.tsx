@@ -817,6 +817,46 @@ function AppContent() {
                     </div>
                   </section>
 
+                  {/* Special Offer */}
+                  {cmsData.specialOffer?.isActive && (
+                    <section className="bg-stone-900 py-20 md:py-32 overflow-hidden">
+                      <div className="mx-auto max-w-7xl px-4 md:px-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16 md:gap-24">
+                          <div className="relative aspect-square lg:aspect-[4/5] overflow-hidden rounded-sm group">
+                            <img 
+                              src={optimizeImage(cmsData.specialOffer.image, 1200)} 
+                              alt="Special Offer" 
+                              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                            />
+                            <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
+                          </div>
+                          <div className="space-y-10">
+                            <div className="space-y-4">
+                              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-500">Exclusive Drop</span>
+                              <h2 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight text-white leading-[0.85]">
+                                {cmsData.specialOffer.title} <br />
+                                <span className="text-stone-700">{cmsData.specialOffer.subTitle}</span>
+                              </h2>
+                            </div>
+                            <p className="text-sm font-bold uppercase tracking-[0.2em] text-stone-400 leading-loose max-w-md">
+                              {cmsData.specialOffer.description}
+                            </p>
+                            <button 
+                              onClick={() => {
+                                const prod = cmsData.products.find((p: any) => p._id === cmsData.specialOffer.productId || p.id === cmsData.specialOffer.productId);
+                                if (prod) navigateTo('product', prod);
+                                else navigateTo('shop');
+                              }}
+                              className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-200 transition-all shadow-2xl"
+                            >
+                              Shop The Offer
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
                   {/* Discover */}
                   <section className="bg-stone-50 py-20 md:py-32">
                     <div className="mx-auto max-w-7xl px-4 md:px-8">
