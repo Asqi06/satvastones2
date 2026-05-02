@@ -4,6 +4,7 @@ import {
   ArrowUpRight, Truck, RefreshCcw, ShieldCheck, ChevronLeft, ChevronRight, Zap
 } from 'lucide-react';
 import { optimizeImage } from '../utils/cloudinary';
+import { Link } from 'react-router-dom';
 
 
 
@@ -58,17 +59,15 @@ export default function ProductPage({
 
   return (
     <div className="min-h-screen bg-white font-sans text-stone-900">
-      {/* Breadcrumb */}
+      {/* Breadcrumb - Critical for SEO & Navigation */}
       <div className="border-b border-stone-100 bg-white px-4 py-3 md:px-8">
-        <div className="mx-auto max-w-7xl flex items-center gap-2 text-[10px] uppercase tracking-widest text-stone-400">
-          <button onClick={onBack} className="hover:text-stone-900 transition-colors flex items-center gap-1">
-            <ArrowLeft className="h-3 w-3" /> Back
-          </button>
-          <span>/</span>
-          <span>Korean Collection</span>
-          <span>/</span>
-          <span className="text-stone-900">{product.title || 'Product'}</span>
-        </div>
+        <nav className="mx-auto max-w-7xl flex items-center gap-2 text-[10px] uppercase tracking-widest text-stone-400">
+          <Link to="/" className="hover:text-stone-900 transition-colors">Home</Link>
+          <ChevronRight className="h-2 w-2" />
+          <Link to="/shop" className="hover:text-stone-900 transition-colors">Shop</Link>
+          <ChevronRight className="h-2 w-2" />
+          <span className="text-stone-900 font-bold">{product.title || 'Product'}</span>
+        </nav>
       </div>
 
       {/* Main Product Section */}
@@ -208,19 +207,70 @@ export default function ProductPage({
               </div>
             )}
 
-            {/* Actions */}
-            <div className="flex gap-3">
-              <div className="flex items-center border border-stone-200">
-                <button onClick={() => setQty(q => Math.max(1, q - 1))} className="px-4 py-3 text-stone-500 hover:text-stone-900 text-sm">−</button>
-                <span className="w-10 text-center text-sm font-bold">{qty}</span>
-                <button onClick={() => setQty(q => q + 1)} className="px-4 py-3 text-stone-500 hover:text-stone-900 text-sm">+</button>
+            {/* Trust Signals & UX Boosters */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-y border-stone-100 py-6 my-4">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center">
+                  <Truck className="h-4 w-4 text-stone-600" />
+                </div>
+                <div className="space-y-0.5">
+                  <p className="text-[9px] font-bold uppercase tracking-widest">Free Shipping</p>
+                  <p className="text-[8px] text-stone-400 uppercase">On orders over ₹1500</p>
+                </div>
               </div>
-              <button 
-                onClick={() => onAddToCart({ ...product, qty, options: selectedOption })}
-                className="flex-1 bg-stone-900 py-3 text-[11px] font-bold uppercase tracking-widest text-white hover:bg-stone-700 transition-colors"
-              >
-                Add to Bag
-              </button>
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center">
+                  <ShieldCheck className="h-4 w-4 text-stone-600" />
+                </div>
+                <div className="space-y-0.5">
+                  <p className="text-[9px] font-bold uppercase tracking-widest">Secure Payment</p>
+                  <p className="text-[8px] text-stone-400 uppercase">100% encrypted checkout</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center">
+                  <RefreshCcw className="h-4 w-4 text-stone-600" />
+                </div>
+                <div className="space-y-0.5">
+                  <p className="text-[9px] font-bold uppercase tracking-widest">Easy Returns</p>
+                  <p className="text-[8px] text-stone-400 uppercase">7-day exchange policy</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-baseline gap-3">
+                  <span className="text-3xl font-bold tracking-tight">₹{product.price}</span>
+                  {product.oldPrice > 0 && (
+                    <span className="text-sm text-stone-400 line-through decoration-red-500/30">₹{product.oldPrice}</span>
+                  )}
+                </div>
+                <div className="flex items-center bg-stone-50 border border-stone-100 rounded-xs p-1">
+                  <button 
+                    onClick={() => setQty(q => Math.max(1, q - 1))}
+                    className="p-2 hover:bg-white rounded transition-colors"
+                  >
+                    <ChevronLeft className="h-3 w-3" />
+                  </button>
+                  <span className="px-4 text-xs font-bold w-10 text-center">{qty}</span>
+                  <button 
+                    onClick={() => setQty(q => q + 1)}
+                    className="p-2 hover:bg-white rounded transition-colors"
+                  >
+                    <ChevronRight className="h-3 w-3" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <button 
+                  onClick={() => onAddToCart({...product, qty, options: selectedOption})}
+                  className="flex-1 bg-black text-white py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all shadow-xl active:scale-95"
+                >
+                  Add To Bag
+                </button>
+              </div>
             </div>
 
             {/* Accordions */}

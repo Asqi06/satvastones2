@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import SEO from './components/SEO';
+import JsonLd, { getProductSchema } from './components/JsonLd';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
 import CartPage from './components/CartPage';
@@ -291,6 +292,7 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
         image={product.image}
         canonical={`https://satvastones.in/product/${id}`}
       />
+      <JsonLd data={getProductSchema(product)} />
       <ProductPage 
         product={product} 
         allProducts={cmsData.products}
@@ -350,6 +352,7 @@ function AppContent() {
     }
     window.scrollTo(0, 0);
   };
+  useEffect(() => {
     if (currentUser) localStorage.setItem('satvastones_user', JSON.stringify(currentUser));
     else localStorage.removeItem('satvastones_user');
   }, [currentUser]);
