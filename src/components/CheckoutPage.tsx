@@ -46,16 +46,16 @@ export default function CheckoutPage({
   }, 0);
   const shipping = calculateShipping(formData.pincode, subtotal);
   
-  // COD Charges Logic
+  // COD Charges Logic - Unified to ₹40 platform charge as per brand policy
   const calculateCodCharge = () => {
     if (paymentMethod !== 'cod') return 0;
-    if (formData.pincode.startsWith('396')) return 0; // Local
-    if (formData.pincode.startsWith('3')) return 20; // Gujarat
-    return 45; // Other
+    if (formData.pincode.startsWith('396')) return 0; // Local Vapi/Gunjan is FREE
+    return 40; // Flat platform charge for outside local
   };
   
   const codCharge = calculateCodCharge();
-  const total = subtotal + shipping + codCharge;
+  // Ensure total is ALWAYS a clean integer for Razorpay (Paise conversion)
+  const total = Math.round(subtotal + shipping + codCharge);
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -169,7 +169,7 @@ export default function CheckoutPage({
         prefill: {
           name: formData.name,
           email: formData.email,
-          contact: formData.phone
+          contact: formData.phone.replace(/[^0-9]/g, '') // Sanitize phone for Razorpay
         },
         theme: {
           color: "#000000"
@@ -386,9 +386,7 @@ export default function CheckoutPage({
                 <br /><br />
                 • Local (Vapi/Gunjan): <span className="text-green-600 font-bold">FREE</span>
                 <br />
-                • Within Gujarat: <span className="text-stone-900 font-bold">₹20</span>
-                <br />
-                • Outside Gujarat: <span className="text-stone-900 font-bold">₹45</span>
+                • Other Regions: <span className="text-stone-900 font-bold">₹40 Platform Charge</span>
               </p>
             </div>
             <button 

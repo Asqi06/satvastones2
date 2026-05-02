@@ -250,9 +250,9 @@ app.put('/api/orders/:id/status', async (req, res) => {
 app.post('/api/create-order', async (req, res) => {
   const { amount } = req.body;
   const options = {
-    amount: amount * 100,
+    amount: Math.round(amount * 100), // Ensure whole number in Paise
     currency: "INR",
-    receipt: "order_rcptid_11"
+    receipt: `rcpt_${Date.now()}` // Unique receipt ID
   };
   try {
     if (!amount || isNaN(amount) || amount <= 0) {

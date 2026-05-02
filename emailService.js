@@ -1,7 +1,12 @@
+import { Resend } from 'resend';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 
+// Primary API-based service (Bulletproof for Render/Vercel)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+// Fallback SMTP service
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.hostinger.com',
   port: parseInt(process.env.EMAIL_PORT) || 465,
@@ -50,24 +55,44 @@ const baseTemplate = (content) => `
 `;
 
 export const sendEmail = async (to, subject, html) => {
+  const fromName = (process.env.BRAND_NAME || 'Satvastones').replace(/['"]+/g, '');
+  const fromEmail = (process.env.EMAIL_FROM || process.env.EMAIL_USER || 'orders@satvastones.com').replace(/['"]+/g, '');
+
+  console.log(`[EMAIL SERVICE] Attempting to send to: ${to} | Mode: ${resend ? 'RESEND API' : 'SMTP FALLBACK'}`);
+
+  if (resend) {
+    try {
+      console.log(`Using Resend API to send email to: ${to}`);
+      const { data, error } = await resend.emails.send({
+        from: `${fromName} <${fromEmail}>`,
+        to: [to],
+        subject,
+        html,
+      });
+
+      if (error) {
+        console.error('RESEND API ERROR:', error);
+        throw error;
+      }
+      console.log('Email sent via Resend:', data.id);
+      return;
+    } catch (err) {
+      console.warn('Resend failed, falling back to SMTP...');
+    }
+  }
+
+  // Fallback to SMTP
   try {
-    const fromAddress = process.env.EMAIL_FROM || process.env.EMAIL_USER;
-    console.log(`Attempting to send email to: ${to} from: ${fromAddress}`);
-    
+    console.log(`Using SMTP to send email to: ${to}`);
     const info = await transporter.sendMail({
-      from: `"${process.env.BRAND_NAME || 'Satvastones'}" <${fromAddress}>`,
+      from: `"${fromName}" <${fromEmail}>`,
       to,
       subject,
       html
     });
-    console.log('Email sent successfully:', info.messageId);
+    console.log('Email sent via SMTP:', info.messageId);
   } catch (err) {
-    console.error('CRITICAL EMAIL ERROR:', {
-      message: err.message,
-      code: err.code,
-      command: err.command,
-      response: err.response
-    });
+    console.error('CRITICAL EMAIL FAILURE (Both API and SMTP failed):', err.message);
   }
 };
 
@@ -75,7 +100,7 @@ export const emailTemplates = {
   welcome: (name) => baseTemplate(`
     <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">WELCOME TO THE TRIBE, ${name.toUpperCase()}</h1>
     <p>Thank you for joining Satvastones. You now have exclusive access to our aesthetic collections and priority drops.</p>
-    <p style="margin-top: 30px;"><a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}" class="button">Enter The Shop</a></p>
+    <p style="margin-top: 30px;"><a href="${process.env.FRONTEND_URL || 'https://satvastones.in'}" class="button">Enter The Shop</a></p>
   `),
 
   orderConfirmation: (order) => {
@@ -100,28 +125,13 @@ export const emailTemplates = {
     `);
   },
 
-  statusUpdate: (order, status, trackingId) => {
-    let message = '';
-    let trackingHtml = '';
-
-    switch(status) {
-      case 'Confirmed': message = 'Your order has been confirmed and is being packed with love.'; break;
-      case 'Packed': message = 'Your aesthetic collection is packed and ready for dispatch.'; break;
-      case 'Shipped':
-      case 'In Transit': 
-        message = 'Great news! Your package has left our hub and is in transit.'; 
-        if (trackingId) trackingHtml = `<p style="background: #f9f9f9; padding: 20px; text-align: center; font-size: 14px;">Tracking ID: <b>${trackingId}</b></p>`;
-        break;
-      case 'Out for Delivery': message = 'Your Satvastones package is out for delivery and will reach you today.'; break;
-      case 'Delivered': message = 'Your order has been delivered. We hope you love your new aesthetic vibe!'; break;
-    }
-
-    return baseTemplate(`
-      <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">ORDER STATUS: ${status.toUpperCase()}</h1>
+  shippingUpdate: (order) => {
+     return baseTemplate(`
+      <h1 style="font-size: 20px; font-weight: bold; margin-bottom: 20px;">YOUR ORDER IS ON THE WAY</h1>
       <p>Order ID: <b>#${order.orderId?.slice(-8).toUpperCase()}</b></p>
-      <p>${message}</p>
-      ${trackingHtml}
-      <p style="margin-top: 30px;"><a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/auth" class="button">Track Order</a></p>
+      <p>Great news! Your Satvastones package has been shipped and is heading to your aesthetic space.</p>
+      ${order.trackingId ? `<p style="background: #f9f9f9; padding: 20px; text-align: center;">Tracking ID: <b>${order.trackingId}</b></p>` : ''}
+      <p style="margin-top: 30px;"><a href="https://satvastones.in/account" class="button">Track My Order</a></p>
     `);
   }
 };
