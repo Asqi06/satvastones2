@@ -249,6 +249,11 @@ export default function App() {
     const saved = localStorage.getItem('satvastones_wishlist');
     return saved ? JSON.parse(saved) : [];
   });
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdminMode, setIsAdminMode] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // PERSISTENCE
