@@ -102,7 +102,7 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const fetchOrders = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
