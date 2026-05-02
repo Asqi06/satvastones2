@@ -544,7 +544,7 @@ export default function App() {
       <SearchOverlay 
         isOpen={isSearchOpen} 
         onClose={() => setIsSearchOpen(false)} 
-        products={cmsData.products} 
+        products={cmsData?.products || []} 
         onSelectProduct={(p) => navigateTo('product', p)} 
       />
 
@@ -557,7 +557,7 @@ export default function App() {
               {cmsData?.settings?.announcementText || 'WELCOME TO SATVASTONES'}
             </p>
           </div>
-          {cmsData.settings.showTimer && (
+          {cmsData?.settings?.showTimer && (
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 font-accent text-base font-bold tracking-wider text-white sm:text-lg">
                 <span className="text-red-500">{String(timeLeft.days).padStart(2, '0')}D</span>
@@ -662,10 +662,10 @@ export default function App() {
 
                 {/* Mother's Day Special Section */}
                 {cmsData.specialOffer?.isActive && (() => {
-                  const featuredHamper = cmsData.products.find((p: any) => 
+                  const featuredHamper = (cmsData?.products || []).find((p: any) => 
                     p.category === "MOTHER'S DAY" || 
-                    p.id === cmsData.specialOffer.productId || 
-                    p._id === cmsData.specialOffer.productId
+                    p.id === cmsData?.specialOffer?.productId || 
+                    p._id === cmsData?.specialOffer?.productId
                   );
                   
                   return (
@@ -719,7 +719,7 @@ export default function App() {
                       </h2>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                      {cmsData.categories.map((cat: any, i: number) => cat ? <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} /> : null)}
+                      {(cmsData?.categories || []).map((cat: any, i: number) => cat ? <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} /> : null)}
                     </div>
                   </div>
                 </section>
@@ -736,7 +736,7 @@ export default function App() {
                       </button>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                      {cmsData.products.slice(0, 6).map((p: any) => p ? <DiscoverCard key={p.id || Math.random()} product={p} onClick={() => navigateTo('product', p)} /> : null)}
+                      {(cmsData?.products || []).slice(0, 6).map((p: any) => p ? <DiscoverCard key={p.id || Math.random()} product={p} onClick={() => navigateTo('product', p)} /> : null)}
                     </div>
                   </div>
                 </section>
