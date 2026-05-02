@@ -249,11 +249,6 @@ export default function App() {
     const saved = localStorage.getItem('satvastones_wishlist');
     return saved ? JSON.parse(saved) : [];
   });
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAdminMode, setIsAdminMode] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   // PERSISTENCE
@@ -269,8 +264,6 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('satvastones_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
-
-  const toggleWishlist = (product: any) => {
     setWishlist(prev => {
       const exists = prev.find(p => p.id === product.id || p._id === product._id);
       if (exists) return prev.filter(p => p.id !== product.id && p._id !== product._id);
