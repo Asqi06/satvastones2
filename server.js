@@ -149,7 +149,17 @@ app.post('/api/cms', async (req, res) => {
   try {
     let cms = await CMS.findOne();
     if (cms) {
-      Object.assign(cms, req.body);
+      // Smart Merge: Don't overwrite the whole object, only the parts sent in the request
+      if (req.body.hero) cms.hero = { ...cms.hero, ...req.body.hero };
+      if (req.body.specialOffer) cms.specialOffer = { ...cms.specialOffer, ...req.body.specialOffer };
+      if (req.body.settings) cms.settings = { ...cms.settings, ...req.body.settings };
+      if (req.body.categories) cms.categories = req.body.categories;
+      
+      cms.markModified('hero');
+      cms.markModified('specialOffer');
+      cms.markModified('settings');
+      cms.markModified('categories');
+      
       await cms.save();
     } else {
       cms = new CMS(req.body);
@@ -157,6 +167,7 @@ app.post('/api/cms', async (req, res) => {
     }
     res.json(cms);
   } catch (err) {
+    console.error("CMS SAVE ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -248,12 +259,17 @@ app.put('/api/orders/:id/status', async (req, res) => {
     const order = await Order.findByIdAndUpdate(req.params.id, { status, trackingId }, { returnDocument: 'after' });
     
     if (order) {
-      // Send dynamic status update email
-      const subject = `Order Update: ${status} - Satvastones`;
-      await sendEmail(order.customer.email, subject, emailTemplates.statusUpdate(order, status, trackingId));
+      // Use try-catch for email so it doesn't crash the status update if email fails
+      try {
+        const subject = `Order Update: ${status} - Satvastones`;
+        await sendEmail(order.customer.email, subject, emailTemplates.statusUpdate(order, status, trackingId));
+      } catch (emailErr) {
+        console.error("Non-critical Email Error in status update:", emailErr);
+      }
     }
     res.json(order);
   } catch (err) {
+    console.error("STATUS UPDATE ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 });
