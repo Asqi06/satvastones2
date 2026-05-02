@@ -37,7 +37,13 @@ export default function CheckoutPage({
     localStorage.setItem('checkout_form', JSON.stringify(formData));
   }, [formData]);
   
-  const subtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
+  const subtotal = cart.reduce((acc, item) => {
+    // Ensure price is a clean number even if it's a string with symbols
+    const price = typeof item.price === 'string' 
+      ? parseFloat(item.price.replace(/[^0-9.]/g, '')) 
+      : (item.price || 0);
+    return acc + (price * (item.qty || 1));
+  }, 0);
   const shipping = calculateShipping(formData.pincode, subtotal);
   
   // COD Charges Logic
