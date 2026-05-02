@@ -246,13 +246,15 @@ export default function App() {
   const [cart, setCart] = useState<any[]>(() => {
     try {
       const saved = localStorage.getItem('satvastones_cart');
-      return (saved && saved !== 'undefined') ? JSON.parse(saved) : [];
+      const parsed = (saved && saved !== 'undefined') ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
     } catch { return []; }
   });
   const [wishlist, setWishlist] = useState<any[]>(() => {
     try {
       const saved = localStorage.getItem('satvastones_wishlist');
-      return (saved && saved !== 'undefined') ? JSON.parse(saved) : [];
+      const parsed = (saved && saved !== 'undefined') ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
     } catch { return []; }
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -315,6 +317,7 @@ export default function App() {
               hero: { ...initialCMSData.hero, ...cms.hero },
               specialOffer: { ...initialCMSData.specialOffer, ...cms.specialOffer },
               settings: { ...initialCMSData.settings, ...cms.settings },
+              categories: Array.isArray(cms.categories) ? cms.categories : prev.categories,
               products: Array.isArray(prods) ? prods : prev.products 
             }));
           }
@@ -632,22 +635,22 @@ export default function App() {
                   <div className="mx-auto max-w-7xl px-4 md:px-8">
                     <div className="flex flex-col mb-8 md:mb-12">
                       <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-9xl lg:text-[10rem]">
-                        {cmsData.hero.title?.split(' ')[0] || ''} <span className="text-stone-300">{cmsData.hero.title?.split(' ')[1] || ''}</span>
+                        {cmsData?.hero?.title?.split(' ')[0] || ''} <span className="text-stone-300">{cmsData?.hero?.title?.split(' ')[1] || ''}</span>
                       </h2>
                       <div className="flex flex-col md:flex-row items-center md:items-start justify-between mt-4 md:mt-2">
                         <div className="max-w-[280px] md:pt-4 mb-6 md:mb-0 text-center md:text-left">
                           <p className="text-[10px] font-bold leading-relaxed tracking-[0.2em] text-stone-500 uppercase">
-                            {cmsData.hero.description}
+                            {cmsData?.hero?.description}
                           </p>
                         </div>
                         <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-8xl lg:text-[10rem]">
-                          {cmsData.hero.subTitle}
+                          {cmsData?.hero?.subTitle}
                         </h2>
                       </div>
                     </div>
 
                     <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
-                      <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Hero" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                      <img src={optimizeImage(cmsData?.hero?.image, 1600)} alt="Hero" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                       <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center p-8">
                         <button className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-black hover:text-white transition-all shadow-2xl">
                           Enter The Shop
@@ -676,12 +679,12 @@ export default function App() {
                             <span className="text-[10px] font-bold text-white uppercase tracking-widest">Live: Mother's Day Special</span>
                           </div>
                           <h2 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight text-white leading-none">
-                            {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ')[0]} {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ')[1] || ''} <br /> 
-                            <span className="text-stone-500">{cmsData.specialOffer?.subTitle || ''}</span> <br /> 
-                            {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ').slice(2).join(' ')}
+                            {(featuredHamper?.title || cmsData?.specialOffer?.title || '').split(' ')[0]} {(featuredHamper?.title || cmsData?.specialOffer?.title || '').split(' ')[1] || ''} <br /> 
+                            <span className="text-stone-500">{cmsData?.specialOffer?.subTitle || ''}</span> <br /> 
+                            {(featuredHamper?.title || cmsData?.specialOffer?.title || '').split(' ').slice(2).join(' ')}
                           </h2>
                           <p className="text-stone-400 text-xs uppercase tracking-[0.3em] leading-loose max-w-md">
-                            {featuredHamper?.description || cmsData.specialOffer.description}
+                            {featuredHamper?.description || cmsData?.specialOffer?.description}
                           </p>
                           <button 
                             onClick={() => {
@@ -696,7 +699,7 @@ export default function App() {
                           <div className="absolute -inset-4 border border-white/10 translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500" />
                           <div className="relative aspect-[4/5] overflow-hidden bg-stone-800">
                              <img 
-                              src={optimizeImage(featuredHamper?.image || cmsData.specialOffer.image, 1000)} 
+                              src={optimizeImage(featuredHamper?.image || cmsData?.specialOffer?.image, 1000)} 
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                              />
                           </div>
@@ -716,7 +719,7 @@ export default function App() {
                       </h2>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                      {cmsData.categories.map((cat: any, i: number) => <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} />)}
+                      {cmsData.categories.map((cat: any, i: number) => cat ? <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} /> : null)}
                     </div>
                   </div>
                 </section>
@@ -733,7 +736,7 @@ export default function App() {
                       </button>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                      {cmsData.products.slice(0, 6).map((p: any) => <DiscoverCard key={p.id} product={p} onClick={() => navigateTo('product', p)} />)}
+                      {cmsData.products.slice(0, 6).map((p: any) => p ? <DiscoverCard key={p.id || Math.random()} product={p} onClick={() => navigateTo('product', p)} /> : null)}
                     </div>
                   </div>
                 </section>
