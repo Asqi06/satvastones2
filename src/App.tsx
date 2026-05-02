@@ -514,9 +514,15 @@ export default function App() {
       />
     );
   }
-  const cartSubtotal = (cart || []).reduce((acc, item) => acc + ((Number(item.price) || 0) * (item.qty || 1)), 0);
+  const cartSubtotal = (cart || []).reduce((acc, item) => {
+    if (!item) return acc;
+    return acc + ((Number(item.price) || 0) * (item.qty || 1));
+  }, 0);
   const cartTotal = cartSubtotal + shippingRate;
-  const cartCount = (cart || []).reduce((acc, item) => acc + (item.qty || 1), 0);
+  const cartCount = (cart || []).reduce((acc, item) => {
+    if (!item) return acc;
+    return acc + (item.qty || 1);
+  }, 0);
 
   if (isLoading) {
     return (
