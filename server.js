@@ -33,6 +33,7 @@ const productSchema = new mongoose.Schema({
   oldPrice: Number,
   rating: Number,
   reviewsCount: Number,
+  image: String,
   images: [String],
   category: String,
   description: String,
@@ -72,7 +73,7 @@ const cmsSchema = new mongoose.Schema({
   settings: {
     announcementText: String,
     showTimer: Boolean,
-    timerDays: Number,
+    timerEnd: String,
     cloudinaryCloudName: String,
     cloudinaryUploadPreset: String
   }
@@ -311,6 +312,7 @@ app.post('/api/google-login', async (req, res) => {
     const orders = await Order.find({ 'customer.email': email }).sort({ createdAt: -1 });
     res.json({ success: true, customer, orders });
   } catch (err) {
+    console.error("GOOGLE LOGIN ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 });

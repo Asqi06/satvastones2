@@ -95,7 +95,7 @@ const initialCMSData = {
   categories: [],
   specialOffer: { title: '', subTitle: '', description: '', image: '', isActive: false },
   products: [],
-  settings: { announcementText: '', showTimer: false, timerDays: 0 }
+  settings: { announcementText: '', showTimer: false, timerEnd: '' }
 };
 
 function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () => void, onShop: () => void }) {
@@ -300,13 +300,19 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (!cmsData) return;
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + cmsData.settings.timerDays);
+    if (!cmsData?.settings?.timerEnd) return;
+    const targetDate = new Date(cmsData.settings.timerEnd);
+    
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate.getTime() - now;
-      if (distance < 0) { clearInterval(timer); return; }
+      
+      if (distance < 0) { 
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        clearInterval(timer); 
+        return; 
+      }
+      
       setTimeLeft({
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
         hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
@@ -315,7 +321,7 @@ export default function App() {
       });
     }, 1000);
     return () => clearInterval(timer);
-  }, [cmsData?.settings?.timerDays]);
+  }, [cmsData?.settings?.timerEnd]);
 
   const navigateTo = (view: string, product: any = null) => {
     setCurrentView(view);
@@ -408,9 +414,10 @@ export default function App() {
         res = await fetch(`${API_URL}/products/${product._id || product.id}`, {
           method: 'DELETE'
         });
+        if (!res.ok) throw new Error('Failed to delete product');
       }
       
-      // Refresh products
+      // Refresh products from DB immediately
       const prodRes = await fetch(`${API_URL}/products`);
       if (prodRes.ok) {
         const prods = await prodRes.json();
@@ -418,6 +425,7 @@ export default function App() {
       }
     } catch (err) {
       console.error("Failed to update product:", err);
+      alert(err.message || "Failed to update product. Check server connection.");
     }
   };
 

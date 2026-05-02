@@ -23,7 +23,7 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState<any>({ 
-    title: '', price: 0, oldPrice: 0, rating: 5, reviews: 0, images: [], category: 'NECKLACES', customOptions: [] 
+    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [] 
   });
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -70,13 +70,23 @@ export default function AdminPanel({
     }
   };
 
-  const saveProduct = (product: any) => {
-    onUpdateProduct(product, 'edit');
+  const saveProduct = async (product: any) => {
+    // Ensure primary image is set
+    const updatedProduct = {
+      ...product,
+      image: product.images && product.images.length > 0 ? product.images[0] : product.image
+    };
+    await onUpdateProduct(updatedProduct, 'edit');
     setEditingProduct(null);
   };
 
-  const addProduct = (product: any) => {
-    onUpdateProduct(product, 'add');
+  const addProduct = async (product: any) => {
+    // Ensure primary image is set
+    const updatedProduct = {
+      ...product,
+      image: product.images && product.images.length > 0 ? product.images[0] : ''
+    };
+    await onUpdateProduct(updatedProduct, 'add');
     setNewProduct(null);
   };
 
@@ -172,7 +182,7 @@ export default function AdminPanel({
           {activeTab === 'products' && (
             <button 
               onClick={() => setNewProduct({ 
-                title: '', price: 0, oldPrice: 0, rating: 5, reviews: 0, images: [], category: 'NECKLACES', customOptions: [] 
+                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [] 
               })}
               className="bg-black text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800 transition-all"
             >
@@ -495,6 +505,18 @@ export default function AdminPanel({
                       <Timer className="h-4 w-4" /> Show Timer
                     </span>
                   </div>
+                  {tempCMSData?.settings?.showTimer && (
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase text-stone-500">Timer End Date & Time</label>
+                      <input 
+                        type="datetime-local" 
+                        value={tempCMSData?.settings?.timerEnd || ''}
+                        onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, timerEnd: e.target.value }})}
+                        className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                      />
+                      <p className="text-[9px] text-stone-400 uppercase italic">Select when the current campaign or offer should end.</p>
+                    </div>
+                  )}
                 </div>
               </section>
 
