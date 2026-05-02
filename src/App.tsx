@@ -264,6 +264,8 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('satvastones_wishlist', JSON.stringify(wishlist));
   }, [wishlist]);
+
+  const toggleWishlist = (product: any) => {
     setWishlist(prev => {
       const exists = prev.find(p => p.id === product.id || p._id === product._id);
       if (exists) return prev.filter(p => p.id !== product.id && p._id !== product._id);
