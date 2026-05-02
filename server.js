@@ -135,36 +135,64 @@ app.get('/api/cms', async (req, res) => {
 });
 
 app.post('/api/cms', async (req, res) => {
-  let cms = await CMS.findOne();
-  if (cms) {
-    Object.assign(cms, req.body);
-    await cms.save();
-  } else {
-    cms = new CMS(req.body);
-    await cms.save();
+  try {
+    let cms = await CMS.findOne();
+    if (cms) {
+      Object.assign(cms, req.body);
+      await cms.save();
+    } else {
+      cms = new CMS(req.body);
+      await cms.save();
+    }
+    res.json(cms);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  res.json(cms);
 });
 
 app.get('/api/products', async (req, res) => {
-  const products = await Product.find();
-  res.json(products);
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post('/api/products', async (req, res) => {
-  const product = new Product(req.body);
-  await product.save();
-  res.json(product);
+  try {
+    const product = new Product(req.body);
+    await product.save();
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.put('/api/products/:id', async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(product);
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: 'Invalid Product ID' });
+    }
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.delete('/api/products/:id', async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Deleted' });
+  try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ error: 'Invalid Product ID' });
+    }
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    res.json({ message: 'Deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post('/api/products/:id/reviews', async (req, res) => {
@@ -186,8 +214,12 @@ app.post('/api/products/:id/reviews', async (req, res) => {
 });
 
 app.get('/api/orders', async (req, res) => {
-  const orders = await Order.find().sort({ createdAt: -1 });
-  res.json(orders);
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.put('/api/orders/:id/status', async (req, res) => {
@@ -220,30 +252,34 @@ app.post('/api/create-order', async (req, res) => {
 });
 
 app.post('/api/verify-payment', async (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderDetails } = req.body;
-  const body = razorpay_order_id + "|" + razorpay_payment_id;
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderDetails } = req.body;
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
+    
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || 'your-razorpay-key-secret')
+      .update(body.toString())
+      .digest("hex");
   
-  const expectedSignature = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || 'your-razorpay-key-secret')
-    .update(body.toString())
-    .digest("hex");
-
-  if (expectedSignature === razorpay_signature) {
-    const order = new Order({ 
-      ...orderDetails, 
-      orderId: razorpay_order_id, 
-      paymentId: razorpay_payment_id, 
-      signature: razorpay_signature, 
-      status: 'Confirmed' 
-    });
-    await order.save();
-
-    await sendEmail(orderDetails.customer.email, 'Order Confirmed - Satvastones', emailTemplates.orderConfirmation(order));
-    await sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New Order Received!', `<p>New order #${order.orderId} received from ${order.customer.name} for ₹${order.amount}</p>`);
-
-    res.json({ status: 'success', order });
-  } else {
-    res.status(400).json({ status: 'failure' });
+    if (expectedSignature === razorpay_signature) {
+      const order = new Order({ 
+        ...orderDetails, 
+        orderId: razorpay_order_id, 
+        paymentId: razorpay_payment_id, 
+        signature: razorpay_signature, 
+        status: 'Confirmed' 
+      });
+      await order.save();
+  
+      await sendEmail(orderDetails.customer.email, 'Order Confirmed - Satvastones', emailTemplates.orderConfirmation(order));
+      await sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New Order Received!', `<p>New order #${order.orderId} received from ${order.customer.name} for ₹${order.amount}</p>`);
+  
+      res.json({ status: 'success', order });
+    } else {
+      res.status(400).json({ status: 'failure' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 

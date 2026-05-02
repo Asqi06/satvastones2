@@ -251,7 +251,7 @@ export default function AdminPanel({
                     <label className="text-[10px] font-bold uppercase text-stone-500">Hero Main Title</label>
                     <input 
                       type="text" 
-                      value={tempCMSData.hero.title}
+                      value={tempCMSData?.hero?.title || ''}
                       onChange={(e) => setTempCMSData({ ...tempCMSData, hero: { ...tempCMSData.hero, title: e.target.value }})}
                       className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
                     />
@@ -260,7 +260,7 @@ export default function AdminPanel({
                     <label className="text-[10px] font-bold uppercase text-stone-500">Hero Sub Title</label>
                     <input 
                       type="text" 
-                      value={tempCMSData.hero.subTitle}
+                      value={tempCMSData?.hero?.subTitle || ''}
                       onChange={(e) => setTempCMSData({ ...tempCMSData, hero: { ...tempCMSData.hero, subTitle: e.target.value }})}
                       className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
                     />
@@ -270,7 +270,7 @@ export default function AdminPanel({
                     <div className="flex gap-2">
                       <input 
                         type="text" 
-                        value={tempCMSData.hero.image}
+                        value={tempCMSData?.hero?.image || ''}
                         onChange={(e) => setTempCMSData({ ...tempCMSData, hero: { ...tempCMSData.hero, image: e.target.value }})}
                         className="flex-1 border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
                       />
@@ -290,7 +290,7 @@ export default function AdminPanel({
                   <ImageIcon className="h-4 w-4" /> Category Tiles
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {tempCMSData.categories.map((cat: any, idx: number) => (
+                  {(tempCMSData?.categories || []).map((cat: any, idx: number) => (
                     <div key={idx} className="p-4 border border-stone-100 bg-stone-50 space-y-4">
                       <div className="aspect-square bg-stone-200 overflow-hidden relative group/img">
                         <img src={cat.image} className="w-full h-full object-cover" />
@@ -435,7 +435,7 @@ export default function AdminPanel({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100">
-                  {cmsData.products.map((product: any) => (
+                  {(cmsData?.products || []).map((product: any) => (
                     <tr key={product._id} className="hover:bg-stone-50 transition-all group">
                       <td className="px-6 py-4">
                         <div className="w-12 h-16 bg-stone-100 overflow-hidden">
@@ -476,7 +476,7 @@ export default function AdminPanel({
                     <label className="text-[10px] font-bold uppercase text-stone-500">Announcement Text</label>
                     <input 
                       type="text" 
-                      value={tempCMSData.settings.announcementText}
+                      value={tempCMSData?.settings?.announcementText || ''}
                       onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, announcementText: e.target.value }})}
                       className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
                     />
@@ -485,7 +485,7 @@ export default function AdminPanel({
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input 
                         type="checkbox" 
-                        checked={tempCMSData.settings.showTimer}
+                        checked={tempCMSData?.settings?.showTimer || false}
                         onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, showTimer: e.target.checked }})}
                         className="sr-only peer" 
                       />

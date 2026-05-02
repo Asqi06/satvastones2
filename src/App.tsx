@@ -274,7 +274,14 @@ export default function App() {
         if (cmsRes.ok && prodRes.ok) {
           const cms = await cmsRes.json();
           const prods = await prodRes.json();
-          setCmsData({ ...cms, products: prods });
+          setCmsData({ 
+            ...initialCMSData, 
+            ...cms, 
+            hero: { ...initialCMSData.hero, ...cms.hero },
+            specialOffer: { ...initialCMSData.specialOffer, ...cms.specialOffer },
+            settings: { ...initialCMSData.settings, ...cms.settings },
+            products: prods || [] 
+          });
         }
       } catch (err) {
         console.log("Using local fallback data. Connect to MongoDB to enable live sync.");
@@ -574,7 +581,7 @@ export default function App() {
                   <div className="mx-auto max-w-7xl px-4 md:px-8">
                     <div className="flex flex-col mb-8 md:mb-12">
                       <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-9xl lg:text-[10rem]">
-                        {cmsData.hero.title.split(' ')[0]} <span className="text-stone-300">{cmsData.hero.title.split(' ')[1]}</span>
+                        {cmsData.hero.title?.split(' ')[0] || ''} <span className="text-stone-300">{cmsData.hero.title?.split(' ')[1] || ''}</span>
                       </h2>
                       <div className="flex flex-col md:flex-row items-center md:items-start justify-between mt-4 md:mt-2">
                         <div className="max-w-[280px] md:pt-4 mb-6 md:mb-0 text-center md:text-left">
@@ -618,9 +625,9 @@ export default function App() {
                             <span className="text-[10px] font-bold text-white uppercase tracking-widest">Live: Mother's Day Special</span>
                           </div>
                           <h2 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight text-white leading-none">
-                            {featuredHamper?.title.split(' ')[0] || cmsData.specialOffer.title.split(' ')[0]} {featuredHamper?.title.split(' ')[1] || cmsData.specialOffer.title.split(' ')[1]} <br /> 
-                            <span className="text-stone-500">{cmsData.specialOffer.subTitle}</span> <br /> 
-                            {(featuredHamper?.title.split(' ').slice(2).join(' ') || cmsData.specialOffer.title.split(' ').slice(2).join(' '))}
+                            {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ')[0]} {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ')[1] || ''} <br /> 
+                            <span className="text-stone-500">{cmsData.specialOffer?.subTitle || ''}</span> <br /> 
+                            {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ').slice(2).join(' ')}
                           </h2>
                           <p className="text-stone-400 text-xs uppercase tracking-[0.3em] leading-loose max-w-md">
                             {featuredHamper?.description || cmsData.specialOffer.description}

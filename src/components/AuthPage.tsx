@@ -74,6 +74,27 @@ export default function AuthPage({ onLogin }: { onLogin: (user: any) => void }) 
         </div>
 
         <div className="space-y-8 bg-stone-50 p-8 md:p-12 shadow-sm border border-stone-100">
+          <div className="space-y-4">
+            <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+              <div className="flex justify-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setError('Google Login Failed')}
+                  useOneTap
+                  theme="outline"
+                  size="large"
+                  text="continue_with"
+                  shape="rectangular"
+                  width="100%"
+                />
+              </div>
+            </GoogleOAuthProvider>
+
+            <button className="w-full flex items-center justify-center gap-2 border border-stone-200 py-3 text-[9px] font-bold uppercase tracking-widest hover:bg-white transition-all opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
+              <Github className="h-3 w-3" /> Github
+            </button>
+          </div>
+
           <div className="relative">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-stone-200"></div></div>
             <div className="relative flex justify-center text-[9px] font-bold uppercase tracking-widest"><span className="bg-stone-50 px-4 text-stone-400">Or use email</span></div>
@@ -138,33 +159,6 @@ export default function AuthPage({ onLogin }: { onLogin: (user: any) => void }) 
               {loading ? 'Verifying...' : (mode === 'login' ? 'Access Panel' : 'Create Account')} <ArrowRight className="h-4 w-4" />
             </button>
           </form>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-stone-200"></div></div>
-            <div className="relative flex justify-center text-[9px] font-bold uppercase tracking-widest"><span className="bg-stone-50 px-4 text-stone-400">Or Continue With</span></div>
-          </div>
-
-          <div className="space-y-4">
-            <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-              <div className="flex justify-center">
-                <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setError('Google Login Failed')}
-                  useOneTap
-                  theme="outline"
-                  size="large"
-                  text="continue_with"
-                  shape="rectangular"
-                  width="100%"
-                />
-              </div>
-            </GoogleOAuthProvider>
-
-            <button className="w-full flex items-center justify-center gap-2 border border-stone-200 py-3 text-[9px] font-bold uppercase tracking-widest hover:bg-white transition-all opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
-              <Github className="h-3 w-3" /> Github
-            </button>
-          </div>
-
         </div>
 
         <div className="text-center">
