@@ -82,6 +82,7 @@ const cmsSchema = new mongoose.Schema({
 const CMS = mongoose.model('CMS', cmsSchema);
 
 const orderSchema = new mongoose.Schema({
+  orderNumber: { type: String, unique: true },
   orderId: String,
   paymentId: String,
   signature: String,
@@ -245,10 +246,17 @@ app.post('/api/create-order', async (req, res) => {
     receipt: "order_rcptid_11"
   };
   try {
+    if (!process.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID === 'your-razorpay-key-id') {
+      throw new Error('RAZORPAY_KEY_ID is missing or using placeholder in environment variables');
+    }
     const order = await razorpay.orders.create(options);
     res.json(order);
   } catch (error) {
-    res.status(500).send(error);
+    console.error("RAZORPAY CREATE ORDER ERROR:", error);
+    res.status(500).json({ 
+      error: error.message, 
+      details: "Check if RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET are set correctly in Render dashboard." 
+    });
   }
 });
 
@@ -256,10 +264,19 @@ app.post('/api/verify-payment', async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderDetails } = req.body;
     
+    if (!orderDetails || !orderDetails.customer || !orderDetails.customer.email) {
+      console.error("Payment Verification Failed: Missing order details in request body");
+      return res.status(400).json({ error: "Missing required order details" });
+    }
+    
     // Handle COD (Cash on Delivery)
     if (razorpay_signature === 'COD') {
+      const orderCount = await Order.countDocuments();
+      const orderNumber = `SAT-${1000 + orderCount + 1}`;
+
       const order = new Order({ 
         ...orderDetails, 
+        orderNumber,
         orderId: razorpay_order_id, 
         paymentId: 'COD', 
         signature: 'COD', 
@@ -278,8 +295,12 @@ app.post('/api/verify-payment', async (req, res) => {
       .digest("hex");
   
     if (expectedSignature === razorpay_signature) {
+      const orderCount = await Order.countDocuments();
+      const orderNumber = `SAT-${1000 + orderCount + 1}`;
+
       const order = new Order({ 
         ...orderDetails, 
+        orderNumber,
         orderId: razorpay_order_id, 
         paymentId: razorpay_payment_id, 
         signature: razorpay_signature, 
