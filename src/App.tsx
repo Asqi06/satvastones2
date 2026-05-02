@@ -20,6 +20,8 @@ import AuthPage from './components/AuthPage';
 import SearchOverlay from './components/SearchOverlay';
 import { optimizeImage } from './utils/cloudinary';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+
 
 const CategoryCard = ({ category, onClick }: any) => (
   <div 
@@ -336,6 +338,8 @@ function AppContent() {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const navigateTo = (view: string, data?: any) => {
     if (view === 'home') navigate('/');
@@ -445,12 +449,6 @@ function AppContent() {
     return () => clearInterval(timer);
   }, [cmsData?.settings?.timerEnd]);
 
-  const navigateTo = (view: string, product: any = null) => {
-    setCurrentView(view);
-    setSelectedProduct(product);
-    window.scrollTo(0, 0);
-    setIsMenuOpen(false);
-  };
 
   const addToCart = (item: any) => {
     setCart(prev => {
@@ -602,21 +600,77 @@ function AppContent() {
       />
     );
   }
-  const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
-  const cartTotal = cartSubtotal + shippingRate;
-  const cartCount = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
-
-  if (isLoading) {
+  if (isLoading || !cmsData) {
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center space-y-8">
-        <div className="w-12 h-12 border-2 border-stone-100 border-t-black rounded-full animate-spin" />
-        <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-400">Loading Satvastones...</p>
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center space-y-6">
+        <div className="font-display text-4xl font-bold tracking-tighter animate-pulse">SATVASTONES.</div>
+        <div className="w-48 h-0.5 bg-stone-100 relative overflow-hidden">
+          <motion.div 
+            initial={{ left: '-100%' }}
+            animate={{ left: '100%' }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+            className="absolute top-0 bottom-0 w-1/2 bg-black"
+          />
+        </div>
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-stone-400">Curating Your Experience</p>
       </div>
     );
   }
 
+  const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
+  const cartTotal = cartSubtotal + shippingRate;
+  const cartCount = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
+
   return (
     <div className="min-h-screen bg-white font-accent selection:bg-black selection:text-white">
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 z-[70] bg-black/40 backdrop-blur-sm"
+            />
+            <motion.div 
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed inset-y-0 left-0 z-[80] w-[85%] max-w-sm bg-white p-8 shadow-2xl"
+            >
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between mb-12">
+                  <span className="font-display text-2xl font-bold tracking-tighter">SATVASTONES.</span>
+                  <button onClick={() => setIsMenuOpen(false)} className="p-2 -mr-2"><X className="h-6 w-6" /></button>
+                </div>
+
+                <div className="flex flex-col gap-8">
+                  <Link to="/" onClick={() => setIsMenuOpen(false)} className="text-3xl font-display font-bold uppercase tracking-tight hover:text-stone-400 transition-colors">Home</Link>
+                  <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="text-3xl font-display font-bold uppercase tracking-tight hover:text-stone-400 transition-colors">Shop</Link>
+                  <Link to="/blogs" onClick={() => setIsMenuOpen(false)} className="text-3xl font-display font-bold uppercase tracking-tight hover:text-stone-400 transition-colors">The Journal</Link>
+                  <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="text-3xl font-display font-bold uppercase tracking-tight hover:text-stone-400 transition-colors">Contact</Link>
+                </div>
+
+                <div className="mt-auto pt-12 border-t border-stone-100">
+                  <Link to="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 group">
+                    <div className="w-10 h-10 rounded-full bg-stone-50 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
+                      <User className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest">{currentUser ? 'My Account' : 'Sign In'}</p>
+                      <p className="text-[8px] text-stone-400 uppercase tracking-widest">{currentUser ? currentUser.email : 'Member Access'}</p>
+                    </div>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <SearchOverlay 
         isOpen={isSearchOpen} 
         onClose={() => setIsSearchOpen(false)} 
