@@ -260,7 +260,11 @@ export default function App() {
   const calculateShipping = (pincode: string, subtotal: number) => {
     if (subtotal > 1500) return 0; // Free delivery above 1500
     if (!pincode) return 70; // Default
-    if (pincode.startsWith('396')) return 0; // Local Vapi
+    if (pincode.startsWith('396')) return 0; // Local Vapi & Gunjan (FREE)
+    
+    // If order is less than 329, delivery starts at 25
+    if (subtotal < 329) return 25;
+    
     if (pincode.startsWith('3')) return 40; // Gujarat
     return 70; // Rest of India
   };
@@ -716,6 +720,7 @@ export default function App() {
             {currentView === 'product' && selectedProduct && (
               <ProductPage 
                 product={selectedProduct} 
+                allProducts={cmsData.products}
                 onBack={() => navigateTo('home')} 
                 onAddToCart={addToCart}
                 onAddReview={handleAddReview}

@@ -90,9 +90,6 @@ export default function AuthPage({ onLogin }: { onLogin: (user: any) => void }) 
               </div>
             </GoogleOAuthProvider>
 
-            <button className="w-full flex items-center justify-center gap-2 border border-stone-200 py-3 text-[9px] font-bold uppercase tracking-widest hover:bg-white transition-all opacity-50 grayscale hover:grayscale-0 hover:opacity-100">
-              <Github className="h-3 w-3" /> Github
-            </button>
           </div>
 
           <div className="relative">

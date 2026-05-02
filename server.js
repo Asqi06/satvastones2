@@ -255,10 +255,25 @@ app.post('/api/create-order', async (req, res) => {
 app.post('/api/verify-payment', async (req, res) => {
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderDetails } = req.body;
-    const body = razorpay_order_id + "|" + razorpay_payment_id;
     
+    // Handle COD (Cash on Delivery)
+    if (razorpay_signature === 'COD') {
+      const order = new Order({ 
+        ...orderDetails, 
+        orderId: razorpay_order_id, 
+        paymentId: 'COD', 
+        signature: 'COD', 
+        status: 'Confirmed' 
+      });
+      await order.save();
+      await sendEmail(orderDetails.customer.email, 'Order Confirmed (COD) - Satvastones', emailTemplates.orderConfirmation(order));
+      return res.json({ status: 'success', order });
+    }
+
+    // Handle Razorpay Verification
+    const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || 'your-razorpay-key-secret')
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET || '')
       .update(body.toString())
       .digest("hex");
   
@@ -277,9 +292,11 @@ app.post('/api/verify-payment', async (req, res) => {
   
       res.json({ status: 'success', order });
     } else {
-      res.status(400).json({ status: 'failure' });
+      console.error("Payment Verification Failed: Signature Mismatch");
+      res.status(400).json({ status: 'failure', message: 'Invalid payment signature' });
     }
   } catch (err) {
+    console.error("VERIFY PAYMENT ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 });

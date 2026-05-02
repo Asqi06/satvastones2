@@ -5,29 +5,7 @@ import {
 } from 'lucide-react';
 import { optimizeImage } from '../utils/cloudinary';
 
-const relatedProducts = [
-  { id: 1, title: 'KOREAN VELVET CHOKER', price: 299, oldPrice: 450, rating: 4.9, reviews: 89, image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=600' },
-  { id: 2, title: 'AESTHETIC BUTTERFLY STUDS', price: 199, oldPrice: 350, rating: 4.8, reviews: 54, image: 'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=600' },
-  { id: 3, title: 'WESTERN MINIMALIST RING', price: 249, oldPrice: 399, rating: 4.7, reviews: 120, image: 'https://images.unsplash.com/photo-1590548784585-643d2b9f2912?auto=format&fit=crop&q=80&w=600' },
-  { id: 4, title: 'KAWAII PEARL HAIRPIN', price: 149, oldPrice: 250, rating: 4.9, reviews: 210, image: 'https://images.unsplash.com/photo-1630030532634-1dc30c729bc1?auto=format&fit=crop&q=80&w=600' },
-];
 
-const galleryImages = [
-  'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1617038220319-276d3cfab638?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1590548784585-643d2b9f2912?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1630030532634-1dc30c729bc1?auto=format&fit=crop&q=80&w=900',
-  'https://images.unsplash.com/photo-1543294001-f7cd5d7fb516?auto=format&fit=crop&q=80&w=900',
-];
-
-const instagramFeed = [
-  'https://images.unsplash.com/photo-1635767798638-3e25273a8236?auto=format&fit=crop&q=80&w=400',
-  'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&q=80&w=400',
-  'https://images.unsplash.com/photo-1630030532634-1dc30c729bc1?auto=format&fit=crop&q=80&w=400',
-  'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=400',
-  'https://images.unsplash.com/photo-1627225924765-552d44cfbc03?auto=format&fit=crop&q=80&w=400',
-  'https://images.unsplash.com/photo-1588444839799-eb00f490a6c0?auto=format&fit=crop&q=80&w=400',
-];
 
 const AccordionItem = ({ title, children }: { title: string; children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
@@ -51,11 +29,13 @@ const AccordionItem = ({ title, children }: { title: string; children: React.Rea
 
 export default function ProductPage({ 
   product, 
+  allProducts = [],
   onBack, 
   onAddToCart,
   onAddReview 
 }: { 
   product: any; 
+  allProducts?: any[];
   onBack: () => void; 
   onAddToCart: (product: any) => void;
   onAddReview: (productId: string, review: any) => void;
@@ -145,26 +125,6 @@ export default function ProductPage({
               </div>
             )}
 
-            {/* Editorial block */}
-            <div className="mt-2 flex flex-col gap-4 bg-stone-50 p-6 md:flex-row md:items-center">
-              <div className="flex-1">
-                <h3 className="font-display text-2xl font-bold uppercase tracking-tight text-stone-900 md:text-3xl">
-                  Aesthetic & Korean Inspired
-                </h3>
-                <p className="mt-3 text-[11px] leading-relaxed text-stone-500 uppercase tracking-tight">
-                  Our collections are curated to bring the latest Korean and Western aesthetic trends to your wardrobe. We focus on high-quality, lightweight materials that are perfect for daily wear and making a statement.
-                </p>
-              </div>
-              <div className="w-full md:w-40 shrink-0">
-                <div className="aspect-square bg-stone-200 overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1635767798638-3e25273a8236?auto=format&fit=crop&q=80&w=400"
-                    alt="Aesthetic Jewelry"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* RIGHT — Product Info */}
@@ -380,9 +340,9 @@ export default function ProductPage({
             <h2 className="font-display text-2xl font-bold uppercase tracking-tight md:text-4xl text-stone-400">@SATVASTONES <span className="text-stone-900">AESTHETICS</span></h2>
           </div>
           <div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
-            {instagramFeed.map((img, i) => (
+            {(allProducts.length > 0 ? allProducts : [product]).slice(0, 6).map((p, i) => (
               <div key={i} className="aspect-square overflow-hidden bg-stone-100 group">
-                <img src={img} alt="" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
+                <img src={optimizeImage(p.image, 400)} alt="" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
               </div>
             ))}
           </div>

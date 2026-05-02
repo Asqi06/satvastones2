@@ -16,6 +16,7 @@ export default function CheckoutPage({
 }) {
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showCodDialog, setShowCodDialog] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -27,7 +28,16 @@ export default function CheckoutPage({
   
   const subtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
   const shipping = calculateShipping(formData.pincode, subtotal);
-  const codCharge = paymentMethod === 'cod' ? 40 : 0;
+  
+  // COD Charges Logic
+  const calculateCodCharge = () => {
+    if (paymentMethod !== 'cod') return 0;
+    if (formData.pincode.startsWith('396')) return 0; // Local
+    if (formData.pincode.startsWith('3')) return 20; // Gujarat
+    return 45; // Other
+  };
+  
+  const codCharge = calculateCodCharge();
   const total = subtotal + shipping + codCharge;
 
   const loadRazorpay = () => {
@@ -246,14 +256,21 @@ export default function CheckoutPage({
                 </button>
 
                 <button 
-                  onClick={() => setPaymentMethod('cod')}
+                  onClick={() => {
+                    setPaymentMethod('cod');
+                    if (formData.pincode && !formData.pincode.startsWith('396')) {
+                      setShowCodDialog(true);
+                    }
+                  }}
                   className={`w-full flex items-center justify-between border p-6 transition-all ${paymentMethod === 'cod' ? 'border-black bg-stone-50' : 'border-stone-200 hover:border-stone-400'}`}
                 >
                   <div className="flex items-center gap-4">
                     <Truck className={`h-5 w-5 ${paymentMethod === 'cod' ? 'text-stone-900' : 'text-stone-300'}`} />
                     <div className="text-left">
                       <p className="text-xs font-bold uppercase tracking-widest text-stone-900">Cash on Delivery</p>
-                      <p className="text-[9px] text-stone-400 uppercase mt-1">Includes ₹40 platform charge</p>
+                      <p className="text-[9px] text-stone-400 uppercase mt-1">
+                        {formData.pincode.startsWith('396') ? 'Free Delivery locally' : `Starts at ₹${calculateCodCharge()}`}
+                      </p>
                     </div>
                   </div>
                   <div className={`w-4 h-4 rounded-full border-2 ${paymentMethod === 'cod' ? 'border-black bg-black shadow-[inset_0_0_0_2px_white]' : 'border-stone-200'}`} />
@@ -332,6 +349,32 @@ export default function CheckoutPage({
           </div>
         </div>
       </div>
+
+      {/* COD Info Dialog */}
+      {showCodDialog && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-sm p-8 shadow-2xl space-y-6">
+            <div className="space-y-2">
+              <h3 className="font-display text-xl font-bold uppercase tracking-tight text-stone-900">COD Shipping Note</h3>
+              <p className="text-[10px] text-stone-500 uppercase tracking-widest leading-loose">
+                Cash on Delivery charges apply based on your distance from our Vapi hub. 
+                <br /><br />
+                • Local (Vapi/Gunjan): <span className="text-green-600 font-bold">FREE</span>
+                <br />
+                • Within Gujarat: <span className="text-stone-900 font-bold">₹20</span>
+                <br />
+                • Outside Gujarat: <span className="text-stone-900 font-bold">₹45</span>
+              </p>
+            </div>
+            <button 
+              onClick={() => setShowCodDialog(false)}
+              className="w-full bg-black text-white py-4 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all"
+            >
+              I Understand
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
