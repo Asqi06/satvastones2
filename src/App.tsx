@@ -4,7 +4,7 @@ import {
   ArrowUpRight, Facebook, Twitter, Linkedin, Instagram, 
   ArrowRight as ArrowRightIcon, Menu, X, Heart, Shield, Trash2, CheckCircle
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
 import CartPage from './components/CartPage';
@@ -307,14 +307,17 @@ export default function App() {
         if (cmsRes.ok && prodRes.ok) {
           const cms = await cmsRes.json();
           const prods = await prodRes.json();
-          setCmsData({ 
-            ...initialCMSData, 
-            ...cms, 
-            hero: { ...initialCMSData.hero, ...cms.hero },
-            specialOffer: { ...initialCMSData.specialOffer, ...cms.specialOffer },
-            settings: { ...initialCMSData.settings, ...cms.settings },
-            products: prods || [] 
-          });
+          
+          if (cms && typeof cms === 'object') {
+            setCmsData((prev: any) => ({ 
+              ...prev, 
+              ...cms, 
+              hero: { ...initialCMSData.hero, ...cms.hero },
+              specialOffer: { ...initialCMSData.specialOffer, ...cms.specialOffer },
+              settings: { ...initialCMSData.settings, ...cms.settings },
+              products: Array.isArray(prods) ? prods : prev.products 
+            }));
+          }
         }
       } catch (err) {
         console.log("Using local fallback data. Connect to MongoDB to enable live sync.");
