@@ -236,7 +236,7 @@ app.get('/api/orders/customer/:email', async (req, res) => {
 app.put('/api/orders/:id/status', async (req, res) => {
   try {
     const { status, trackingId } = req.body;
-    const order = await Order.findByIdAndUpdate(req.params.id, { status, trackingId }, { new: true });
+    const order = await Order.findByIdAndUpdate(req.params.id, { status, trackingId }, { returnDocument: 'after' });
     
     if (order && status === 'Shipped') {
       await sendEmail(order.customer.email, 'Order Shipped - Satvastones', emailTemplates.shippingUpdate(order));

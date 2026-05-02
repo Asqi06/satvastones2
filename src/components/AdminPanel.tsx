@@ -46,10 +46,11 @@ export default function AdminPanel({
 
   // Fetch Orders when tab changes
   React.useEffect(() => {
-    if (activeTab === 'orders') {
+    if (activeTab === 'orders' || activeTab === 'dashboard') {
       fetch(`${API_URL}/orders`)
         .then(res => res.json())
-        .then(data => setOrders(data));
+        .then(data => setOrders(data))
+        .catch(err => console.error("Failed to fetch dashboard data:", err));
     }
   }, [activeTab]);
 
