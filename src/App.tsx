@@ -238,24 +238,16 @@ export default function App() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [currentUser, setCurrentUser] = useState<any>(() => {
-    try {
-      const saved = localStorage.getItem('satvastones_user');
-      return (saved && saved !== 'undefined') ? JSON.parse(saved) : null;
-    } catch { return null; }
+    const saved = localStorage.getItem('satvastones_user');
+    return saved ? JSON.parse(saved) : null;
   });
   const [cart, setCart] = useState<any[]>(() => {
-    try {
-      const saved = localStorage.getItem('satvastones_cart');
-      const parsed = (saved && saved !== 'undefined') ? JSON.parse(saved) : [];
-      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
-    } catch { return []; }
+    const saved = localStorage.getItem('satvastones_cart');
+    return saved ? JSON.parse(saved) : [];
   });
   const [wishlist, setWishlist] = useState<any[]>(() => {
-    try {
-      const saved = localStorage.getItem('satvastones_wishlist');
-      const parsed = (saved && saved !== 'undefined') ? JSON.parse(saved) : [];
-      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
-    } catch { return []; }
+    const saved = localStorage.getItem('satvastones_wishlist');
+    return saved ? JSON.parse(saved) : [];
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
@@ -309,18 +301,14 @@ export default function App() {
         if (cmsRes.ok && prodRes.ok) {
           const cms = await cmsRes.json();
           const prods = await prodRes.json();
-          
-          if (cms && typeof cms === 'object') {
-            setCmsData((prev: any) => ({ 
-              ...prev, 
-              ...cms, 
-              hero: { ...initialCMSData.hero, ...cms.hero },
-              specialOffer: { ...initialCMSData.specialOffer, ...cms.specialOffer },
-              settings: { ...initialCMSData.settings, ...cms.settings },
-              categories: Array.isArray(cms.categories) ? cms.categories : prev.categories,
-              products: Array.isArray(prods) ? prods : prev.products 
-            }));
-          }
+          setCmsData({ 
+            ...initialCMSData, 
+            ...cms, 
+            hero: { ...initialCMSData.hero, ...cms.hero },
+            specialOffer: { ...initialCMSData.specialOffer, ...cms.specialOffer },
+            settings: { ...initialCMSData.settings, ...cms.settings },
+            products: prods || [] 
+          });
         }
       } catch (err) {
         console.log("Using local fallback data. Connect to MongoDB to enable live sync.");
@@ -341,13 +329,12 @@ export default function App() {
   useEffect(() => {
     if (!cmsData?.settings?.timerEnd) return;
     const targetDate = new Date(cmsData.settings.timerEnd);
-    if (isNaN(targetDate.getTime())) return; // Safety check
     
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate.getTime() - now;
       
-      if (distance <= 0) { 
+      if (distance < 0) { 
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         clearInterval(timer); 
         return; 
@@ -520,15 +507,9 @@ export default function App() {
       />
     );
   }
-  const cartSubtotal = (cart || []).reduce((acc, item) => {
-    if (!item) return acc;
-    return acc + ((Number(item.price) || 0) * (item.qty || 1));
-  }, 0);
+  const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
   const cartTotal = cartSubtotal + shippingRate;
-  const cartCount = (cart || []).reduce((acc, item) => {
-    if (!item) return acc;
-    return acc + (item.qty || 1);
-  }, 0);
+  const cartCount = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
 
   if (isLoading) {
     return (
@@ -544,7 +525,7 @@ export default function App() {
       <SearchOverlay 
         isOpen={isSearchOpen} 
         onClose={() => setIsSearchOpen(false)} 
-        products={cmsData?.products || []} 
+        products={cmsData.products} 
         onSelectProduct={(p) => navigateTo('product', p)} 
       />
 
@@ -554,10 +535,10 @@ export default function App() {
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />
             <p className="text-[10px] font-black uppercase tracking-[0.15em] text-white sm:text-xs">
-              {cmsData?.settings?.announcementText || 'WELCOME TO SATVASTONES'}
+              {cmsData.settings.announcementText}
             </p>
           </div>
-          {cmsData?.settings?.showTimer && (
+          {cmsData.settings.showTimer && (
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 font-accent text-base font-bold tracking-wider text-white sm:text-lg">
                 <span className="text-red-500">{String(timeLeft.days).padStart(2, '0')}D</span>
@@ -571,7 +552,7 @@ export default function App() {
               <button 
                 onClick={() => {
                   const hamperId = cmsData.specialOffer?.productId || 'md-hamper';
-                  const hamper = (cmsData.products || []).find((p: any) => p.id === hamperId || p._id === hamperId);
+                  const hamper = cmsData.products.find((p: any) => p.id === hamperId || p._id === hamperId);
                   if (hamper) navigateTo('product', hamper);
                   else navigateTo('shop');
                 }} 
@@ -635,22 +616,22 @@ export default function App() {
                   <div className="mx-auto max-w-7xl px-4 md:px-8">
                     <div className="flex flex-col mb-8 md:mb-12">
                       <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-9xl lg:text-[10rem]">
-                        {cmsData?.hero?.title?.split(' ')[0] || ''} <span className="text-stone-300">{cmsData?.hero?.title?.split(' ')[1] || ''}</span>
+                        {cmsData.hero.title?.split(' ')[0] || ''} <span className="text-stone-300">{cmsData.hero.title?.split(' ')[1] || ''}</span>
                       </h2>
                       <div className="flex flex-col md:flex-row items-center md:items-start justify-between mt-4 md:mt-2">
                         <div className="max-w-[280px] md:pt-4 mb-6 md:mb-0 text-center md:text-left">
                           <p className="text-[10px] font-bold leading-relaxed tracking-[0.2em] text-stone-500 uppercase">
-                            {cmsData?.hero?.description}
+                            {cmsData.hero.description}
                           </p>
                         </div>
                         <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-8xl lg:text-[10rem]">
-                          {cmsData?.hero?.subTitle}
+                          {cmsData.hero.subTitle}
                         </h2>
                       </div>
                     </div>
 
                     <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
-                      <img src={optimizeImage(cmsData?.hero?.image, 1600)} alt="Hero" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                      <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Hero" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                       <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center p-8">
                         <button className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-black hover:text-white transition-all shadow-2xl">
                           Enter The Shop
@@ -662,10 +643,10 @@ export default function App() {
 
                 {/* Mother's Day Special Section */}
                 {cmsData.specialOffer?.isActive && (() => {
-                  const featuredHamper = (cmsData?.products || []).find((p: any) => 
+                  const featuredHamper = cmsData.products.find((p: any) => 
                     p.category === "MOTHER'S DAY" || 
-                    p.id === cmsData?.specialOffer?.productId || 
-                    p._id === cmsData?.specialOffer?.productId
+                    p.id === cmsData.specialOffer.productId || 
+                    p._id === cmsData.specialOffer.productId
                   );
                   
                   return (
@@ -679,12 +660,12 @@ export default function App() {
                             <span className="text-[10px] font-bold text-white uppercase tracking-widest">Live: Mother's Day Special</span>
                           </div>
                           <h2 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight text-white leading-none">
-                            {(featuredHamper?.title || cmsData?.specialOffer?.title || '').split(' ')[0]} {(featuredHamper?.title || cmsData?.specialOffer?.title || '').split(' ')[1] || ''} <br /> 
-                            <span className="text-stone-500">{cmsData?.specialOffer?.subTitle || ''}</span> <br /> 
-                            {(featuredHamper?.title || cmsData?.specialOffer?.title || '').split(' ').slice(2).join(' ')}
+                            {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ')[0]} {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ')[1] || ''} <br /> 
+                            <span className="text-stone-500">{cmsData.specialOffer?.subTitle || ''}</span> <br /> 
+                            {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ').slice(2).join(' ')}
                           </h2>
                           <p className="text-stone-400 text-xs uppercase tracking-[0.3em] leading-loose max-w-md">
-                            {featuredHamper?.description || cmsData?.specialOffer?.description}
+                            {featuredHamper?.description || cmsData.specialOffer.description}
                           </p>
                           <button 
                             onClick={() => {
@@ -699,7 +680,7 @@ export default function App() {
                           <div className="absolute -inset-4 border border-white/10 translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500" />
                           <div className="relative aspect-[4/5] overflow-hidden bg-stone-800">
                              <img 
-                              src={optimizeImage(featuredHamper?.image || cmsData?.specialOffer?.image, 1000)} 
+                              src={optimizeImage(featuredHamper?.image || cmsData.specialOffer.image, 1000)} 
                               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                              />
                           </div>
@@ -719,7 +700,7 @@ export default function App() {
                       </h2>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                      {(cmsData?.categories || []).map((cat: any, i: number) => cat ? <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} /> : null)}
+                      {cmsData.categories.map((cat: any, i: number) => <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} />)}
                     </div>
                   </div>
                 </section>
@@ -736,7 +717,7 @@ export default function App() {
                       </button>
                     </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                      {(cmsData?.products || []).slice(0, 6).map((p: any) => p ? <DiscoverCard key={p.id || Math.random()} product={p} onClick={() => navigateTo('product', p)} /> : null)}
+                      {cmsData.products.slice(0, 6).map((p: any) => <DiscoverCard key={p.id} product={p} onClick={() => navigateTo('product', p)} />)}
                     </div>
                   </div>
                 </section>
@@ -745,7 +726,7 @@ export default function App() {
 
             {currentView === 'shop' && (
               <ShopPage 
-                products={cmsData.products || []} 
+                products={cmsData.products} 
                 onSelectProduct={(p) => navigateTo('product', p)} 
               />
             )}
