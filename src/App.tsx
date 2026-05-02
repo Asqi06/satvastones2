@@ -551,7 +551,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />
             <p className="text-[10px] font-black uppercase tracking-[0.15em] text-white sm:text-xs">
-              {cmsData.settings.announcementText}
+              {cmsData?.settings?.announcementText || 'WELCOME TO SATVASTONES'}
             </p>
           </div>
           {cmsData.settings.showTimer && (
@@ -568,7 +568,7 @@ export default function App() {
               <button 
                 onClick={() => {
                   const hamperId = cmsData.specialOffer?.productId || 'md-hamper';
-                  const hamper = cmsData.products.find((p: any) => p.id === hamperId || p._id === hamperId);
+                  const hamper = (cmsData.products || []).find((p: any) => p.id === hamperId || p._id === hamperId);
                   if (hamper) navigateTo('product', hamper);
                   else navigateTo('shop');
                 }} 
