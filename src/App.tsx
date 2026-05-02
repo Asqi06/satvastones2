@@ -5,6 +5,9 @@ import {
   ArrowRight as ArrowRightIcon, Menu, X, Heart, Shield, Trash2, CheckCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import SEO from './components/SEO';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
 import CartPage from './components/CartPage';
@@ -268,13 +271,53 @@ function WishlistPage({
   );
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }: any) {
+  const { id } = useParams();
+  const product = cmsData?.products?.find((p: any) => p._id === id || p.id === id);
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-xs uppercase tracking-widest text-stone-400">Product not found</p>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <SEO 
+        title={product.title} 
+        description={product.description || `Buy ${product.title} at Satvastones. High quality aesthetic jewelry.`}
+        image={product.image}
+        canonical={`https://satvastones.in/product/${id}`}
+      />
+      <ProductPage 
+        product={product} 
+        allProducts={cmsData.products}
+        onBack={() => navigateTo('home')} 
+        onAddToCart={addToCart}
+        onAddReview={handleAddReview}
+      />
+    </>
+  );
+}
 
 export default function App() {
-  const [cmsData, setCmsData] = useState<any>(initialCMSData);
+
+  return (
+    <HelmetProvider>
+      <Router>
+        <AppContent />
+      </Router>
+    </HelmetProvider>
+  );
+}
+
+function AppContent() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [cmsData, setCmsData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentView, setCurrentView] = useState('home');
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [currentUser, setCurrentUser] = useState<any>(() => {
     const saved = localStorage.getItem('satvastones_user');
     return saved ? JSON.parse(saved) : null;
@@ -289,13 +332,24 @@ export default function App() {
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
-  const [adminPassword, setAdminPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
-  // PERSISTENCE
-  useEffect(() => {
+  const navigateTo = (view: string, data?: any) => {
+    if (view === 'home') navigate('/');
+    else if (view === 'shop') navigate('/shop');
+    else if (view === 'auth') navigate('/account');
+    else if (view === 'cart') navigate('/cart');
+    else if (view === 'checkout') navigate('/checkout');
+    else if (view === 'blogs') navigate('/blogs');
+    else if (view === 'contact') navigate('/contact');
+    else if (view === 'order-success') navigate('/order-success');
+    else if (view === 'product' && data) {
+      const id = data._id || data.id;
+      navigate(`/product/${id}`);
+    }
+    window.scrollTo(0, 0);
+  };
     if (currentUser) localStorage.setItem('satvastones_user', JSON.stringify(currentUser));
     else localStorage.removeItem('satvastones_user');
   }, [currentUser]);
@@ -611,269 +665,121 @@ export default function App() {
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
             <div className="hidden md:flex items-center gap-8">
-              <button onClick={() => navigateTo('home')} className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${currentView === 'home' ? 'text-black' : 'text-stone-400'}`}>Home</button>
-              <button onClick={() => navigateTo('shop')} className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${currentView === 'shop' ? 'text-black' : 'text-stone-400'}`}>Shop</button>
-              <button onClick={() => navigateTo('blogs')} className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${currentView === 'blogs' ? 'text-black' : 'text-stone-400'}`}>Blogs</button>
-              <button onClick={() => navigateTo('contact')} className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${currentView === 'contact' ? 'text-black' : 'text-stone-400'}`}>Contact</button>
+              <Link to="/" className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${location.pathname === '/' ? 'text-black' : 'text-stone-400'}`}>Home</Link>
+              <Link to="/shop" className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${location.pathname === '/shop' ? 'text-black' : 'text-stone-400'}`}>Shop</Link>
+              <Link to="/blogs" className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${location.pathname === '/blogs' ? 'text-black' : 'text-stone-400'}`}>Blogs</Link>
+              <Link to="/contact" className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${location.pathname === '/contact' ? 'text-black' : 'text-stone-400'}`}>Contact</Link>
             </div>
           </div>
 
           <div className="flex-1 text-center">
-            <button onClick={() => navigateTo('home')} className="font-display text-2xl md:text-3xl font-bold tracking-tighter">SATVASTONES.</button>
+            <Link to="/" className="font-display text-2xl md:text-3xl font-bold tracking-tighter">SATVASTONES.</Link>
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-3 md:gap-6">
             <button onClick={() => setIsSearchOpen(true)} className="p-1 hover:text-stone-400 transition-colors"><Search className="h-5 w-5" /></button>
-            <button onClick={() => navigateTo('auth')} className="p-1 hover:text-stone-400 transition-colors"><User className="h-5 w-5" /></button>
-            <button onClick={() => navigateTo('cart')} className="p-1 hover:text-stone-400 transition-colors relative">
+            <Link to="/account" className="p-1 hover:text-stone-400 transition-colors"><User className="h-5 w-5" /></Link>
+            <Link to="/cart" className="p-1 hover:text-stone-400 transition-colors relative">
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
 
-      {/* Main Content Render */}
+      {/* Main Content Render with Routes */}
       <main className="relative">
         <AnimatePresence mode="wait">
           <motion.div
-            key={currentView + (selectedProduct?.id || '')}
+            key={location.pathname}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
           >
-            {currentView === 'home' && (
-              <>
-                {/* Hero Section */}
-                <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24">
-                  <div className="mx-auto max-w-7xl px-4 md:px-8">
-                    <div className="flex flex-col mb-8 md:mb-12">
-                      <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-9xl lg:text-[10rem]">
-                        {cmsData.hero.title?.split(' ')[0] || ''} <span className="text-stone-300">{cmsData.hero.title?.split(' ')[1] || ''}</span>
-                      </h2>
-                      <div className="flex flex-col md:flex-row items-center md:items-start justify-between mt-4 md:mt-2">
-                        <div className="max-w-[280px] md:pt-4 mb-6 md:mb-0 text-center md:text-left">
-                          <p className="text-[10px] font-bold leading-relaxed tracking-[0.2em] text-stone-500 uppercase">
-                            {cmsData.hero.description}
-                          </p>
-                        </div>
-                        <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-8xl lg:text-[10rem]">
-                          {cmsData.hero.subTitle}
-                        </h2>
-                      </div>
-                    </div>
-
-                    <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
-                      <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Hero" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                      <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center p-8">
-                        <button className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-black hover:text-white transition-all shadow-2xl">
-                          Enter The Shop
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* Mother's Day Special Section */}
-                {cmsData.specialOffer?.isActive && (() => {
-                  const featuredHamper = cmsData.products.find((p: any) => 
-                    p.category === "MOTHER'S DAY" || 
-                    p.id === cmsData.specialOffer.productId || 
-                    p._id === cmsData.specialOffer.productId
-                  );
-                  
-                  return (
-                    <section className="bg-stone-900 py-24 md:py-32 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-1/2 h-full bg-stone-800/30 skew-x-12 translate-x-20" />
-                    <div className="mx-auto max-w-7xl px-4 md:px-8 relative z-10">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-                        <div className="space-y-8">
-                          <div className="inline-flex items-center gap-3 bg-white/10 px-4 py-2 rounded-full backdrop-blur-md">
-                            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                            <span className="text-[10px] font-bold text-white uppercase tracking-widest">Live: Mother's Day Special</span>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={
+                <>
+                  <SEO 
+                    title="Satvastones | Aesthetic Korean & Western Jewelry" 
+                    description="Elevate your vibe with our premium Korean and Western jewelry collection. Free shipping on orders over ₹1500."
+                  />
+                  {/* Hero Section */}
+                  <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24">
+                    <div className="mx-auto max-w-7xl px-4 md:px-8">
+                      <div className="flex flex-col mb-8 md:mb-12">
+                        <h1 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-9xl lg:text-[10rem]">
+                          {cmsData.hero.title?.split(' ')[0] || ''} <span className="text-stone-300">{cmsData.hero.title?.split(' ')[1] || ''}</span>
+                        </h1>
+                        <div className="flex flex-col md:flex-row items-center md:items-start justify-between mt-4 md:mt-2">
+                          <div className="max-w-[280px] md:pt-4 mb-6 md:mb-0 text-center md:text-left">
+                            <p className="text-[10px] font-bold leading-relaxed tracking-[0.2em] text-stone-500 uppercase">
+                              {cmsData.hero.description}
+                            </p>
                           </div>
-                          <h2 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight text-white leading-none">
-                            {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ')[0]} {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ')[1] || ''} <br /> 
-                            <span className="text-stone-500">{cmsData.specialOffer?.subTitle || ''}</span> <br /> 
-                            {(featuredHamper?.title || cmsData.specialOffer?.title || '').split(' ').slice(2).join(' ')}
+                          <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-8xl lg:text-[10rem]">
+                            {cmsData.hero.subTitle}
                           </h2>
-                          <p className="text-stone-400 text-xs uppercase tracking-[0.3em] leading-loose max-w-md">
-                            {featuredHamper?.description || cmsData.specialOffer.description}
-                          </p>
-                          <button 
-                            onClick={() => {
-                              if (featuredHamper) navigateTo('product', featuredHamper);
-                            }}
-                            className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-200 transition-all shadow-2xl"
-                          >
-                            Explore The Hamper
+                        </div>
+                      </div>
+
+                      <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
+                        <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Hero" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center p-8">
+                          <button className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-black hover:text-white transition-all shadow-2xl">
+                            Enter The Shop
                           </button>
                         </div>
-                        <div className="relative group">
-                          <div className="absolute -inset-4 border border-white/10 translate-x-4 translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500" />
-                          <div className="relative aspect-[4/5] overflow-hidden bg-stone-800">
-                             <img 
-                              src={optimizeImage(featuredHamper?.image || cmsData.specialOffer.image, 1000)} 
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                             />
-                          </div>
-                        </div>
                       </div>
                     </div>
-                    </section>
-                  );
-                })()}
+                  </section>
 
-                {/* Categories */}
-                <section className="bg-white py-20 md:py-32">
-                  <div className="mx-auto max-w-7xl px-4 md:px-8">
-                    <div className="mb-16 text-center">
-                      <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight">
-                        SHOP BY <span className="text-stone-300">VIBE</span>
-                      </h2>
+                  {/* Categories */}
+                  <section className="bg-white py-20 md:py-32">
+                    <div className="mx-auto max-w-7xl px-4 md:px-8">
+                      <div className="mb-16 text-center">
+                        <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight">
+                          SHOP BY <span className="text-stone-300">VIBE</span>
+                        </h2>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                        {cmsData.categories.map((cat: any, i: number) => <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} />)}
+                      </div>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                      {cmsData.categories.map((cat: any, i: number) => <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} />)}
+                  </section>
+
+                  {/* Discover */}
+                  <section className="bg-stone-50 py-20 md:py-32">
+                    <div className="mx-auto max-w-7xl px-4 md:px-8">
+                      <div className="mb-16 flex flex-col md:flex-row items-end justify-between gap-8">
+                        <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight leading-[0.85]">
+                          LATEST <br /> <span className="text-stone-300">ARRIVALS</span>
+                        </h2>
+                        <button onClick={() => navigateTo('shop')} className="px-10 py-4 border border-stone-300 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all">
+                          View Collection
+                        </button>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
+                        {cmsData.products.slice(0, 6).map((p: any) => <DiscoverCard key={p.id} product={p} onClick={() => navigateTo('product', p)} />)}
+                      </div>
                     </div>
-                  </div>
-                </section>
+                  </section>
+                </>
+              } />
 
-                {/* Discover */}
-                <section className="bg-stone-50 py-20 md:py-32">
-                  <div className="mx-auto max-w-7xl px-4 md:px-8">
-                    <div className="mb-16 flex flex-col md:flex-row items-end justify-between gap-8">
-                      <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight leading-[0.85]">
-                        LATEST <br /> <span className="text-stone-300">ARRIVALS</span>
-                      </h2>
-                      <button onClick={() => navigateTo('shop')} className="px-10 py-4 border border-stone-300 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all">
-                        View Collection
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                      {cmsData.products.slice(0, 6).map((p: any) => <DiscoverCard key={p.id} product={p} onClick={() => navigateTo('product', p)} />)}
-                    </div>
-                  </div>
-                </section>
-              </>
-            )}
-
-            {currentView === 'shop' && (
-              <ShopPage 
-                products={cmsData.products} 
-                onSelectProduct={(p) => navigateTo('product', p)} 
-              />
-            )}
-
-            {currentView === 'wishlist' && (
-              <WishlistPage 
-                items={wishlist} 
-                onRemove={toggleWishlist} 
-                onAddToCart={(p) => { addToCart(p); toggleWishlist(p); }} 
-                onShop={() => navigateTo('shop')}
-              />
-            )}
-            
-            {currentView === 'product' && selectedProduct && (
-              <ProductPage 
-                product={selectedProduct} 
-                allProducts={cmsData.products}
-                onBack={() => navigateTo('home')} 
-                onAddToCart={addToCart}
-                onAddReview={handleAddReview}
-              />
-            )}
-
-            {currentView === 'cart' && (
-              <CartPage 
-                cart={cart} 
-                onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} 
-                onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} 
-                onCheckout={() => navigateTo('checkout')}
-                onContinueShopping={() => navigateTo('shop')}
-              />
-            )}
-
-            {currentView === 'checkout' && (
-              <CheckoutPage 
-                cart={cart} 
-                currentUser={currentUser}
-                onBack={() => navigateTo('cart')}
-                onComplete={() => { 
-                  setCart([]); 
-                  localStorage.removeItem('checkout_form');
-                  localStorage.removeItem('checkout_pending');
-                  navigateTo('order-success'); 
-                }}
-                onLoginRedirect={() => navigateTo('auth')}
-                calculateShipping={calculateShipping}
-              />
-            )}
-
-            {currentView === 'order-success' && (
-              <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center space-y-10">
-                <div className="w-24 h-24 bg-stone-900 rounded-full flex items-center justify-center animate-bounce">
-                  <CheckCircle className="h-12 w-12 text-white" />
-                </div>
-                <div className="space-y-4">
-                  <h1 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight">Success!</h1>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-400">Order confirmed • Preparing for delivery</p>
-                </div>
-                <div className="bg-stone-50 p-8 border border-stone-100 max-w-lg w-full text-left space-y-6">
-                  <div className="flex justify-between border-b border-stone-200 pb-4">
-                    <span className="text-[9px] font-bold uppercase text-stone-400">Estimated Delivery</span>
-                    <span className="text-[10px] font-bold uppercase">3-5 Business Days</span>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-[10px] font-bold uppercase">What Happens Next?</p>
-                    <p className="text-[9px] text-stone-500 uppercase leading-loose">You will receive a confirmation email shortly. Once your aesthetic piece is shipped from our Vapi hub, we will send you a tracking ID.</p>
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <button 
-                    onClick={() => navigateTo('home')}
-                    className="bg-black text-white px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all"
-                  >
-                    Back to Home
-                  </button>
-                  <button 
-                    onClick={() => navigateTo('shop')}
-                    className="border border-stone-200 px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-50 transition-all"
-                  >
-                    Continue Shopping
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {currentView === 'contact' && <ContactPage />}
-            {currentView === 'blogs' && <BlogsPage />}
-            {currentView === 'auth' && (
-              currentUser ? (
-                <AccountDashboard 
-                  user={currentUser} 
-                  onLogout={() => { 
-                    setCurrentUser(null); 
-                    localStorage.removeItem('satvastones_user');
-                    navigateTo('home'); 
-                  }} 
-                  onShop={() => navigateTo('shop')}
-                />
-              ) : (
-                <AuthPage onLogin={(data) => { 
-                  setCurrentUser(data.customer); 
-                  if (localStorage.getItem('checkout_pending') === 'true') {
-                    navigateTo('checkout');
-                  } else {
-                    navigateTo('auth'); 
-                  }
-                }} />
-              )
-            )}
+              <Route path="/shop" element={<><SEO title="Shop Aesthetic Jewelry" /><ShopPage products={cmsData.products} onSelectProduct={(p) => navigateTo('product', p)} /></>} />
+              <Route path="/product/:id" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} />} />
+              <Route path="/cart" element={<><SEO title="Your Bag" /><CartPage cart={cart} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
+              <Route path="/checkout" element={<><SEO title="Checkout" /><CheckoutPage cart={cart} currentUser={currentUser} onBack={() => navigateTo('cart')} onComplete={() => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success'); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
+              <Route path="/account" element={currentUser ? <><SEO title="My Account" /><AccountDashboard user={currentUser} onLogout={() => { setCurrentUser(null); localStorage.removeItem('satvastones_user'); navigate('/'); }} onShop={() => navigate('/shop')} /></> : <AuthPage onLogin={(data) => { setCurrentUser(data.customer); if (localStorage.getItem('checkout_pending') === 'true') navigate('/checkout'); else navigate('/account'); }} />} />
+              <Route path="/contact" element={<><SEO title="Contact" /><ContactPage /></>} />
+              <Route path="/blogs" element={<><SEO title="The Journal" /><BlogsPage /></>} />
+              <Route path="/order-success" element={<div className="min-h-screen flex flex-col items-center justify-center p-8 text-center space-y-4"><h1>Success!</h1><button onClick={() => navigate('/')}>Back Home</button></div>} />
+            </Routes>
           </motion.div>
         </AnimatePresence>
       </main>

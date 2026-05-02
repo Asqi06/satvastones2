@@ -101,7 +101,7 @@ export default function ShopPage({
                     <span className="text-[10px]">★</span>
                   </div>
                   <span className="text-[9px] font-bold text-stone-900">{product.rating}</span>
-                  <span className="text-[9px] text-stone-400 uppercase tracking-tighter">({product.reviews} reviews)</span>
+                  <span className="text-[9px] text-stone-400 uppercase tracking-tighter">({(product.reviews && Array.isArray(product.reviews)) ? product.reviews.length : (typeof product.reviews === 'number' ? product.reviews : 0)} reviews)</span>
                 </div>
               </div>
             </div>
