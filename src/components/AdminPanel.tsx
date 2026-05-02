@@ -733,7 +733,7 @@ export default function AdminPanel({
                   onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, category: e.target.value}) : setNewProduct({...newProduct, category: e.target.value})}
                   className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
                 >
-                  {['NECKLACES', 'EARRINGS', 'RINGS', 'PENDANT', 'GIFTS', 'HAMPERS', 'ACCESSORIES', "MOTHER'S DAY"].map(cat => (
+                  {['NECKLACES', 'EARRINGS', 'RINGS', 'BRACELETS', 'PENDANT', 'GIFTS', 'HAMPERS', 'ACCESSORIES', "MOTHER'S DAY"].map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
