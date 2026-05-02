@@ -55,16 +55,19 @@ const baseTemplate = (content) => `
 `;
 
 export const sendEmail = async (to, subject, html) => {
-  const fromName = (process.env.BRAND_NAME || 'Satvastones').replace(/['"]+/g, '');
-  const fromEmail = (process.env.EMAIL_FROM || process.env.EMAIL_USER || 'orders@satvastones.com').replace(/['"]+/g, '');
+  const fromName = (process.env.BRAND_NAME || 'Satvastones').replace(/['"]+/g, '').trim();
+  let fromEmail = (process.env.EMAIL_FROM || process.env.EMAIL_USER || 'orders@satvastones.com').replace(/['"]+/g, '').trim();
 
-  console.log(`[EMAIL SERVICE] Attempting to send to: ${to} | Mode: ${resend ? 'RESEND API' : 'SMTP FALLBACK'}`);
+  // Smart Detection: If fromEmail already has brackets, use it as is. 
+  // Otherwise, wrap it in the standard "Name <email>" format.
+  const finalFrom = fromEmail.includes('<') ? fromEmail : `${fromName} <${fromEmail}>`;
+
+  console.log(`[EMAIL SERVICE] Attempting to send to: ${to} | From: ${finalFrom} | Mode: ${resend ? 'RESEND API' : 'SMTP FALLBACK'}`);
 
   if (resend) {
     try {
-      console.log(`Using Resend API to send email to: ${to}`);
       const { data, error } = await resend.emails.send({
-        from: `${fromName} <${fromEmail}>`,
+        from: finalFrom,
         to: [to],
         subject,
         html,
