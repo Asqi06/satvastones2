@@ -4,7 +4,7 @@ import {
   ArrowUpRight, Facebook, Twitter, Linkedin, Instagram, 
   ArrowRight as ArrowRightIcon, Menu, X, Heart, Shield, Trash2, CheckCircle
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
 import CartPage from './components/CartPage';
@@ -335,12 +335,13 @@ export default function App() {
   useEffect(() => {
     if (!cmsData?.settings?.timerEnd) return;
     const targetDate = new Date(cmsData.settings.timerEnd);
+    if (isNaN(targetDate.getTime())) return; // Safety check
     
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate.getTime() - now;
       
-      if (distance < 0) { 
+      if (distance <= 0) { 
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
         clearInterval(timer); 
         return; 
@@ -513,9 +514,9 @@ export default function App() {
       />
     );
   }
-  const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
+  const cartSubtotal = (cart || []).reduce((acc, item) => acc + ((Number(item.price) || 0) * (item.qty || 1)), 0);
   const cartTotal = cartSubtotal + shippingRate;
-  const cartCount = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
+  const cartCount = (cart || []).reduce((acc, item) => acc + (item.qty || 1), 0);
 
   if (isLoading) {
     return (
@@ -732,7 +733,7 @@ export default function App() {
 
             {currentView === 'shop' && (
               <ShopPage 
-                products={cmsData.products} 
+                products={cmsData.products || []} 
                 onSelectProduct={(p) => navigateTo('product', p)} 
               />
             )}
