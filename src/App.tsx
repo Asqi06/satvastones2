@@ -238,16 +238,22 @@ export default function App() {
   const [currentView, setCurrentView] = useState('home');
   const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [currentUser, setCurrentUser] = useState<any>(() => {
-    const saved = localStorage.getItem('satvastones_user');
-    return saved ? JSON.parse(saved) : null;
+    try {
+      const saved = localStorage.getItem('satvastones_user');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : null;
+    } catch { return null; }
   });
   const [cart, setCart] = useState<any[]>(() => {
-    const saved = localStorage.getItem('satvastones_cart');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('satvastones_cart');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : [];
+    } catch { return []; }
   });
   const [wishlist, setWishlist] = useState<any[]>(() => {
-    const saved = localStorage.getItem('satvastones_wishlist');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('satvastones_wishlist');
+      return (saved && saved !== 'undefined') ? JSON.parse(saved) : [];
+    } catch { return []; }
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
