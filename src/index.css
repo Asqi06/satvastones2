@@ -6,6 +6,22 @@
   --font-display: "Bebas Neue", sans-serif;
   --font-accent: "Oswald", sans-serif;
 
+  /* Custom Earthy Palette */
+  --color-stone-50: #F9F6F1;
+  --color-stone-100: #F2EBE1;
+  --color-stone-200: #E6D9C8;
+  --color-stone-300: #D9C7B0;
+  --color-stone-400: #CBB498;
+  --color-stone-500: #B78453;
+  --color-stone-600: #9C6A3B;
+  --color-stone-700: #744D30;
+  --color-stone-800: #5A3C26;
+  --color-stone-900: #3D2B24;
+
+  /* Global Overrides */
+  --color-white: #F9F6F1;
+  --color-black: #3D2B24;
+
   @keyframes marquee {
     from { transform: translateX(0); }
     to { transform: translateX(-50%); }
