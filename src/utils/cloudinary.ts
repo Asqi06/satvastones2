@@ -6,13 +6,24 @@ export const optimizeImage = (url: string, width?: number, height?: number) => {
   if (!url) return '';
   if (!url.includes('cloudinary.com')) return url;
 
+  // If the URL already has transformations, don't double up
+  if (url.includes('/upload/f_auto')) return url;
+
   const parts = url.split('/upload/');
   if (parts.length !== 2) return url;
 
-  // Add transformations: f_auto (format), q_auto (quality)
-  let transformation = 'f_auto,q_auto';
-  if (width) transformation += `,w_${width}`;
-  if (height) transformation += `,h_${height}`;
+  // f_auto: best format (WebP/AVIF)
+  // q_auto:best: high quality but small size
+  // c_limit: don't upscale, just downscale if too big
+  let transformation = 'f_auto,q_auto:best';
+  
+  if (width && height) {
+    transformation += `,c_fill,g_auto,w_${width},h_${height}`;
+  } else if (width) {
+    transformation += `,c_limit,w_${width}`;
+  } else if (height) {
+    transformation += `,c_limit,h_${height}`;
+  }
 
   return `${parts[0]}/upload/${transformation}/${parts[1]}`;
 };
