@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 import PDFDocument from 'pdfkit';
 import axios from 'axios';
-import { toWords } from 'number-to-words';
+import converter from 'number-to-words';
 dotenv.config();
 
 const SELLER_DETAILS = {
@@ -275,7 +275,7 @@ export const generateInvoice = async (order, sellerSettings = {}) => {
     currentY += 120;
     doc.rect(50, currentY, 495, 40).fill(THEME.GOLD_PALE);
     doc.fillColor(THEME.GOLD).fontSize(7).font('Helvetica-Bold').text('AMOUNT IN WORDS', 60, currentY + 10, { characterSpacing: 1 });
-    const words = toWords(order.amount).toUpperCase() + ' RUPEES ONLY';
+    const words = converter.toWords(Math.round(order.amount)).toUpperCase() + ' RUPEES ONLY';
     doc.fillColor(THEME.NAVY).fontSize(10).text(words, 60, currentY + 20);
 
     // FOOTER
