@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, Filter, LayoutGrid, Square, ArrowUpRight } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 
 
@@ -10,10 +11,20 @@ export default function ShopPage({
   products: any[],
   onSelectProduct: (p: any) => void 
 }) {
-  const [activeCategory, setActiveCategory] = useState('ALL');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get('category');
+  
+  const [activeCategory, setActiveCategory] = useState(categoryParam?.toUpperCase() || 'ALL');
   const [viewMode, setViewMode] = useState<'grid' | 'large'>('grid');
 
-  const categories = ['ALL', 'NECKLACES', 'EARRINGS', 'RINGS', 'BRACELETS', 'ACCESSORIES', 'PENDANT', 'GIFTS', 'HAMPERS', "MOTHER'S DAY"];
+  // Sync state if URL param changes
+  useEffect(() => {
+    if (categoryParam) {
+      setActiveCategory(categoryParam.toUpperCase());
+    }
+  }, [categoryParam]);
+
+  const categories = ['ALL', 'NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'ACCESSORIES', 'PENDANT', 'GIFTS', 'HAMPERS', "MOTHER'S DAY"];
 
   const filteredProducts = activeCategory === 'ALL' 
     ? products 

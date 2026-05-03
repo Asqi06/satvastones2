@@ -812,7 +812,13 @@ function AppContent() {
                         </h2>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                        {cmsData.categories.map((cat: any, i: number) => <CategoryCard key={i} category={cat} onClick={() => navigateTo('shop')} />)}
+                        {cmsData.categories.map((cat: any, i: number) => (
+                          <CategoryCard 
+                            key={i} 
+                            category={cat} 
+                            onClick={() => navigate(`/shop?category=${cat.name.toUpperCase()}`)} 
+                          />
+                        ))}
                       </div>
                     </div>
                   </section>
