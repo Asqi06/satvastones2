@@ -19,6 +19,7 @@ import ContactPage from './components/ContactPage';
 import BlogsPage from './components/BlogsPage';
 import AuthPage from './components/AuthPage';
 import SearchOverlay from './components/SearchOverlay';
+import OrderSuccessPage from './components/OrderSuccessPage';
 import { optimizeImage } from './utils/cloudinary';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
@@ -350,7 +351,7 @@ function AppContent() {
     else if (view === 'checkout') navigate('/checkout');
     else if (view === 'blogs') navigate('/blogs');
     else if (view === 'contact') navigate('/contact');
-    else if (view === 'order-success') navigate('/order-success');
+    else if (view === 'order-success') navigate('/order-success', { state: { order: data } });
     else if (view === 'product' && data) {
       const id = data._id || data.id;
       navigate(`/product/${id}`);
@@ -610,6 +611,9 @@ function AppContent() {
       <AnimatePresence>
         {showLoading && <LoadingScreen />}
       </AnimatePresence>
+      
+      {cmsData && (
+        <>
       {/* Mobile Sidebar */}
       <AnimatePresence>
         {isMenuOpen && (
@@ -864,11 +868,11 @@ function AppContent() {
               <Route path="/shop" element={<><SEO title="Shop Aesthetic Jewelry" /><ShopPage products={cmsData.products} onSelectProduct={(p) => navigateTo('product', p)} /></>} />
               <Route path="/product/:id" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} />} />
               <Route path="/cart" element={<><SEO title="Your Bag" /><CartPage cart={cart} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
-              <Route path="/checkout" element={<><SEO title="Checkout" /><CheckoutPage cart={cart} currentUser={currentUser} onBack={() => navigateTo('cart')} onComplete={() => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success'); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
+              <Route path="/checkout" element={<><SEO title="Checkout" /><CheckoutPage cart={cart} currentUser={currentUser} onBack={() => navigateTo('cart')} onComplete={(order) => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success', order); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
               <Route path="/account" element={currentUser ? <><SEO title="My Account" /><AccountDashboard user={currentUser} onLogout={() => { setCurrentUser(null); localStorage.removeItem('satvastones_user'); navigate('/'); }} onShop={() => navigate('/shop')} /></> : <AuthPage onLogin={(data) => { setCurrentUser(data.customer); if (localStorage.getItem('checkout_pending') === 'true') navigate('/checkout'); else navigate('/account'); }} />} />
               <Route path="/contact" element={<><SEO title="Contact" /><ContactPage /></>} />
               <Route path="/blogs" element={<><SEO title="The Journal" /><BlogsPage /></>} />
-              <Route path="/order-success" element={<div className="min-h-screen flex flex-col items-center justify-center p-8 text-center space-y-4"><h1>Success!</h1><button onClick={() => navigate('/')}>Back Home</button></div>} />
+              <Route path="/order-success" element={<OrderSuccessPage />} />
             </Routes>
           </motion.div>
         </AnimatePresence>
@@ -936,6 +940,8 @@ function AppContent() {
           </div>
         </div>
       </footer>
+    </>
+    )}
     </div>
   );
 }

@@ -105,7 +105,8 @@ export default function CheckoutPage({
         });
 
         if (res.ok) {
-          onComplete();
+          const data = await res.json();
+          onComplete(data.order);
         } else {
           alert('Failed to place COD order. Please try again.');
           setIsProcessing(false);
@@ -117,6 +118,7 @@ export default function CheckoutPage({
       const sdkLoaded = await loadRazorpay();
       if (!sdkLoaded) {
         alert('Razorpay SDK failed to load. Are you online?');
+        setIsProcessing(false);
         return;
       }
 
@@ -156,7 +158,7 @@ export default function CheckoutPage({
             });
             const verifyData = await verifyRes.json();
             if (verifyData.status === 'success') {
-              onComplete();
+              onComplete(verifyData.order);
             } else {
               alert('Payment verification failed');
               setIsProcessing(false);
