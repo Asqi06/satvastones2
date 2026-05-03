@@ -45,12 +45,21 @@ export default function ProductPage({
   const [wishlisted, setWishlisted] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [qty, setQty] = useState(1);
+  const [selectedVariant, setSelectedVariant] = useState<any>(null);
+  const [customText, setCustomText] = useState('');
 
-  const images = (product.images && product.images.length > 0) ? product.images : [product.image];
+  // Dynamic Image Logic: Use variant images if a variant is selected, otherwise fallback to main images
+  const images = selectedVariant && selectedVariant.images?.length > 0 
+    ? selectedVariant.images 
+    : (product.images && product.images.length > 0) ? product.images : [product.image];
+
   const isCustomizable = ['HAMPERS', 'GIFTS', "MOTHER'S DAY"].includes(product.category);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Reset variant and image when product changes
+    setSelectedVariant(null);
+    setActiveImage(0);
   }, [product]);
 
   const styles = ['Standard Polish', 'Matte Finish', 'Vintage Aesthetic'];
@@ -79,6 +88,7 @@ export default function ProductPage({
             {/* Main Image */}
             <div className="relative aspect-square overflow-hidden bg-stone-100 group">
               <img
+                key={images[activeImage]} // Force re-render for smooth transition
                 src={optimizeImage(images[activeImage], 1000)}
                 alt="Product"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -161,7 +171,49 @@ export default function ProductPage({
               </p>
             </div>
 
-            {/* Options Selection */}
+            {/* NEW: Customization for Name Necklace */}
+            {product.category === 'NAME NECKLACE' && (
+              <div className="space-y-4 p-5 bg-stone-50 border border-stone-200 rounded-sm">
+                <div className="flex justify-between items-center">
+                  <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-900">Custom Name</label>
+                  <span className="text-[9px] text-stone-400 font-bold uppercase tracking-widest">Required</span>
+                </div>
+                <input 
+                  type="text" 
+                  maxLength={15}
+                  value={customText}
+                  onChange={(e) => setCustomText(e.target.value.toUpperCase())}
+                  placeholder="e.g. ANIRUDH"
+                  className="w-full bg-white border border-stone-200 p-4 text-sm font-bold uppercase tracking-widest focus:border-stone-900 outline-hidden transition-all placeholder:text-stone-300"
+                />
+                <p className="text-[9px] text-stone-400 italic">Enter the name exactly as you want it to appear (Max 15 characters).</p>
+              </div>
+            )}
+
+            {/* NEW: Color Variants Selection */}
+            {product.variants && product.variants.length > 0 && (
+              <div className="space-y-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-stone-500">
+                  Select Color <span className="text-stone-900 ml-2">{selectedVariant?.color || ''}</span>
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {product.variants.map((variant: any, idx: number) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setSelectedVariant(variant);
+                        setActiveImage(0); // Reset to first image of variant
+                      }}
+                      className={`px-5 py-3 border text-[10px] font-bold uppercase tracking-widest transition-all ${selectedVariant?.color === variant.color ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-200 text-stone-500 hover:border-stone-400'}`}
+                    >
+                      {variant.color}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Options Selection (Old logic kept for other custom options) */}
             {product.customOptions && product.customOptions.length > 0 && (
               <div>
                 <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.15em] text-stone-500">
@@ -265,7 +317,13 @@ export default function ProductPage({
 
               <div className="flex gap-4">
                 <button 
-                  onClick={() => onAddToCart({...product, qty, options: selectedOption})}
+                  onClick={() => {
+                    if (product.category === 'NAME NECKLACE' && !customText.trim()) {
+                      alert('Please enter a name for your necklace');
+                      return;
+                    }
+                    onAddToCart({...product, qty, options: selectedOption, variant: selectedVariant?.color, customText: customText.trim()})
+                  }}
                   className="flex-1 bg-black text-white py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all shadow-xl active:scale-95"
                 >
                   Add To Bag

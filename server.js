@@ -38,7 +38,10 @@ const productSchema = new mongoose.Schema({
   category: String,
   description: String,
   customOptions: [String],
-  style: [String],
+  variants: [{
+    color: String,
+    images: [String]
+  }],
   reviews: [{
     name: String,
     rating: Number,
@@ -94,7 +97,15 @@ const orderSchema = new mongoose.Schema({
     city: String,
     pincode: String
   },
-  items: Array,
+  items: [{
+    id: String,
+    title: String,
+    price: Number,
+    qty: Number,
+    variant: String,
+    customText: String,
+    options: [String]
+  }],
   amount: Number,
   status: { type: String, default: 'Pending' },
   trackingId: String,

@@ -23,7 +23,7 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState<any>({ 
-    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [] 
+    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [] 
   });
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -183,7 +183,7 @@ export default function AdminPanel({
           {activeTab === 'products' && (
             <button 
               onClick={() => setNewProduct({ 
-                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [] 
+                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [] 
               })}
               className="bg-black text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800 transition-all"
             >
@@ -726,6 +726,82 @@ export default function AdminPanel({
                 </div>
                 <p className="text-[9px] text-stone-400 italic">Press Enter to add an option. These will appear as choices on the product page.</p>
               </div>
+
+              {/* Color Variants with Images */}
+              <div className="col-span-full space-y-6 border-t border-stone-100 pt-8 mt-4">
+                <div className="flex justify-between items-center">
+                   <label className="text-[10px] font-bold uppercase text-stone-900 tracking-widest">Color-Specific Image Variants</label>
+                   <button 
+                     onClick={() => {
+                        const currentVariants = editingProduct ? [...(editingProduct.variants || [])] : [...(newProduct.variants || [])];
+                        currentVariants.push({ color: 'NEW COLOR', images: [] });
+                        editingProduct ? setEditingProduct({...editingProduct, variants: currentVariants}) : setNewProduct({...newProduct, variants: currentVariants});
+                     }}
+                     className="px-4 py-2 bg-stone-100 text-[10px] font-bold uppercase hover:bg-stone-200 transition-all rounded-sm"
+                   >
+                     + Add Color Variant
+                   </button>
+                </div>
+
+                <div className="space-y-8">
+                  {(editingProduct ? editingProduct.variants : newProduct.variants || []).map((variant: any, vIdx: number) => (
+                    <div key={vIdx} className="p-6 bg-stone-50 border border-stone-200 rounded-sm space-y-4">
+                       <div className="flex justify-between items-center gap-4">
+                          <input 
+                            type="text" 
+                            value={variant.color}
+                            onChange={(e) => {
+                              const currentVariants = editingProduct ? [...editingProduct.variants] : [...newProduct.variants];
+                              currentVariants[vIdx].color = e.target.value.toUpperCase();
+                              editingProduct ? setEditingProduct({...editingProduct, variants: currentVariants}) : setNewProduct({...newProduct, variants: currentVariants});
+                            }}
+                            className="bg-white border border-stone-200 px-3 py-2 text-[10px] font-bold uppercase outline-hidden focus:border-black w-full max-w-xs"
+                          />
+                          <button 
+                            onClick={() => {
+                              const currentVariants = editingProduct ? [...editingProduct.variants] : [...newProduct.variants];
+                              currentVariants.splice(vIdx, 1);
+                              editingProduct ? setEditingProduct({...editingProduct, variants: currentVariants}) : setNewProduct({...newProduct, variants: currentVariants});
+                            }}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                       </div>
+
+                       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                          {variant.images.map((img: string, iIdx: number) => (
+                            <div key={iIdx} className="relative aspect-square bg-white border border-stone-100 group">
+                              <img src={img} className="w-full h-full object-cover" />
+                              <button 
+                                onClick={() => {
+                                  const currentVariants = editingProduct ? [...editingProduct.variants] : [...newProduct.variants];
+                                  currentVariants[vIdx].images.splice(iIdx, 1);
+                                  editingProduct ? setEditingProduct({...editingProduct, variants: currentVariants}) : setNewProduct({...newProduct, variants: currentVariants});
+                                }}
+                                className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                              >
+                                <X className="h-2 w-2" />
+                              </button>
+                            </div>
+                          ))}
+                          <button 
+                            onClick={() => openUploadWidget((url) => {
+                              const currentVariants = editingProduct ? [...editingProduct.variants] : [...newProduct.variants];
+                              currentVariants[vIdx].images.push(url);
+                              editingProduct ? setEditingProduct({...editingProduct, variants: currentVariants}) : setNewProduct({...newProduct, variants: currentVariants});
+                            }, cloudinaryConfig)}
+                            className="aspect-square border-2 border-dashed border-stone-200 flex flex-col items-center justify-center gap-2 hover:border-stone-400 transition-all text-stone-400 hover:text-stone-600 bg-white"
+                          >
+                            <UploadCloud className="h-4 w-4" />
+                            <span className="text-[7px] font-bold uppercase">Upload</span>
+                          </button>
+                       </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[9px] text-stone-400 italic">Configure color-specific galleries here. When a user chooses a color, the main gallery will switch to these images.</p>
+              </div>
               <div className="space-y-2">
                 <label className="text-[10px] font-bold uppercase text-stone-500">Category</label>
                 <select 
@@ -733,7 +809,7 @@ export default function AdminPanel({
                   onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, category: e.target.value}) : setNewProduct({...newProduct, category: e.target.value})}
                   className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
                 >
-                  {['NECKLACES', 'EARRINGS', 'RINGS', 'BRACELETS', 'PENDANT', 'GIFTS', 'HAMPERS', 'ACCESSORIES', "MOTHER'S DAY"].map(cat => (
+                  {['NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'PENDANT', 'GIFTS', 'HAMPERS', 'ACCESSORIES', "MOTHER'S DAY"].map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </select>
@@ -845,8 +921,12 @@ export default function AdminPanel({
                           <img src={item.image} className="w-full h-full object-cover" />
                         </div>
                         <div>
-                          <p className="text-[11px] font-bold uppercase">{item.title}</p>
-                          <p className="text-[9px] text-stone-400 uppercase mt-1">QTY: {item.qty || 1}</p>
+                          <p className="text-xs font-bold text-stone-900">{item.title} <span className="text-stone-400 font-normal">x{item.qty}</span></p>
+                          {item.variant && <p className="text-[10px] text-stone-500 uppercase tracking-widest mt-0.5">Color: {item.variant}</p>}
+                          {item.customText && <p className="text-[10px] text-red-600 font-bold uppercase tracking-widest mt-1 bg-red-50 p-1 rounded-xs inline-block">Custom Name: {item.customText}</p>}
+                          {item.options && item.options.length > 0 && (
+                            <p className="text-[9px] text-stone-400 mt-0.5 italic">Options: {item.options.join(', ')}</p>
+                          )}
                         </div>
                       </div>
                       <p className="text-xs font-bold">₹{item.price * (item.qty || 1)}</p>
