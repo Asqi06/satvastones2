@@ -898,7 +898,7 @@ function AppContent() {
                 <>
                   <SEO 
                     title="Satvastones | Aesthetic Korean & Western Jewelry" 
-                    description="Elevate your vibe with our premium Korean and Western jewelry collection. Free shipping on orders over ₹1500."
+                    description="Elevate your vibe with our premium Korean and Western jewelry collection. Free shipping on orders over ₹399 (Local only)."
                   />
                   {/* Hero Section */}
                   <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24">

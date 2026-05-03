@@ -167,7 +167,7 @@ export default function ProductPage({
             <div className="flex items-start gap-3 rounded-sm border border-stone-200 bg-stone-50 p-4">
               <Zap className="h-4 w-4 shrink-0 text-stone-900 mt-0.5" />
               <p className="text-[10px] leading-relaxed text-stone-600 uppercase tracking-tight">
-                <span className="font-bold text-stone-900">Payment Tip:</span> UPI is the most cost-effective way to pay. We primarily don't accept COD. COD orders incur a ₹40 platform charge.
+                <span className="font-bold text-stone-900">Delivery Info:</span> SHIPPING IS CALCULATED BY DISTANCE FROM VAPI. ALL ORDERS OVER ₹399 QUALIFY FOR FREE SHIPPING (LOCAL & REGIONAL ONLY).
               </p>
             </div>
 
@@ -267,7 +267,7 @@ export default function ProductPage({
                 </div>
                 <div className="space-y-0.5">
                   <p className="text-[9px] font-bold uppercase tracking-widest">Free Shipping</p>
-                  <p className="text-[8px] text-stone-400 uppercase">On orders over ₹1500</p>
+                  <p className="text-[8px] text-stone-400 uppercase">On orders over ₹399 (Local)</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -284,8 +284,8 @@ export default function ProductPage({
                   <RefreshCcw className="h-4 w-4 text-stone-600" />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-[9px] font-bold uppercase tracking-widest">Easy Returns</p>
-                  <p className="text-[8px] text-stone-400 uppercase">7-day exchange policy</p>
+                  <p className="text-[9px] font-bold uppercase tracking-widest">Final Sale</p>
+                  <p className="text-[8px] text-stone-400 uppercase">No Returns or Exchanges</p>
                 </div>
               </div>
             </div>
