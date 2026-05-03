@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation,
 import { HelmetProvider } from 'react-helmet-async';
 import SEO from './components/SEO';
 import JsonLd, { getProductSchema } from './components/JsonLd';
+import LoadingScreen from './components/LoadingScreen';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
 import CartPage from './components/CartPage';
@@ -337,9 +338,9 @@ function AppContent() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const [adminPassword, setAdminPassword] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [adminPassword, setAdminPassword] = useState('');
+  const [showLoading, setShowLoading] = useState(true);
 
   const navigateTo = (view: string, data?: any) => {
     if (view === 'home') navigate('/');
@@ -557,8 +558,6 @@ function AppContent() {
     }
   };
 
-  if (!cmsData) return <div className="min-h-screen bg-white flex items-center justify-center font-display text-4xl animate-pulse">SATVASTONES.</div>;
-
   if (isAdminMode) {
     if (!isLoggedIn) {
       return (
@@ -599,38 +598,18 @@ function AppContent() {
         </div>
       );
     }
-    return (
-      <AdminPanel 
-        cmsData={cmsData} 
-        onUpdateCMS={handleUpdateCMS} 
-        onUpdateProduct={handleUpdateProduct}
-        onLogout={handleAdminLogout} 
-      />
-    );
-  }
-  if (isLoading || !cmsData) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center space-y-6">
-        <div className="font-display text-4xl font-bold tracking-tighter animate-pulse">SATVASTONES.</div>
-        <div className="w-48 h-0.5 bg-stone-100 relative overflow-hidden">
-          <motion.div 
-            initial={{ left: '-100%' }}
-            animate={{ left: '100%' }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
-            className="absolute top-0 bottom-0 w-1/2 bg-black"
-          />
-        </div>
-        <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-stone-400">Curating Your Experience</p>
-      </div>
-    );
+    return <AdminPanel cmsData={cmsData} onUpdateCMS={handleUpdateCMS} onUpdateProduct={handleUpdateProduct} onLogout={handleAdminLogout} />;
   }
 
   const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
-  const cartTotal = cartSubtotal + shippingRate;
   const cartCount = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
+  const cartTotal = cartSubtotal + (cartCount > 0 ? shippingRate : 0);
 
   return (
-    <div className="min-h-screen bg-white font-accent selection:bg-black selection:text-white">
+    <div className="min-h-screen bg-stone-50 font-sans selection:bg-stone-900 selection:text-white">
+      <AnimatePresence>
+        {showLoading && <LoadingScreen />}
+      </AnimatePresence>
       {/* Mobile Sidebar */}
       <AnimatePresence>
         {isMenuOpen && (
