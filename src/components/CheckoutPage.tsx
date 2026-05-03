@@ -40,6 +40,10 @@ export default function CheckoutPage({
     localStorage.setItem('checkout_form', JSON.stringify(formData));
   }, [formData]);
   
+  const subtotal = cart.reduce((acc, item) => {
+    const price = typeof item.price === 'string' 
+      ? parseFloat(item.price.replace(/[^0-9.]/g, '')) 
+      : (item.price || 0);
     return acc + (price * (item.qty || 1));
   }, 0);
   
