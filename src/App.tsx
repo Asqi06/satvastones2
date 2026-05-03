@@ -22,6 +22,14 @@ import SearchOverlay from './components/SearchOverlay';
 import OrderSuccessPage from './components/OrderSuccessPage';
 import { optimizeImage } from './utils/cloudinary';
 
+function ScrollToTop() {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname, search]);
+  return null;
+}
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 
@@ -422,6 +430,7 @@ export default function App() {
   return (
     <HelmetProvider>
       <Router>
+        <ScrollToTop />
         <AppContent />
       </Router>
     </HelmetProvider>
@@ -465,6 +474,8 @@ function AppContent() {
     else if (view === 'product' && data) {
       const id = data._id || data.id;
       navigate(`/product/${id}`);
+    } else if (view === 'shop' && data?.category) {
+      navigate(`/shop?category=${data.category}`);
     }
     window.scrollTo(0, 0);
   };
@@ -915,7 +926,7 @@ function AppContent() {
                           <CategoryCard 
                             key={i} 
                             category={cat} 
-                            onClick={() => navigate(`/shop?category=${(cat.name || cat.title || 'ALL').toUpperCase()}`)} 
+                            onClick={() => navigateTo('shop', { category: (cat.name || cat.title || 'ALL').toUpperCase() })} 
                           />
                         ))}
                       </div>
