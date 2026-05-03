@@ -78,7 +78,11 @@ const cmsSchema = new mongoose.Schema({
     showTimer: Boolean,
     timerEnd: String,
     cloudinaryCloudName: String,
-    cloudinaryUploadPreset: String
+    cloudinaryUploadPreset: String,
+    businessName: String,
+    gstin: String,
+    businessPan: String,
+    businessAddress: String
   }
 });
 
