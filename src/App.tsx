@@ -109,6 +109,8 @@ const initialCMSData = {
 function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () => void, onShop: () => void }) {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -118,6 +120,14 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
         if (res.ok) {
           const data = await res.json();
           setOrders(data);
+          
+          // Check for orderId in URL to auto-select (for tracking from email)
+          const params = new URLSearchParams(location.search);
+          const orderId = params.get('orderId');
+          if (orderId) {
+            const order = data.find((o: any) => o._id === orderId || o.orderNumber === orderId);
+            if (order) setSelectedOrder(order);
+          }
         }
       } catch (err) {
         console.error("Failed to fetch customer orders:", err);
@@ -126,7 +136,7 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
       }
     };
     fetchOrders();
-  }, [user.email]);
+  }, [user.email, location.search]);
 
   return (
     <div className="min-h-screen bg-white py-24">
@@ -166,9 +176,16 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
                   <div className="p-12 text-center text-[10px] uppercase tracking-widest text-stone-400 animate-pulse">Loading History...</div>
                 ) : orders.length > 0 ? (
                   orders.map(order => (
-                    <div key={order._id} className="border border-stone-100 p-6 flex items-center justify-between hover:bg-stone-50 transition-colors">
+                    <div 
+                      key={order._id} 
+                      onClick={() => setSelectedOrder(order)}
+                      className="group border border-stone-100 p-6 flex items-center justify-between hover:bg-stone-50 transition-all cursor-pointer"
+                    >
                       <div>
-                        <p className="text-[10px] font-bold uppercase tracking-widest">Order #{order.orderNumber || order._id?.slice(-8)}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-[10px] font-bold uppercase tracking-widest group-hover:text-stone-900">Order #{order.orderNumber || order._id?.slice(-8)}</p>
+                          <ChevronRight className="h-3 w-3 text-stone-300 group-hover:text-stone-900 transition-transform group-hover:translate-x-1" />
+                        </div>
                         <p className="text-[9px] text-stone-400 uppercase mt-1">
                           {new Date(order.createdAt).toLocaleDateString()} • {order.items?.length || 0} ITEMS • ₹{order.amount}
                         </p>
@@ -210,6 +227,98 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
 
         </div>
       </div>
+
+      {/* Order Detail Modal */}
+      <AnimatePresence>
+        {selectedOrder && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white w-full max-w-2xl rounded-sm shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              <div className="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                <div>
+                  <h3 className="font-display text-xl font-bold uppercase tracking-tight">Order Details</h3>
+                  <p className="text-[9px] font-bold text-stone-400 uppercase tracking-widest">Order #{selectedOrder.orderNumber || selectedOrder._id?.slice(-8)}</p>
+                </div>
+                <button onClick={() => setSelectedOrder(null)} className="text-stone-400 hover:text-black p-2"><X className="h-6 w-6" /></button>
+              </div>
+
+              <div className="p-8 overflow-y-auto space-y-10 no-scrollbar">
+                {/* Status Stepper */}
+                <div className="flex justify-between items-center px-4 relative">
+                  <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-stone-100 -translate-y-1/2 -z-10" />
+                  {['Confirmed', 'Shipped', 'Delivered'].map((step, i) => {
+                    const isCompleted = ['Confirmed', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered'].indexOf(selectedOrder.status) >= ['Confirmed', 'Shipped', 'Delivered'].indexOf(step);
+                    return (
+                      <div key={step} className="flex flex-col items-center gap-3 bg-white px-2">
+                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isCompleted ? 'bg-black border-black' : 'border-stone-100 bg-white'}`}>
+                          {isCompleted && <CheckCircle className="h-3 w-3 text-white" />}
+                        </div>
+                        <span className={`text-[8px] font-bold uppercase tracking-widest ${isCompleted ? 'text-black' : 'text-stone-300'}`}>{step}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Tracking Info */}
+                {selectedOrder.trackingId && (
+                  <div className="bg-stone-50 border border-stone-100 p-6 flex items-center justify-between">
+                    <div>
+                      <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-stone-400 mb-1">Tracking Number</p>
+                      <p className="text-sm font-bold tracking-widest">{selectedOrder.trackingId}</p>
+                    </div>
+                    <button className="bg-black text-white px-6 py-3 text-[8px] font-bold uppercase tracking-widest hover:bg-stone-800 transition-all">
+                      Track Now
+                    </button>
+                  </div>
+                )}
+
+                {/* Items */}
+                <div className="space-y-6">
+                  <h4 className="text-[9px] font-black uppercase tracking-widest text-stone-900 border-b border-stone-100 pb-3">Items Purchased</h4>
+                  <div className="space-y-4">
+                    {selectedOrder.items.map((item: any, i: number) => (
+                      <div key={i} className="flex justify-between items-center">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-16 bg-stone-50 overflow-hidden shrink-0">
+                            <img src={item.image} className="w-full h-full object-cover" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase text-stone-900">{item.title}</p>
+                            <p className="text-[8px] text-stone-400 uppercase">{item.variant || 'Standard'} • QTY: {item.qty}</p>
+                            {item.customText && <p className="text-[8px] text-red-600 font-bold uppercase mt-1">Name: {item.customText}</p>}
+                          </div>
+                        </div>
+                        <span className="text-xs font-bold text-stone-900">₹{item.price * item.qty}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Summary */}
+                <div className="pt-8 border-t border-stone-100 grid grid-cols-2 gap-10">
+                  <div className="space-y-4">
+                    <h4 className="text-[9px] font-black uppercase tracking-widest text-stone-900">Shipping To</h4>
+                    <p className="text-[10px] text-stone-500 uppercase leading-relaxed font-medium">
+                      {selectedOrder.customer.name}<br />
+                      {selectedOrder.shippingAddress?.address || selectedOrder.customer.address}<br />
+                      {selectedOrder.shippingAddress?.city || selectedOrder.customer.city} - {selectedOrder.shippingAddress?.pincode || selectedOrder.customer.pincode}
+                    </p>
+                  </div>
+                  <div className="space-y-2 text-right">
+                     <p className="text-[9px] font-bold uppercase text-stone-400">Total Amount Paid</p>
+                     <p className="text-3xl font-display font-bold text-stone-900">₹{selectedOrder.amount}</p>
+                     <p className="text-[8px] font-bold text-green-600 uppercase tracking-widest">Payment: {selectedOrder.paymentMethod}</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -806,7 +915,7 @@ function AppContent() {
                           <CategoryCard 
                             key={i} 
                             category={cat} 
-                            onClick={() => navigate(`/shop?category=${cat.name.toUpperCase()}`)} 
+                            onClick={() => navigate(`/shop?category=${(cat.name || cat.title || 'ALL').toUpperCase()}`)} 
                           />
                         ))}
                       </div>

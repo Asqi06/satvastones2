@@ -71,6 +71,22 @@ export default function AdminPanel({
     }
   };
 
+  const deleteOrder = async (orderId: string) => {
+    if (window.confirm('Permanently delete this order? This will remove it from all revenue figures and analytics.')) {
+      try {
+        const res = await fetch(`${API_URL}/orders/${orderId}`, {
+          method: 'DELETE'
+        });
+        if (res.ok) {
+          setOrders(prev => prev.filter(o => o._id !== orderId));
+          setSelectedOrder(null);
+        }
+      } catch (err) {
+        console.error("Failed to delete order:", err);
+      }
+    }
+  };
+
   const saveProduct = async (product: any) => {
     // Ensure primary image is set
     const updatedProduct = {
@@ -523,6 +539,53 @@ export default function AdminPanel({
 
               <section className="pt-12 border-t border-stone-100">
                 <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <ShieldCheck className="h-4 w-4" /> GST & Billing Configuration
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Business Name</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. Satvastones Jewelry Studio"
+                      value={tempCMSData.settings.businessName || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, businessName: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Official GSTIN</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. 24XXXXX0000X1Z5"
+                      value={tempCMSData.settings.gstin || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, gstin: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Business PAN</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. XXXXX0000X"
+                      value={tempCMSData.settings.businessPan || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, businessPan: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Business Address (For Invoice)</label>
+                    <textarea 
+                      placeholder="Enter full legal address..."
+                      value={tempCMSData.settings.businessAddress || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, businessAddress: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden min-h-[80px]" 
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <section className="pt-12 border-t border-stone-100">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
                   <UploadCloud className="h-4 w-4" /> Image Upload (Cloudinary)
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -904,6 +967,14 @@ export default function AdminPanel({
                        <div>
                          <p className="text-[9px] font-bold uppercase text-stone-400 mb-2">Total Paid</p>
                          <p className="text-3xl font-display font-bold text-stone-900">₹{selectedOrder.amount}</p>
+                       </div>
+                       <div className="pt-4">
+                         <button 
+                           onClick={() => deleteOrder(selectedOrder._id)}
+                           className="flex items-center gap-2 px-6 py-2 bg-red-50 text-red-600 rounded-full text-[9px] font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all border border-red-100 w-full justify-center"
+                         >
+                           <Trash2 className="h-3 w-3" /> Delete Order Record
+                         </button>
                        </div>
                     </div>
                   </div>

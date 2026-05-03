@@ -101,9 +101,9 @@ export default function OrderSuccessPage() {
                   <MapPin className="h-3 w-3" /> Delivery Address
                 </h4>
                 <div className="text-[10px] text-stone-600 uppercase leading-relaxed font-medium">
-                  {order.customer.name}<br />
-                  {order.shippingAddress.address}<br />
-                  {order.shippingAddress.city}, {order.shippingAddress.pincode}
+                  {order.customer?.name}<br />
+                  {order.shippingAddress?.address}<br />
+                  {order.shippingAddress?.city}{order.shippingAddress?.pincode ? `, ${order.shippingAddress.pincode}` : ''}
                 </div>
               </div>
               <div className="space-y-4 bg-stone-50 p-6 rounded-xs">

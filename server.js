@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
-import { sendEmail, emailTemplates } from './emailService.js';
+import { sendEmail, emailTemplates, generateInvoice } from './emailService.js';
 import { OAuth2Client } from 'google-auth-library';
 
 
@@ -285,6 +285,15 @@ app.put('/api/orders/:id/status', async (req, res) => {
   }
 });
 
+app.delete('/api/orders/:id', async (req, res) => {
+  try {
+    await Order.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Order deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/create-order', async (req, res) => {
   const { amount } = req.body;
   const options = {
@@ -340,8 +349,19 @@ app.post('/api/verify-payment', async (req, res) => {
       await order.save();
       // Clear saved cart after successful order
       await Cart.findOneAndDelete({ email: orderDetails.customer.email });
-      // Send emails in background (don't await)
-      sendEmail(orderDetails.customer.email, 'Order Confirmed (COD) - Satvastones', emailTemplates.orderConfirmation(order));
+      
+      // Generate and Send Invoice
+      try {
+        const cms = await CMS.findOne();
+        const invoicePdf = await generateInvoice(order, cms?.settings || {});
+        sendEmail(orderDetails.customer.email, 'Order Confirmed (COD) & GST Invoice - Satvastones', emailTemplates.orderConfirmation(order), [
+          { filename: `Invoice_${order.orderNumber}.pdf`, content: invoicePdf }
+        ]);
+      } catch (invoiceErr) {
+        console.error("Invoice generation failed, sending plain confirmation:", invoiceErr);
+        sendEmail(orderDetails.customer.email, 'Order Confirmed (COD) - Satvastones', emailTemplates.orderConfirmation(order));
+      }
+
       sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New COD Order Received!', `<p>New order #${order.orderNumber} received from ${order.customer.name} for ₹${order.amount}</p>`);
       return res.json({ status: 'success', order });
     }
@@ -368,8 +388,19 @@ app.post('/api/verify-payment', async (req, res) => {
       await order.save();
       // Clear saved cart after successful order
       await Cart.findOneAndDelete({ email: orderDetails.customer.email });
-      // Send emails in background (don't await)
-      sendEmail(orderDetails.customer.email, 'Order Confirmed - Satvastones', emailTemplates.orderConfirmation(order));
+      
+      // Generate and Send Invoice
+      try {
+        const cms = await CMS.findOne();
+        const invoicePdf = await generateInvoice(order, cms?.settings || {});
+        sendEmail(orderDetails.customer.email, 'Order Confirmed & GST Invoice - Satvastones', emailTemplates.orderConfirmation(order), [
+          { filename: `Invoice_${order.orderNumber}.pdf`, content: invoicePdf }
+        ]);
+      } catch (invoiceErr) {
+        console.error("Invoice generation failed, sending plain confirmation:", invoiceErr);
+        sendEmail(orderDetails.customer.email, 'Order Confirmed - Satvastones', emailTemplates.orderConfirmation(order));
+      }
+
       sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New Order Received!', `<p>New order #${order.orderId} received from ${order.customer.name} for ₹${order.amount}</p>`);
   
       res.json({ status: 'success', order });

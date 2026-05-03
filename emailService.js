@@ -1,7 +1,17 @@
 import { Resend } from 'resend';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import PDFDocument from 'pdfkit';
 dotenv.config();
+
+const SELLER_DETAILS = {
+  name: "SATVASTONES JEWELRY STUDIO",
+  address: "Gunjan Road, Vapi, Gujarat - 396191",
+  gstin: "24XXXXX0000X1Z5", // USER: Replace with your actual GSTIN
+  pan: "XXXXX0000X",
+  state: "Gujarat",
+  stateCode: "24"
+};
 
 // Primary API-based service (Bulletproof for Render/Vercel)
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -54,7 +64,106 @@ const baseTemplate = (content) => `
 </html>
 `;
 
-export const sendEmail = async (to, subject, html) => {
+export const generateInvoice = (order, sellerSettings = {}) => {
+  const seller = {
+    name: sellerSettings.businessName || SELLER_DETAILS.name,
+    address: sellerSettings.businessAddress || SELLER_DETAILS.address,
+    gstin: sellerSettings.gstin || SELLER_DETAILS.gstin,
+    pan: sellerSettings.businessPan || SELLER_DETAILS.pan
+  };
+
+  return new Promise((resolve) => {
+    const doc = new PDFDocument({ margin: 50, size: 'A4' });
+    let buffers = [];
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', () => resolve(Buffer.concat(buffers)));
+
+    // Header
+    doc.fontSize(20).font('Helvetica-Bold').text('TAX INVOICE', { align: 'right' });
+    doc.fontSize(10).font('Helvetica').text(`Invoice No: ${order.orderNumber || order._id.slice(-8).toUpperCase()}`, { align: 'right' });
+    doc.text(`Date: ${new Date(order.createdAt).toLocaleDateString()}`, { align: 'right' });
+    doc.moveDown();
+
+    // Seller & Buyer
+    const startY = doc.y;
+    doc.font('Helvetica-Bold').text('SOLD BY:', 50, startY);
+    doc.font('Helvetica').text(seller.name);
+    doc.text(seller.address);
+    doc.text(`GSTIN: ${seller.gstin}`);
+    doc.text(`PAN: ${seller.pan}`);
+
+    doc.font('Helvetica-Bold').text('BILL TO:', 350, startY);
+    doc.font('Helvetica').text(order.customer.name, 350);
+    doc.text(order.customer.address || 'N/A', 350);
+    doc.text(`${order.customer.city || ''} - ${order.customer.pincode || ''}`, 350);
+    doc.text(`Phone: ${order.customer.phone}`, 350);
+
+    doc.moveDown(2);
+
+    // Table Header
+    const tableTop = doc.y;
+    doc.font('Helvetica-Bold');
+    doc.text('Item Description', 50, tableTop);
+    doc.text('HSN', 250, tableTop);
+    doc.text('Qty', 300, tableTop);
+    doc.text('Rate', 350, tableTop);
+    doc.text('Taxable', 420, tableTop);
+    doc.text('Total', 500, tableTop);
+    
+    doc.moveTo(50, tableTop + 15).lineTo(550, tableTop + 15).stroke();
+    doc.font('Helvetica');
+
+    // Items
+    let currentY = tableTop + 25;
+    order.items.forEach(item => {
+      const taxable = Math.round((item.price / 1.18) * 100) / 100;
+      doc.text(item.title.substring(0, 30), 50, currentY);
+      doc.text('7117', 250, currentY);
+      doc.text(item.qty.toString(), 300, currentY);
+      doc.text(taxable.toString(), 350, currentY);
+      doc.text((taxable * item.qty).toFixed(2), 420, currentY);
+      doc.text((item.price * item.qty).toFixed(2), 500, currentY);
+      currentY += 20;
+    });
+
+    doc.moveTo(50, currentY).lineTo(550, currentY).stroke();
+    currentY += 15;
+
+    // Totals & Tax Logic
+    const totalAmount = order.amount;
+    const totalTaxable = Math.round((totalAmount / 1.18) * 100) / 100;
+    const totalTax = Math.round((totalAmount - totalTaxable) * 100) / 100;
+    
+    const isLocal = order.customer.pincode?.startsWith('3'); // Gujarat
+    
+    doc.font('Helvetica-Bold');
+    doc.text('Total Taxable Value:', 350, currentY);
+    doc.text(`₹${totalTaxable.toFixed(2)}`, 500, currentY);
+    currentY += 15;
+
+    if (isLocal) {
+      doc.text('CGST (9%):', 350, currentY);
+      doc.text(`₹${(totalTax / 2).toFixed(2)}`, 500, currentY);
+      currentY += 15;
+      doc.text('SGST (9%):', 350, currentY);
+      doc.text(`₹${(totalTax / 2).toFixed(2)}`, 500, currentY);
+    } else {
+      doc.text('IGST (18%):', 350, currentY);
+      doc.text(`₹${totalTax.toFixed(2)}`, 500, currentY);
+    }
+    currentY += 20;
+
+    doc.fontSize(14).text('GRAND TOTAL:', 350, currentY);
+    doc.text(`₹${totalAmount.toFixed(2)}`, 500, currentY);
+
+    // Footer
+    doc.fontSize(8).font('Helvetica-Oblique').text('This is a computer generated invoice and does not require a physical signature.', 50, 750, { align: 'center' });
+    
+    doc.end();
+  });
+};
+
+export const sendEmail = async (to, subject, html, attachments = []) => {
   const fromName = (process.env.BRAND_NAME || 'Satvastones').replace(/['"]+/g, '').trim();
   let fromEmail = (process.env.EMAIL_FROM || process.env.EMAIL_USER || 'orders@satvastones.com').replace(/['"]+/g, '').trim();
 
@@ -69,6 +178,10 @@ export const sendEmail = async (to, subject, html) => {
         to: [to],
         subject,
         html,
+        attachments: attachments.map(a => ({
+          filename: a.filename,
+          content: a.content.toString('base64'),
+        }))
       });
 
       if (error) {
@@ -86,7 +199,8 @@ export const sendEmail = async (to, subject, html) => {
       from: finalFrom,
       to,
       subject,
-      html
+      html,
+      attachments
     });
     return info;
   } catch (err) {
