@@ -514,30 +514,29 @@ function AppContent() {
   const calculateShipping = (pincode: string, subtotal: number, paymentMethod: string = 'upi') => {
     if (!pincode) return 40;
     const zone = pincode.charAt(0);
-    const isNearby = pincode.startsWith('39'); // ~130km
-    const isRegional = zone === '3' || zone === '4'; // ~600km
-
-    // 1. COD PREMIUM RULES (No Free Delivery)
+    const isNearby = pincode.startsWith('39'); // Local Vapi/Valsad area
+    
+    // 1. COD GRADIENT (No Free Delivery)
     if (paymentMethod === 'cod') {
-      if (isNearby) return 35; // Local COD starts at 35
-      if (isRegional) return 45; // Regional COD
-      if (['6', '7', '8'].includes(zone)) return 80; // Far National COD capped at 80
-      return 60; // Standard National COD
+      if (isNearby) return 35; 
+      if (zone === '3') return 45; // Rest of Gujarat
+      if (zone === '4') return 55; // Maharashtra
+      if (['1', '2', '5'].includes(zone)) return 65; // North/Central
+      return 85; // South/East/NE (Max)
     }
 
-    // 2. PREPAID / UPI RULES (Existing Perks)
-    if (!isRegional) {
-      if (subtotal > 399) {
-        if (['6', '7', '8'].includes(zone)) return 80;
-        return 45;
-      }
-      return 60;
+    // 2. PREPAID / UPI GRADIENT (Includes >399 Perks)
+    // Rule: Free Shipping override for any UPI order over 399 (except very far zones)
+    if (subtotal > 399) {
+      if (['6', '7', '8'].includes(zone)) return 45; // Discounted even for far zones
+      return 0; // Free for everywhere else
     }
-    if (!isNearby && isRegional) {
-      if (subtotal > 399) return 0;
-      return 40;
-    }
-    return 0; // Local UPI/Prepaid is FREE
+
+    if (isNearby) return 0;
+    if (zone === '3') return 25; // Non-local Gujarat
+    if (zone === '4') return 35; // Maharashtra
+    if (['1', '2', '5'].includes(zone)) return 55; // North/Central
+    return 75; // South/East/NE
   };
   // FETCH DATA
   useEffect(() => {
