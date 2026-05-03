@@ -3,7 +3,7 @@ import {
   Settings, Package, ShoppingCart, Users, Image as ImageIcon, 
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
   CheckCircle, Clock, ChevronRight, UploadCloud, TrendingUp, ShoppingBag,
-  Menu
+  Menu, ShieldCheck
 } from 'lucide-react';
 import { openUploadWidget } from '../utils/cloudinary';
 

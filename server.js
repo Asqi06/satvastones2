@@ -255,6 +255,16 @@ app.get('/api/orders', async (req, res) => {
   }
 });
 
+app.get('/api/orders/:id', async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get('/api/orders/customer/:email', async (req, res) => {
   try {
     const orders = await Order.find({ "customer.email": req.params.email }).sort({ createdAt: -1 });
