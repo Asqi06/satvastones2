@@ -342,6 +342,7 @@ function AppContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
   const [showLoading, setShowLoading] = useState(true);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   const navigateTo = (view: string, data?: any) => {
     if (view === 'home') navigate('/');
