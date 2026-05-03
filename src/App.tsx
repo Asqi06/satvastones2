@@ -403,6 +403,11 @@ function AppContent() {
   };
   // FETCH DATA
   useEffect(() => {
+    // Show loading screen for at least 2.5 seconds
+    const timer = setTimeout(() => {
+      setShowLoading(false);
+    }, 2500);
+
     const fetchData = async () => {
       try {
         const cmsRes = await fetch(`${API_URL}/cms`);
@@ -427,6 +432,7 @@ function AppContent() {
       }
     };
     fetchData();
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -610,7 +616,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-stone-50 font-sans selection:bg-stone-900 selection:text-white">
       <AnimatePresence>
-        {showLoading && <LoadingScreen />}
+        {showLoading && <LoadingScreen logoUrl="/logo.png" />}
       </AnimatePresence>
       
       {cmsData && (
