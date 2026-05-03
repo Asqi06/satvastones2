@@ -166,6 +166,7 @@ export default function AdminPanel({
             { id: 'special', icon: Zap, label: 'Special Offer' },
             { id: 'products', icon: Package, label: 'Products' },
             { id: 'orders', icon: ShoppingBag, label: 'Orders' },
+            { id: 'coupons', icon: CheckCircle, label: 'Coupons' },
             { id: 'settings', icon: Settings, label: 'Settings' }
           ].map(tab => (
             <button
@@ -492,6 +493,75 @@ export default function AdminPanel({
           )}
 
           {/* SETTINGS TAB */}
+          {activeTab === 'coupons' && (
+            <div className="space-y-8 max-w-4xl">
+              <div className="bg-white p-8 border border-stone-100 space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold uppercase tracking-tight">Active Coupons</h2>
+                    <p className="text-[10px] text-stone-400 font-bold uppercase mt-1">Manage discount codes for your customers</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      const code = window.prompt('Enter Coupon Code:');
+                      const discount = window.prompt('Enter Discount Percentage (0-100):');
+                      if (code && discount) {
+                        setTempCMSData({
+                          ...tempCMSData,
+                          coupons: [...(tempCMSData.coupons || []), { code: code.toUpperCase(), discount: parseInt(discount), isActive: true }]
+                        });
+                      }
+                    }}
+                    className="flex items-center gap-2 bg-stone-900 text-white px-5 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
+                  >
+                    <Plus className="h-3 w-3" /> Add Coupon
+                  </button>
+                </div>
+
+                <div className="grid gap-4">
+                  {(tempCMSData.coupons || []).map((c: any, i: number) => (
+                    <div key={i} className="flex items-center justify-between p-4 bg-stone-50 border border-stone-100 group">
+                      <div className="flex items-center gap-4">
+                        <div className="bg-stone-900 text-white px-3 py-1 text-xs font-bold font-accent tracking-tighter">
+                          {c.code}
+                        </div>
+                        <div className="text-[10px] font-bold uppercase text-stone-900">
+                          {c.discount}% Discount
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          const newCoupons = [...tempCMSData.coupons];
+                          newCoupons.splice(i, 1);
+                          setTempCMSData({ ...tempCMSData, coupons: newCoupons });
+                        }}
+                        className="text-stone-300 hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                  {(!tempCMSData.coupons || tempCMSData.coupons.length === 0) && (
+                    <div className="text-center py-12 border-2 border-dashed border-stone-100">
+                      <Zap className="h-8 w-8 text-stone-100 mx-auto mb-4" />
+                      <p className="text-[10px] text-stone-300 font-bold uppercase tracking-widest">No active coupons</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex justify-end pt-8">
+                <button 
+                  onClick={handleSaveCMS}
+                  disabled={isSaving}
+                  className="bg-stone-900 text-white px-10 py-4 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-black transition-all flex items-center gap-3"
+                >
+                  {isSaving ? 'Processing...' : 'Save Coupon Changes'} <Save className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'settings' && (
             <div className="p-8 space-y-12">
               <section>

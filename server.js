@@ -83,7 +83,12 @@ const cmsSchema = new mongoose.Schema({
     gstin: String,
     businessPan: String,
     businessAddress: String
-  }
+  },
+  coupons: [{
+    code: String,
+    discount: Number,
+    isActive: Boolean
+  }]
 });
 
 const CMS = mongoose.model('CMS', cmsSchema);

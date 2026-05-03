@@ -441,6 +441,7 @@ function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
   const [cmsData, setCmsData] = useState<any>(null);
+  if (typeof window !== 'undefined') (window as any).cmsData = cmsData;
   const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(() => {
     const saved = localStorage.getItem('satvastones_user');
@@ -510,16 +511,33 @@ function AppContent() {
 
   const [shippingRate, setShippingRate] = useState(0);
 
-  const calculateShipping = (pincode: string, subtotal: number) => {
-    if (subtotal > 1500) return 0; // Free delivery above 1500
-    if (!pincode) return 70; // Default
-    if (pincode.startsWith('396')) return 0; // Local Vapi & Gunjan (FREE)
-    
-    // If order is less than 329, delivery starts at 25
-    if (subtotal < 329) return 25;
-    
-    if (pincode.startsWith('3')) return 40; // Gujarat
-    return 70; // Rest of India
+  const calculateShipping = (pincode: string, subtotal: number, paymentMethod: string = 'upi') => {
+    if (!pincode) return 40;
+    const zone = pincode.charAt(0);
+    const isNearby = pincode.startsWith('39'); // ~130km
+    const isRegional = zone === '3' || zone === '4'; // ~600km
+
+    // 1. COD PREMIUM RULES (No Free Delivery)
+    if (paymentMethod === 'cod') {
+      if (isNearby) return 35; // Local COD starts at 35
+      if (isRegional) return 45; // Regional COD
+      if (['6', '7', '8'].includes(zone)) return 80; // Far National COD capped at 80
+      return 60; // Standard National COD
+    }
+
+    // 2. PREPAID / UPI RULES (Existing Perks)
+    if (!isRegional) {
+      if (subtotal > 399) {
+        if (['6', '7', '8'].includes(zone)) return 80;
+        return 45;
+      }
+      return 60;
+    }
+    if (!isNearby && isRegional) {
+      if (subtotal > 399) return 0;
+      return 40;
+    }
+    return 0; // Local UPI/Prepaid is FREE
   };
   // FETCH DATA
   useEffect(() => {

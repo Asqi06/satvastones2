@@ -20,6 +20,9 @@ export default function CheckoutPage({
 }) {
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [activeCoupon, setActiveCoupon] = useState<any>(null);
+  const [couponError, setCouponError] = useState('');
   const [showCodDialog, setShowCodDialog] = useState(false);
   const [formData, setFormData] = useState(() => {
     const saved = localStorage.getItem('checkout_form');
@@ -37,25 +40,27 @@ export default function CheckoutPage({
     localStorage.setItem('checkout_form', JSON.stringify(formData));
   }, [formData]);
   
-  const subtotal = cart.reduce((acc, item) => {
-    // Ensure price is a clean number even if it's a string with symbols
-    const price = typeof item.price === 'string' 
-      ? parseFloat(item.price.replace(/[^0-9.]/g, '')) 
-      : (item.price || 0);
     return acc + (price * (item.qty || 1));
   }, 0);
-  const shipping = calculateShipping(formData.pincode, subtotal);
   
-  // COD Charges Logic - Unified to ₹40 platform charge as per brand policy
-  const calculateCodCharge = () => {
-    if (paymentMethod !== 'cod') return 0;
-    if (formData.pincode.startsWith('396')) return 0; // Local Vapi/Gunjan is FREE
-    return 40; // Flat platform charge for outside local
-  };
+  const shipping = calculateShipping(formData.pincode, subtotal, paymentMethod);
   
-  const codCharge = calculateCodCharge();
+  const discountAmount = activeCoupon ? Math.round((subtotal * activeCoupon.discount) / 100) : 0;
+  
   // Ensure total is ALWAYS a clean integer for Razorpay (Paise conversion)
-  const total = Math.round(subtotal + shipping + codCharge);
+  const total = Math.round(subtotal + shipping - discountAmount);
+
+  const applyCoupon = () => {
+    const coupons = (window as any).cmsData?.coupons || [];
+    const found = coupons.find((c: any) => c.code === couponCode.toUpperCase() && c.isActive);
+    if (found) {
+      setActiveCoupon(found);
+      setCouponError('');
+    } else {
+      setCouponError('Invalid or expired code');
+      setActiveCoupon(null);
+    }
+  };
 
   const loadRazorpay = () => {
     return new Promise((resolve) => {
@@ -296,7 +301,7 @@ export default function CheckoutPage({
                     <div className="text-left">
                       <p className="text-xs font-bold uppercase tracking-widest text-stone-900">Cash on Delivery</p>
                       <p className="text-[9px] text-stone-400 uppercase mt-1">
-                        {formData.pincode.startsWith('396') ? 'Free Delivery locally' : `Starts at ₹${calculateCodCharge()}`}
+                        Pay on delivery for your aesthetic pieces
                       </p>
                     </div>
                   </div>
@@ -308,11 +313,11 @@ export default function CheckoutPage({
                 <div className="flex items-start gap-3">
                   <Zap className="h-5 w-5 text-stone-900 mt-1 shrink-0" />
                   <div className="space-y-2">
-                    <p className="text-xs font-bold uppercase tracking-widest text-stone-900">Payment & Return Policy</p>
+                    <p className="text-xs font-bold uppercase tracking-widest text-stone-900">Delivery & Returns</p>
                     <p className="text-[10px] text-stone-500 uppercase leading-relaxed tracking-tight">
-                      To keep our aesthetic collections affordable for everyone, we primarily promote digital payments. 
-                      <span className="text-stone-900 font-bold"> UPI is our most cost-effective and cheap method to pay.</span> 
-                      We only accept COD with a small <span className="text-stone-900 font-bold">₹40 platform charge</span> added to the total.
+                      To keep our boutique collections accessible, shipping is calculated based on distance from our Vapi hub. 
+                      <span className="text-stone-900 font-bold"> All orders over ₹399 qualify for FREE shipping.</span> 
+                      For smaller orders, a distance-based delivery charge applies to all payment methods.
                     </p>
                     <p className="text-[10px] text-red-600 font-bold uppercase mt-2 tracking-widest">
                       Final Sale: No Refunds, Cancellations or Returns.
@@ -348,17 +353,46 @@ export default function CheckoutPage({
                   <span className="text-stone-900">₹{subtotal}</span>
                 </div>
                 <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-stone-500">
-                  <span>Shipping</span>
+                  <span>Shipping & Delivery</span>
                   <span className="text-stone-900">
-                    {shipping === 0 ? (formData.pincode.startsWith('396') ? 'FREE (LOCAL)' : 'FREE') : `₹${shipping}`}
+                    {shipping === 0 ? 'FREE' : `₹${shipping}`}
                   </span>
                 </div>
-                {paymentMethod === 'cod' && (
-                  <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-stone-900">
-                    <span>COD Charge</span>
-                    <span>₹40</span>
+
+                <div className="pt-4 space-y-2">
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="COUPON CODE"
+                      className="flex-1 border-b border-stone-200 py-2 text-[10px] font-bold uppercase tracking-widest outline-hidden focus:border-black"
+                    />
+                    <button 
+                      onClick={applyCoupon}
+                      className="bg-stone-900 text-white px-4 py-2 text-[9px] font-bold uppercase tracking-widest hover:bg-black"
+                    >
+                      Apply
+                    </button>
+                  </div>
+                  {couponError && <p className="text-[8px] text-red-500 font-bold uppercase tracking-widest">{couponError}</p>}
+                  {activeCoupon && (
+                    <div className="flex justify-between items-center bg-green-50 p-2 border border-green-100">
+                      <span className="text-[9px] text-green-700 font-bold uppercase tracking-widest">
+                        {activeCoupon.code} APPLIED (-{activeCoupon.discount}%)
+                      </span>
+                      <button onClick={() => { setActiveCoupon(null); setCouponCode(''); }} className="text-[9px] text-green-700 font-bold">×</button>
+                    </div>
+                  )}
+                </div>
+
+                {activeCoupon && (
+                  <div className="flex justify-between text-[11px] font-bold uppercase tracking-widest text-green-600">
+                    <span>Discount</span>
+                    <span>-₹{discountAmount}</span>
                   </div>
                 )}
+
                 <div className="flex justify-between text-lg font-bold uppercase tracking-tight text-stone-900 pt-4 border-t border-stone-200 mt-4">
                   <span>Total</span>
                   <span>₹{total}</span>
