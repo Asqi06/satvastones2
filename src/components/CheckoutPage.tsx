@@ -9,14 +9,16 @@ export default function CheckoutPage({
   onBack, 
   onComplete,
   onLoginRedirect,
-  calculateShipping
+  calculateShipping,
+  cmsData
 }: { 
   cart: any[], 
   currentUser: any,
   onBack: () => void, 
-  onComplete: () => void,
+  onComplete: (order: any) => void,
   onLoginRedirect: () => void,
-  calculateShipping: (pincode: string, subtotal: number) => number
+  calculateShipping: (pincode: string, subtotal: number, paymentMethod: string) => number,
+  cmsData?: any
 }) {
   const [paymentMethod, setPaymentMethod] = useState('upi');
   const [isProcessing, setIsProcessing] = useState(false);
@@ -55,7 +57,7 @@ export default function CheckoutPage({
   const total = Math.round(subtotal + shipping - discountAmount);
 
   const applyCoupon = () => {
-    const coupons = (window as any).cmsData?.coupons || [];
+    const coupons = cmsData?.coupons || [];
     const found = coupons.find((c: any) => c.code === couponCode.toUpperCase() && c.isActive);
     if (found) {
       setActiveCoupon(found);

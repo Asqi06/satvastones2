@@ -157,7 +157,7 @@ app.get('/api/cms', async (req, res) => {
   try {
     let cms = await CMS.findOne();
     if (!cms) {
-      return res.json({ message: 'initialized', hero: {}, categories: [], specialOffer: {}, settings: {} });
+      return res.json({ message: 'initialized', hero: {}, categories: [], specialOffer: {}, settings: {}, coupons: [] });
     }
     res.json(cms);
   } catch (err) {
@@ -174,11 +174,13 @@ app.post('/api/cms', async (req, res) => {
       if (req.body.specialOffer) cms.specialOffer = { ...cms.specialOffer, ...req.body.specialOffer };
       if (req.body.settings) cms.settings = { ...cms.settings, ...req.body.settings };
       if (req.body.categories) cms.categories = req.body.categories;
+      if (req.body.coupons) cms.coupons = req.body.coupons;
       
       cms.markModified('hero');
       cms.markModified('specialOffer');
       cms.markModified('settings');
       cms.markModified('categories');
+      cms.markModified('coupons');
       
       await cms.save();
     } else {
