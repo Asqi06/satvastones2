@@ -1075,6 +1075,7 @@ export default function AdminPanel({
                 </label>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Mark as Featured (Show at top of Shop)</span>
               </div>
+            </div>
             <footer className="p-6 bg-stone-50 border-t border-stone-100 flex justify-end gap-4">
               <button 
                 onClick={() => { setEditingProduct(null); setNewProduct(null); }}
@@ -1091,7 +1092,7 @@ export default function AdminPanel({
             </footer>
           </div>
         </div>
-      )}
+      </div>)}
       {/* Order Detail Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
