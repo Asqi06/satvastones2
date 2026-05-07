@@ -1269,22 +1269,20 @@ export default function AdminPanel({
                 {showSkuLabel.sku || 'NO SKU SET'}
               </div>
               <div className="w-full flex flex-col items-center py-4 bg-white">
-                <QRCode 
-                  value={JSON.stringify({
-                    sku: showSkuLabel.sku || 'NOSKU',
-                    name: showSkuLabel.title || 'Unknown Product',
-                    price: showSkuLabel.price || 0,
-                    category: showSkuLabel.category || 'NECKLACES',
-                    material: showSkuLabel.material || '',
-                    stock: showSkuLabel.stockQuantity || 0,
-                    brand: 'Satvastones'
-                  })}
-                  size={180}
-                  bgColor="#ffffff"
-                  fgColor="#000000"
-                  level="M"
+                <Barcode 
+                  value={showSkuLabel.sku || 'NOSKU'} 
+                  format="CODE128" 
+                  width={3} 
+                  height={100} 
+                  displayValue={true}
+                  fontSize={24}
+                  margin={15}
+                  background="#ffffff"
                 />
-                <p className="text-[10px] font-bold uppercase mt-3 text-stone-600">Scan for product details</p>
+                <div className="mt-3 text-left w-full">
+                  <p className="text-[10px] font-bold text-stone-800">SKU: {showSkuLabel.sku || 'NOSKU'}</p>
+                  <p className="text-[8px] text-stone-500 uppercase">{showSkuLabel.title}</p>
+                </div>
               </div>
             </div>
             
