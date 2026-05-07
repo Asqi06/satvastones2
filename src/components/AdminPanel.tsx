@@ -483,23 +483,24 @@ export default function AdminPanel({
           {/* PRODUCTS TAB */}
           {activeTab === 'products' && (
             <div className="flex flex-col h-full">
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
-                <input 
-                  type="text" 
-                  placeholder="Search by name, SKU, or category..." 
-                  value={productSearch}
-                  onChange={(e) => setProductSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-xs border border-stone-200 focus:border-black outline-hidden"
-                />
+              <div className="p-6 border-b border-stone-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                  <input 
+                    type="text" 
+                    placeholder="Search by name, SKU, or category..." 
+                    value={productSearch}
+                    onChange={(e) => setProductSearch(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2 text-xs border border-stone-200 focus:border-black outline-hidden"
+                  />
+                </div>
+                <button 
+                  onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '' })}
+                  className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
+                >
+                  <Plus className="h-3 w-3" /> Add New Product
+                </button>
               </div>
-              <button 
-                onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '' })}
-                className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
-              >
-                <Plus className="h-3 w-3" /> Add New Product
-              </button>
-            </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left min-w-[700px]">
                 <thead>
