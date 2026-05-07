@@ -748,6 +748,44 @@ export default function AdminPanel({
                 <p className="text-[9px] text-stone-400 mt-4 italic uppercase tracking-tighter">Enter your Cloudinary details here to enable image uploads across the site.</p>
               </section>
 
+              <section className="pt-12 border-t border-stone-100">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <UploadCloud className="h-4 w-4" /> Logo & SEO
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Website Logo URL</label>
+                    <input 
+                      type="text" 
+                      placeholder="https://your-logo-url.com/logo.png"
+                      value={tempCMSData.settings.logoUrl || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, logoUrl: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                    <p className="text-[9px] text-stone-400 italic">Upload your logo to Cloudinary and paste the URL here</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">SEO Title</label>
+                    <input 
+                      type="text" 
+                      placeholder="Satvastones | Aesthetic Korean & Western Jewelry"
+                      value={tempCMSData.settings.seoTitle || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, seoTitle: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="col-span-full space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">SEO Description</label>
+                    <textarea 
+                      placeholder="Discover our curated collection of aesthetic Korean and Western jewelry..."
+                      value={tempCMSData.settings.seoDescription || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, seoDescription: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden min-h-[80px]" 
+                    />
+                  </div>
+                </div>
+              </section>
+
               <div className="pt-8 border-t border-stone-100 flex justify-end">
                 <button 
                   onClick={handleSaveCMS}
@@ -1230,7 +1268,7 @@ export default function AdminPanel({
                 {showSkuLabel.sku || 'NO SKU SET'}
               </div>
               <div className="flex flex-col items-center">
-                <Barcode value={showSkuLabel.sku || 'NOSKU'} format="CODE128" width={2} height={60} displayValue={false} />
+                <Barcode value={showSkuLabel.sku || 'NOSKU'} format="CODE128" width={3} height={100} fontSize={20} displayValue={false} margin={10} />
                 <p className="text-[10px] font-bold uppercase mt-2">{showSkuLabel.title}</p>
               </div>
             </div>

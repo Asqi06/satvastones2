@@ -754,7 +754,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-stone-50 font-sans selection:bg-stone-900 selection:text-white">
       <AnimatePresence>
-        {showLoading && <LoadingScreen logoUrl="/logo.png" />}
+        {showLoading && <LoadingScreen logoUrl={cmsData?.settings?.logoUrl || '/logo.png'} />}
       </AnimatePresence>
       
       {cmsData && (
@@ -898,8 +898,8 @@ function AppContent() {
               <Route path="/" element={
                 <>
                   <SEO 
-                    title="Satvastones | Aesthetic Korean & Western Jewelry" 
-                    description="Elevate your vibe with our premium Korean and Western jewelry collection. Free shipping on orders over ₹399 (Local only)."
+                    title={cmsData?.settings?.seoTitle || "Satvastones | Aesthetic Korean & Western Jewelry"} 
+                    description={cmsData?.settings?.seoDescription || "Elevate your vibe with our premium Korean and Western jewelry collection. Free shipping on orders over ₹399 (Local only)."}
                   />
                   {/* Hero Section */}
                   <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24">
