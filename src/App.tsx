@@ -582,7 +582,7 @@ function AppContent() {
 
   useEffect(() => {
     if (!cmsData?.settings?.timerEnd) return;
-    const targetDate = new Date(cmsData.settings.timerEnd);
+    const targetDate = new Date(cmsData?.settings?.timerEnd);
     
     const timer = setInterval(() => {
       const now = new Date().getTime();
@@ -820,10 +820,10 @@ function AppContent() {
           <div className="flex items-center gap-2">
             <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />
             <p className="text-[10px] font-black uppercase tracking-[0.15em] text-white sm:text-xs">
-              {cmsData.settings.announcementText}
+              {cmsData?.settings?.announcementText}
             </p>
           </div>
-          {cmsData.settings.showTimer && (
+          {cmsData?.settings?.showTimer && (
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 font-accent text-base font-bold tracking-wider text-white sm:text-lg">
                 <span className="text-red-500">{String(timeLeft.days).padStart(2, '0')}D</span>
