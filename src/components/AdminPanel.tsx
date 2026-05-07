@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import Barcode from 'react-barcode';
 import { 
   Settings, Package, ShoppingCart, Users, Image as ImageIcon, 
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
   CheckCircle, Clock, ChevronRight, UploadCloud, TrendingUp, ShoppingBag,
-  Menu, ShieldCheck, Search, Barcode
+  Menu, ShieldCheck, Search
 } from 'lucide-react';
 import { openUploadWidget } from '../utils/cloudinary';
 
@@ -1229,7 +1230,7 @@ export default function AdminPanel({
                 {showSkuLabel.sku || 'NO SKU SET'}
               </div>
               <div className="flex flex-col items-center">
-                <Barcode className="h-16 w-32 text-black" />
+                <Barcode value={showSkuLabel.sku || 'NOSKU'} format="CODE128" width={2} height={60} displayValue={false} />
                 <p className="text-[10px] font-bold uppercase mt-2">{showSkuLabel.title}</p>
               </div>
             </div>
