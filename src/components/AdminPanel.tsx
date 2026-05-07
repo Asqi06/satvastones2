@@ -553,6 +553,7 @@ export default function AdminPanel({
                 </tbody>
               </table>
             </div>
+            </div>
           )}
 
           {/* SETTINGS TAB */}
