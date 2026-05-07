@@ -465,7 +465,10 @@ function AppContent() {
 
   const navigateTo = (view: string, data?: any) => {
     if (view === 'home') navigate('/');
-    else if (view === 'shop') navigate('/shop');
+    else if (view === 'shop') {
+      if (data && data.category) navigate(`/shop?category=${encodeURIComponent(data.category)}`);
+      else navigate('/shop');
+    }
     else if (view === 'auth') navigate('/account');
     else if (view === 'cart') navigate('/cart');
     else if (view === 'checkout') navigate('/checkout');
@@ -475,8 +478,6 @@ function AppContent() {
     else if (view === 'product' && data) {
       const id = data._id || data.id;
       navigate(`/product/${id}`);
-    } else if (view === 'shop' && data?.category) {
-      navigate(`/shop?category=${data.category}`);
     }
     window.scrollTo(0, 0);
   };

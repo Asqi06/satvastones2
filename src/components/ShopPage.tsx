@@ -16,6 +16,8 @@ export default function ShopPage({
   
   const [activeCategory, setActiveCategory] = useState(categoryParam?.toUpperCase() || 'ALL');
   const [viewMode, setViewMode] = useState<'grid' | 'large'>('grid');
+  const [sortBy, setSortBy] = useState('Featured');
+  const [isSortOpen, setIsSortOpen] = useState(false);
 
   // Sync state if URL param changes
   useEffect(() => {
@@ -26,9 +28,17 @@ export default function ShopPage({
 
   const categories = ['ALL', 'NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'ACCESSORIES', 'PENDANT', 'GIFTS', 'HAMPERS', "MOTHER'S DAY"];
 
-  const filteredProducts = activeCategory === 'ALL' 
-    ? products 
+  let filteredProducts = activeCategory === 'ALL' 
+    ? [...products] 
     : products.filter(p => p.category === activeCategory);
+
+  if (sortBy === 'Price: Low to High') {
+    filteredProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
+  } else if (sortBy === 'Price: High to Low') {
+    filteredProducts.sort((a, b) => (b.price || 0) - (a.price || 0));
+  } else if (sortBy === 'Newest') {
+    filteredProducts.sort((a, b) => String(b._id || b.id || '').localeCompare(String(a._id || a.id || '')));
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -65,10 +75,26 @@ export default function ShopPage({
               <span className="ml-4">{filteredProducts.length} Products</span>
             </div>
             
-            <div className="relative group">
-              <button className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-900">
-                Sort By <ChevronDown className="h-3 w-3" />
+            <div className="relative">
+              <button 
+                onClick={() => setIsSortOpen(!isSortOpen)}
+                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-stone-900"
+              >
+                Sort By: <span className="text-stone-500">{sortBy}</span> <ChevronDown className="h-3 w-3" />
               </button>
+              {isSortOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white shadow-xl border border-stone-100 z-50">
+                  {['Featured', 'Price: Low to High', 'Price: High to Low', 'Newest'].map(option => (
+                    <button
+                      key={option}
+                      onClick={() => { setSortBy(option); setIsSortOpen(false); }}
+                      className={`block w-full text-left px-4 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-stone-50 ${sortBy === option ? 'text-black bg-stone-50' : 'text-stone-500'}`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
