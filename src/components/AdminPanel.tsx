@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Barcode from 'react-barcode';
+import QRCode from 'react-qrcode-logo';
 import { 
   Settings, Package, ShoppingCart, Users, Image as ImageIcon, 
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
@@ -1267,18 +1268,23 @@ export default function AdminPanel({
               <div className="bg-stone-50 py-4 font-mono text-xl font-bold tracking-[0.5em] border-y border-stone-100">
                 {showSkuLabel.sku || 'NO SKU SET'}
               </div>
-              <div className="w-full flex flex-col items-center py-6 bg-white">
-                <Barcode 
-                  value={showSkuLabel.sku || 'NOSKU'} 
-                  format="CODE128" 
-                  width={5} 
-                  height={120} 
-                  fontSize={30} 
-                  displayValue={false} 
-                  margin={20}
-                  background="#ffffff"
+              <div className="w-full flex flex-col items-center py-4 bg-white">
+                <QRCode 
+                  value={JSON.stringify({
+                    sku: showSkuLabel.sku || 'NOSKU',
+                    name: showSkuLabel.title || 'Unknown Product',
+                    price: showSkuLabel.price || 0,
+                    category: showSkuLabel.category || 'NECKLACES',
+                    material: showSkuLabel.material || '',
+                    stock: showSkuLabel.stockQuantity || 0,
+                    brand: 'Satvastones'
+                  })}
+                  size={180}
+                  bgColor="#ffffff"
+                  fgColor="#000000"
+                  level="M"
                 />
-                <p className="text-[12px] font-bold uppercase mt-4">{showSkuLabel.title}</p>
+                <p className="text-[10px] font-bold uppercase mt-3 text-stone-600">Scan for product details</p>
               </div>
             </div>
             
