@@ -480,8 +480,9 @@ export default function AdminPanel({
               </div>
             </div>
           )}
-
-            <div className="p-6 border-b border-stone-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* PRODUCTS TAB */}
+          {activeTab === 'products' && (
+            <div className="flex flex-col h-full">
               <div className="relative flex-1 max-w-md">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
                 <input 
@@ -1046,7 +1047,6 @@ export default function AdminPanel({
                     className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
                   />
                 </div>
-              </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-stone-500">Category</label>
                   <select 
@@ -1073,7 +1073,6 @@ export default function AdminPanel({
                 </label>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Mark as Featured (Show at top of Shop)</span>
               </div>
-            </div>
             <footer className="p-6 bg-stone-50 border-t border-stone-100 flex justify-end gap-4">
               <button 
                 onClick={() => { setEditingProduct(null); setNewProduct(null); }}
@@ -1211,6 +1210,7 @@ export default function AdminPanel({
             </div>
           </div>
         </div>
+      </div>
       )}
       {/* SKU Label Modal (Barcode Concept) */}
       {showSkuLabel && (
@@ -1241,6 +1241,7 @@ export default function AdminPanel({
             <p className="text-[8px] text-stone-400 uppercase">Attach this to your physical product packaging.</p>
           </div>
         </div>
+      </div>
       )}
     </div>
   );
