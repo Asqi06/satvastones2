@@ -935,17 +935,42 @@ export default function AdminPanel({
                 </div>
                 <p className="text-[9px] text-stone-400 italic">Configure color-specific galleries here. When a user chooses a color, the main gallery will switch to these images.</p>
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase text-stone-500">Category</label>
-                <select 
-                  value={editingProduct ? editingProduct.category : newProduct.category}
-                  onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, category: e.target.value}) : setNewProduct({...newProduct, category: e.target.value})}
-                  className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
-                >
-                  {['NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'PENDANT', 'GIFTS', 'HAMPERS', 'ACCESSORIES', "MOTHER'S DAY"].map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
-                </select>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-stone-500">Material Type</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. 18K Gold Plated"
+                    value={editingProduct ? (editingProduct.material || '') : (newProduct.material || '')}
+                    onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, material: e.target.value}) : setNewProduct({...newProduct, material: e.target.value})}
+                    className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-stone-500">Category</label>
+                  <select 
+                    value={editingProduct ? editingProduct.category : newProduct.category}
+                    onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, category: e.target.value}) : setNewProduct({...newProduct, category: e.target.value})}
+                    className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
+                  >
+                    {['NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'PENDANT', 'GIFTS', 'HAMPERS', 'ACCESSORIES', "MOTHER'S DAY"].map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-4 py-2">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={editingProduct ? editingProduct.isFeatured : newProduct.isFeatured}
+                    onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, isFeatured: e.target.checked}) : setNewProduct({...newProduct, isFeatured: e.target.checked})}
+                    className="sr-only peer" 
+                  />
+                  <div className="w-11 h-6 bg-stone-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"></div>
+                </label>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Mark as Featured (Show at top of Shop)</span>
               </div>
             </div>
             <footer className="p-6 bg-stone-50 border-t border-stone-100 flex justify-end gap-4">

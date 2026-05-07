@@ -47,7 +47,9 @@ const productSchema = new mongoose.Schema({
     rating: Number,
     comment: String,
     date: { type: Date, default: Date.now }
-  }]
+  }],
+  isFeatured: { type: Boolean, default: false },
+  material: String
 });
 
 const Product = mongoose.model('Product', productSchema);

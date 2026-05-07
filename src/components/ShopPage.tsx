@@ -38,6 +38,8 @@ export default function ShopPage({
     filteredProducts.sort((a, b) => (b.price || 0) - (a.price || 0));
   } else if (sortBy === 'Newest') {
     filteredProducts.sort((a, b) => String(b._id || b.id || '').localeCompare(String(a._id || a.id || '')));
+  } else if (sortBy === 'Featured') {
+    filteredProducts.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
   }
 
   return (

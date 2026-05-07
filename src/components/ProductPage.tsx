@@ -155,6 +155,13 @@ export default function ProductPage({
               <p className="mt-6 text-[11px] leading-relaxed text-stone-500 uppercase tracking-tight">
                 {product.description || 'No description available for this aesthetic piece.'}
               </p>
+              
+              {product.material && (
+                <div className="mt-6 flex items-center gap-2 border-l-2 border-stone-900 pl-4 py-1">
+                  <span className="text-[10px] font-bold uppercase text-stone-400 tracking-[0.2em]">Material</span>
+                  <span className="text-[10px] font-bold uppercase text-stone-900 tracking-widest">{product.material}</span>
+                </div>
+              )}
             </div>
 
             <div className="flex items-baseline gap-3">
