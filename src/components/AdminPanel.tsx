@@ -1273,15 +1273,17 @@ export default function AdminPanel({
                   value={showSkuLabel.sku || 'NOSKU'} 
                   format="CODE128" 
                   width={3} 
-                  height={100} 
+                  height={80} 
                   displayValue={true}
-                  fontSize={24}
+                  fontSize={20}
                   margin={15}
                   background="#ffffff"
                 />
                 <div className="mt-3 text-left w-full">
                   <p className="text-[10px] font-bold text-stone-800">SKU: {showSkuLabel.sku || 'NOSKU'}</p>
                   <p className="text-[8px] text-stone-500 uppercase">{showSkuLabel.title}</p>
+                  <p className="text-[8px] text-stone-400">₹{showSkuLabel.price} | {showSkuLabel.category} | {showSkuLabel.material}</p>
+                  <p className="text-[8px] text-stone-400">Stock: {showSkuLabel.stockQuantity || 0}</p>
                 </div>
               </div>
             </div>
