@@ -117,6 +117,13 @@ export default function ShopPage({
                 />
                 <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />
                 
+                {/* Sold Out Badge */}
+                {(product.stockQuantity || 0) <= 0 && (
+                  <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-10">
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-900 border-2 border-stone-900 px-3 py-1">Sold Out</span>
+                  </div>
+                )}
+                
                 {/* Quick Add */}
                 <div className="absolute inset-x-0 bottom-4 flex justify-center translate-y-4 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 px-4">
                   <button className="w-full bg-white/90 backdrop-blur-md py-3 text-[9px] font-bold uppercase tracking-widest text-black hover:bg-black hover:text-white transition-all shadow-xl">

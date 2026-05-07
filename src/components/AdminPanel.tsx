@@ -266,6 +266,35 @@ export default function AdminPanel({
                   </table>
                 </div>
               </section>
+
+              {/* Low Stock Radar */}
+              <section className="pt-12 border-t border-stone-100">
+                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 mb-6 flex items-center gap-2">
+                  <Package className="h-4 w-4" /> Stock Radar: Low Inventory Alerts
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {(cmsData?.products || [])
+                    .filter((p: any) => (p.stockQuantity || 0) < 5)
+                    .map((p: any) => (
+                      <div key={p._id} className="flex items-center gap-4 p-4 bg-red-50 border border-red-100 rounded-sm">
+                        <div className="w-12 h-16 bg-white overflow-hidden shrink-0 shadow-sm">
+                          <img src={p.image} className="w-full h-full object-cover" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold uppercase text-stone-900 leading-tight">{p.title}</p>
+                          <p className="text-[9px] font-bold uppercase text-red-600 mt-1 font-accent">STOCK: {p.stockQuantity || 0} LEFT</p>
+                          <p className="text-[8px] text-stone-400 mt-0.5 uppercase tracking-tighter font-mono">SKU: {p.sku || 'N/A'}</p>
+                        </div>
+                      </div>
+                    ))}
+                  {(cmsData?.products || []).filter((p: any) => (p.stockQuantity || 0) < 5).length === 0 && (
+                    <div className="col-span-full py-12 text-center bg-stone-50 border border-stone-100 italic text-[10px] text-stone-300 uppercase tracking-widest">
+                      <ShieldCheck className="h-6 w-6 mx-auto mb-3 text-stone-200" />
+                      All inventory levels are healthy.
+                    </div>
+                  )}
+                </div>
+              </section>
             </div>
           );
         })()}
@@ -504,7 +533,13 @@ export default function AdminPanel({
                       </td>
                       <td className="px-6 py-4">
                         <p className="text-[11px] font-bold text-stone-900">₹{product.price}</p>
-                        <p className="text-[9px] text-stone-400 line-through">₹{product.oldPrice}</p>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <div className={`w-1.5 h-1.5 rounded-full ${
+                            (product.stockQuantity || 0) <= 0 ? 'bg-red-500' : 
+                            (product.stockQuantity || 0) < 5 ? 'bg-orange-500 animate-pulse' : 'bg-green-500'
+                          }`} />
+                          <span className="text-[9px] font-bold uppercase text-stone-400">Stock: {product.stockQuantity || 0}</span>
+                        </div>
                       </td>
                       <td className="px-6 py-4 text-right space-x-3">
                         <button onClick={() => setShowSkuLabel(product)} className="text-stone-400 hover:text-blue-500 transition-colors" title="Print SKU Label"><Barcode className="h-4 w-4" /></button>
@@ -998,6 +1033,16 @@ export default function AdminPanel({
                     placeholder="e.g. 18K Gold Plated"
                     value={editingProduct ? (editingProduct.material || '') : (newProduct.material || '')}
                     onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, material: e.target.value}) : setNewProduct({...newProduct, material: e.target.value})}
+                    className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-stone-500">Stock Quantity</label>
+                  <input 
+                    type="number" 
+                    placeholder="0"
+                    value={editingProduct ? (editingProduct.stockQuantity || 0) : (newProduct.stockQuantity || 0)}
+                    onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, stockQuantity: Number(e.target.value)}) : setNewProduct({...newProduct, stockQuantity: Number(e.target.value)})}
                     className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
                   />
                 </div>

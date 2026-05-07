@@ -50,10 +50,28 @@ const productSchema = new mongoose.Schema({
   }],
   isFeatured: { type: Boolean, default: false },
   material: String,
-  sku: { type: String, unique: true, sparse: true }
+  sku: { type: String, unique: true, sparse: true },
+  stockQuantity: { type: Number, default: 0 }
 });
 
 const Product = mongoose.model('Product', productSchema);
+
+// Helper function to deduct stock
+async function deductStock(items) {
+  for (const item of items) {
+    try {
+      const productId = item._id || item.id;
+      if (productId) {
+        await Product.findByIdAndUpdate(productId, {
+          $inc: { stockQuantity: -(item.qty || 1) }
+        });
+        console.log(`Deducted stock for product ${productId}`);
+      }
+    } catch (err) {
+      console.error("Stock deduction error for product:", item.title, err);
+    }
+  }
+}
 
 const cmsSchema = new mongoose.Schema({
   hero: {
@@ -371,6 +389,8 @@ app.post('/api/verify-payment', async (req, res) => {
         status: 'Confirmed' 
       });
       await order.save();
+      // Deduct stock for COD orders
+      await deductStock(orderDetails.items);
       // Clear saved cart after successful order
       await Cart.findOneAndDelete({ email: orderDetails.customer.email });
       
@@ -410,6 +430,8 @@ app.post('/api/verify-payment', async (req, res) => {
         status: 'Confirmed' 
       });
       await order.save();
+      // Deduct stock for Razorpay orders
+      await deductStock(orderDetails.items);
       // Clear saved cart after successful order
       await Cart.findOneAndDelete({ email: orderDetails.customer.email });
       

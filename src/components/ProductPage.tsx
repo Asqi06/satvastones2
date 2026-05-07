@@ -324,6 +324,7 @@ export default function ProductPage({
 
               <div className="flex gap-4">
                 <button 
+                  disabled={(product.stockQuantity || 0) <= 0}
                   onClick={() => {
                     if (product.category === 'NAME NECKLACE' && !customText.trim()) {
                       alert('Please enter a name for your necklace');
@@ -339,9 +340,13 @@ export default function ProductPage({
                       customText: customText.trim()
                     })
                   }}
-                  className="flex-1 bg-black text-white py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all shadow-xl active:scale-95"
+                  className={`flex-1 py-5 text-[10px] font-bold uppercase tracking-[0.3em] transition-all shadow-xl active:scale-95 ${
+                    (product.stockQuantity || 0) <= 0 
+                      ? 'bg-stone-200 text-stone-400 cursor-not-allowed' 
+                      : 'bg-black text-white hover:bg-stone-800'
+                  }`}
                 >
-                  Add To Bag
+                  {(product.stockQuantity || 0) <= 0 ? 'Sold Out' : 'Add To Bag'}
                 </button>
               </div>
             </div>
