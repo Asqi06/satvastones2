@@ -1083,15 +1083,22 @@ export default function AdminPanel({
                   {selectedOrder.items.map((item: any, idx: number) => (
                     <div key={idx} className="flex items-center justify-between p-4 bg-stone-50 border border-stone-100">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-16 bg-white overflow-hidden shrink-0">
+                        <div className="w-16 h-20 bg-white overflow-hidden shrink-0 border border-stone-100 shadow-sm">
                           <img src={item.image} className="w-full h-full object-cover" />
                         </div>
-                        <div>
-                          <p className="text-xs font-bold text-stone-900">{item.title} <span className="text-stone-400 font-normal">x{item.qty}</span></p>
-                          {item.variant && <p className="text-[10px] text-stone-500 uppercase tracking-widest mt-0.5">Color: {item.variant}</p>}
-                          {item.customText && <p className="text-[10px] text-red-600 font-bold uppercase tracking-widest mt-1 bg-red-50 p-1 rounded-xs inline-block">Custom Name: {item.customText}</p>}
-                          {item.options && item.options.length > 0 && (
-                            <p className="text-[9px] text-stone-400 mt-0.5 italic">Options: {item.options.join(', ')}</p>
+                        <div className="flex-1">
+                          <p className="text-sm font-bold text-stone-900">{item.title} <span className="text-stone-400 font-normal ml-2">x{item.qty}</span></p>
+                          <div className="flex flex-wrap gap-2 mt-1.5">
+                            {item.variant && <span className="text-[9px] bg-stone-100 text-stone-600 px-2 py-0.5 font-bold uppercase tracking-widest">{item.variant}</span>}
+                            {item.options && item.options.map((opt: string) => (
+                              <span key={opt} className="text-[9px] bg-stone-50 text-stone-400 px-2 py-0.5 border border-stone-100 font-bold uppercase tracking-widest">{opt}</span>
+                            ))}
+                          </div>
+                          {item.customText && (
+                            <div className="mt-3 bg-red-600 text-white p-2.5 rounded-sm inline-flex flex-col gap-1 shadow-lg shadow-red-100">
+                              <span className="text-[8px] font-black uppercase tracking-[0.2em] opacity-80">PERSONALIZATION</span>
+                              <span className="text-[12px] font-black uppercase tracking-widest leading-none">{item.customText}</span>
+                            </div>
                           )}
                         </div>
                       </div>

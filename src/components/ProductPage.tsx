@@ -329,7 +329,15 @@ export default function ProductPage({
                       alert('Please enter a name for your necklace');
                       return;
                     }
-                    onAddToCart({...product, qty, options: selectedOption, variant: selectedVariant?.color, customText: customText.trim()})
+                    const variantImage = selectedVariant?.images?.[0] || product.image;
+                    onAddToCart({
+                      ...product, 
+                      image: variantImage,
+                      qty, 
+                      options: selectedOption, 
+                      variant: selectedVariant?.color, 
+                      customText: customText.trim()
+                    })
                   }}
                   className="flex-1 bg-black text-white py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-800 transition-all shadow-xl active:scale-95"
                 >
