@@ -4,7 +4,7 @@ import {
   Settings, Package, ShoppingCart, Users, Image as ImageIcon, 
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
   CheckCircle, Clock, ChevronRight, UploadCloud, TrendingUp, ShoppingBag,
-  Menu, ShieldCheck, Search, Barcode
+  Menu, ShieldCheck, Search, Barcode as BarcodeIcon
 } from 'lucide-react';
 import { openUploadWidget } from '../utils/cloudinary';
 
@@ -545,7 +545,7 @@ export default function AdminPanel({
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right space-x-3">
-                        <button onClick={() => setShowSkuLabel(product)} className="text-stone-400 hover:text-blue-500 transition-colors" title="Print SKU Label"><Barcode className="h-4 w-4" /></button>
+                        <button onClick={() => setShowSkuLabel(product)} className="text-stone-400 hover:text-blue-500 transition-colors" title="Print SKU Label"><BarcodeIcon className="h-4 w-4" /></button>
                         <button onClick={() => setEditingProduct(product)} className="text-stone-400 hover:text-black transition-colors"><Edit3 className="h-4 w-4" /></button>
                         <button onClick={() => removeProduct(product)} className="text-stone-400 hover:text-red-500 transition-colors"><Trash2 className="h-4 w-4" /></button>
                       </td>
