@@ -49,7 +49,8 @@ const productSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now }
   }],
   isFeatured: { type: Boolean, default: false },
-  material: String
+  material: String,
+  sku: { type: String, unique: true, sparse: true }
 });
 
 const Product = mongoose.model('Product', productSchema);

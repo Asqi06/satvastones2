@@ -3,7 +3,7 @@ import {
   Settings, Package, ShoppingCart, Users, Image as ImageIcon, 
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
   CheckCircle, Clock, ChevronRight, UploadCloud, TrendingUp, ShoppingBag,
-  Menu, ShieldCheck
+  Menu, ShieldCheck, Search, Barcode
 } from 'lucide-react';
 import { openUploadWidget } from '../utils/cloudinary';
 
@@ -31,6 +31,9 @@ export default function AdminPanel({
   const [isSaving, setIsSaving] = useState(false);
   const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [productSearch, setProductSearch] = useState('');
+  const [orderSearch, setOrderSearch] = useState('');
+  const [showSkuLabel, setShowSkuLabel] = useState<any>(null);
 
   // Check DB Connection
   React.useEffect(() => {
@@ -449,21 +452,43 @@ export default function AdminPanel({
             </div>
           )}
 
-          {/* PRODUCTS TAB */}
-          {activeTab === 'products' && (
+            <div className="p-6 border-b border-stone-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search by name, SKU, or category..." 
+                  value={productSearch}
+                  onChange={(e) => setProductSearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 text-xs border border-stone-200 focus:border-black outline-hidden"
+                />
+              </div>
+              <button 
+                onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '' })}
+                className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
+              >
+                <Plus className="h-3 w-3" /> Add New Product
+              </button>
+            </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left min-w-[700px]">
                 <thead>
                   <tr className="border-b border-stone-200 bg-stone-50">
                     <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">Image</th>
-                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">Details</th>
+                    <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">Details & SKU</th>
                     <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">Category</th>
                     <th className="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">Price</th>
                     <th className="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-widest text-stone-400">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100">
-                  {(cmsData?.products || []).map((product: any) => (
+                  {(cmsData?.products || [])
+                    .filter((p: any) => 
+                      p.title.toLowerCase().includes(productSearch.toLowerCase()) || 
+                      (p.sku && p.sku.toLowerCase().includes(productSearch.toLowerCase())) ||
+                      p.category.toLowerCase().includes(productSearch.toLowerCase())
+                    )
+                    .map((product: any) => (
                     <tr key={product._id} className="hover:bg-stone-50 transition-all group">
                       <td className="px-6 py-4">
                         <div className="w-12 h-16 bg-stone-100 overflow-hidden">
@@ -472,7 +497,7 @@ export default function AdminPanel({
                       </td>
                       <td className="px-6 py-4">
                         <p className="text-[11px] font-bold uppercase text-stone-900">{product.title}</p>
-                        <p className="text-[9px] text-stone-400 mt-1">ID: #{product._id ? product._id.slice(-6) : product.id}</p>
+                        <p className="text-[9px] text-stone-400 mt-1 font-mono uppercase">SKU: {product.sku || 'NOT SET'}</p>
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-[10px] font-bold uppercase bg-stone-100 px-2 py-1">{product.category}</span>
@@ -482,6 +507,7 @@ export default function AdminPanel({
                         <p className="text-[9px] text-stone-400 line-through">₹{product.oldPrice}</p>
                       </td>
                       <td className="px-6 py-4 text-right space-x-3">
+                        <button onClick={() => setShowSkuLabel(product)} className="text-stone-400 hover:text-blue-500 transition-colors" title="Print SKU Label"><Barcode className="h-4 w-4" /></button>
                         <button onClick={() => setEditingProduct(product)} className="text-stone-400 hover:text-black transition-colors"><Edit3 className="h-4 w-4" /></button>
                         <button onClick={() => removeProduct(product)} className="text-stone-400 hover:text-red-500 transition-colors"><Trash2 className="h-4 w-4" /></button>
                       </td>
@@ -698,7 +724,25 @@ export default function AdminPanel({
           {/* ORDERS TAB */}
           {activeTab === 'orders' && (
             <div className="p-8 space-y-6">
-              {orders && orders.length > 0 ? orders.map((order: any) => (
+              <div className="relative max-w-md mb-8">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-400" />
+                <input 
+                  type="text" 
+                  placeholder="Search by Order ID, Name, or Phone..." 
+                  value={orderSearch}
+                  onChange={(e) => setOrderSearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 text-xs border border-stone-200 focus:border-black outline-hidden bg-white shadow-sm"
+                />
+              </div>
+
+              {orders && orders.length > 0 ? orders
+                .filter((o: any) => 
+                  o._id?.toLowerCase().includes(orderSearch.toLowerCase()) ||
+                  o.customer?.name?.toLowerCase().includes(orderSearch.toLowerCase()) ||
+                  o.customer?.phone?.includes(orderSearch) ||
+                  (o.orderNumber && o.orderNumber.toLowerCase().includes(orderSearch.toLowerCase()))
+                )
+                .map((order: any) => (
                 <div 
                   key={order._id || order.id || Math.random()} 
                   onClick={() => setSelectedOrder(order)}
@@ -937,6 +981,17 @@ export default function AdminPanel({
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
+                  <label className="text-[10px] font-bold uppercase text-stone-500">Product SKU / Serial Number</label>
+                  <input 
+                    type="text" 
+                    placeholder="e.g. SS-RING-01"
+                    value={editingProduct ? (editingProduct.sku || '') : (newProduct.sku || '')}
+                    onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, sku: e.target.value.toUpperCase()}) : setNewProduct({...newProduct, sku: e.target.value.toUpperCase()})}
+                    className="w-full border border-stone-200 p-3 text-sm font-mono focus:border-black outline-hidden"
+                  />
+                  <p className="text-[9px] text-stone-400 uppercase italic">Unique identifier for physical barcode system.</p>
+                </div>
+                <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-stone-500">Material Type</label>
                   <input 
                     type="text" 
@@ -946,6 +1001,7 @@ export default function AdminPanel({
                     className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
                   />
                 </div>
+              </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase text-stone-500">Category</label>
                   <select 
@@ -1108,6 +1164,36 @@ export default function AdminPanel({
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {/* SKU Label Modal (Barcode Concept) */}
+      {showSkuLabel && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4">
+          <div className="bg-white p-8 rounded-sm shadow-2xl max-w-sm w-full text-center space-y-6">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Inventory Label</span>
+              <button onClick={() => setShowSkuLabel(null)} className="text-stone-400 hover:text-black"><X className="h-4 w-4" /></button>
+            </div>
+            
+            <div className="border-2 border-black p-6 space-y-4">
+              <p className="font-display text-xl font-bold tracking-tight">SATVASTONES.</p>
+              <div className="bg-stone-50 py-4 font-mono text-xl font-bold tracking-[0.5em] border-y border-stone-100">
+                {showSkuLabel.sku || 'NO SKU SET'}
+              </div>
+              <div className="flex flex-col items-center">
+                <Barcode className="h-16 w-32 text-black" />
+                <p className="text-[10px] font-bold uppercase mt-2">{showSkuLabel.title}</p>
+              </div>
+            </div>
+            
+            <button 
+              onClick={() => window.print()}
+              className="w-full bg-black text-white py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-stone-800 transition-all"
+            >
+              Print Physical Label
+            </button>
+            <p className="text-[8px] text-stone-400 uppercase">Attach this to your physical product packaging.</p>
           </div>
         </div>
       )}
