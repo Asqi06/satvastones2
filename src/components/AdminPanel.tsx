@@ -1267,8 +1267,10 @@ export default function AdminPanel({
               <div className="bg-stone-50 py-4 font-mono text-xl font-bold tracking-[0.5em] border-y border-stone-100">
                 {showSkuLabel.sku || 'NO SKU SET'}
               </div>
-              <div className="flex flex-col items-center">
-                <Barcode value={showSkuLabel.sku || 'NOSKU'} format="CODE128" width={3} height={100} fontSize={20} displayValue={false} margin={10} />
+              <div className="w-full flex flex-col items-center">
+                <div className="w-full flex justify-center">
+                  <Barcode value={showSkuLabel.sku || 'NOSKU'} format="CODE128" width={4} height={80} fontSize={24} displayValue={false} margin={15} />
+                </div>
                 <p className="text-[10px] font-bold uppercase mt-2">{showSkuLabel.title}</p>
               </div>
             </div>
