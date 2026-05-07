@@ -1212,7 +1212,6 @@ export default function AdminPanel({
             </div>
           </div>
         </div>
-      </div>
       )}
       {/* SKU Label Modal (Barcode Concept) */}
       {showSkuLabel && (
@@ -1243,7 +1242,6 @@ export default function AdminPanel({
             <p className="text-[8px] text-stone-400 uppercase">Attach this to your physical product packaging.</p>
           </div>
         </div>
-      </div>
       )}
     </div>
   );
