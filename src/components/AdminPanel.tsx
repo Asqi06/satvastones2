@@ -1270,13 +1270,13 @@ export default function AdminPanel({
               </div>
               <div className="w-full flex flex-col items-center py-4 bg-white">
                 <Barcode 
-                  value={`${showSkuLabel.sku || 'NOSKU'}~${showSkuLabel.title || ''}~${showSkuLabel.price || ''}~${showSkuLabel.category || ''}~${showSkuLabel.material || ''}`} 
+                  value={`${showSkuLabel.sku || 'NOSKU'}|${showSkuLabel.title?.substring(0,15) || ''}|${showSkuLabel.price || ''}|${showSkuLabel.category || ''}`} 
                   format="CODE128" 
-                  width={2} 
-                  height={60} 
+                  width={1} 
+                  height={50} 
                   displayValue={true}
-                  fontSize={14}
-                  margin={8}
+                  fontSize={10}
+                  margin={5}
                   background="#ffffff"
                 />
                 <div className="mt-3 text-left w-full">
