@@ -123,6 +123,16 @@ export default function ShopPage({
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-900 border-2 border-stone-900 px-3 py-1">Sold Out</span>
                   </div>
                 )}
+
+                {/* Anti-Tarnish Badge */}
+                {product.isAntiTarnish && (
+                  <div className="absolute top-2 left-2 z-10">
+                    <span className="inline-flex items-center gap-1 bg-emerald-600 text-white px-2 py-0.5 text-[8px] font-black uppercase tracking-widest rounded-sm shadow-md">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-200 inline-block"></span>
+                      Anti-Tarnish
+                    </span>
+                  </div>
+                )}
                 
                 {/* Quick Add */}
                 <div className="absolute inset-x-0 bottom-4 flex justify-center translate-y-4 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 px-4">

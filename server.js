@@ -51,6 +51,7 @@ const productSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now }
   }],
   isFeatured: { type: Boolean, default: false },
+  isAntiTarnish: { type: Boolean, default: false },
   material: String,
   sku: { type: String, unique: true, sparse: true },
   stockQuantity: { type: Number, default: 0 }

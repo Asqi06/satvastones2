@@ -25,7 +25,7 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState<any>({ 
-    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [] 
+    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false 
   });
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -205,7 +205,7 @@ export default function AdminPanel({
           {activeTab === 'products' && (
             <button 
               onClick={() => setNewProduct({ 
-                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [] 
+                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false 
               })}
               className="bg-black text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800 transition-all"
             >
@@ -497,7 +497,7 @@ export default function AdminPanel({
                   />
                 </div>
                 <button 
-                  onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '' })}
+                  onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false })}
                   className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
                 >
                   <Plus className="h-3 w-3" /> Add New Product
@@ -1114,6 +1114,26 @@ export default function AdminPanel({
                   <div className="w-11 h-6 bg-stone-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"></div>
                 </label>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Mark as Featured (Show at top of Shop)</span>
+              </div>
+
+              {/* Anti-Tarnish Toggle */}
+              <div className="flex items-center gap-4 py-2 border border-stone-100 bg-stone-50 px-4 rounded-sm">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={editingProduct ? (editingProduct.isAntiTarnish || false) : (newProduct.isAntiTarnish || false)}
+                    onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, isAntiTarnish: e.target.checked}) : setNewProduct({...newProduct, isAntiTarnish: e.target.checked})}
+                    className="sr-only peer" 
+                  />
+                  <div className="w-11 h-6 bg-stone-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                </label>
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-stone-900 flex items-center gap-1.5">
+                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>
+                    Anti-Tarnish Jewelry
+                  </span>
+                  <p className="text-[9px] text-stone-400 uppercase tracking-wider mt-0.5">Displays an 'Anti-Tarnish' badge on the product card & detail page</p>
+                </div>
               </div>
             </div>
             <footer className="p-6 bg-stone-50 border-t border-stone-100 flex justify-end gap-4">

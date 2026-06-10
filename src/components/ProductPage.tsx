@@ -100,6 +100,16 @@ export default function ProductPage({
               >
                 <Heart className={`h-5 w-5 transition-colors ${wishlisted ? 'fill-red-500 stroke-red-500' : 'stroke-stone-400'}`} />
               </button>
+
+              {/* Anti-Tarnish Badge on Image */}
+              {product.isAntiTarnish && (
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-sm shadow-lg">
+                    <span className="w-2 h-2 rounded-full bg-emerald-200 inline-block"></span>
+                    Anti-Tarnish
+                  </span>
+                </div>
+              )}
               {/* Prev / Next */}
               {images.length > 1 && (
                 <>
@@ -267,7 +277,7 @@ export default function ProductPage({
             )}
 
             {/* Trust Signals & UX Boosters */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-y border-stone-100 py-6 my-4">
+            <div className={`grid grid-cols-1 gap-4 border-y border-stone-100 py-6 my-4 ${product.isAntiTarnish ? 'md:grid-cols-4' : 'md:grid-cols-3'}`}>
               <div className="flex items-center gap-3">
                 <div className="h-8 w-8 rounded-full bg-stone-50 flex items-center justify-center">
                   <Truck className="h-4 w-4 text-stone-600" />
@@ -295,6 +305,18 @@ export default function ProductPage({
                   <p className="text-[8px] text-stone-400 uppercase">No Returns or Exchanges</p>
                 </div>
               </div>
+              {/* Anti-Tarnish Trust Signal */}
+              {product.isAntiTarnish && (
+                <div className="flex items-center gap-3 border border-emerald-100 bg-emerald-50 rounded-sm px-3 py-2">
+                  <div className="h-8 w-8 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                    <span className="text-emerald-600 text-[14px] font-black">✦</span>
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-[9px] font-black uppercase tracking-widest text-emerald-700">Anti-Tarnish</p>
+                    <p className="text-[8px] text-emerald-500 uppercase">Long-lasting shine guaranteed</p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-6">
