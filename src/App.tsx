@@ -922,10 +922,17 @@ function AppContent() {
 
                       <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
                         <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Hero" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                        <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center p-8">
-                          <button className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-black hover:text-white transition-all shadow-2xl">
-                            Enter The Shop
-                          </button>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end p-8 md:p-14">
+                          <div className="flex flex-col items-center gap-4 mb-4">
+                            <p className="text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em]">Browse The Full Collection</p>
+                            <button className="group/btn relative flex items-center gap-4 bg-white text-black pl-8 pr-6 py-4 md:py-5 text-[11px] md:text-sm font-black uppercase tracking-[0.25em] shadow-2xl hover:bg-black hover:text-white transition-all duration-300 rounded-full">
+                              <span>Shop All Jewelry</span>
+                              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white group-hover/btn:bg-white group-hover/btn:text-black transition-all duration-300">
+                                <ArrowRight className="h-4 w-4" />
+                              </span>
+                            </button>
+                            <p className="text-white/50 text-[8px] uppercase tracking-widest">{cmsData.products?.length || 0}+ Aesthetic Pieces</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -947,6 +954,28 @@ function AppContent() {
                             onClick={() => navigateTo('shop', { category: (cat.name || cat.title || 'ALL').toUpperCase() })} 
                           />
                         ))}
+                      </div>
+
+                      {/* Full-width Shop CTA Banner */}
+                      <div
+                        onClick={() => navigateTo('shop')}
+                        className="mt-12 cursor-pointer group relative overflow-hidden bg-stone-900 rounded-sm px-8 py-10 md:py-14 flex flex-col md:flex-row items-center justify-between gap-6"
+                      >
+                        {/* Animated shimmer */}
+                        <div className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+                        <div className="text-center md:text-left">
+                          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-500 mb-2">New Customers? Start Here</p>
+                          <h3 className="font-display text-3xl md:text-5xl font-bold uppercase tracking-tight text-white leading-tight">
+                            View The Complete <span className="text-stone-400">Collection</span>
+                          </h3>
+                          <p className="text-[11px] text-stone-400 uppercase tracking-wider mt-3">{cmsData.products?.length || 0}+ Pieces • Earrings, Necklaces, Rings, Bracelets & More</p>
+                        </div>
+                        <button className="shrink-0 flex items-center gap-4 bg-white text-black pl-8 pr-5 py-4 md:py-5 text-[11px] font-black uppercase tracking-[0.2em] rounded-full shadow-xl group-hover:bg-stone-100 transition-all">
+                          Shop Everything
+                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white">
+                            <ArrowRight className="h-4 w-4" />
+                          </span>
+                        </button>
                       </div>
                     </div>
                   </section>
@@ -998,8 +1027,14 @@ function AppContent() {
                         <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight leading-[0.85]">
                           LATEST <br /> <span className="text-stone-300">ARRIVALS</span>
                         </h2>
-                        <button onClick={() => navigateTo('shop')} className="px-10 py-4 border border-stone-300 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-all">
-                          View Collection
+                        <button
+                          onClick={() => navigateTo('shop')}
+                          className="group/btn flex items-center gap-3 bg-black text-white pl-7 pr-5 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-stone-800 transition-all shadow-lg"
+                        >
+                          View All {cmsData.products?.length || ''} Pieces
+                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-black group-hover/btn:scale-110 transition-transform">
+                            <ArrowRight className="h-3.5 w-3.5" />
+                          </span>
                         </button>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
