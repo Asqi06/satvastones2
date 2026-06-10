@@ -6,11 +6,13 @@ import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import { sendEmail, emailTemplates, generateInvoice } from './emailService.js';
 import { OAuth2Client } from 'google-auth-library';
+import compression from 'compression';
 
 
 dotenv.config();
 
 const app = express();
+app.use(compression());
 app.use(cors());
 app.use(express.json());
 
