@@ -297,5 +297,25 @@ export const emailTemplates = {
         <a href="${process.env.FRONTEND_URL || 'https://satvastones.in'}/account" class="button">SEE LIVE STATUS</a>
       </div>
     `, `Order Update: ${status}`);
+  },
+
+  loginNotification: (name, time) => {
+    return baseTemplate(`
+      <div style="text-align: center;">
+        <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 25px; letter-spacing: -1px;">NEW LOGIN DETECTED</h1>
+        <p style="font-size: 15px; color: #555; margin-bottom: 35px;">Hello ${name ? name.toUpperCase() : 'USER'}, a new login to your Satvastones account was recorded on ${time}.</p>
+        <p style="font-size: 12px; color: #888;">If this wasn't you, please secure your account or contact our support team immediately.</p>
+      </div>
+    `, "New Login - Satvastones");
+  },
+
+  abandonedCart: (name) => {
+    return baseTemplate(`
+      <div style="text-align: center;">
+        <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 25px; letter-spacing: -1px;">YOUR BAG IS WAITING</h1>
+        <p style="font-size: 15px; color: #555; margin-bottom: 35px;">Hello ${name ? name.toUpperCase() : 'THERE'}, we noticed you left some of our curated, hand-crafted aesthetic pieces in your shopping cart. They are reserved for a limited time.</p>
+        <p><a href="${process.env.FRONTEND_URL || 'https://satvastones.in'}/cart" class="button">RETURN TO BAG</a></p>
+      </div>
+    `, "Your Satvastones Bag is Waiting...");
   }
 };
