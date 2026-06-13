@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import SEO from './components/SEO';
-import JsonLd, { getProductSchema } from './components/JsonLd';
+import JsonLd, { getProductSchema, getOrganizationSchema, getWebsiteSchema, getBreadcrumbSchema, getFaqSchema } from './components/JsonLd';
 import LoadingScreen from './components/LoadingScreen';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
@@ -406,15 +406,26 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
     );
   }
 
+  const metaTitle = product.metaTitle || `${product.title} | Buy at Just ₹${product.price} | Satvastones`;
+  const metaDesc = product.metaDescription || `Buy ${product.title} at ₹${product.price}. ${product.isAntiTarnish ? 'Anti-tarnish, ' : ''}waterproof aesthetic jewelry. ✓ Free Shipping ✓ COD Available. Shop authentic ${product.category?.toLowerCase() || 'jewelry'} online at Satvastones.`;
+  const metaKeywords = [...(product.focusKeywords || []), product.title, `${product.title} price`, `buy ${product.title} online`, product.category?.toLowerCase() || 'jewelry', 'satvastones', 'aesthetic jewelry'];
+
   return (
     <>
       <SEO 
-        title={product.title} 
-        description={product.description || `Buy ${product.title} at Satvastones. High quality aesthetic jewelry.`}
+        title={metaTitle}
+        description={metaDesc}
         image={product.image}
         canonical={`https://satvastones.in/product/${id}`}
+        keywords={metaKeywords}
+        type="product"
       />
       <JsonLd data={getProductSchema(product)} />
+      <JsonLd data={getBreadcrumbSchema([
+        { name: 'Home', url: 'https://satvastones.in/' },
+        { name: 'Shop', url: 'https://satvastones.in/shop' },
+        { name: product.title, url: `https://satvastones.in/product/${id}` }
+      ])} />
       <ProductPage 
         product={product} 
         allProducts={cmsData.products}
@@ -761,6 +772,10 @@ function AppContent() {
       
       {cmsData && (
         <>
+      {/* Global JSON-LD Structured Data (Organization + WebSite) */}
+      <JsonLd data={getOrganizationSchema()} />
+      <JsonLd data={getWebsiteSchema()} />
+
       {/* Mobile Sidebar */}
       <AnimatePresence>
         {isMenuOpen && (
@@ -901,8 +916,32 @@ function AppContent() {
                 <>
                   <SEO 
                     title={cmsData?.settings?.seoTitle || "Satvastones | Aesthetic Korean & Western Jewelry"} 
-                    description={cmsData?.settings?.seoDescription || "Elevate your vibe with our premium Korean and Western jewelry collection. Free shipping on orders over ₹399 (Local only)."}
+                    description={cmsData?.settings?.seoDescription || "Elevate your vibe with our premium Korean and Western jewelry collection. Anti-tarnish, waterproof, and trend-forward designs. Free shipping on orders over ₹399."}
+                    canonical="https://satvastones.in/"
+                    keywords={['aesthetic jewelry', 'korean jewelry', 'western jewelry', 'anti-tarnish jewelry', 'waterproof jewelry', 'online jewelry store india', 'satvastones', 'trendy earrings', 'gold plated necklace', 'minimalist rings', 'bracelets india', 'fashion jewelry online']}
                   />
+                  <JsonLd data={getFaqSchema([
+                    {
+                      question: 'Is Satvastones jewelry anti-tarnish?',
+                      answer: 'Yes! All our jewelry is anti-tarnish, waterproof, and designed to maintain its color. We guarantee no dulling or fading.'
+                    },
+                    {
+                      question: 'Do you offer free shipping?',
+                      answer: 'Yes, we offer free shipping on prepaid orders above ₹399. COD charges may apply based on your location.'
+                    },
+                    {
+                      question: 'What payment methods do you accept?',
+                      answer: 'We accept UPI, Credit/Debit Cards, Net Banking, and Cash on Delivery (COD).'
+                    },
+                    {
+                      question: 'How do I care for my jewelry?',
+                      answer: 'Keep your jewelry dry when not wearing. Avoid contact with perfumes and lotions. Store in a cool, dry place.'
+                    },
+                    {
+                      question: 'Is Satvastones jewelry waterproof?',
+                      answer: 'Yes, our jewelry is waterproof and can withstand daily wear. However, we recommend removing before swimming or showering to maintain longevity.'
+                    }
+                  ])} />
                   {/* Hero Section */}
                   <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24">
                     <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -1019,11 +1058,7 @@ function AppContent() {
 
                             <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                               <button
-                                onClick={() => {
-                                  const saleProducts = cmsData.products.filter((p: any) => p.isNinetyNine);
-                                  if (saleProducts.length > 0) navigateTo('product', saleProducts[0]);
-                                  else navigateTo('shop');
-                                }}
+                                onClick={() => navigateTo('shop', { category: '₹99 SALE' })}
                                 className="bg-white text-black px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-rose-100 transition-all shadow-2xl rounded-full flex items-center gap-3 group/btn"
                               >
                                 Shop ₹99 Collection
@@ -1139,13 +1174,25 @@ function AppContent() {
                 </>
               } />
 
-              <Route path="/shop" element={<><SEO title="Shop Aesthetic Jewelry" /><ShopPage products={cmsData.products} cmsData={cmsData} onSelectProduct={(p) => navigateTo('product', p)} /></>} />
+              <Route path="/shop" element={<>
+                <SEO 
+                  title="Shop Aesthetic Jewelry Online | Satvastones"
+                  description="Browse our curated collection of 100+ aesthetic Korean and Western jewelry pieces. Anti-tarnish, waterproof, and trend-forward designs at affordable prices. Free shipping available."
+                  canonical="https://satvastones.in/shop"
+                  keywords={['shop jewelry online india', 'buy aesthetic jewelry', 'korean jewelry shop', 'western jewelry collection', 'anti-tarnish jewelry online', 'trendy earrings india', 'gold plated necklace']}
+                />
+                <JsonLd data={getBreadcrumbSchema([
+                  { name: 'Home', url: 'https://satvastones.in/' },
+                  { name: 'Shop', url: 'https://satvastones.in/shop' }
+                ])} />
+                <ShopPage products={cmsData.products} cmsData={cmsData} onSelectProduct={(p) => navigateTo('product', p)} />
+              </>} />
               <Route path="/product/:id" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} />} />
-              <Route path="/cart" element={<><SEO title="Your Bag" /><CartPage cart={cart} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
-              <Route path="/checkout" element={<><SEO title="Checkout" /><CheckoutPage cart={cart} currentUser={currentUser} cmsData={cmsData} onBack={() => navigateTo('cart')} onComplete={(order) => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success', order); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
-              <Route path="/account" element={currentUser ? <><SEO title="My Account" /><AccountDashboard user={currentUser} onLogout={() => { setCurrentUser(null); localStorage.removeItem('satvastones_user'); navigate('/'); }} onShop={() => navigate('/shop')} /></> : <AuthPage onLogin={(data) => { setCurrentUser(data.customer); if (localStorage.getItem('checkout_pending') === 'true') navigate('/checkout'); else navigate('/account'); }} />} />
-              <Route path="/contact" element={<><SEO title="Contact" /><ContactPage /></>} />
-              <Route path="/blogs" element={<><SEO title="The Journal" /><BlogsPage /></>} />
+              <Route path="/cart" element={<><SEO title="Your Shopping Bag" description="Review your selected aesthetic jewelry pieces at Satvastones. Secure checkout with UPI, Card & COD available." canonical="https://satvastones.in/cart" keywords={['shopping cart', 'jewelry cart', 'checkout jewelry', 'satvastones cart']} noindex={true} /><CartPage cart={cart} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
+              <Route path="/checkout" element={<><SEO title="Secure Checkout" description="Complete your order securely. We accept UPI, Cards, Net Banking & COD." canonical="https://satvastones.in/checkout" noindex={true} /><CheckoutPage cart={cart} currentUser={currentUser} cmsData={cmsData} onBack={() => navigateTo('cart')} onComplete={(order) => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success', order); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
+              <Route path="/account" element={currentUser ? <><SEO title="My Account | Satvastones" description="Manage your orders, addresses, and preferences at Satvastones." canonical="https://satvastones.in/account" noindex={true} keywords={['my account', 'order history', 'satvastones account']} /><AccountDashboard user={currentUser} onLogout={() => { setCurrentUser(null); localStorage.removeItem('satvastones_user'); navigate('/'); }} onShop={() => navigate('/shop')} /></> : <AuthPage onLogin={(data) => { setCurrentUser(data.customer); if (localStorage.getItem('checkout_pending') === 'true') navigate('/checkout'); else navigate('/account'); }} />} />
+              <Route path="/contact" element={<><SEO title="Contact Satvastones | Customer Support" description="Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: hello@satvastones.com" canonical="https://satvastones.in/contact" keywords={['contact satvastones', 'jewelry support', 'customer care', 'satvastones help']} /><ContactPage /></>} />
+              <Route path="/blogs" element={<><SEO title="The Journal | Satvastones Blog" description="Explore style guides, jewelry care tips, and the latest trends in Korean and Western aesthetic jewelry on the Satvastones Journal." canonical="https://satvastones.in/blogs" keywords={['jewelry blog', 'style guide', 'jewelry care tips', 'korean fashion', 'aesthetic jewelry trends']} /><BlogsPage /></>} />
               <Route path="/order-success" element={<OrderSuccessPage />} />
             </Routes>
           </motion.div>

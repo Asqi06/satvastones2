@@ -55,7 +55,11 @@ const productSchema = new mongoose.Schema({
   isNinetyNine: { type: Boolean, default: false },
   material: String,
   sku: { type: String, unique: true, sparse: true },
-  stockQuantity: { type: Number, default: 0 }
+  stockQuantity: { type: Number, default: 0 },
+  // SEO fields
+  metaTitle: String,
+  metaDescription: String,
+  focusKeywords: [String]
 });
 
 const Product = mongoose.model('Product', productSchema);
@@ -178,6 +182,49 @@ const Cart = mongoose.model('Cart', cartSchema);
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID);
 
+
+// --- SEO Endpoints ---
+
+app.get('/api/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.send(`User-agent: *
+Allow: /
+Disallow: /aniadmin
+Disallow: /api/
+
+Sitemap: https://satvastones.in/api/sitemap.xml
+`);
+});
+
+app.get('/api/sitemap.xml', async (req, res) => {
+  try {
+    const products = await Product.find({}, 'title price images updatedAt');
+    const staticPages = [
+      { loc: 'https://satvastones.in/', priority: '1.0', changefreq: 'daily' },
+      { loc: 'https://satvastones.in/shop', priority: '0.9', changefreq: 'daily' },
+      { loc: 'https://satvastones.in/blogs', priority: '0.6', changefreq: 'weekly' },
+      { loc: 'https://satvastones.in/contact', priority: '0.5', changefreq: 'monthly' },
+    ];
+
+    let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+    for (const page of staticPages) {
+      xml += `  <url>\n    <loc>${page.loc}</loc>\n    <priority>${page.priority}</priority>\n    <changefreq>${page.changefreq}</changefreq>\n  </url>\n`;
+    }
+
+    for (const product of products) {
+      const lastMod = product.updatedAt ? new Date(product.updatedAt).toISOString() : new Date().toISOString();
+      xml += `  <url>\n    <loc>https://satvastones.in/product/${product._id}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <priority>0.8</priority>\n    <changefreq>weekly</changefreq>\n  </url>\n`;
+    }
+
+    xml += '</urlset>';
+    res.header('Content-Type', 'application/xml');
+    res.send(xml);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // --- Razorpay Setup ---
 const razorpay = new Razorpay({

@@ -25,7 +25,7 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState<any>({ 
-    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false 
+    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] 
   });
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -206,7 +206,7 @@ export default function AdminPanel({
           {activeTab === 'products' && (
             <button 
               onClick={() => setNewProduct({ 
-                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false 
+                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] 
               })}
               className="bg-black text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800 transition-all"
             >
@@ -653,7 +653,7 @@ export default function AdminPanel({
                     ₹99 Sale
                   </button>
                   <button 
-                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false })}
+                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] })}
                     className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
                   >
                     <Plus className="h-3 w-3" /> Add New Product
@@ -1314,6 +1314,51 @@ export default function AdminPanel({
                     Anti-Tarnish Jewelry
                   </span>
                   <p className="text-[9px] text-stone-400 uppercase tracking-wider mt-0.5">Displays an 'Anti-Tarnish' badge on the product card & detail page</p>
+                </div>
+              </div>
+
+              {/* SEO Section */}
+              <div className="col-span-full border-t border-stone-100 pt-8 mt-4">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <Search className="h-4 w-4" /> SEO & Search Optimization
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Meta Title (browser tab / search result)</label>
+                    <input 
+                      type="text" 
+                      placeholder={editingProduct ? `Auto: ${editingProduct.title} | Satvastones` : 'Auto-generated from product name'}
+                      value={editingProduct ? (editingProduct.metaTitle || '') : (newProduct.metaTitle || '')}
+                      onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, metaTitle: e.target.value}) : setNewProduct({...newProduct, metaTitle: e.target.value})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                    <p className="text-[9px] text-stone-400 italic">Leave empty to auto-generate from product title.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Focus Keywords (comma separated)</label>
+                    <input 
+                      type="text" 
+                      placeholder="e.g. anti-tarnish earrings, gold plated jewelry"
+                      value={editingProduct ? ((editingProduct.focusKeywords || []).join(', ')) : ((newProduct.focusKeywords || []).join(', '))}
+                      onChange={(e) => {
+                        const keywords = e.target.value.split(',').map((k: string) => k.trim()).filter(Boolean);
+                        editingProduct ? setEditingProduct({...editingProduct, focusKeywords: keywords}) : setNewProduct({...newProduct, focusKeywords: keywords});
+                      }}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                    <p className="text-[9px] text-stone-400 italic">These keywords help search engines understand your product.</p>
+                  </div>
+                  <div className="col-span-full space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Meta Description (search snippet)</label>
+                    <textarea 
+                      rows={2}
+                      placeholder={editingProduct ? `Auto: Buy ${editingProduct.title} at ₹${editingProduct.price}. Anti-tarnish, waterproof jewelry.` : 'Auto-generated from product details'}
+                      value={editingProduct ? (editingProduct.metaDescription || '') : (newProduct.metaDescription || '')}
+                      onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, metaDescription: e.target.value}) : setNewProduct({...newProduct, metaDescription: e.target.value})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden resize-none" 
+                    />
+                    <p className="text-[9px] text-stone-400 italic">150-160 characters recommended. Leave empty to auto-generate.</p>
+                  </div>
                 </div>
               </div>
             </div>
