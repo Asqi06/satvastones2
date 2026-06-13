@@ -8,10 +8,12 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Satvastones | High-End Luxury Jewellery Curation",
   description: "Explore the intersection of Seoul minimalism and Parisian chic. Handcrafted luxury jewellery artifacts designed for the sophisticated woman.",
+  alternates: { canonical: "https://satvastones.in" },
   openGraph: {
     type: "website",
     locale: "en_IN",
     siteName: "Satvastones",
+    url: "https://satvastones.in",
   },
 };
 

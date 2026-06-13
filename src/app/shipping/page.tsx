@@ -3,6 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Shipping Protocol",
   description: "Transit and delivery protocols for your Satvastones artifacts.",
+  alternates: { canonical: "https://satvastones.in/shipping" },
 };
 
 export default function ShippingPage() {

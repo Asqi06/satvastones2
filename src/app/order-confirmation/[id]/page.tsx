@@ -3,6 +3,16 @@ import { notFound } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { formatPrice, formatDate } from "@/lib/utils";
+import type { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  return {
+    title: `Order Confirmed`,
+    description: "Your order has been confirmed.",
+    robots: { index: false, follow: false },
+  };
+}
 import { CheckCircle, Package, MapPin, CreditCard } from "lucide-react";
 
 interface Props {

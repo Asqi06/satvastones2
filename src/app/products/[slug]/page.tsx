@@ -80,6 +80,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: product.name,
     description: product.description.substring(0, 160),
+    alternates: { canonical: `https://satvastones.in/products/${slug}` },
     openGraph: {
       images: product.images[0] ? [product.images[0]] : [],
     },

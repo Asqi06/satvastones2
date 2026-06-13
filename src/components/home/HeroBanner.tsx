@@ -72,9 +72,9 @@ export default function HeroBanner() {
              <span className="label-sm text-[var(--luxury-gold)]">{SLIDES[current].subtitle}</span>
           </div>
           
-          <h2 className="heading-hero text-[var(--luxury-brown)] mb-6 lg:mb-8 text-shadow-sm">
+          <h1 className="heading-hero text-[var(--luxury-brown)] mb-6 lg:mb-8 text-shadow-sm">
             {SLIDES[current].title}
-          </h2>
+          </h1>
           
           <p className="label-md text-[var(--luxury-brown)]/80 max-w-sm lg:max-w-md leading-relaxed mb-10 lg:mb-16 hidden md:block">
             {SLIDES[current].description}

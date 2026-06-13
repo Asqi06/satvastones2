@@ -3,6 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Data Curation Protocol",
   description: "Protocols for managing and protecting your private information.",
+  alternates: { canonical: "https://satvastones.in/privacy" },
 };
 
 export default function PrivacyPage() {

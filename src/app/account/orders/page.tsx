@@ -4,6 +4,13 @@ import { prisma } from "@/lib/prisma";
 import { formatPrice, formatDate } from "@/lib/utils";
 import { ORDER_STATUS_LABELS, PAYMENT_STATUS_LABELS } from "@/lib/constants";
 import { Package, ChevronRight, Eye } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Orders",
+  description: "Track and manage your orders.",
+  robots: { index: false, follow: false },
+};
 
 export default async function OrdersPage() {
   const session = await auth();

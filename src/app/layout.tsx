@@ -20,6 +20,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://satvastones.in"),
   title: {
     default: "SatvaStones | Korean & Aesthetic Jewellery India",
     template: "%s | SatvaStones",
@@ -37,6 +38,13 @@ export const metadata: Metadata = {
     "handcrafted jewellery",
     "Satvastones",
   ],
+  alternates: {
+    canonical: "https://satvastones.in",
+  },
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",

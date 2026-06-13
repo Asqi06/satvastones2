@@ -1,6 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Compass, Shield, Gem } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About SatvaStones",
+  description: "Discover the story behind SatvaStones — premium Korean and aesthetic jewelry curated for the modern woman.",
+  alternates: { canonical: "https://satvastones.in/about" },
+};
 
 export default function AboutPage() {
   return (

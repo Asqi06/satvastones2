@@ -2,6 +2,13 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { User, Package, MapPin, LogOut, ChevronRight } from "lucide-react";
 import { signOut } from "@/lib/auth";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Account",
+  description: "Manage your account, view orders, and manage saved addresses.",
+  robots: { index: false, follow: false },
+};
 
 export default async function AccountPage() {
   const session = await auth();

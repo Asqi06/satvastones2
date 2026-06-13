@@ -3,6 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Archival Usage Protocol",
   description: "Terms and protocols for interacting with the Satvastones platform.",
+  alternates: { canonical: "https://satvastones.in/terms" },
 };
 
 export default function TermsPage() {

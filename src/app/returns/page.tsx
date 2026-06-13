@@ -3,6 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Return & Damage Policy | SatvaStones",
   description: "SatvaStones does not accept returns or refunds unless the item arrives damaged. Contact support within 48 hours for damaged item replacement.",
+  alternates: { canonical: "https://satvastones.in/returns" },
 };
 
 export default function ReturnsPage() {

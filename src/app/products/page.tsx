@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Shop Jewellery",
   description: "Browse our collection of luxury Korean and Western jewellery.",
+  alternates: { canonical: "https://satvastones.in/products" },
 };
 
 export default async function ProductsPage() {
