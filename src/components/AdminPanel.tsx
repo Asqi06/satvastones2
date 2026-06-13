@@ -25,7 +25,7 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState<any>({ 
-    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false 
+    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false 
   });
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -169,6 +169,7 @@ export default function AdminPanel({
             { id: 'dashboard', icon: TrendingUp, label: 'Dashboard' },
             { id: 'content', icon: ImageIcon, label: 'Home Content' },
             { id: 'special', icon: Zap, label: 'Special Offer' },
+            { id: 'ninetyNine', icon: Timer, label: '₹99 Sale' },
             { id: 'products', icon: Package, label: 'Products' },
             { id: 'orders', icon: ShoppingBag, label: 'Orders' },
             { id: 'coupons', icon: CheckCircle, label: 'Coupons' },
@@ -482,6 +483,154 @@ export default function AdminPanel({
               </div>
             </div>
           )}
+          {/* ₹99 SALE TAB */}
+          {activeTab === 'ninetyNine' && (
+            <div className="p-8 space-y-12">
+              <section>
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <Timer className="h-4 w-4" /> ₹99 Flash Sale Campaign
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="flex items-center gap-4 py-4 col-span-full">
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input 
+                        type="checkbox" 
+                        checked={tempCMSData.ninetyNineSale?.isActive}
+                        onChange={(e) => setTempCMSData({ ...tempCMSData, ninetyNineSale: { ...tempCMSData.ninetyNineSale, isActive: e.target.checked }})}
+                        className="sr-only peer" 
+                      />
+                      <div className="w-11 h-6 bg-stone-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-600"></div>
+                    </label>
+                    <span className="text-[11px] font-bold uppercase tracking-widest text-stone-900">Sale Section Visible on Home & Shop Pages</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Section Title</label>
+                    <input 
+                      type="text" 
+                      value={tempCMSData.ninetyNineSale?.title || '₹99 Flash Sale'}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, ninetyNineSale: { ...tempCMSData.ninetyNineSale, title: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Subtitle</label>
+                    <input 
+                      type="text" 
+                      value={tempCMSData.ninetyNineSale?.subTitle || 'Limited Stock Deal'}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, ninetyNineSale: { ...tempCMSData.ninetyNineSale, subTitle: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="col-span-full space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Sale Description</label>
+                    <textarea 
+                      rows={2}
+                      value={tempCMSData.ninetyNineSale?.description || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, ninetyNineSale: { ...tempCMSData.ninetyNineSale, description: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden resize-none" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Banner Image URL</label>
+                    <div className="flex gap-2">
+                      <input 
+                        type="text" 
+                        value={tempCMSData.ninetyNineSale?.bannerImage || ''}
+                        onChange={(e) => setTempCMSData({ ...tempCMSData, ninetyNineSale: { ...tempCMSData.ninetyNineSale, bannerImage: e.target.value }})}
+                        className="flex-1 border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                      />
+                      <button 
+                        onClick={() => openUploadWidget((url) => setTempCMSData({ ...tempCMSData, ninetyNineSale: { ...tempCMSData.ninetyNineSale, bannerImage: url }}), cloudinaryConfig)}
+                        className="bg-stone-100 hover:bg-stone-200 px-4 flex items-center gap-2 text-[10px] font-bold uppercase"
+                      >
+                        <UploadCloud className="h-4 w-4" /> Upload
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Badge Text (e.g. ₹99 Only)</label>
+                    <input 
+                      type="text" 
+                      value={tempCMSData.ninetyNineSale?.badgeText || '₹99 Only'}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, ninetyNineSale: { ...tempCMSData.ninetyNineSale, badgeText: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="col-span-full space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Guarantee Text</label>
+                    <input 
+                      type="text" 
+                      value={tempCMSData.ninetyNineSale?.guaranteeText || 'Anti-Tarnish • Waterproof • No Color Fade • 100% Guaranteed'}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, ninetyNineSale: { ...tempCMSData.ninetyNineSale, guaranteeText: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                </div>
+              </section>
+
+              {/* Manage ₹99 Products */}
+              <section className="pt-12 border-t border-stone-100">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <Package className="h-4 w-4" /> ₹99 Sale Products ({tempCMSData?.products?.filter((p: any) => p.isNinetyNine).length || 0})
+                </h3>
+                <p className="text-[10px] text-stone-500 mb-4 uppercase tracking-wider">Toggle products below or use the "₹99 Sale" toggle in the product editor to mark items for this sale.</p>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left min-w-[500px]">
+                    <thead>
+                      <tr className="border-b border-stone-200 bg-stone-50">
+                        <th className="px-4 py-3 text-[9px] font-bold uppercase tracking-widest text-stone-400">Product</th>
+                        <th className="px-4 py-3 text-[9px] font-bold uppercase tracking-widest text-stone-400">Price</th>
+                        <th className="px-4 py-3 text-[9px] font-bold uppercase tracking-widest text-stone-400">In ₹99 Sale</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-100">
+                      {(tempCMSData?.products || []).map((p: any) => (
+                        <tr key={p._id} className="hover:bg-stone-50 transition-all">
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-14 bg-stone-100 overflow-hidden shrink-0">
+                                <img src={p.image} className="w-full h-full object-cover" />
+                              </div>
+                              <span className="text-[10px] font-bold uppercase text-stone-900">{p.title}</span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-[10px] font-bold">₹{p.price}</td>
+                          <td className="px-4 py-3">
+                            <label className="relative inline-flex items-center cursor-pointer">
+                              <input 
+                                type="checkbox" 
+                                checked={p.isNinetyNine || false}
+                                onChange={(e) => {
+                                  const updatedProducts = tempCMSData.products.map((prod: any) => 
+                                    prod._id === p._id ? { ...prod, isNinetyNine: e.target.checked } : prod
+                                  );
+                                  setTempCMSData({ ...tempCMSData, products: updatedProducts });
+                                }}
+                                className="sr-only peer" 
+                              />
+                              <div className="w-9 h-5 bg-stone-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[0.5px] after:left-[0.5px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-rose-500"></div>
+                            </label>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              <div className="pt-8 border-t border-stone-100 flex justify-end">
+                <button 
+                  onClick={handleSaveCMS}
+                  disabled={isSaving}
+                  className="bg-stone-900 text-white px-10 py-4 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-black transition-all flex items-center gap-3 disabled:opacity-50"
+                >
+                  <Save className="h-4 w-4" /> {isSaving ? 'Saving...' : 'Save ₹99 Sale Changes'}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* PRODUCTS TAB */}
           {activeTab === 'products' && (
             <div className="flex flex-col h-full">
@@ -496,12 +645,20 @@ export default function AdminPanel({
                     className="w-full pl-10 pr-4 py-2 text-xs border border-stone-200 focus:border-black outline-hidden"
                   />
                 </div>
-                <button 
-                  onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false })}
-                  className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
-                >
-                  <Plus className="h-3 w-3" /> Add New Product
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setProductSearch(prev => prev === 'isNinetyNine' ? '' : 'isNinetyNine')}
+                    className={`px-3 py-2 text-[9px] font-bold uppercase tracking-widest border transition-all ${productSearch === 'isNinetyNine' ? 'bg-rose-500 text-white border-rose-500' : 'border-stone-200 text-stone-500 hover:border-stone-900'}`}
+                  >
+                    ₹99 Sale
+                  </button>
+                  <button 
+                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false })}
+                    className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
+                  >
+                    <Plus className="h-3 w-3" /> Add New Product
+                  </button>
+                </div>
               </div>
             <div className="overflow-x-auto">
               <table className="w-full text-left min-w-[700px]">
@@ -516,11 +673,12 @@ export default function AdminPanel({
                 </thead>
                 <tbody className="divide-y divide-stone-100">
                   {(cmsData?.products || [])
-                    .filter((p: any) => 
-                      p.title.toLowerCase().includes(productSearch.toLowerCase()) || 
-                      (p.sku && p.sku.toLowerCase().includes(productSearch.toLowerCase())) ||
-                      p.category.toLowerCase().includes(productSearch.toLowerCase())
-                    )
+                    .filter((p: any) => {
+                      if (productSearch === 'isNinetyNine') return p.isNinetyNine;
+                      return p.title.toLowerCase().includes(productSearch.toLowerCase()) || 
+                        (p.sku && p.sku.toLowerCase().includes(productSearch.toLowerCase())) ||
+                        p.category.toLowerCase().includes(productSearch.toLowerCase());
+                    })
                     .map((product: any) => (
                     <tr key={product._id} className="hover:bg-stone-50 transition-all group">
                       <td className="px-6 py-4">
@@ -531,6 +689,9 @@ export default function AdminPanel({
                       <td className="px-6 py-4">
                         <p className="text-[11px] font-bold uppercase text-stone-900">{product.title}</p>
                         <p className="text-[9px] text-stone-400 mt-1 font-mono uppercase">SKU: {product.sku || 'NOT SET'}</p>
+                        {product.isNinetyNine && (
+                          <span className="inline-block mt-1 text-[8px] font-black bg-rose-500 text-white px-1.5 py-0.5 uppercase tracking-widest rounded-xs">₹99 Sale</span>
+                        )}
                       </td>
                       <td className="px-6 py-4">
                         <span className="text-[10px] font-bold uppercase bg-stone-100 px-2 py-1">{product.category}</span>
@@ -1114,6 +1275,26 @@ export default function AdminPanel({
                   <div className="w-11 h-6 bg-stone-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"></div>
                 </label>
                 <span className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Mark as Featured (Show at top of Shop)</span>
+              </div>
+
+              {/* ₹99 Sale Toggle */}
+              <div className="flex items-center gap-4 py-2 border border-stone-100 bg-rose-50 px-4 rounded-sm">
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={editingProduct ? (editingProduct.isNinetyNine || false) : (newProduct.isNinetyNine || false)}
+                    onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, isNinetyNine: e.target.checked}) : setNewProduct({...newProduct, isNinetyNine: e.target.checked})}
+                    className="sr-only peer" 
+                  />
+                  <div className="w-11 h-6 bg-stone-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-rose-600"></div>
+                </label>
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-stone-900 flex items-center gap-1.5">
+                    <span className="inline-block w-2 h-2 rounded-full bg-rose-500"></span>
+                    ₹99 Sale Product
+                  </span>
+                  <p className="text-[9px] text-stone-400 uppercase tracking-wider mt-0.5">Shows this product in the ₹99 Flash Sale section on home & shop pages</p>
+                </div>
               </div>
 
               {/* Anti-Tarnish Toggle */}

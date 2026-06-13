@@ -110,6 +110,7 @@ const initialCMSData = {
   hero: { title: '', subTitle: '', description: '', image: '' },
   categories: [],
   specialOffer: { title: '', subTitle: '', description: '', image: '', isActive: false },
+  ninetyNineSale: { isActive: false, title: '₹99 Flash Sale', subTitle: 'Limited Stock Deal', description: 'Grab your favorite anti-tarnish jewelry at just ₹99 each!', bannerImage: '', guaranteeText: 'Anti-Tarnish • Waterproof • No Color Fade • 100% Guaranteed', badgeText: '₹99 Only' },
   products: [],
   settings: { announcementText: '', showTimer: false, timerEnd: '' }
 };
@@ -559,6 +560,7 @@ function AppContent() {
             ...cms, 
             hero: { ...initialCMSData.hero, ...cms.hero },
             specialOffer: { ...initialCMSData.specialOffer, ...cms.specialOffer },
+            ninetyNineSale: { ...initialCMSData.ninetyNineSale, ...cms.ninetyNineSale },
             settings: { ...initialCMSData.settings, ...cms.settings },
             products: prods || [] 
           });
@@ -980,6 +982,98 @@ function AppContent() {
                     </div>
                   </section>
 
+                  {/* ₹99 Flash Sale */}
+                  {cmsData.ninetyNineSale?.isActive && (
+                    <section className="relative overflow-hidden bg-gradient-to-br from-rose-950 via-rose-900 to-pink-900 py-20 md:py-28">
+                      {/* Animated background particles */}
+                      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                        <div className="absolute -top-20 -right-20 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl animate-pulse"></div>
+                        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+                      </div>
+                      <div className="mx-auto max-w-7xl px-4 md:px-8 relative z-10">
+                        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+                          {/* Left - Content */}
+                          <div className="flex-1 text-center lg:text-left space-y-8">
+                            <div className="space-y-4">
+                              <span className="inline-flex items-center gap-2 bg-rose-500/20 text-rose-200 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] rounded-full border border-rose-400/20">
+                                <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
+                                {cmsData.ninetyNineSale.subTitle}
+                              </span>
+                              <h2 className="font-display text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-white leading-[0.85]">
+                                {cmsData.ninetyNineSale.title}
+                              </h2>
+                              <p className="text-sm md:text-base text-rose-200/80 font-bold uppercase tracking-[0.2em] leading-loose max-w-lg mx-auto lg:mx-0">
+                                {cmsData.ninetyNineSale.description}
+                              </p>
+                            </div>
+
+                            {/* Guarantee badges */}
+                            <div className="flex flex-wrap justify-center lg:justify-start gap-3">
+                              {cmsData.ninetyNineSale.guaranteeText.split('•').map((item: string, i: number) => (
+                                <span key={i} className="inline-flex items-center gap-1.5 bg-white/10 text-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-full border border-white/10">
+                                  <CheckCircle className="h-3 w-3 text-emerald-400" />
+                                  {item.trim()}
+                                </span>
+                              ))}
+                            </div>
+
+                            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+                              <button
+                                onClick={() => {
+                                  const saleProducts = cmsData.products.filter((p: any) => p.isNinetyNine);
+                                  if (saleProducts.length > 0) navigateTo('product', saleProducts[0]);
+                                  else navigateTo('shop');
+                                }}
+                                className="bg-white text-black px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-rose-100 transition-all shadow-2xl rounded-full flex items-center gap-3 group/btn"
+                              >
+                                Shop ₹99 Collection
+                                <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+                              </button>
+                            </div>
+                          </div>
+
+                          {/* Right - Product Grid */}
+                          <div className="flex-1 w-full max-w-lg">
+                            <div className="grid grid-cols-2 gap-4">
+                              {cmsData.products.filter((p: any) => p.isNinetyNine).slice(0, 4).map((p: any) => (
+                                <div
+                                  key={p._id || p.id}
+                                  onClick={() => navigateTo('product', p)}
+                                  className="group cursor-pointer bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:bg-white/10 transition-all"
+                                >
+                                  <div className="aspect-square overflow-hidden relative">
+                                    <img
+                                      src={p.image}
+                                      alt={p.title}
+                                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                    <div className="absolute top-2 left-2">
+                                      <span className="bg-rose-500 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-widest shadow-lg">
+                                        {cmsData.ninetyNineSale.badgeText}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="p-3 text-center">
+                                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white/90 truncate">{p.title}</h4>
+                                    <p className="text-sm font-bold text-rose-300 mt-1">₹{p.price}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                            {cmsData.products.filter((p: any) => p.isNinetyNine).length > 4 && (
+                              <button
+                                onClick={() => navigateTo('shop')}
+                                className="w-full mt-4 text-center text-[9px] font-bold uppercase tracking-widest text-rose-200/60 hover:text-white transition-colors"
+                              >
+                                +{cmsData.products.filter((p: any) => p.isNinetyNine).length - 4} More ₹99 Items
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+                  )}
+
                   {/* Special Offer */}
                   {cmsData.specialOffer?.isActive && (
                     <section className="bg-stone-900 py-20 md:py-32 overflow-hidden">
@@ -1045,7 +1139,7 @@ function AppContent() {
                 </>
               } />
 
-              <Route path="/shop" element={<><SEO title="Shop Aesthetic Jewelry" /><ShopPage products={cmsData.products} onSelectProduct={(p) => navigateTo('product', p)} /></>} />
+              <Route path="/shop" element={<><SEO title="Shop Aesthetic Jewelry" /><ShopPage products={cmsData.products} cmsData={cmsData} onSelectProduct={(p) => navigateTo('product', p)} /></>} />
               <Route path="/product/:id" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} />} />
               <Route path="/cart" element={<><SEO title="Your Bag" /><CartPage cart={cart} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
               <Route path="/checkout" element={<><SEO title="Checkout" /><CheckoutPage cart={cart} currentUser={currentUser} cmsData={cmsData} onBack={() => navigateTo('cart')} onComplete={(order) => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success', order); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />

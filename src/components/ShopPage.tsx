@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ChevronDown, Filter, LayoutGrid, Square, ArrowUpRight } from 'lucide-react';
+import { Search, ChevronDown, Filter, LayoutGrid, Square, ArrowUpRight, ArrowRight, CheckCircle } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 
 
 
 export default function ShopPage({ 
   products,
-  onSelectProduct 
+  onSelectProduct,
+  cmsData
 }: { 
   products: any[],
-  onSelectProduct: (p: any) => void 
+  onSelectProduct: (p: any) => void,
+  cmsData?: any 
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
@@ -26,11 +28,15 @@ export default function ShopPage({
     }
   }, [categoryParam]);
 
-  const categories = ['ALL', 'NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'ACCESSORIES', 'PENDANT', 'GIFTS', 'HAMPERS', "MOTHER'S DAY"];
+  const categories = ['ALL', '₹99 SALE', 'NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'ACCESSORIES', 'PENDANT', 'GIFTS', 'HAMPERS', "MOTHER'S DAY"];
+
+  const ninetyNineProducts = products.filter((p: any) => p.isNinetyNine);
 
   let filteredProducts = activeCategory === 'ALL' 
     ? [...products] 
-    : products.filter(p => p.category === activeCategory);
+    : activeCategory === '₹99 SALE'
+      ? [...ninetyNineProducts]
+      : products.filter(p => p.category === activeCategory);
 
   if (sortBy === 'Price: Low to High') {
     filteredProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
@@ -53,6 +59,50 @@ export default function ShopPage({
           Curated Korean & Western Aesthetics
         </p>
       </div>
+
+      {/* ₹99 Sale Banner */}
+      {cmsData?.ninetyNineSale?.isActive && ninetyNineProducts.length > 0 && activeCategory !== '₹99 SALE' && (
+        <div className="bg-gradient-to-r from-rose-950 via-rose-900 to-pink-900 py-8 md:py-10 px-4 md:px-8">
+          <div className="mx-auto max-w-7xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4 md:gap-8">
+              <div className="text-center md:text-left">
+                <h3 className="font-display text-3xl md:text-5xl font-bold tracking-tight text-white">{cmsData.ninetyNineSale.title}</h3>
+                <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
+                  {cmsData.ninetyNineSale.guaranteeText.split('•').map((item: string, i: number) => (
+                    <span key={i} className="text-[8px] text-rose-200/70 font-bold uppercase tracking-widest flex items-center gap-1">
+                      <CheckCircle className="h-2.5 w-2.5 text-emerald-400" />
+                      {item.trim()}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => setActiveCategory('₹99 SALE')}
+              className="shrink-0 bg-white text-black px-8 py-3.5 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-rose-100 transition-all flex items-center gap-2 shadow-xl"
+            >
+              Shop Now <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+          <div className="mx-auto max-w-7xl mt-6">
+            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+              {ninetyNineProducts.slice(0, 6).map((p: any) => (
+                <div
+                  key={p._id || p.id}
+                  onClick={() => onSelectProduct(p)}
+                  className="shrink-0 w-24 md:w-28 cursor-pointer group"
+                >
+                  <div className="aspect-square rounded-xl overflow-hidden bg-white/10 border border-white/10 group-hover:border-white/30 transition-all">
+                    <img src={p.image} className="w-full h-full object-cover" />
+                  </div>
+                  <p className="text-[8px] font-bold text-white/80 text-center mt-1.5 truncate uppercase tracking-wider">{p.title}</p>
+                  <p className="text-[9px] font-bold text-rose-300 text-center">₹{p.price}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="mx-auto max-w-7xl px-4 md:px-8 py-10">
         {/* Controls */}
@@ -121,6 +171,15 @@ export default function ShopPage({
                 {(product.stockQuantity || 0) <= 0 && (
                   <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center z-10">
                     <span className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-900 border-2 border-stone-900 px-3 py-1">Sold Out</span>
+                  </div>
+                )}
+
+                {/* ₹99 Sale Badge */}
+                {product.isNinetyNine && (
+                  <div className="absolute top-2 left-2 z-10">
+                    <span className="inline-flex items-center gap-1 bg-rose-600 text-white px-2 py-0.5 text-[8px] font-black uppercase tracking-widest rounded-sm shadow-md">
+                      ₹99 Only
+                    </span>
                   </div>
                 )}
 

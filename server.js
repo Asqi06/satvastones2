@@ -52,6 +52,7 @@ const productSchema = new mongoose.Schema({
   }],
   isFeatured: { type: Boolean, default: false },
   isAntiTarnish: { type: Boolean, default: false },
+  isNinetyNine: { type: Boolean, default: false },
   material: String,
   sku: { type: String, unique: true, sparse: true },
   stockQuantity: { type: Number, default: 0 }
@@ -96,6 +97,15 @@ const cmsSchema = new mongoose.Schema({
     image: String,
     productId: String,
     isActive: Boolean
+  },
+  ninetyNineSale: {
+    isActive: { type: Boolean, default: false },
+    title: { type: String, default: '₹99 Flash Sale' },
+    subTitle: { type: String, default: 'Limited Stock Deal' },
+    description: { type: String, default: 'Grab your favorite anti-tarnish jewelry at just ₹99 each!' },
+    bannerImage: String,
+    guaranteeText: { type: String, default: 'Anti-Tarnish • Waterproof • No Color Fade • 100% Guaranteed' },
+    badgeText: { type: String, default: '₹99 Only' }
   },
   settings: {
     announcementText: String,
@@ -196,12 +206,14 @@ app.post('/api/cms', async (req, res) => {
       // Smart Merge: Don't overwrite the whole object, only the parts sent in the request
       if (req.body.hero) cms.hero = { ...cms.hero, ...req.body.hero };
       if (req.body.specialOffer) cms.specialOffer = { ...cms.specialOffer, ...req.body.specialOffer };
+      if (req.body.ninetyNineSale) cms.ninetyNineSale = { ...cms.ninetyNineSale, ...req.body.ninetyNineSale };
       if (req.body.settings) cms.settings = { ...cms.settings, ...req.body.settings };
       if (req.body.categories) cms.categories = req.body.categories;
       if (req.body.coupons) cms.coupons = req.body.coupons;
       
       cms.markModified('hero');
       cms.markModified('specialOffer');
+      cms.markModified('ninetyNineSale');
       cms.markModified('settings');
       cms.markModified('categories');
       cms.markModified('coupons');
