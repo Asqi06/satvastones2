@@ -407,7 +407,7 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
   }
 
   const metaTitle = product.metaTitle || `${product.title} | Buy at Just ₹${product.price} | Satvastones`;
-  const metaDesc = product.metaDescription || `Buy ${product.title} at ₹${product.price}. ${product.isAntiTarnish ? 'Anti-tarnish, ' : ''}waterproof aesthetic jewelry. ✓ Free Shipping ✓ COD Available. Shop authentic ${product.category?.toLowerCase() || 'jewelry'} online at Satvastones.`;
+  const metaDesc = product.metaDescription || `Buy ${product.title} at ₹${product.price}. ${product.isAntiTarnish ? 'Anti-tarnish, ' : ''}waterproof jewelry. Free shipping & COD. Shop authentic ${product.category?.toLowerCase() || 'jewelry'} at Satvastones.`;
   const metaKeywords = [...(product.focusKeywords || []), product.title, `${product.title} price`, `buy ${product.title} online`, product.category?.toLowerCase() || 'jewelry', 'satvastones', 'aesthetic jewelry'];
 
   return (
@@ -916,7 +916,7 @@ function AppContent() {
                 <>
                   <SEO 
                     title={cmsData?.settings?.seoTitle || "Satvastones | Aesthetic Korean & Western Jewelry"} 
-                    description={cmsData?.settings?.seoDescription || "Elevate your vibe with our premium Korean and Western jewelry collection. Anti-tarnish, waterproof, and trend-forward designs. Free shipping on orders over ₹399."}
+                    description={cmsData?.settings?.seoDescription || "Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399."}
                     canonical="https://satvastones.in/"
                     keywords={['aesthetic jewelry', 'korean jewelry', 'western jewelry', 'anti-tarnish jewelry', 'waterproof jewelry', 'online jewelry store india', 'satvastones', 'trendy earrings', 'gold plated necklace', 'minimalist rings', 'bracelets india', 'fashion jewelry online']}
                   />
@@ -992,7 +992,7 @@ function AppContent() {
                           <CategoryCard 
                             key={i} 
                             category={cat} 
-                            onClick={() => navigateTo('shop', { category: (cat.name || cat.title || 'ALL').toUpperCase() })} 
+                            onClick={() => navigateTo('shop', { category: (cat.name || cat.title || 'all').toLowerCase() })} 
                           />
                         ))}
                       </div>
@@ -1058,7 +1058,7 @@ function AppContent() {
 
                             <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                               <button
-                                onClick={() => navigateTo('shop', { category: '₹99 SALE' })}
+                                onClick={() => navigateTo('shop', { category: '₹99 sale' })}
                                 className="bg-white text-black px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-rose-100 transition-all shadow-2xl rounded-full flex items-center gap-3 group/btn"
                               >
                                 Shop ₹99 Collection
@@ -1177,7 +1177,7 @@ function AppContent() {
               <Route path="/shop" element={<>
                 <SEO 
                   title="Shop Aesthetic Jewelry Online | Satvastones"
-                  description="Browse our curated collection of 100+ aesthetic Korean and Western jewelry pieces. Anti-tarnish, waterproof, and trend-forward designs at affordable prices. Free shipping available."
+                  description="Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available."
                   canonical="https://satvastones.in/shop"
                   keywords={['shop jewelry online india', 'buy aesthetic jewelry', 'korean jewelry shop', 'western jewelry collection', 'anti-tarnish jewelry online', 'trendy earrings india', 'gold plated necklace']}
                 />

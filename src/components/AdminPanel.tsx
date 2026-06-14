@@ -25,7 +25,7 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState<any>({ 
-    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] 
+    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] 
   });
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -206,7 +206,7 @@ export default function AdminPanel({
           {activeTab === 'products' && (
             <button 
               onClick={() => setNewProduct({ 
-                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] 
+                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] 
               })}
               className="bg-black text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800 transition-all"
             >
@@ -653,7 +653,7 @@ export default function AdminPanel({
                     ₹99 Sale
                   </button>
                   <button 
-                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'NECKLACES', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] })}
+                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] })}
                     className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
                   >
                     <Plus className="h-3 w-3" /> Add New Product
@@ -1257,7 +1257,7 @@ export default function AdminPanel({
                     onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, category: e.target.value}) : setNewProduct({...newProduct, category: e.target.value})}
                     className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden"
                   >
-                    {['NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'PENDANT', 'GIFTS', 'HAMPERS', 'ACCESSORIES', "MOTHER'S DAY"].map(cat => (
+                    {['necklaces', 'name necklace', 'earrings', 'rings', 'bracelets', 'pendant', 'gifts', 'hampers', 'accessories', "mother's day"].map(cat => (
                       <option key={cat} value={cat}>{cat}</option>
                     ))}
                   </select>

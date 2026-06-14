@@ -1,11 +1,10 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /api/
-Disallow: /account/
+Disallow: /aniadmin
 Disallow: /cart
 Disallow: /checkout
-Disallow: /wishlist
+Disallow: /account/
 Disallow: /order-confirmation/
+Disallow: /wishlist
 
 Sitemap: https://satvastones.in/sitemap.xml

@@ -16,7 +16,7 @@ export default function ShopPage({
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category');
   
-  const [activeCategory, setActiveCategory] = useState(categoryParam?.toUpperCase() || 'ALL');
+  const [activeCategory, setActiveCategory] = useState(categoryParam?.toLowerCase() || 'all');
   const [viewMode, setViewMode] = useState<'grid' | 'large'>('grid');
   const [sortBy, setSortBy] = useState('Featured');
   const [isSortOpen, setIsSortOpen] = useState(false);
@@ -24,19 +24,19 @@ export default function ShopPage({
   // Sync state if URL param changes
   useEffect(() => {
     if (categoryParam) {
-      setActiveCategory(categoryParam.toUpperCase());
+      setActiveCategory(categoryParam.toLowerCase());
     }
   }, [categoryParam]);
 
-  const categories = ['ALL', '₹99 SALE', 'NECKLACES', 'NAME NECKLACE', 'EARRINGS', 'RINGS', 'BRACELETS', 'ACCESSORIES', 'PENDANT', 'GIFTS', 'HAMPERS', "MOTHER'S DAY"];
+  const categories = ['all', '₹99 sale', 'necklaces', 'name necklace', 'earrings', 'rings', 'bracelets', 'accessories', 'pendant', 'gifts', 'hampers', "mother's day"];
 
   const ninetyNineProducts = products.filter((p: any) => p.isNinetyNine);
 
-  let filteredProducts = activeCategory === 'ALL' 
+  let filteredProducts = activeCategory === 'all' 
     ? [...products] 
-    : activeCategory === '₹99 SALE'
+    : activeCategory === '₹99 sale'
       ? [...ninetyNineProducts]
-      : products.filter(p => p.category === activeCategory);
+      : products.filter(p => p.category?.toLowerCase() === activeCategory);
 
   if (sortBy === 'Price: Low to High') {
     filteredProducts.sort((a, b) => (a.price || 0) - (b.price || 0));
@@ -78,7 +78,7 @@ export default function ShopPage({
               </div>
             </div>
             <button
-              onClick={() => setActiveCategory('₹99 SALE')}
+              onClick={() => setActiveCategory('₹99 sale')}
               className="shrink-0 bg-white text-black px-8 py-3.5 text-[10px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-rose-100 transition-all flex items-center gap-2 shadow-xl"
             >
               Shop Now <ArrowRight className="h-3.5 w-3.5" />
@@ -115,7 +115,7 @@ export default function ShopPage({
                 onClick={() => setActiveCategory(cat)}
                 className={`shrink-0 px-5 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded-full border ${activeCategory === cat ? 'bg-black text-white border-black' : 'border-stone-200 text-stone-500 hover:border-stone-900 hover:text-stone-900'}`}
               >
-                {cat}
+                {cat.toUpperCase()}
               </button>
             ))}
           </div>

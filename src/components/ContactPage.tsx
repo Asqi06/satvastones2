@@ -46,6 +46,12 @@ export default function ContactPage() {
               </p>
             </div>
 
+            <div className="text-stone-500 text-[10px] uppercase tracking-wider leading-relaxed space-y-3 max-w-md">
+              <p>Satvastones is India's premier destination for aesthetic Korean and Western jewelry. Based in Jaipur, we curate anti-tarnish, waterproof pieces including earrings, necklaces, rings, and bracelets that blend Seoul minimalism with Parisian elegance.</p>
+              <p>Our customer support team responds within 24 hours. Whether you need help with sizing, order tracking, or styling advice for our gold-plated and silver jewelry collections, we are here to assist you every step of the way.</p>
+              <p>Bulk and wholesale inquiries for boutique owners are welcome. Join thousands of happy customers who trust Satvastones for trend-forward, affordable jewelry that never compromises on quality.</p>
+            </div>
+
             <div className="space-y-8">
               <div className="flex items-center gap-6">
                 <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center shrink-0">

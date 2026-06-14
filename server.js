@@ -16,6 +16,18 @@ app.use(compression());
 app.use(cors());
 app.use(express.json());
 
+// Security Headers (Referrer-Policy, CSP, X-Frame-Options, X-Content-Type-Options)
+app.use((req, res, next) => {
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.cloudinary.com https://*.razorpay.com https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.cloudinary.com https://*.razorpay.com https://api.razorpay.com; frame-src https://*.razorpay.com https://checkout.razorpay.com;"
+  );
+  next();
+});
+
 // Root Health Check (For Cron-jobs and Render keep-alive)
 app.get('/', (req, res) => {
   res.json({ status: 'active', message: 'Satvastones API is running beautifully.' });
