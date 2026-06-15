@@ -8,19 +8,7 @@
     <!-- SEO Meta Tags -->
     <meta name="description" content="Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399." />
     <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://satvastones.in/" />
-    <script>
-      // Override canonical for JS-enabled crawlers based on actual route
-      (function(){
-        var p = window.location.pathname;
-        if (p !== '/') {
-          var c = document.createElement('link');
-          c.rel = 'canonical';
-          c.href = 'https://satvastones.in' + p;
-          document.head.appendChild(c);
-        }
-      })();
-    </script>
+    <!-- Canonical is managed dynamically by SEO component via react-helmet-async -->
 
     <!-- Favicons -->
     <link rel="icon" type="image/png" href="/logo.png" />

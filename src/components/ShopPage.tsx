@@ -2,7 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Search, ChevronDown, Filter, LayoutGrid, Square, ArrowUpRight, ArrowRight, CheckCircle } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
 
+const CATEGORIES = [
+  { slug: 'all', label: 'All' },
+  { slug: '99-sale', label: '₹99 Sale' },
+  { slug: 'necklaces', label: 'Necklaces' },
+  { slug: 'name-necklace', label: 'Name Necklace' },
+  { slug: 'earrings', label: 'Earrings' },
+  { slug: 'rings', label: 'Rings' },
+  { slug: 'bracelets', label: 'Bracelets' },
+  { slug: 'accessories', label: 'Accessories' },
+  { slug: 'pendant', label: 'Pendant' },
+  { slug: 'gifts', label: 'Gifts' },
+  { slug: 'hampers', label: 'Hampers' },
+  { slug: 'mothers-day', label: "Mother's Day" },
+];
 
+const LABEL_MAP = Object.fromEntries(CATEGORIES.map(c => [c.slug, c.label]));
 
 export default function ShopPage({ 
   products,
@@ -27,8 +42,6 @@ export default function ShopPage({
       setActiveCategory(categoryParam.toLowerCase());
     }
   }, [categoryParam]);
-
-  const categories = ['all', '₹99 sale', 'necklaces', 'name necklace', 'earrings', 'rings', 'bracelets', 'accessories', 'pendant', 'gifts', 'hampers', "mother's day"];
 
   const ninetyNineProducts = products.filter((p: any) => p.isNinetyNine);
 
