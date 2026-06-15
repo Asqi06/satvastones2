@@ -475,10 +475,20 @@ function AppContent() {
   const [showLoading, setShowLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
+  const categorySlug = (name: string) => {
+    const slugMap: Record<string, string> = {
+      'name necklace': 'name-necklace',
+      "mother's day": 'mothers-day',
+      '₹99 sale': '99-sale',
+      'gift hampers': 'hampers',
+    };
+    return slugMap[name.toLowerCase()] || name.toLowerCase().replace(/\s+/g, '-');
+  };
+
   const navigateTo = (view: string, data?: any) => {
     if (view === 'home') navigate('/');
     else if (view === 'shop') {
-      if (data && data.category) navigate(`/shop?category=${encodeURIComponent(data.category)}`);
+      if (data && data.category) navigate(`/shop/${categorySlug(data.category)}`);
       else navigate('/shop');
     }
     else if (view === 'auth') navigate('/account');
@@ -493,6 +503,70 @@ function AppContent() {
     }
     window.scrollTo(0, 0);
   };
+
+  const CATEGORY_LABELS: Record<string, string> = {
+    '99-sale': '₹99 Sale',
+    'necklaces': 'Necklaces',
+    'name-necklace': 'Name Necklace',
+    'earrings': 'Earrings',
+    'rings': 'Rings',
+    'bracelets': 'Bracelets',
+    'accessories': 'Accessories',
+    'pendant': 'Pendant',
+    'gifts': 'Gifts',
+    'hampers': 'Hampers',
+    'mothers-day': "Mother's Day",
+  };
+
+  const CATEGORY_DESCRIPTIONS: Record<string, string> = {
+    '99-sale': 'Shop trendy aesthetic jewelry at just ₹99 each — including Korean studs, Western hoops, stacking rings, and delicate chain necklaces. Anti-tarnish, waterproof, and budget-friendly. Free shipping over ₹399.',
+    'necklaces': 'Discover aesthetic necklaces for women — anti-tarnish gold-plated chains, Korean chokers, pendant necklaces, and layered styles. Waterproof, hypoallergenic, and crafted to elevate every outfit. Free shipping over ₹399.',
+    'name-necklace': 'Shop personalized name necklaces in gold and silver finishes — custom engraved, anti-tarnish, and waterproof. The perfect gift for her, crafted in Mumbai and shipped across India.',
+    'earrings': 'Explore 100+ aesthetic earrings for women — Korean minimalist studs, Western hoop earrings, drop earrings, and statement chandbalis. Anti-tarnish, hypoallergenic, and waterproof. Free shipping over ₹399.',
+    'rings': 'Browse aesthetic rings for women — Korean stacking rings, gold-plated bands, statement cocktail rings, and minimalist designs. Waterproof, anti-tarnish, and available in adjustable sizes.',
+    'bracelets': 'Shop aesthetic bracelets and bangles — gold-plated chains, Korean beaded bracelets, tennis bracelets, and cuffs. Anti-tarnish, waterproof, and crafted for everyday elegance.',
+    'accessories': 'Discover premium jewelry accessories — including anklets, hair accessories, brooches, and jewelry organizers. Complete your aesthetic look with Satvastones.',
+    'pendant': 'Shop aesthetic pendants for women — gold-plated, anti-tarnish pendants in Korean and Western styles. Perfect for layering or gifting. Free shipping over ₹399.',
+    'gifts': 'Find the perfect jewelry gifts for her — curated gift-ready pieces including earrings, necklaces, rings, and personalized name necklaces. Beautifully packaged, shipped across India.',
+    'hampers': 'Shop luxury jewelry gift hampers from Satvastones — curated sets of Korean and Western aesthetic jewelry in elegant packaging. The perfect gift for birthdays, anniversaries, and festivals.',
+    'mothers-day': "Shop Mother's Day jewelry gifts — elegant earrings, personalized name necklaces, and curated gift sets mom will love. Anti-tarnish, waterproof, and beautifully packaged.",
+  };
+
+  const ShopRoute = () => {
+    const { category } = useParams<{ category?: string }>();
+    const catLabel = category ? (CATEGORY_LABELS[category] || category) : null;
+    const title = category 
+      ? `Shop ${catLabel} | Satvastones` 
+      : 'Shop Aesthetic Jewelry Online | Satvastones';
+    const canonical = category 
+      ? `https://satvastones.in/shop/${category}` 
+      : 'https://satvastones.in/shop';
+    const description = category 
+      ? (CATEGORY_DESCRIPTIONS[category] || `Shop our curated collection of ${catLabel?.toLowerCase() || category} — premium Korean & Western aesthetic jewelry.`)
+      : 'Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available.';
+    const breadcrumbs = category 
+      ? [
+          { name: 'Home', url: 'https://satvastones.in/' },
+          { name: 'Shop', url: 'https://satvastones.in/shop' },
+          { name: catLabel || category, url: `https://satvastones.in/shop/${category}` }
+        ]
+      : [
+          { name: 'Home', url: 'https://satvastones.in/' },
+          { name: 'Shop', url: 'https://satvastones.in/shop' }
+        ];
+    
+    return <>
+      <SEO 
+        title={title}
+        description={description}
+        canonical={canonical}
+        keywords={['shop jewelry online india', 'buy aesthetic jewelry', 'korean jewelry shop', 'western jewelry collection', 'anti-tarnish jewelry online', 'trendy earrings india', 'gold plated necklace']}
+      />
+      <JsonLd data={getBreadcrumbSchema(breadcrumbs)} />
+      <ShopPage products={cmsData.products} cmsData={cmsData} onSelectProduct={(p) => navigateTo('product', p)} />
+    </>;
+  };
+
   useEffect(() => {
     if (currentUser) localStorage.setItem('satvastones_user', JSON.stringify(currentUser));
     else localStorage.removeItem('satvastones_user');
@@ -1058,7 +1132,7 @@ function AppContent() {
 
                             <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                               <button
-                                onClick={() => navigateTo('shop', { category: '₹99 sale' })}
+                                onClick={() => navigateTo('shop', { category: '99-sale' })}
                                 className="bg-white text-black px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-rose-100 transition-all shadow-2xl rounded-full flex items-center gap-3 group/btn"
                               >
                                 Shop ₹99 Collection
@@ -1174,19 +1248,8 @@ function AppContent() {
                 </>
               } />
 
-              <Route path="/shop" element={<>
-                <SEO 
-                  title="Shop Aesthetic Jewelry Online | Satvastones"
-                  description="Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available."
-                  canonical="https://satvastones.in/shop"
-                  keywords={['shop jewelry online india', 'buy aesthetic jewelry', 'korean jewelry shop', 'western jewelry collection', 'anti-tarnish jewelry online', 'trendy earrings india', 'gold plated necklace']}
-                />
-                <JsonLd data={getBreadcrumbSchema([
-                  { name: 'Home', url: 'https://satvastones.in/' },
-                  { name: 'Shop', url: 'https://satvastones.in/shop' }
-                ])} />
-                <ShopPage products={cmsData.products} cmsData={cmsData} onSelectProduct={(p) => navigateTo('product', p)} />
-              </>} />
+              <Route path="/shop" element={<ShopRoute />} />
+              <Route path="/shop/:category" element={<ShopRoute />} />
               <Route path="/product/:id" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} />} />
               <Route path="/cart" element={<><SEO title="Your Shopping Bag" description="Review your selected aesthetic jewelry pieces at Satvastones. Secure checkout with UPI, Card & COD available." canonical="https://satvastones.in/cart" keywords={['shopping cart', 'jewelry cart', 'checkout jewelry', 'satvastones cart']} noindex={true} /><CartPage cart={cart} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
               <Route path="/checkout" element={<><SEO title="Secure Checkout" description="Complete your order securely. We accept UPI, Cards, Net Banking & COD." canonical="https://satvastones.in/checkout" noindex={true} /><CheckoutPage cart={cart} currentUser={currentUser} cmsData={cmsData} onBack={() => navigateTo('cart')} onComplete={(order) => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success', order); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
