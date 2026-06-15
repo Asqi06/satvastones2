@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/aniadmin/*",
+    "/assets/*",
+    "/logo.png",
+    "/favicon.ico",
+    "/favicon-*.png",
+    "/apple-touch-icon.png",
+    "/robots.txt",
+    "/sitemap.xml",
+    "/_headers"
+  ]
+}
