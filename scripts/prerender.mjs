@@ -33,7 +33,7 @@ const routes = [
   { path: '/about',       title: 'About SatvaStones | Korean & Western Aesthetic Jewelry Studio',
     desc: 'Discover the SatvaStones story — an Indian jewelry brand curating premium Korean aesthetic earrings, anti-tarnish gold necklaces, and Western minimalist accessories.' },
   { path: '/contact',     title: 'Contact Satvastones | Customer Support',
-    desc: 'Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: hello@satvastones.com' },
+    desc: 'Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: support@satvastones.in' },
   { path: '/blogs',       title: 'The Journal | Satvastones Blog',
     desc: 'Explore style guides, jewelry care tips, and the latest trends in Korean and Western aesthetic jewelry on the Satvastones Journal.' },
   { path: '/privacy',     title: 'Privacy Policy | Satvastones',
@@ -105,7 +105,7 @@ function noscriptContent(route) {
     return `<header><h1>Contact SatvaStones</h1>
 <nav><a href="/">Home</a> | <a href="/shop">Shop</a> | <a href="/about">About</a> | <a href="/contact">Contact</a></nav></header>
 <main><section><h2>Get In Touch</h2>
-<p>Have a question about our anti-tarnish jewelry, sizing, orders, or returns? Email us at hello@satvastones.com or use our contact form. We respond within 24 hours.</p>
+<p>Have a question about our anti-tarnish jewelry, sizing, orders, or returns? Email us at support@satvastones.in or use our contact form. We respond within 24 hours.</p>
 <p>Follow us on Instagram @satvastones for daily style inspiration and new arrivals.</p></section></main>
 <footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }

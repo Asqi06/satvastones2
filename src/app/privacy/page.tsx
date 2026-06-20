@@ -67,7 +67,7 @@ export default function PrivacyPage() {
               This privacy charter may be updated periodically to reflect changes in our data practices, legal obligations, or platform capabilities. We encourage you to review this page regularly. Material changes will be communicated via email or a prominent notice on the SatvaStones website prior to taking effect.
             </p>
             <p>
-              If you have any questions about how we handle your personal information while you browse our collection of anti-tarnish jewelry, waterproof earrings, or gold-plated accessories, please contact our data protection officer at hello@satvastones.com.
+              If you have any questions about how we handle your personal information while you browse our collection of anti-tarnish jewelry, waterproof earrings, or gold-plated accessories, please contact our data protection officer at support@satvastones.in.
             </p>
           </section>
         </div>

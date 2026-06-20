@@ -1,0 +1,17 @@
+# Security Contact
+Contact: mailto:support@satvastones.in
+
+# Encryption
+Encryption: https://satvastones.in/.well-known/pgp-key.txt
+
+# Disclosure Policy
+Policy: https://satvastones.in/security-disclosure
+
+# Preferred Languages
+Preferred-Languages: en, hi
+
+# Canonical
+Canonical: https://satvastones.in/.well-known/security.txt
+
+# Expiry
+Expires: 2027-06-20T00:00:00.000Z

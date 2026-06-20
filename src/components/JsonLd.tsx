@@ -132,7 +132,7 @@ export const getOrganizationSchema = () => ({
     "@type": "ContactPoint",
     "telephone": "+91-0000000000",
     "contactType": "customer service",
-    "email": "hello@satvastones.com",
+    "email": "support@satvastones.in",
     "availableLanguage": ["English", "Hindi"]
   },
   "sameAs": [
@@ -192,7 +192,7 @@ export const getLocalBusinessSchema = () => ({
   "image": "https://satvastones.in/logo.png",
   "url": "https://satvastones.in",
   "telephone": "+91-0000000000",
-  "email": "hello@satvastones.com",
+  "email": "support@satvastones.in",
   "description": "Premium aesthetic Korean and Western jewelry store based in Vapi, India. Anti-tarnish, waterproof jewelry online.",
   "address": {
     "@type": "PostalAddress",

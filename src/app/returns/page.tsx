@@ -24,7 +24,7 @@ export default function ReturnsPage() {
               SatvaStones does not accept returns, refunds, or cancellations once an order has been placed and confirmed. All sales are final. This policy applies to all products in our collection including Korean aesthetic earrings, gold-plated necklaces, anti-tarnish rings, designer bracelets, and ₹99 Sale items.
             </p>
             <p>
-              We encourage you to review your order carefully — including product specifications, sizes, and customization details such as name engravings or custom text — before completing your purchase. If you have questions about sizing, material, or styling of our waterproof and anti-tarnish jewelry, please contact our team at hello@satvastones.com before placing your order.
+              We encourage you to review your order carefully — including product specifications, sizes, and customization details such as name engravings or custom text — before completing your purchase. If you have questions about sizing, material, or styling of our waterproof and anti-tarnish jewelry, please contact our team at support@satvastones.in before placing your order.
             </p>
             <p>
               This no-return policy is standard practice for affordable luxury jewelry retailers in India due to hygiene regulations and the handcrafted nature of our pieces. Each SatvaStones artifact undergoes rigorous quality inspection before dispatch to ensure it meets our exacting standards.

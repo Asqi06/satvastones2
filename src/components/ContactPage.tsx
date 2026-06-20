@@ -59,7 +59,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Email Us</p>
-                  <p className="text-xs font-bold uppercase text-stone-900">hello@satvastones.com</p>
+                  <p className="text-xs font-bold uppercase text-stone-900">support@satvastones.in</p>
                 </div>
               </div>
 
