@@ -1604,8 +1604,16 @@ export default function AdminPanel({
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold uppercase text-stone-500">Cover Image URL</label>
-                      <input type="url" value={editingBlog ? editingBlog.image : (blogForm?.image || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, image: e.target.value}) : setBlogForm({...blogForm, image: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                      <label className="text-[10px] font-bold uppercase text-stone-500">Cover Image</label>
+                      <div className="flex gap-3">
+                        <input type="url" value={editingBlog ? editingBlog.image : (blogForm?.image || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, image: e.target.value}) : setBlogForm({...blogForm, image: e.target.value})} className="flex-1 border border-stone-200 p-3 text-sm focus:border-black outline-hidden" placeholder="Image URL or upload from Cloudinary" />
+                        <button type="button" onClick={() => openUploadWidget((url) => { editingBlog ? setEditingBlog({...editingBlog, image: url}) : setBlogForm({...blogForm, image: url}) }, cloudinaryConfig)} className="bg-stone-100 hover:bg-stone-200 px-4 py-3 text-[9px] font-bold uppercase tracking-widest transition-all border border-stone-200 shrink-0">Upload</button>
+                      </div>
+                      {(editingBlog ? editingBlog.image : blogForm?.image) && (
+                        <div className="mt-2 w-32 h-20 bg-stone-50 overflow-hidden border border-stone-100">
+                          <img src={editingBlog ? editingBlog.image : blogForm?.image} alt="Preview" className="w-full h-full object-cover" />
+                        </div>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase text-stone-500">Category</label>
