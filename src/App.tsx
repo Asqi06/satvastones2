@@ -1303,10 +1303,10 @@ function AppContent() {
                           <div className="w-16 h-0.5 bg-stone-200 mx-auto"></div>
                         </div>
                         <div className="text-[10px] md:text-xs leading-relaxed text-stone-500 uppercase tracking-tight space-y-5 max-w-3xl mx-auto">
-                          <p>Welcome to Satvastones, India's premier destination for aesthetic Korean and Western jewelry. Based in Jaipur, Rajasthan, we curate handcrafted, anti-tarnish, and waterproof jewelry pieces that blend Seoul minimalism with Parisian elegance. Our collection features over 100 meticulously designed pieces including Korean huggie earrings, layered chain necklaces, stackable rings, charm bracelets, personalized name necklaces, and luxury gift hampers.</p>
-                          <p>Every Satvastones piece is crafted using premium materials with a focus on craftsmanship and durability. Our jewelry features 18K gold plating, sterling silver finishes, and hypoallergenic alloy bases — all treated with anti-tarnish coating to ensure long-lasting luster. We guarantee no color fade, no green fingers, and no discoloration. Each piece is designed for the sophisticated woman who values quality, style, and affordability in her everyday aesthetic.</p>
-                          <p>Shop across multiple categories — from minimalist everyday earrings and dainty necklaces to bold statement rings and elegant bracelets. Our ₹99 Flash Sale offers premium anti-tarnish jewelry at accessible price points, while our personalized name necklaces make thoughtful gifts for birthdays, anniversaries, and special occasions. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours.</p>
-                          <p>Follow us on Instagram, Facebook, and Pinterest for daily style inspiration, new arrivals, and exclusive offers. Whether you are dressing up for a wedding, accessorizing for work, or looking for the perfect gift, Satvastones has the perfect aesthetic jewelry piece for every occasion and every woman.</p>
+                          <p>{cmsData?.homepageSeo?.p1 || "Welcome to Satvastones, India's premier destination for aesthetic Korean and Western jewelry. Based in Vapi, Gujarat, we curate handcrafted, anti-tarnish, and waterproof jewelry pieces that blend Seoul minimalism with Parisian elegance. Our collection features over 100 meticulously designed pieces including Korean huggie earrings, layered chain necklaces, stackable rings, charm bracelets, personalized name necklaces, and luxury gift hampers."}</p>
+                          <p>{cmsData?.homepageSeo?.p2 || "Every Satvastones piece is crafted using premium materials with a focus on craftsmanship and durability. Our jewelry features 18K gold plating, sterling silver finishes, and hypoallergenic alloy bases — all treated with anti-tarnish coating to ensure long-lasting luster. We guarantee no color fade, no green fingers, and no discoloration. Each piece is designed for the sophisticated woman who values quality, style, and affordability in her everyday aesthetic."}</p>
+                          <p>{cmsData?.homepageSeo?.p3 || "Shop across multiple categories — from minimalist everyday earrings and dainty necklaces to bold statement rings and elegant bracelets. Our ₹99 Flash Sale offers premium anti-tarnish jewelry at accessible price points, while our personalized name necklaces make thoughtful gifts for birthdays, anniversaries, and special occasions. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours."}</p>
+                          <p>{cmsData?.homepageSeo?.p4 || "Follow us on Instagram, Facebook, and Pinterest for daily style inspiration, new arrivals, and exclusive offers. Whether you are dressing up for a wedding, accessorizing for work, or looking for the perfect gift, Satvastones has the perfect aesthetic jewelry piece for every occasion and every woman."}</p>
                         </div>
                         <div className="flex flex-wrap justify-center gap-3">
                           {['Anti-Tarnish', 'Waterproof', 'Hypoallergenic', '18K Gold Plated', 'Gift-Ready Packaging', 'Free Shipping over ₹399'].map((tag) => (
@@ -1383,13 +1383,13 @@ function AppContent() {
               <div className="space-y-6">
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.2em]">Contact</h4>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-stone-500">hello@satvastones.com</p>
-                <p className="text-[9px] font-bold uppercase tracking-widest text-stone-600">Jaipur, Rajasthan, India</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-stone-600">Vapi, Gujarat, India</p>
               </div>
             </div>
           </div>
           <div className="border-t border-stone-900 pt-12 flex flex-col md:flex-row justify-between gap-6 text-center md:text-left">
              <div className="space-y-2">
-                <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-stone-600">© 2024 SATVASTONES. ALL RIGHTS RESERVED.</p>
+                <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-stone-600">© 2026 SATVASTONES. ALL RIGHTS RESERVED.</p>
                 <p className="text-[8px] font-bold uppercase tracking-[0.4em] text-red-900/40">No Refunds • No Cancellations • No Returns</p>
              </div>
              <div className="flex justify-center md:justify-end gap-8 text-[9px] font-bold uppercase tracking-[0.3em] text-stone-600">

@@ -47,7 +47,7 @@ export default function ContactPage() {
             </div>
 
             <div className="text-stone-500 text-[10px] uppercase tracking-wider leading-relaxed space-y-3 max-w-md">
-              <p>Satvastones is India's premier destination for aesthetic Korean and Western jewelry. Based in Jaipur, we curate anti-tarnish, waterproof pieces including earrings, necklaces, rings, and bracelets that blend Seoul minimalism with Parisian elegance.</p>
+              <p>Satvastones is India's premier destination for aesthetic Korean and Western jewelry. Based in Vapi, Gujarat, we curate anti-tarnish, waterproof pieces including earrings, necklaces, rings, and bracelets that blend Seoul minimalism with Parisian elegance.</p>
               <p>Our customer support team responds within 24 hours. Whether you need help with sizing, order tracking, or styling advice for our gold-plated and silver jewelry collections, we are here to assist you every step of the way.</p>
               <p>Bulk and wholesale inquiries for boutique owners are welcome. Join thousands of happy customers who trust Satvastones for trend-forward, affordable jewelry that never compromises on quality.</p>
             </div>
@@ -79,7 +79,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Our Studio</p>
-                  <p className="text-xs font-bold uppercase text-stone-900">Aesthetic Lane, Jaipur, India</p>
+                  <p className="text-xs font-bold uppercase text-stone-900">Vapi, Gujarat, India</p>
                 </div>
               </div>
             </div>

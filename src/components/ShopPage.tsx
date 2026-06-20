@@ -33,6 +33,7 @@ export default function ShopPage({
   const [viewMode, setViewMode] = useState<'grid' | 'large'>('grid');
   const [sortBy, setSortBy] = useState('Featured');
   const [isSortOpen, setIsSortOpen] = useState(false);
+  const collectionSeo = cmsData?.collectionSeo || {};
 
   // Sync state if URL path changes
   useEffect(() => {
@@ -270,50 +271,64 @@ export default function ShopPage({
             {urlCategory ? (
               <>
                 <h2 className="font-display text-3xl font-bold uppercase tracking-tight">
-                  {activeCategory === '99-sale' ? '₹99 Flash Sale — Premium Aesthetic Jewelry at Unbeatable Prices' :
-                   activeCategory === 'necklaces' ? 'Designer Necklaces for Women — Gold Plated, Anti-Tarnish & Waterproof' :
-                   activeCategory === 'earrings' ? 'Aesthetic Earrings for Women — Korean, Western & Minimalist Styles' :
-                   activeCategory === 'rings' ? 'Minimalist Rings for Women — Stackable, Adjustable & Anti-Tarnish' :
-                   activeCategory === 'bracelets' ? 'Chic Bracelets & Bangles — Gold Plated, Waterproof & Trendy' :
-                   activeCategory === 'name-necklace' ? 'Personalized Name Necklaces — Custom Engraved Gold & Silver' :
-                   activeCategory === 'gifts' ? 'Jewelry Gifts for Her — Curated Gift-Ready Pieces' :
-                   activeCategory === 'hampers' ? 'Luxury Jewelry Gift Hampers — Curated Sets for Every Occasion' :
-                   activeCategory === 'pendant' ? 'Aesthetic Pendants for Women — Gold Plated & Anti-Tarnish' :
-                   activeCategory === 'accessories' ? 'Premium Jewelry Accessories — Anklets, Hair Accessories & More' :
-                   activeCategory === 'mothers-day' ? "Mother's Day Jewelry Gifts — Elegant, Thoughtful & Beautifully Packaged" :
-                   `Shop ${catLabel || activeCategory} — Premium Aesthetic Jewelry`}
+                  {collectionSeo[activeCategory]?.h2 || (
+                    activeCategory === '99-sale' ? '₹99 Flash Sale — Premium Aesthetic Jewelry at Unbeatable Prices' :
+                    activeCategory === 'necklaces' ? 'Designer Necklaces for Women — Gold Plated, Anti-Tarnish & Waterproof' :
+                    activeCategory === 'earrings' ? 'Aesthetic Earrings for Women — Korean, Western & Minimalist Styles' :
+                    activeCategory === 'rings' ? 'Minimalist Rings for Women — Stackable, Adjustable & Anti-Tarnish' :
+                    activeCategory === 'bracelets' ? 'Chic Bracelets & Bangles — Gold Plated, Waterproof & Trendy' :
+                    activeCategory === 'name-necklace' ? 'Personalized Name Necklaces — Custom Engraved Gold & Silver' :
+                    activeCategory === 'gifts' ? 'Jewelry Gifts for Her — Curated Gift-Ready Pieces' :
+                    activeCategory === 'hampers' ? 'Luxury Jewelry Gift Hampers — Curated Sets for Every Occasion' :
+                    activeCategory === 'pendant' ? 'Aesthetic Pendants for Women — Gold Plated & Anti-Tarnish' :
+                    activeCategory === 'accessories' ? 'Premium Jewelry Accessories — Anklets, Hair Accessories & More' :
+                    activeCategory === 'mothers-day' ? "Mother's Day Jewelry Gifts — Elegant, Thoughtful & Beautifully Packaged" :
+                    `Shop ${catLabel || activeCategory} — Premium Aesthetic Jewelry`
+                  )}
                 </h2>
                 <div className="text-[10px] leading-relaxed text-stone-500 uppercase tracking-tight space-y-4 max-w-3xl mx-auto">
-                  {activeCategory === '99-sale' && (
-                    <p>Discover our iconic ₹99 Flash Sale featuring premium anti-tarnish jewelry at an incredible price point. Each piece is handpicked from our best-selling Korean and Western aesthetic collection — including minimalist stud earrings, dainty chain necklaces, stackable rings, and charm bracelets. Despite the affordable price, every ₹99 item is crafted with the same hypoallergenic, waterproof, and tarnish-resistant quality that Satvastones is known for. Shop now before stock runs out — limited quantities available. Free shipping on prepaid orders above ₹399.</p>
-                  )}
-                  {activeCategory === 'necklaces' && (
-                    <p>Explore our curated collection of designer necklaces for women, featuring Korean layered chains, Western pendant necklaces, velvet chokers, and gold-plated statement pieces. Each necklace is handcrafted using premium anti-tarnish and waterproof materials, ensuring your jewelry maintains its brilliant luster through daily wear. Our collection includes adjustable lengths, hypoallergenic clasps, and heirloom-quality finishes. Whether you need a minimalist everyday chain or a bold statement piece for weddings and parties, Satvastones has the perfect necklace to elevate your aesthetic. Free shipping on prepaid orders above ₹399.</p>
-                  )}
-                  {activeCategory === 'earrings' && (
-                    <p>Browse over 100 aesthetic earrings for women — from Korean minimalist studs and huggie hoops to Western drop earrings and traditional chandbalis. All our earrings are crafted with hypoallergenic, nickel-free materials and feature anti-tarnish coating for long-lasting wear. Our collection includes lightweight designs for all-day comfort, making them perfect for daily office wear, college, parties, and weddings. Each pair is meticulously crafted with attention to clarity, setting, and overall luster. Shop online with free shipping on prepaid orders above ₹399.</p>
-                  )}
-                  {activeCategory === 'rings' && (
-                    <p>Discover our handpicked collection of aesthetic rings for women, featuring Korean stacking bands, minimalist gold-plated rings, statement cocktail rings, and adjustable daily-wear designs. Each ring is crafted using premium anti-tarnish materials with hypoallergenic properties — safe for sensitive skin. Our adjustable sizes ensure a perfect fit for any finger. From dainty everyday bands to bold fashion rings for special occasions, find the perfect piece to express your unique style. Free shipping on prepaid orders above ₹399.</p>
-                  )}
-                  {activeCategory === 'bracelets' && (
-                    <p>Shop our exclusive range of aesthetic bracelets and bangles — including gold-plated chain bracelets, Korean beaded designs, tennis bracelets, and minimalist cuffs. Every bracelet is designed with anti-tarnish, waterproof materials for lasting beauty. Our collection features adjustable closures, hypoallergenic metals, and artisanal craftsmanship. Whether you are layering multiple bracelets or wearing a single statement piece, these accessories add the perfect finishing touch to any outfit. Free shipping on prepaid orders above ₹399.</p>
-                  )}
-                  {(!urlCategory || activeCategory === 'all') && (
+                  {collectionSeo[activeCategory]?.content ? (
+                    <div dangerouslySetInnerHTML={{ __html: collectionSeo[activeCategory].content }} />
+                  ) : (
                     <>
-                      <p>Welcome to Satvastones — India's premier destination for aesthetic Korean and Western jewelry. Our carefully curated collection features over 100 pieces including anti-tarnish earrings, waterproof necklaces, hypoallergenic rings, and tarnish-resistant bracelets. Each piece is handcrafted using premium materials including 18K gold plating, sterling silver, and high-grade alloy bases with anti-tarnish coating.</p>
-                      <p>Whether you are searching for minimalist everyday jewelry, statement pieces for weddings and parties, or personalized name necklaces for gifting, Satvastones offers trend-forward designs that blend Seoul minimalism with Parisian elegance. All products are backed by our quality guarantee — no color fade, no green fingers, no discoloration. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours from our studio in Jaipur, Rajasthan.</p>
+                      {activeCategory === '99-sale' && (
+                        <p>Discover our iconic ₹99 Flash Sale featuring premium anti-tarnish jewelry at an incredible price point. Each piece is handpicked from our best-selling Korean and Western aesthetic collection — including minimalist stud earrings, dainty chain necklaces, stackable rings, and charm bracelets. Despite the affordable price, every ₹99 item is crafted with the same hypoallergenic, waterproof, and tarnish-resistant quality that Satvastones is known for. Shop now before stock runs out — limited quantities available. Free shipping on prepaid orders above ₹399.</p>
+                      )}
+                      {activeCategory === 'necklaces' && (
+                        <p>Explore our curated collection of designer necklaces for women, featuring Korean layered chains, Western pendant necklaces, velvet chokers, and gold-plated statement pieces. Each necklace is handcrafted using premium anti-tarnish and waterproof materials, ensuring your jewelry maintains its brilliant luster through daily wear. Our collection includes adjustable lengths, hypoallergenic clasps, and heirloom-quality finishes. Whether you need a minimalist everyday chain or a bold statement piece for weddings and parties, Satvastones has the perfect necklace to elevate your aesthetic. Free shipping on prepaid orders above ₹399.</p>
+                      )}
+                      {activeCategory === 'earrings' && (
+                        <p>Browse over 100 aesthetic earrings for women — from Korean minimalist studs and huggie hoops to Western drop earrings and traditional chandbalis. All our earrings are crafted with hypoallergenic, nickel-free materials and feature anti-tarnish coating for long-lasting wear. Our collection includes lightweight designs for all-day comfort, making them perfect for daily office wear, college, parties, and weddings. Each pair is meticulously crafted with attention to clarity, setting, and overall luster. Shop online with free shipping on prepaid orders above ₹399.</p>
+                      )}
+                      {activeCategory === 'rings' && (
+                        <p>Discover our handpicked collection of aesthetic rings for women, featuring Korean stacking bands, minimalist gold-plated rings, statement cocktail rings, and adjustable daily-wear designs. Each ring is crafted using premium anti-tarnish materials with hypoallergenic properties — safe for sensitive skin. Our adjustable sizes ensure a perfect fit for any finger. From dainty everyday bands to bold fashion rings for special occasions, find the perfect piece to express your unique style. Free shipping on prepaid orders above ₹399.</p>
+                      )}
+                      {activeCategory === 'bracelets' && (
+                        <p>Shop our exclusive range of aesthetic bracelets and bangles — including gold-plated chain bracelets, Korean beaded designs, tennis bracelets, and minimalist cuffs. Every bracelet is designed with anti-tarnish, waterproof materials for lasting beauty. Our collection features adjustable closures, hypoallergenic metals, and artisanal craftsmanship. Whether you are layering multiple bracelets or wearing a single statement piece, these accessories add the perfect finishing touch to any outfit. Free shipping on prepaid orders above ₹399.</p>
+                      )}
+                      {(!urlCategory || activeCategory === 'all') && (
+                        <>
+                          <p>Welcome to Satvastones — India's premier destination for aesthetic Korean and Western jewelry. Our carefully curated collection features over 100 pieces including anti-tarnish earrings, waterproof necklaces, hypoallergenic rings, and tarnish-resistant bracelets. Each piece is handcrafted using premium materials including 18K gold plating, sterling silver, and high-grade alloy bases with anti-tarnish coating.</p>
+                          <p>Whether you are searching for minimalist everyday jewelry, statement pieces for weddings and parties, or personalized name necklaces for gifting, Satvastones offers trend-forward designs that blend Seoul minimalism with Parisian elegance. All products are backed by our quality guarantee — no color fade, no green fingers, no discoloration. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours from our studio in Vapi, Gujarat.</p>
+                        </>
+                      )}
                     </>
                   )}
                 </div>
               </>
             ) : (
               <>
-                <h2 className="font-display text-3xl font-bold uppercase tracking-tight">Premium Aesthetic Jewelry Online — Korean & Western Collections</h2>
+                <h2 className="font-display text-3xl font-bold uppercase tracking-tight">{collectionSeo.all?.h2 || 'Premium Aesthetic Jewelry Online — Korean & Western Collections'}</h2>
                 <div className="text-[10px] leading-relaxed text-stone-500 uppercase tracking-tight space-y-4 max-w-3xl mx-auto">
-                  <p>Welcome to Satvastones — India's premier destination for aesthetic Korean and Western jewelry. Our carefully curated collection features over 100 pieces including anti-tarnish earrings, waterproof necklaces, hypoallergenic rings, and tarnish-resistant bracelets. Each piece is handcrafted using premium materials including 18K gold plating, sterling silver, and high-grade alloy bases with anti-tarnish coating.</p>
-                  <p>Whether you are searching for minimalist everyday jewelry, statement pieces for weddings and parties, or personalized name necklaces for gifting, Satvastones offers trend-forward designs that blend Seoul minimalism with Parisian elegance. All products are backed by our quality guarantee — no color fade, no green fingers, no discoloration. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours from our studio in Jaipur, Rajasthan.</p>
-                  <p>Our collection spans multiple categories: Korean huggie earrings, Western drop earrings, layered chain necklaces, stacking rings, charm bracelets, custom name necklaces, pendant sets, gift hampers, and more. Each category is designed with specific aesthetic sensibilities — from Seoul street style to Parisian chic. Our craftsmanship focuses on durability, comfort, and timeless elegance.</p>
+                  {collectionSeo.all?.content ? (
+                    <div dangerouslySetInnerHTML={{ __html: collectionSeo.all.content }} />
+                  ) : (
+                    <>
+                      <p>Welcome to Satvastones — India's premier destination for aesthetic Korean and Western jewelry. Our carefully curated collection features over 100 pieces including anti-tarnish earrings, waterproof necklaces, hypoallergenic rings, and tarnish-resistant bracelets. Each piece is handcrafted using premium materials including 18K gold plating, sterling silver, and high-grade alloy bases with anti-tarnish coating.</p>
+                      <p>Whether you are searching for minimalist everyday jewelry, statement pieces for weddings and parties, or personalized name necklaces for gifting, Satvastones offers trend-forward designs that blend Seoul minimalism with Parisian elegance. All products are backed by our quality guarantee — no color fade, no green fingers, no discoloration. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours from our studio in Vapi, Gujarat.</p>
+                      <p>Our collection spans multiple categories: Korean huggie earrings, Western drop earrings, layered chain necklaces, stacking rings, charm bracelets, custom name necklaces, pendant sets, gift hampers, and more. Each category is designed with specific aesthetic sensibilities — from Seoul street style to Parisian chic. Our craftsmanship focuses on durability, comfort, and timeless elegance.</p>
+                    </>
+                  )}
                 </div>
               </>
             )}

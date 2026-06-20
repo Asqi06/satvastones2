@@ -112,15 +112,13 @@ export const getOrganizationSchema = () => ({
   "url": "https://satvastones.in",
   "logo": "https://satvastones.in/logo.png",
   "description": "Premium aesthetic Korean and Western jewelry brand. Anti-tarnish, waterproof, trend-forward designs.",
-  "foundingDate": "2024",
-  "vatID": "GSTIN-PENDING",
-  "taxID": "PAN-PENDING",
+  "foundingDate": "2026",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Jaipur, Rajasthan",
-    "addressLocality": "Jaipur",
-    "addressRegion": "Rajasthan",
-    "postalCode": "302001",
+    "streetAddress": "Vapi, Gujarat",
+    "addressLocality": "Vapi",
+    "addressRegion": "Gujarat",
+    "postalCode": "396191",
     "addressCountry": "IN"
   },
   "contactPoint": {
@@ -188,19 +186,19 @@ export const getLocalBusinessSchema = () => ({
   "url": "https://satvastones.in",
   "telephone": "+91-0000000000",
   "email": "hello@satvastones.com",
-  "description": "Premium aesthetic Korean and Western jewelry store based in Jaipur, India. Anti-tarnish, waterproof jewelry online.",
+  "description": "Premium aesthetic Korean and Western jewelry store based in Vapi, India. Anti-tarnish, waterproof jewelry online.",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Jaipur, Rajasthan",
-    "addressLocality": "Jaipur",
-    "addressRegion": "Rajasthan",
-    "postalCode": "302001",
+    "streetAddress": "Vapi, Gujarat",
+    "addressLocality": "Vapi",
+    "addressRegion": "Gujarat",
+    "postalCode": "396191",
     "addressCountry": "IN"
   },
   "geo": {
     "@type": "GeoCoordinates",
-    "latitude": 26.9124,
-    "longitude": 75.7873
+    "latitude": 20.3717,
+    "longitude": 72.9048
   },
   "openingHoursSpecification": {
     "@type": "OpeningHoursSpecification",

@@ -25,7 +25,7 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState<any>({ 
-    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] 
+    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '' 
   });
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -39,7 +39,7 @@ export default function AdminPanel({
   const [blogs, setBlogs] = useState<any[]>([]);
   const [showBlogForm, setShowBlogForm] = useState(false);
   const [editingBlog, setEditingBlog] = useState<any>(null);
-  const [blogForm, setBlogForm] = useState<any>({ title: '', slug: '', excerpt: '', content: '', image: '', category: '', author: 'SATVASTONES', readTime: '5 min read', published: false });
+  const [blogForm, setBlogForm] = useState<any>({ title: '', slug: '', excerpt: '', content: '', image: '', category: '', author: 'SATVASTONES', readTime: '5 min read', isPublished: false });
 
   // Fetch Blogs
   React.useEffect(() => {
@@ -67,7 +67,7 @@ export default function AdminPanel({
         }
         setShowBlogForm(false);
         setEditingBlog(null);
-        setBlogForm({ title: '', slug: '', excerpt: '', content: '', image: '', category: '', author: 'SATVASTONES', readTime: '5 min read', published: false });
+        setBlogForm({ title: '', slug: '', excerpt: '', content: '', image: '', category: '', author: 'SATVASTONES', readTime: '5 min read', isPublished: false });
       }
     } catch (err) {
       console.error("Failed to save blog:", err);
@@ -261,7 +261,7 @@ export default function AdminPanel({
           {activeTab === 'products' && (
             <button 
               onClick={() => setNewProduct({ 
-                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] 
+                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '' 
               })}
               className="bg-black text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800 transition-all"
             >
@@ -708,7 +708,7 @@ export default function AdminPanel({
                     ₹99 Sale
                   </button>
                   <button 
-                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [] })}
+                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '' })}
                     className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
                   >
                     <Plus className="h-3 w-3" /> Add New Product
@@ -1414,6 +1414,17 @@ export default function AdminPanel({
                     />
                     <p className="text-[9px] text-stone-400 italic">150-160 characters recommended. Leave empty to auto-generate.</p>
                   </div>
+                  <div className="col-span-full space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">SEO Content (HTML — overrides "About This Piece" section)</label>
+                    <textarea 
+                      rows={8}
+                      placeholder="Custom product-specific SEO content with HTML. Include unique keywords, detailed description, and style notes. Leave empty for auto-generated content."
+                      value={editingProduct ? (editingProduct.seoContent || '') : (newProduct.seoContent || '')}
+                      onChange={(e) => editingProduct ? setEditingProduct({...editingProduct, seoContent: e.target.value}) : setNewProduct({...newProduct, seoContent: e.target.value})}
+                      className="w-full border border-stone-200 p-3 text-sm font-mono focus:border-black outline-hidden resize-none" 
+                    />
+                    <p className="text-[9px] text-stone-400 italic">Custom HTML content that replaces the generic "About This Piece" section on the product page. Great for per-product SEO.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1577,43 +1588,43 @@ export default function AdminPanel({
                 <form onSubmit={handleBlogSubmit} className="space-y-6">
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase text-stone-500">Title</label>
-                    <input type="text" required value={editingBlog?.title || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, title: e.target.value}) : setBlogForm({...blogForm, title: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                    <input type="text" required value={editingBlog ? editingBlog.title : (blogForm?.title || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, title: e.target.value}) : setBlogForm({...blogForm, title: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase text-stone-500">Slug</label>
-                    <input type="text" required value={editingBlog?.slug || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')}) : setBlogForm({...blogForm, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')})} className="w-full border border-stone-200 p-3 text-sm font-mono focus:border-black outline-hidden" />
+                    <input type="text" required value={editingBlog ? editingBlog.slug : (blogForm?.slug || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')}) : setBlogForm({...blogForm, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')})} className="w-full border border-stone-200 p-3 text-sm font-mono focus:border-black outline-hidden" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase text-stone-500">Excerpt</label>
-                    <textarea rows={2} required value={editingBlog?.excerpt || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, excerpt: e.target.value}) : setBlogForm({...blogForm, excerpt: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                    <textarea rows={2} required value={editingBlog ? editingBlog.excerpt : (blogForm?.excerpt || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, excerpt: e.target.value}) : setBlogForm({...blogForm, excerpt: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase text-stone-500">Content (HTML)</label>
-                    <textarea rows={12} required value={editingBlog?.content || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, content: e.target.value}) : setBlogForm({...blogForm, content: e.target.value})} className="w-full border border-stone-200 p-3 text-sm font-mono focus:border-black outline-hidden" />
+                    <textarea rows={12} required value={editingBlog ? editingBlog.content : (blogForm?.content || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, content: e.target.value}) : setBlogForm({...blogForm, content: e.target.value})} className="w-full border border-stone-200 p-3 text-sm font-mono focus:border-black outline-hidden" />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase text-stone-500">Cover Image URL</label>
-                      <input type="url" value={editingBlog?.image || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, image: e.target.value}) : setBlogForm({...blogForm, image: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                      <input type="url" value={editingBlog ? editingBlog.image : (blogForm?.image || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, image: e.target.value}) : setBlogForm({...blogForm, image: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase text-stone-500">Category</label>
-                      <input type="text" value={editingBlog?.category || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, category: e.target.value}) : setBlogForm({...blogForm, category: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                      <input type="text" value={editingBlog ? editingBlog.category : (blogForm?.category || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, category: e.target.value}) : setBlogForm({...blogForm, category: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase text-stone-500">Author</label>
-                      <input type="text" value={editingBlog?.author || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, author: e.target.value}) : setBlogForm({...blogForm, author: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                      <input type="text" value={editingBlog ? editingBlog.author : (blogForm?.author || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, author: e.target.value}) : setBlogForm({...blogForm, author: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
                     </div>
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold uppercase text-stone-500">Read Time</label>
-                      <input type="text" placeholder="5 min read" value={editingBlog?.readTime || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, readTime: e.target.value}) : setBlogForm({...blogForm, readTime: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                      <input type="text" placeholder="5 min read" value={editingBlog ? editingBlog.readTime : (blogForm?.readTime || '')} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, readTime: e.target.value}) : setBlogForm({...blogForm, readTime: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
                     </div>
                   </div>
                   <label className="flex items-center gap-3 cursor-pointer">
                     <input 
                       type="checkbox" 
-                      checked={editingBlog ? editingBlog.published : (blogForm?.published || false)} 
-                      onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, published: e.target.checked}) : setBlogForm({...blogForm, published: e.target.checked})}
+                      checked={editingBlog ? editingBlog.isPublished : (blogForm?.isPublished || false)} 
+                      onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, isPublished: e.target.checked}) : setBlogForm({...blogForm, isPublished: e.target.checked})}
                       className="w-4 h-4" 
                     />
                     <span className="text-[10px] font-bold uppercase text-stone-500">Published</span>
@@ -1641,7 +1652,7 @@ export default function AdminPanel({
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-stone-900 truncate">{post.title}</p>
                     <div className="flex items-center gap-3 mt-1">
-                      <span className={`text-[9px] font-bold uppercase tracking-widest ${post.published ? 'text-green-600' : 'text-stone-300'}`}>{post.published ? 'Published' : 'Draft'}</span>
+                      <span className={`text-[9px] font-bold uppercase tracking-widest ${post.isPublished ? 'text-green-600' : 'text-stone-300'}`}>{post.isPublished ? 'Published' : 'Draft'}</span>
                       <span className="text-[9px] text-stone-400">{post.category || 'Uncategorized'}</span>
                       <span className="text-[9px] text-stone-400">{new Date(post.createdAt).toLocaleDateString()}</span>
                     </div>

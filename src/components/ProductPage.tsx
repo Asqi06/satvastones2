@@ -553,11 +553,17 @@ export default function ProductPage({
               <div className="space-y-4">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-900">About This Piece</h3>
                 <p className="text-[10px] leading-relaxed text-stone-500 uppercase tracking-tight">
-                  {product.description || `Discover the exquisite ${product.title} from Satvastones — a premium ${(product.material || 'gold-plated').toLowerCase()} jewelry piece designed for the modern aesthetic woman. Each detail is crafted with artisanal precision, from the brilliant clarity of the setting to the smooth hypoallergenic finish that ensures comfortable all-day wear.`}
+                  {product.seoContent ? (
+                    <span dangerouslySetInnerHTML={{ __html: product.seoContent }} />
+                  ) : (
+                    product.description || `Discover the exquisite ${product.title} from Satvastones — a premium ${(product.material || 'gold-plated').toLowerCase()} jewelry piece designed for the modern aesthetic woman. Each detail is crafted with artisanal precision, from the brilliant clarity of the setting to the smooth hypoallergenic finish that ensures comfortable all-day wear.`
+                  )}
                 </p>
+                {!product.seoContent && (
                 <p className="text-[10px] leading-relaxed text-stone-500 uppercase tracking-tight">
                   Part of our {product.category || 'signature'} collection, this piece embodies the fusion of Korean minimalism and Western elegance that Satvastones is renowned for. The tarnish-resistant coating and waterproof construction make it perfect for daily wear — whether you are heading to the office, attending a wedding celebration, or curating your weekend aesthetic.
                 </p>
+                )}
               </div>
               <div className="space-y-4">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-900">Why Choose Satvastones</h3>
@@ -576,7 +582,7 @@ export default function ProductPage({
                   </li>
                   <li className="flex items-start gap-3 text-[9px] text-stone-500 uppercase tracking-tight">
                     <span className="w-1.5 h-1.5 rounded-full bg-stone-900 mt-1 shrink-0"></span>
-                    <span><strong className="text-stone-900">Free Shipping:</strong> On prepaid orders above ₹399. Express dispatch within 24-48 hours from our studio in Jaipur. Gift-ready packaging included.</span>
+                    <span><strong className="text-stone-900">Free Shipping:</strong> On prepaid orders above ₹399. Express dispatch within 24-48 hours from our studio in Vapi. Gift-ready packaging included.</span>
                   </li>
                 </ul>
               </div>

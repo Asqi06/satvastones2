@@ -76,7 +76,8 @@ const productSchema = new mongoose.Schema({
   // SEO fields
   metaTitle: String,
   metaDescription: String,
-  focusKeywords: [String]
+  focusKeywords: [String],
+  seoContent: String
 });
 
 const Product = mongoose.model('Product', productSchema);
@@ -143,7 +144,21 @@ const cmsSchema = new mongoose.Schema({
     code: String,
     discount: Number,
     isActive: Boolean
-  }]
+  }],
+  homepageSeo: {
+    p1: String,
+    p2: String,
+    p3: String,
+    p4: String
+  },
+  collectionSeo: {
+    type: Map,
+    of: {
+      h2: String,
+      content: String
+    },
+    default: {}
+  }
 });
 
 const CMS = mongoose.model('CMS', cmsSchema);
