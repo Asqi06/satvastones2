@@ -9,6 +9,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation,
 import { HelmetProvider } from 'react-helmet-async';
 import SEO from './components/SEO';
 import JsonLd, { getProductSchema, getOrganizationSchema, getWebsiteSchema, getBreadcrumbSchema, getFaqSchema, getLocalBusinessSchema } from './components/JsonLd';
+import { getSrcSet } from './utils/cloudinary';
 import LoadingScreen from './components/LoadingScreen';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
@@ -987,7 +988,7 @@ function AppContent() {
       <nav className="border-b border-stone-200 sticky top-0 bg-white/80 backdrop-blur-md z-50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-8">
           <div className="flex flex-1 items-center gap-6">
-            <button className="md:hidden p-1" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            <button className="md:hidden p-1" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
             <div className="hidden md:flex items-center gap-8">
@@ -1003,9 +1004,9 @@ function AppContent() {
           </div>
 
           <div className="flex flex-1 items-center justify-end gap-3 md:gap-6">
-            <button onClick={() => setIsSearchOpen(true)} className="p-1 hover:text-stone-400 transition-colors"><Search className="h-5 w-5" /></button>
-            <Link to="/account" className="p-1 hover:text-stone-400 transition-colors"><User className="h-5 w-5" /></Link>
-            <Link to="/cart" className="p-1 hover:text-stone-400 transition-colors relative">
+            <button onClick={() => setIsSearchOpen(true)} className="p-1 hover:text-stone-400 transition-colors" aria-label="Search"><Search className="h-5 w-5" /></button>
+            <Link to="/account" aria-label="My Account" className="p-1 hover:text-stone-400 transition-colors"><User className="h-5 w-5" /></Link>
+            <Link to="/cart" aria-label="Shopping Cart" className="p-1 hover:text-stone-400 transition-colors relative">
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
@@ -1078,7 +1079,7 @@ function AppContent() {
                       </div>
 
                       <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
-                        <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Satvastones - Premium aesthetic Korean and Western jewelry" fetchpriority="high" width="1600" height="686" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        <img src={optimizeImage(cmsData.hero.image, 768)} alt="Satvastones - Premium aesthetic Korean and Western jewelry" fetchpriority="high" width="768" height="329" srcSet={getSrcSet(cmsData.hero.image, [360, 480, 768, 1024, 1600])} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end p-8 md:p-14">
                           <div className="flex flex-col items-center gap-4 mb-4">
                             <p className="text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em]">Browse The Full Collection</p>

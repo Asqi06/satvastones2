@@ -1,31 +1,52 @@
 /**
- * Optimizes a Cloudinary URL by adding auto-format and auto-quality.
- * If the URL is not from Cloudinary, it returns the original URL.
+ * Extracts the public ID from a Cloudinary URL.
+ */
+const getPublicId = (url: string): string | null => {
+  const match = url.match(/\/upload\/(?:v\d+\/)?(.+?)(?:\.\w+)?$/);
+  return match ? match[1] : null;
+};
+
+/**
+ * Builds a Cloudinary URL with the given transformations.
+ * Preserves version number and original extension for proper cache behavior.
+ */
+const buildUrl = (url: string, transforms: string): string => {
+  if (!url.includes('cloudinary.com')) return url;
+  const parts = url.split('/upload/');
+  if (parts.length !== 2) return url;
+  return `${parts[0]}/upload/${transforms}/${parts[1]}`;
+};
+
+/**
+ * Optimizes a Cloudinary URL by forcing WebP, auto-quality, and optional sizing.
+ * Falls back to original URL for non-Cloudinary images.
  */
 export const optimizeImage = (url: string, width?: number, height?: number) => {
   if (!url) return '';
   if (!url.includes('cloudinary.com')) return url;
 
-  // If the URL already has transformations, don't double up
-  if (url.includes('/upload/f_auto')) return url;
-
-  const parts = url.split('/upload/');
-  if (parts.length !== 2) return url;
-
-  // f_auto: best format (WebP/AVIF)
-  // q_auto:best: high quality but small size
-  // c_limit: don't upscale, just downscale if too big
-  let transformation = 'f_auto,q_auto:best';
+  // Force WebP (smaller than f_auto which sometimes picks PNG), best quality, fill crop
+  let transforms = 'f_webp,q_auto:best';
   
   if (width && height) {
-    transformation += `,c_fill,g_auto,w_${width},h_${height}`;
+    transforms += `,c_fill,g_auto:face,w_${width},h_${height}`;
   } else if (width) {
-    transformation += `,c_limit,w_${width}`;
+    transforms += `,c_limit,w_${width}`;
   } else if (height) {
-    transformation += `,c_limit,h_${height}`;
+    transforms += `,c_limit,h_${height}`;
   }
 
-  return `${parts[0]}/upload/${transformation}/${parts[1]}`;
+  return buildUrl(url, transforms);
+};
+
+/**
+ * Generates a srcSet string for responsive images at multiple breakpoints.
+ */
+export const getSrcSet = (url: string, widths: number[] = [320, 480, 768, 1024, 1280]): string => {
+  if (!url || !url.includes('cloudinary.com')) return '';
+  return widths
+    .map(w => `${buildUrl(url, `f_webp,q_auto:best,c_limit,w_${w}`)} ${w}w`)
+    .join(', ');
 };
 
 /**

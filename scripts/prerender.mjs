@@ -72,7 +72,7 @@ function noscriptContent(route) {
 <li>100% Waterproof — wear in rain, gym, daily</li>
 <li>Free Shipping over ₹399 — COD available</li>
 <li>Secure Payments via Razorpay, UPI, Cards</li></ul></section></main>
-<footer><p>© 2024 SATVASTONES. All rights reserved.</p></footer>`;
+<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }
   if (p.startsWith('/shop/')) {
     const cat = p.replace('/shop/', '');
@@ -82,8 +82,8 @@ function noscriptContent(route) {
 <nav><a href="/">Home</a> | <a href="/shop">Shop All</a> | <a href="/shop/earrings">Earrings</a> | <a href="/shop/necklaces">Necklaces</a> | <a href="/shop/rings">Rings</a> | <a href="/shop/bracelets">Bracelets</a> | <a href="/shop/99-sale">₹99 Sale</a></nav></header>
 <main><section><h2>Browse Our ${label} Collection</h2>
 <p>Explore our curated collection of ${label.toLowerCase()} at SatvaStones — premium Korean and Western aesthetic jewelry. Each piece is anti-tarnish, waterproof, and designed for the modern woman. Free shipping over ₹399 with easy returns.</p>
-<p>Shop online with secure payments via UPI, Credit/Debit Cards, Net Banking, and COD. All orders are dispatched within 24-48 hours from our studio in Mumbai.</p></section></main>
-<footer><p>© 2024 SATVASTONES. All rights reserved.</p></footer>`;
+<p>Shop online with secure payments via UPI, Credit/Debit Cards, Net Banking, and COD. All orders are dispatched within 24-48 hours from our studio in Vapi, Gujarat.</p></section></main>
+<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }
   if (p === '/shop') {
     return `<header><h1>Shop All Jewelry — SatvaStones</h1>
@@ -91,7 +91,7 @@ function noscriptContent(route) {
 <main><section><h2>Complete Aesthetic Jewelry Collection</h2>
 <p>Browse our complete collection of 100+ aesthetic Korean and Western jewelry pieces. From minimalist earrings to statement necklaces, each piece is handcrafted with anti-tarnish, waterproof materials. Free shipping over ₹399.</p>
 <p>Discover trending designs including Korean huggies, layered gold chains, stackable rings, and personalized name necklaces.</p></section></main>
-<footer><p>© 2024 SATVASTONES. All rights reserved.</p></footer>`;
+<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }
   if (p === '/about') {
     return `<header><h1>About SatvaStones</h1>
@@ -99,7 +99,7 @@ function noscriptContent(route) {
 <main><section><h2>Our Story</h2>
 <p>SatvaStones is an Indian jewelry brand based in Mumbai, curating premium Korean and Western aesthetic jewelry for the modern woman. Every piece is handpicked for quality, designed to be anti-tarnish and waterproof, ensuring lasting beauty.</p>
 <p>We believe jewelry is an extension of identity. Our collections blend Seoul minimalism with Parisian elegance, offering pieces that transition effortlessly from desk to dinner.</p></section></main>
-<footer><p>© 2024 SATVASTONES. All rights reserved.</p></footer>`;
+<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }
   if (p === '/contact') {
     return `<header><h1>Contact SatvaStones</h1>
@@ -107,20 +107,20 @@ function noscriptContent(route) {
 <main><section><h2>Get In Touch</h2>
 <p>Have a question about our anti-tarnish jewelry, sizing, orders, or returns? Email us at hello@satvastones.com or use our contact form. We respond within 24 hours.</p>
 <p>Follow us on Instagram @satvastones for daily style inspiration and new arrivals.</p></section></main>
-<footer><p>© 2024 SATVASTONES. All rights reserved.</p></footer>`;
+<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }
   if (p === '/blogs') {
     return `<header><h1>The Journal — SatvaStones Blog</h1>
 <nav><a href="/">Home</a> | <a href="/shop">Shop</a> | <a href="/blogs">Journal</a></nav></header>
 <main><section><h2>Style Guides & Jewelry Care</h2>
 <p>Explore expert style guides, jewelry care tips, Korean fashion trends, and how to style aesthetic pieces for every occasion. From anti-tarnish care routines to layering inspiration, the SatvaStones Journal is your guide to aesthetic living.</p></section></main>
-<footer><p>© 2024 SATVASTONES. All rights reserved.</p></footer>`;
+<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }
   return `<header><h1>${route.title}</h1>
 <nav><a href="/">Home</a> | <a href="/shop">Shop</a></nav></header>
 <main><section><h2>${route.title}</h2>
 <p>${route.desc}</p></section></main>
-<footer><p>© 2024 SATVASTONES. All rights reserved.</p></footer>`;
+<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
 }
 
 function routeToDir(p) {
@@ -130,16 +130,17 @@ function routeToDir(p) {
 
 function generateSitemap() {
   const sitemapRoutes = routes.filter(r => !r.noindex);
+  const today = new Date().toISOString().split('T')[0];
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
   for (const route of sitemapRoutes) {
     const priority = route.path === '/' ? '1.0' : route.path.startsWith('/shop/') ? '0.8' : route.path === '/shop' ? '0.9' : '0.6';
     const changefreq = route.path === '/' ? 'daily' : route.path.startsWith('/shop/') ? 'weekly' : 'monthly';
-    xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <priority>${priority}</priority>\n    <changefreq>${changefreq}</changefreq>\n  </url>\n`;
+    xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${priority}</priority>\n    <changefreq>${changefreq}</changefreq>\n  </url>\n`;
   }
   xml += '</urlset>';
   writeFileSync(resolve(dist, 'sitemap.xml'), xml);
-  console.log(`✓ sitemap.xml written with ${sitemapRoutes.length} URLs`);
+  console.log(`✓ sitemap.xml written with ${sitemapRoutes.length} URLs (lastmod: ${today})`);
 }
 
 function main() {
