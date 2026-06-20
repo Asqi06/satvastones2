@@ -17,8 +17,9 @@ export const getProductSchema = (product: any) => {
   const url = `https://satvastones.in/product/${product._id || product.id}`;
   const name = product.metaTitle || product.title;
   const description = product.metaDescription || product.description || `Buy ${product.title} at ₹${product.price}. Anti-tarnish, waterproof aesthetic jewelry from Satvastones.`;
+  const isInStock = (product.stockQuantity || 0) > 0;
 
-  return {
+  const schema: any = {
     "@context": "https://schema.org/",
     "@type": "Product",
     "name": name,
@@ -31,6 +32,8 @@ export const getProductSchema = (product: any) => {
       "name": "Satvastones"
     },
     "category": product.category || "Jewelry",
+    "material": product.material || "Premium Alloy",
+    "color": product.variants?.map((v: any) => v.color)?.join(', ') || undefined,
     "keywords": (product.focusKeywords || []).join(', '),
     "offers": {
       "@type": "Offer",
@@ -39,7 +42,7 @@ export const getProductSchema = (product: any) => {
       "price": product.price,
       "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       "itemCondition": "https://schema.org/NewCondition",
-      "availability": (product.stockQuantity || 0) > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "availability": isInStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       "hasMerchantReturnPolicy": {
         "@type": "MerchantReturnPolicy",
         "applicableCountry": "IN",
@@ -50,7 +53,29 @@ export const getProductSchema = (product: any) => {
         "shippingDestination": {
           "@type": "DefinedRegion",
           "addressCountry": "IN"
-        }
+        },
+        ...(isInStock ? {
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 1,
+              "maxValue": 2,
+              "unitCode": "DAY"
+            },
+            "transitTime": {
+              "@type": "QuantitativeValue",
+              "minValue": 3,
+              "maxValue": 7,
+              "unitCode": "DAY"
+            }
+          },
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": 0,
+            "currency": "INR"
+          }
+        } : {})
       }
     },
     ...(product.reviews?.length > 0 ? {
@@ -76,6 +101,8 @@ export const getProductSchema = (product: any) => {
       }))
     } : {})
   };
+
+  return schema;
 };
 
 export const getOrganizationSchema = () => ({
@@ -86,6 +113,16 @@ export const getOrganizationSchema = () => ({
   "logo": "https://satvastones.in/logo.png",
   "description": "Premium aesthetic Korean and Western jewelry brand. Anti-tarnish, waterproof, trend-forward designs.",
   "foundingDate": "2024",
+  "vatID": "GSTIN-PENDING",
+  "taxID": "PAN-PENDING",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Jaipur, Rajasthan",
+    "addressLocality": "Jaipur",
+    "addressRegion": "Rajasthan",
+    "postalCode": "302001",
+    "addressCountry": "IN"
+  },
   "contactPoint": {
     "@type": "ContactPoint",
     "telephone": "+91-0000000000",
@@ -96,7 +133,9 @@ export const getOrganizationSchema = () => ({
   "sameAs": [
     "https://facebook.com/satvastones",
     "https://instagram.com/satvastones",
-    "https://twitter.com/satvastones"
+    "https://twitter.com/satvastones",
+    "https://pinterest.com/satvastones",
+    "https://tiktok.com/@satvastones"
   ]
 });
 
@@ -137,6 +176,75 @@ export const getFaqSchema = (faqs: { question: string; answer: string }[]) => ({
     "acceptedAnswer": {
       "@type": "Answer",
       "text": faq.answer
+    }
+  }))
+});
+
+export const getLocalBusinessSchema = () => ({
+  "@context": "https://schema.org",
+  "@type": "JewelryStore",
+  "name": "Satvastones",
+  "image": "https://satvastones.in/logo.png",
+  "url": "https://satvastones.in",
+  "telephone": "+91-0000000000",
+  "email": "hello@satvastones.com",
+  "description": "Premium aesthetic Korean and Western jewelry store based in Jaipur, India. Anti-tarnish, waterproof jewelry online.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Jaipur, Rajasthan",
+    "addressLocality": "Jaipur",
+    "addressRegion": "Rajasthan",
+    "postalCode": "302001",
+    "addressCountry": "IN"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 26.9124,
+    "longitude": 75.7873
+  },
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "opens": "09:00",
+    "closes": "19:00"
+  },
+  "priceRange": "₹99 - ₹10,000",
+  "areaServed": "IN",
+  "sameAs": [
+    "https://facebook.com/satvastones",
+    "https://instagram.com/satvastones",
+    "https://twitter.com/satvastones",
+    "https://pinterest.com/satvastones",
+    "https://tiktok.com/@satvastones"
+  ]
+});
+
+export const getProductGroupSchema = (product: any, variants: any[]) => ({
+  "@context": "https://schema.org",
+  "@type": "ProductGroup",
+  "name": product.title,
+  "description": product.description || `Shop ${product.title} at Satvastones`,
+  "url": `https://satvastones.in/product/${product._id || product.id}`,
+  "image": [product.image, ...(product.images || [])],
+  "brand": {
+    "@type": "Brand",
+    "name": "Satvastones"
+  },
+  "productGroupID": product.sku || product._id || product.id,
+  "variesBy": [
+    "https://schema.org/color"
+  ],
+  "hasVariant": variants.map((v: any, i: number) => ({
+    "@type": "Product",
+    "name": `${product.title} - ${v.color}`,
+    "image": v.images?.[0] || product.image,
+    "color": v.color,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": product.price,
+      "availability": "https://schema.org/InStock",
+      "url": `https://satvastones.in/product/${product._id || product.id}`
     }
   }))
 });

@@ -68,6 +68,11 @@ const productSchema = new mongoose.Schema({
   material: String,
   sku: { type: String, unique: true, sparse: true },
   stockQuantity: { type: Number, default: 0 },
+  weight: String,
+  dimensions: String,
+  giftingOption: { type: Boolean, default: false },
+  isRestockable: { type: Boolean, default: true },
+  restockSubscribers: [{ email: String, subscribedAt: { type: Date, default: Date.now } }],
   // SEO fields
   metaTitle: String,
   metaDescription: String,
@@ -210,12 +215,28 @@ Sitemap: https://satvastones.in/api/sitemap.xml
 
 app.get('/api/sitemap.xml', async (req, res) => {
   try {
-    const products = await Product.find({}, 'title price images updatedAt');
+    const products = await Product.find({}, 'title price images updatedAt category');
     const staticPages = [
       { loc: 'https://satvastones.in/', priority: '1.0', changefreq: 'daily' },
       { loc: 'https://satvastones.in/shop', priority: '0.9', changefreq: 'daily' },
+      { loc: 'https://satvastones.in/shop/necklaces', priority: '0.8', changefreq: 'weekly' },
+      { loc: 'https://satvastones.in/shop/earrings', priority: '0.8', changefreq: 'weekly' },
+      { loc: 'https://satvastones.in/shop/rings', priority: '0.8', changefreq: 'weekly' },
+      { loc: 'https://satvastones.in/shop/bracelets', priority: '0.8', changefreq: 'weekly' },
+      { loc: 'https://satvastones.in/shop/99-sale', priority: '0.8', changefreq: 'weekly' },
+      { loc: 'https://satvastones.in/shop/gifts', priority: '0.7', changefreq: 'weekly' },
+      { loc: 'https://satvastones.in/shop/name-necklace', priority: '0.7', changefreq: 'weekly' },
+      { loc: 'https://satvastones.in/shop/accessories', priority: '0.6', changefreq: 'monthly' },
+      { loc: 'https://satvastones.in/shop/pendant', priority: '0.6', changefreq: 'monthly' },
+      { loc: 'https://satvastones.in/shop/hampers', priority: '0.6', changefreq: 'monthly' },
+      { loc: 'https://satvastones.in/shop/mothers-day', priority: '0.7', changefreq: 'yearly' },
       { loc: 'https://satvastones.in/blogs', priority: '0.6', changefreq: 'weekly' },
       { loc: 'https://satvastones.in/contact', priority: '0.5', changefreq: 'monthly' },
+      { loc: 'https://satvastones.in/about', priority: '0.7', changefreq: 'monthly' },
+      { loc: 'https://satvastones.in/terms', priority: '0.4', changefreq: 'monthly' },
+      { loc: 'https://satvastones.in/privacy', priority: '0.4', changefreq: 'monthly' },
+      { loc: 'https://satvastones.in/shipping', priority: '0.5', changefreq: 'monthly' },
+      { loc: 'https://satvastones.in/returns', priority: '0.5', changefreq: 'monthly' },
     ];
 
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -347,6 +368,28 @@ app.post('/api/products/:id/reviews', async (req, res) => {
     
     await product.save();
     res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/products/:id/restock-notify', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+    
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    
+    if (!product.restockSubscribers) product.restockSubscribers = [];
+    
+    const alreadySubscribed = product.restockSubscribers.some((s) => s.email === email);
+    if (!alreadySubscribed) {
+      product.restockSubscribers.push({ email, subscribedAt: new Date() });
+      await product.save();
+    }
+    
+    res.json({ success: true, message: 'You will be notified when this item is back in stock.' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

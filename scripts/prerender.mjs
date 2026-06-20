@@ -128,6 +128,20 @@ function routeToDir(p) {
   return resolve(dist, p.slice(1));
 }
 
+function generateSitemap() {
+  const sitemapRoutes = routes.filter(r => !r.noindex);
+  let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  for (const route of sitemapRoutes) {
+    const priority = route.path === '/' ? '1.0' : route.path.startsWith('/shop/') ? '0.8' : route.path === '/shop' ? '0.9' : '0.6';
+    const changefreq = route.path === '/' ? 'daily' : route.path.startsWith('/shop/') ? 'weekly' : 'monthly';
+    xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <priority>${priority}</priority>\n    <changefreq>${changefreq}</changefreq>\n  </url>\n`;
+  }
+  xml += '</urlset>';
+  writeFileSync(resolve(dist, 'sitemap.xml'), xml);
+  console.log(`✓ sitemap.xml written with ${sitemapRoutes.length} URLs`);
+}
+
 function main() {
   const src = readFileSync(resolve(dist, 'index.html'), 'utf-8');
 
@@ -160,6 +174,8 @@ function main() {
     writeFileSync(outPath, html);
     console.log(`✓ ${route.path} → ${outPath}`);
   }
+
+  generateSitemap();
 }
 
 main();

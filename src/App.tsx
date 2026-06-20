@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import SEO from './components/SEO';
-import JsonLd, { getProductSchema, getOrganizationSchema, getWebsiteSchema, getBreadcrumbSchema, getFaqSchema } from './components/JsonLd';
+import JsonLd, { getProductSchema, getOrganizationSchema, getWebsiteSchema, getBreadcrumbSchema, getFaqSchema, getLocalBusinessSchema } from './components/JsonLd';
 import LoadingScreen from './components/LoadingScreen';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
@@ -40,7 +40,10 @@ const CategoryCard = ({ category, onClick }: any) => (
   >
     <img 
       src={optimizeImage(category.image, 800)} 
-      alt={category.title} 
+      alt={`Shop ${category.title} at Satvastones`} 
+      loading="lazy"
+      width="800"
+      height="1067"
       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
     />
     <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:bg-black/20" />
@@ -70,6 +73,9 @@ const DiscoverCard = ({ product, large = false, onClick }: any) => (
       <img 
         src={optimizeImage(product.image, 600)} 
         alt={product.title} 
+        loading="lazy"
+        width="600"
+        height="600"
         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
       
@@ -293,7 +299,7 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
                       <div key={i} className="flex justify-between items-center">
                         <div className="flex items-center gap-4">
                           <div className="w-12 h-16 bg-stone-50 overflow-hidden shrink-0">
-                            <img src={item.image} className="w-full h-full object-cover" />
+                            <img src={item.image} alt={item.title} loading="lazy" width="48" height="64" className="w-full h-full object-cover" />
                           </div>
                           <div>
                             <p className="text-[10px] font-bold uppercase text-stone-900">{item.title}</p>
@@ -355,8 +361,8 @@ function WishlistPage({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {items.map(p => (
               <div key={p.id || p._id} className="group space-y-4">
-                <div className="relative aspect-[3/4] bg-stone-100 overflow-hidden">
-                  <img src={p.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <div className="relative aspect-[3/4] bg-stone-100 overflow-hidden">
+                  <img src={p.image} alt={p.title} loading="lazy" width="400" height="533" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                   <button 
                     onClick={() => onRemove(p)}
                     className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
@@ -406,9 +412,11 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
     );
   }
 
-  const metaTitle = product.metaTitle || `${product.title} | Buy at Just ₹${product.price} | Satvastones`;
-  const metaDesc = product.metaDescription || `Buy ${product.title} at ₹${product.price}. ${product.isAntiTarnish ? 'Anti-tarnish, ' : ''}waterproof jewelry. Free shipping & COD. Shop authentic ${product.category?.toLowerCase() || 'jewelry'} at Satvastones.`;
-  const metaKeywords = [...(product.focusKeywords || []), product.title, `${product.title} price`, `buy ${product.title} online`, product.category?.toLowerCase() || 'jewelry', 'satvastones', 'aesthetic jewelry'];
+  const material = product.material || 'Premium';
+  const category = product.category?.toLowerCase() || 'jewelry';
+  const metaTitle = product.metaTitle || `${product.title} - ${material} ${category === 'jewelry' ? '' : category} | Satvastones`;
+  const metaDesc = product.metaDescription || `Buy ${product.title} at ₹${product.price}. ${product.isAntiTarnish ? 'Anti-tarnish, ' : ''}waterproof ${category}. Free shipping & COD. Shop authentic ${category} at Satvastones. Ethically sourced, heirloom quality.`;
+  const metaKeywords = [...(product.focusKeywords || []), product.title, `${product.title} price`, `buy ${product.title} online`, category, 'satvastones', 'aesthetic jewelry', 'craftsmanship', 'hypoallergenic'];
 
   return (
     <>
@@ -437,7 +445,36 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
   );
 }
 
-export default function App() {
+const CATEGORY_FAQS: Record<string, Array<{ question: string; answer: string }>> = {
+  'rings': [
+    { question: 'How do I measure my ring size?', answer: 'Use a string or paper strip to measure the circumference of your finger in millimeters. Compare with our size chart. Most of our rings are adjustable for easy fitting.' },
+    { question: 'Does your silver tarnish?', answer: 'Our rings feature an anti-tarnish coating. While all metals may naturally oxidize over time, our craftsmanship ensures your ring maintains its luster with basic care.' },
+    { question: 'Are these rings hypoallergenic?', answer: 'Yes, all Satvastones rings are made with hypoallergenic materials. We use nickel-free alloys suitable for sensitive skin.' },
+  ],
+  'earrings': [
+    { question: 'Are your earrings hypoallergenic?', answer: 'Yes, all our earrings are hypoallergenic and nickel-free, making them safe for sensitive ears. Our posts are crafted from surgical-grade materials.' },
+    { question: 'Do the earrings turn green?', answer: 'No. Our premium anti-tarnish coating prevents oxidation and discoloration. Your earrings will not turn your skin green.' },
+    { question: 'Can I wear these earrings in water?', answer: 'Our earrings are water-resistant for daily wear, but we recommend removing them before swimming or showering to maintain their luster.' },
+  ],
+  'necklaces': [
+    { question: 'What length are your necklaces?', answer: 'Our necklaces come in standard lengths: chokers at 14-16 inches, princess at 18 inches, and matinee at 22-24 inches. Adjustable chains are available on select designs.' },
+    { question: 'Will the gold plating fade?', answer: 'Our premium gold plating is designed to last. With proper care, your necklace will maintain its brilliance for years. We use thick 18K gold plating for durability.' },
+    { question: 'Can I wear my necklace daily?', answer: 'Yes, our necklaces are designed for everyday wear. The anti-tarnish coating and durable construction make them perfect for daily use.' },
+  ],
+  'bracelets': [
+    { question: 'What size bracelet should I order?', answer: 'Measure your wrist circumference and add 1-2 cm for comfort. Most of our bracelets are adjustable between 6-8 inches.' },
+    { question: 'Are the bracelets waterproof?', answer: 'Yes, our bracelets are waterproof for daily wear. However, we advise removing them before intense water activities.' },
+  ],
+};
+
+  const getCategoryFaqs = (cat?: string) => {
+    if (cat && CATEGORY_FAQS[cat]) return CATEGORY_FAQS[cat];
+    return [
+      { question: 'Is Satvastones jewelry anti-tarnish?', answer: 'Yes! All our jewelry is anti-tarnish, waterproof, and designed to maintain its color. We guarantee no dulling or fading.' },
+      { question: 'Do you offer free shipping?', answer: 'Yes, we offer free shipping on prepaid orders above ₹399. COD charges may apply based on your location.' },
+      { question: 'What payment methods do you accept?', answer: 'We accept UPI, Credit/Debit Cards, Net Banking, and Cash on Delivery (COD).' },
+    ];
+  };export default function App() {
 
   return (
     <HelmetProvider>
@@ -535,9 +572,10 @@ function AppContent() {
   const ShopRoute = () => {
     const { category } = useParams<{ category?: string }>();
     const catLabel = category ? (CATEGORY_LABELS[category] || category) : null;
+    const materialForTitle = 'Gold-Plated';
     const title = category 
-      ? `Shop ${catLabel} | Satvastones` 
-      : 'Shop Aesthetic Jewelry Online | Satvastones';
+      ? `${catLabel || category} | Premium ${materialForTitle} Jewelry | Satvastones` 
+      : 'Shop Aesthetic Jewelry Online | Premium Korean & Western Collection | Satvastones';
     const canonical = category 
       ? `https://satvastones.in/shop/${category}` 
       : 'https://satvastones.in/shop';
@@ -555,6 +593,7 @@ function AppContent() {
           { name: 'Shop', url: 'https://satvastones.in/shop' }
         ];
     
+    const categoryFaqs = getCategoryFaqs(category);
     return <>
       <SEO 
         title={title}
@@ -563,6 +602,7 @@ function AppContent() {
         keywords={['shop jewelry online india', 'buy aesthetic jewelry', 'korean jewelry shop', 'western jewelry collection', 'anti-tarnish jewelry online', 'trendy earrings india', 'gold plated necklace']}
       />
       <JsonLd data={getBreadcrumbSchema(breadcrumbs)} />
+      {category && <JsonLd data={getFaqSchema(categoryFaqs)} />}
       <ShopPage products={cmsData.products} cmsData={cmsData} onSelectProduct={(p) => navigateTo('product', p)} />
     </>;
   };
@@ -846,9 +886,10 @@ function AppContent() {
       
       {cmsData && (
         <>
-      {/* Global JSON-LD Structured Data (Organization + WebSite) */}
+      {/* Global JSON-LD Structured Data (Organization + WebSite + LocalBusiness) */}
       <JsonLd data={getOrganizationSchema()} />
       <JsonLd data={getWebsiteSchema()} />
+      <JsonLd data={getLocalBusinessSchema()} />
 
       {/* Mobile Sidebar */}
       <AnimatePresence>
@@ -1036,7 +1077,7 @@ function AppContent() {
                       </div>
 
                       <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
-                        <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Hero" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Satvastones - Premium aesthetic Korean and Western jewelry" loading="lazy" width="1600" height="686" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end p-8 md:p-14">
                           <div className="flex flex-col items-center gap-4 mb-4">
                             <p className="text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em]">Browse The Full Collection</p>
@@ -1154,6 +1195,9 @@ function AppContent() {
                                     <img
                                       src={p.image}
                                       alt={p.title}
+                                      loading="lazy"
+                                      width="400"
+                                      height="400"
                                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                     />
                                     <div className="absolute top-2 left-2">
@@ -1191,7 +1235,10 @@ function AppContent() {
                           <div className="relative aspect-square lg:aspect-[4/5] overflow-hidden rounded-sm group">
                             <img 
                               src={optimizeImage(cmsData.specialOffer.image, 1200)} 
-                              alt="Special Offer" 
+                              alt={cmsData.specialOffer.title || 'Special offer - Satvastones premium jewelry'} 
+                              loading="lazy"
+                              width="1200"
+                              height="1500"
                               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                             />
                             <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
@@ -1309,6 +1356,7 @@ function AppContent() {
               <div className="space-y-6">
                 <h4 className="text-[10px] font-bold uppercase tracking-[0.2em]">Contact</h4>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-stone-500">hello@satvastones.com</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-stone-600">Jaipur, Rajasthan, India</p>
               </div>
             </div>
           </div>

@@ -11,12 +11,12 @@
     <changefreq>daily</changefreq>
   </url>
   <url>
-    <loc>https://satvastones.in/shop/earrings</loc>
+    <loc>https://satvastones.in/shop/necklaces</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://satvastones.in/shop/necklaces</loc>
+    <loc>https://satvastones.in/shop/earrings</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>

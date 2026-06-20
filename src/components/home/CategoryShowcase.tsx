@@ -50,7 +50,10 @@ export default function CategoryShowcase() {
               <div className="absolute inset-0 grayscale group-hover:grayscale-0 transition-all duration-1000">
                 <img 
                   src={cat.image} 
-                  alt={cat.name} 
+                  alt={`Shop ${cat.name} jewelry collection at Satvastones`} 
+                  loading="lazy"
+                  width="800"
+                  height="1000"
                   className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-40 group-hover:opacity-100"
                 />
               </div>

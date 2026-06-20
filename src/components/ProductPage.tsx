@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   ArrowLeft, Heart, ShoppingBag, Star, ChevronDown, ChevronUp,
-  ArrowUpRight, Truck, RefreshCcw, ShieldCheck, ChevronLeft, ChevronRight, Zap
+  ArrowUpRight, Truck, RefreshCcw, ShieldCheck, ChevronLeft, ChevronRight, Zap, Mail
 } from 'lucide-react';
 import { optimizeImage } from '../utils/cloudinary';
 import { Link } from 'react-router-dom';
@@ -88,9 +88,12 @@ export default function ProductPage({
             {/* Main Image */}
             <div className="relative aspect-square overflow-hidden bg-stone-100 group">
               <img
-                key={images[activeImage]} // Force re-render for smooth transition
+                key={images[activeImage]}
                 src={optimizeImage(images[activeImage], 1000)}
-                alt="Product"
+                alt={product.title || 'Aesthetic jewelry piece'}
+                loading="lazy"
+                width="1000"
+                height="1000"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               {/* Wishlist */}
@@ -138,7 +141,7 @@ export default function ProductPage({
                     onClick={() => setActiveImage(i)}
                     className={`aspect-square overflow-hidden bg-stone-100 transition-all ${activeImage === i ? 'ring-2 ring-stone-900' : 'opacity-60 hover:opacity-100'}`}
                   >
-                    <img src={optimizeImage(img, 200)} alt="" className="h-full w-full object-cover" />
+                    <img src={optimizeImage(img, 200)} alt={product.title ? `${product.title} view ${i + 1}` : 'Product thumbnail'} loading="lazy" width="200" height="200" className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -371,17 +374,72 @@ export default function ProductPage({
                   {(product.stockQuantity || 0) <= 0 ? 'Sold Out' : 'Add To Bag'}
                 </button>
               </div>
+
+              {/* Restock Notification Form */}
+              {(product.stockQuantity || 0) <= 0 && (
+                <div className="bg-stone-50 border border-stone-200 p-5 rounded-sm">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Mail className="h-4 w-4 text-stone-600" />
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Email Me When Restocked</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <input 
+                      type="email" 
+                      placeholder="YOUR EMAIL" 
+                      className="flex-1 bg-white border border-stone-200 p-3 text-[10px] font-bold uppercase tracking-widest outline-hidden focus:border-stone-900 transition-colors"
+                    />
+                    <button className="bg-stone-900 text-white px-4 text-[9px] font-bold uppercase tracking-widest hover:bg-black transition-all whitespace-nowrap">
+                      Notify Me
+                    </button>
+                  </div>
+                  <p className="text-[8px] text-stone-400 mt-2 uppercase tracking-wider">We will notify you when this piece is back in stock.</p>
+                </div>
+              )}
             </div>
 
             {/* Accordions */}
             <div className="mt-2 divide-y divide-stone-100">
-              <AccordionItem title="Material & Care">
-                <ul className="space-y-1.5 list-disc list-inside">
-                  <li>High-grade aesthetic alloy base</li>
-                  <li>Lightweight design for all-day comfort</li>
-                  <li>Avoid direct contact with water and perfumes</li>
-                  <li>Store in a dry, cool place</li>
-                </ul>
+              <AccordionItem title="Material & Specifications">
+                <div className="space-y-4">
+                  <p className="text-[10px] leading-relaxed text-stone-600 uppercase tracking-tight font-medium">
+                    Each Satvastones piece is crafted with artisanal precision, featuring a brilliant luster and heirloom-quality finish. The hypoallergenic construction ensures comfortable wear for even the most sensitive skin, while the tarnish-resistant coating preserves its captivating sparkle through every occasion.
+                  </p>
+                  <div className="bg-stone-100 p-4 space-y-2">
+                    <div className="flex justify-between text-[9px] uppercase tracking-wider">
+                      <span className="text-stone-500 font-bold">Metal</span>
+                      <span className="text-stone-900 font-bold">{product.material || 'Premium Alloy'}</span>
+                    </div>
+                    <div className="flex justify-between text-[9px] uppercase tracking-wider">
+                      <span className="text-stone-500 font-bold">Finish</span>
+                      <span className="text-stone-900 font-bold">High Polish / Matte</span>
+                    </div>
+                    <div className="flex justify-between text-[9px] uppercase tracking-wider">
+                      <span className="text-stone-500 font-bold">Tarnish Resistance</span>
+                      <span className="text-stone-900 font-bold">{product.isAntiTarnish ? 'Anti-Tarnish Guaranteed' : 'Standard'}</span>
+                    </div>
+                    {product.sku && (
+                      <div className="flex justify-between text-[9px] uppercase tracking-wider">
+                        <span className="text-stone-500 font-bold">SKU</span>
+                        <span className="text-stone-900 font-bold">{product.sku}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[9px] font-bold uppercase tracking-widest text-stone-900">Care Instructions</p>
+                    <ul className="space-y-1 list-disc list-inside text-[9px] text-stone-500 uppercase tracking-tight">
+                      <li>Avoid direct contact with perfumes, lotions, and water</li>
+                      <li>Store in a cool, dry place away from sunlight</li>
+                      <li>Gently polish with a soft cloth to restore luster</li>
+                      <li>Remove before sleeping, exercising, or swimming</li>
+                    </ul>
+                  </div>
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    <span className="text-[7px] bg-stone-200 text-stone-600 px-2 py-1 font-bold uppercase tracking-wider">Craftsmanship</span>
+                    <span className="text-[7px] bg-stone-200 text-stone-600 px-2 py-1 font-bold uppercase tracking-wider">Hypoallergenic</span>
+                    <span className="text-[7px] bg-stone-200 text-stone-600 px-2 py-1 font-bold uppercase tracking-wider">Tarnish-Resistant</span>
+                    <span className="text-[7px] bg-stone-200 text-stone-600 px-2 py-1 font-bold uppercase tracking-wider">Artisan Quality</span>
+                  </div>
+                </div>
               </AccordionItem>
               <AccordionItem title="Returns & Policy">
                 <p className="text-red-600 font-bold mb-2">STRICT POLICY: NO REFUNDS • NO CANCELLATIONS • NO RETURNS</p>
@@ -483,6 +541,57 @@ export default function ProductPage({
         </div>
       </section>
 
+      {/* Complete the Look - Related Products */}
+      {allProducts.length > 1 && (
+        <section className="border-t border-stone-100 bg-white py-20">
+          <div className="mx-auto max-w-7xl px-4 md:px-8">
+            <div className="mb-12">
+              <h2 className="font-display text-3xl font-bold uppercase tracking-tight">Complete The <span className="text-stone-300">Look</span></h2>
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-stone-400 mt-2">Pair this piece with matching jewelry from the same collection</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {allProducts
+                .filter((p: any) => (p._id || p.id) !== (product._id || product.id))
+                .filter((p: any) => !product.category || p.category === product.category)
+                .slice(0, 4)
+                .map((related: any) => (
+                  <Link 
+                    key={related._id || related.id}
+                    to={`/product/${related._id || related.id}`}
+                    className="group flex flex-col gap-3"
+                  >
+                    <div className="aspect-[4/5] bg-stone-100 overflow-hidden">
+                      <img 
+                        src={optimizeImage(related.image, 500)} 
+                        alt={related.title} 
+                        loading="lazy"
+                        width="500"
+                        height="625"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-[10px] font-bold uppercase tracking-widest text-stone-900">{related.title}</h3>
+                      <p className="text-[10px] font-bold text-stone-900">₹{related.price}</p>
+                      {related.isAntiTarnish && (
+                        <span className="inline-flex items-center gap-1 text-[8px] text-emerald-600 font-bold uppercase tracking-wider">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                          Anti-Tarnish
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                ))}
+            </div>
+            {allProducts.filter((p: any) => !product.category || p.category === product.category).length <= 1 && (
+              <div className="text-center py-12">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Discover more pieces from our <Link to="/shop" className="underline underline-offset-4 hover:text-stone-900">full collection</Link></p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Instagram Feed */}
       <section className="bg-white py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -492,7 +601,7 @@ export default function ProductPage({
           <div className="grid grid-cols-3 gap-2 md:grid-cols-6 md:gap-3">
             {(allProducts.length > 0 ? allProducts : [product]).slice(0, 6).map((p, i) => (
               <div key={i} className="aspect-square overflow-hidden bg-stone-100 group">
-                <img src={optimizeImage(p.image, 400)} alt="" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
+                <img src={optimizeImage(p.image, 400)} alt={p.title || 'Shop more aesthetic jewelry'} loading="lazy" width="400" height="400" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
               </div>
             ))}
           </div>

@@ -124,7 +124,7 @@ export default function ShopPage({
                   className="shrink-0 w-24 md:w-28 cursor-pointer group"
                 >
                   <div className="aspect-square rounded-xl overflow-hidden bg-white/10 border border-white/10 group-hover:border-white/30 transition-all">
-                    <img src={p.image} className="w-full h-full object-cover" />
+                    <img src={p.image} alt={p.title} loading="lazy" width="120" height="120" className="w-full h-full object-cover" />
                   </div>
                   <p className="text-[8px] font-bold text-white/80 text-center mt-1.5 truncate uppercase tracking-wider">{p.title}</p>
                   <p className="text-[9px] font-bold text-rose-300 text-center">₹{p.price}</p>
@@ -194,6 +194,9 @@ export default function ShopPage({
                 <img 
                   src={product.image} 
                   alt={product.title} 
+                  loading="lazy"
+                  width="600"
+                  height="750"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />

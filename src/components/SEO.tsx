@@ -22,6 +22,17 @@ const DEFAULT_KEYWORDS = [
   'satvastones', 'online jewelry store india', 'affordable jewelry', 'fashion jewelry'
 ];
 
+function stripQueryParams(url: string): string {
+  try {
+    const u = new URL(url);
+    u.search = '';
+    u.hash = '';
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 const SEO = ({
   title = `${SITE_NAME} | Aesthetic Korean & Western Jewelry`,
   description = 'Discover our curated collection of aesthetic Korean and Western jewelry. From minimalist earrings to statement necklaces, find your vibe at Satvastones.',
@@ -35,13 +46,15 @@ const SEO = ({
 }: SEOProps) => {
   const siteTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
   const allKeywords = [...new Set([...(keywords || []), ...DEFAULT_KEYWORDS])].join(', ');
+  const cleanCanonical = stripQueryParams(canonical);
 
   return (
     <Helmet>
       <title>{siteTitle}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={allKeywords} />
-      <link rel="canonical" href={canonical} />
+      <link rel="canonical" href={cleanCanonical} />
+      <link rel="alternate" hrefLang="en-IN" href={cleanCanonical} />
       <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large'} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="theme-color" content="#0a0a0a" />
@@ -57,7 +70,7 @@ const SEO = ({
       <meta property="og:image" content={image} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:url" content={canonical} />
+      <meta property="og:url" content={cleanCanonical} />
       <meta property="og:locale" content={locale} />
       {publishedTime && <meta property="og:updated_time" content={publishedTime} />}
 
