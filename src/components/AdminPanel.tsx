@@ -25,7 +25,7 @@ export default function AdminPanel({
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [newProduct, setNewProduct] = useState<any>({ 
-    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '' 
+    title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '', specifications: [] 
   });
   const [orders, setOrders] = useState<any[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -261,7 +261,7 @@ export default function AdminPanel({
           {activeTab === 'products' && (
             <button 
               onClick={() => setNewProduct({ 
-                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '' 
+                title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '', specifications: [] 
               })}
               className="bg-black text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800 transition-all"
             >
@@ -708,7 +708,7 @@ export default function AdminPanel({
                     ₹99 Sale
                   </button>
                   <button 
-                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '' })}
+                    onClick={() => setNewProduct({ title: '', price: 0, oldPrice: 0, rating: 5, reviewsCount: 0, reviews: [], images: [], category: 'necklaces', customOptions: [], variants: [], sku: '', isFeatured: false, isAntiTarnish: false, isNinetyNine: false, metaTitle: '', metaDescription: '', focusKeywords: [], seoContent: '', specifications: [] })}
                     className="flex items-center gap-2 bg-stone-900 text-white px-5 py-2.5 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
                   >
                     <Plus className="h-3 w-3" /> Add New Product
@@ -1369,6 +1369,68 @@ export default function AdminPanel({
                     Anti-Tarnish Jewelry
                   </span>
                   <p className="text-[9px] text-stone-400 uppercase tracking-wider mt-0.5">Displays an 'Anti-Tarnish' badge on the product card & detail page</p>
+                </div>
+              </div>
+
+              {/* Specifications */}
+              <div className="col-span-full border-t border-stone-100 pt-8 mt-4">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 flex items-center gap-2">
+                    <Package className="h-4 w-4" /> Specifications (for SEO / AEO / GEO)
+                  </h3>
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      const current = editingProduct ? [...(editingProduct.specifications || [])] : [...(newProduct.specifications || [])];
+                      current.push({ key: '', value: '' });
+                      editingProduct ? setEditingProduct({...editingProduct, specifications: current}) : setNewProduct({...newProduct, specifications: current});
+                    }}
+                    className="text-[9px] font-bold uppercase tracking-widest text-stone-500 hover:text-black flex items-center gap-1.5"
+                  >
+                    <Plus className="h-3 w-3" /> Add Spec
+                  </button>
+                </div>
+                <div className="space-y-2">
+                  {(editingProduct ? editingProduct.specifications : newProduct.specifications || []).map((spec: any, idx: number) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <input 
+                        type="text" 
+                        placeholder="Key (e.g. Metal)"
+                        value={spec.key}
+                        onChange={(e) => {
+                          const current = editingProduct ? [...(editingProduct.specifications || [])] : [...(newProduct.specifications || [])];
+                          current[idx] = { ...current[idx], key: e.target.value };
+                          editingProduct ? setEditingProduct({...editingProduct, specifications: current}) : setNewProduct({...newProduct, specifications: current});
+                        }}
+                        className="w-1/3 border border-stone-200 p-2.5 text-[10px] font-bold uppercase tracking-wider focus:border-black outline-hidden"
+                      />
+                      <input 
+                        type="text" 
+                        placeholder="Value (e.g. 18K Gold Plated)"
+                        value={spec.value}
+                        onChange={(e) => {
+                          const current = editingProduct ? [...(editingProduct.specifications || [])] : [...(newProduct.specifications || [])];
+                          current[idx] = { ...current[idx], value: e.target.value };
+                          editingProduct ? setEditingProduct({...editingProduct, specifications: current}) : setNewProduct({...newProduct, specifications: current});
+                        }}
+                        className="flex-1 border border-stone-200 p-2.5 text-[10px] font-bold uppercase tracking-wider focus:border-black outline-hidden"
+                      />
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const current = editingProduct ? [...(editingProduct.specifications || [])] : [...(newProduct.specifications || [])];
+                          current.splice(idx, 1);
+                          editingProduct ? setEditingProduct({...editingProduct, specifications: current}) : setNewProduct({...newProduct, specifications: current});
+                        }}
+                        className="p-2 text-stone-400 hover:text-red-500 transition-all shrink-0"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                  {(!editingProduct && !newProduct.specifications?.length) && (
+                    <p className="text-[9px] text-stone-400 italic">Add specifications like Metal, Weight, Dimensions, Stone Type, Closure, etc. These feed into SEO & structured data.</p>
+                  )}
                 </div>
               </div>
 

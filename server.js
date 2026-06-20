@@ -77,7 +77,8 @@ const productSchema = new mongoose.Schema({
   metaTitle: String,
   metaDescription: String,
   focusKeywords: [String],
-  seoContent: String
+  seoContent: String,
+  specifications: [{ key: String, value: String }]
 });
 
 const Product = mongoose.model('Product', productSchema);

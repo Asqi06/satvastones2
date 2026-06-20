@@ -405,23 +405,34 @@ export default function ProductPage({
                     Each Satvastones piece is crafted with artisanal precision, featuring a brilliant luster and heirloom-quality finish. The hypoallergenic construction ensures comfortable wear for even the most sensitive skin, while the tarnish-resistant coating preserves its captivating sparkle through every occasion.
                   </p>
                   <div className="bg-stone-100 p-4 space-y-2">
-                    <div className="flex justify-between text-[9px] uppercase tracking-wider">
-                      <span className="text-stone-500 font-bold">Metal</span>
-                      <span className="text-stone-900 font-bold">{product.material || 'Premium Alloy'}</span>
-                    </div>
-                    <div className="flex justify-between text-[9px] uppercase tracking-wider">
-                      <span className="text-stone-500 font-bold">Finish</span>
-                      <span className="text-stone-900 font-bold">High Polish / Matte</span>
-                    </div>
-                    <div className="flex justify-between text-[9px] uppercase tracking-wider">
-                      <span className="text-stone-500 font-bold">Tarnish Resistance</span>
-                      <span className="text-stone-900 font-bold">{product.isAntiTarnish ? 'Anti-Tarnish Guaranteed' : 'Standard'}</span>
-                    </div>
-                    {product.sku && (
-                      <div className="flex justify-between text-[9px] uppercase tracking-wider">
-                        <span className="text-stone-500 font-bold">SKU</span>
-                        <span className="text-stone-900 font-bold">{product.sku}</span>
-                      </div>
+                    {product.specifications && product.specifications.length > 0 ? (
+                      product.specifications.map((spec: any, idx: number) => (
+                        <div key={idx} className="flex justify-between text-[9px] uppercase tracking-wider">
+                          <span className="text-stone-500 font-bold">{spec.key}</span>
+                          <span className="text-stone-900 font-bold">{spec.value}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <>
+                        <div className="flex justify-between text-[9px] uppercase tracking-wider">
+                          <span className="text-stone-500 font-bold">Metal</span>
+                          <span className="text-stone-900 font-bold">{product.material || 'Premium Alloy'}</span>
+                        </div>
+                        <div className="flex justify-between text-[9px] uppercase tracking-wider">
+                          <span className="text-stone-500 font-bold">Finish</span>
+                          <span className="text-stone-900 font-bold">High Polish / Matte</span>
+                        </div>
+                        <div className="flex justify-between text-[9px] uppercase tracking-wider">
+                          <span className="text-stone-500 font-bold">Tarnish Resistance</span>
+                          <span className="text-stone-900 font-bold">{product.isAntiTarnish ? 'Anti-Tarnish Guaranteed' : 'Standard'}</span>
+                        </div>
+                        {product.sku && (
+                          <div className="flex justify-between text-[9px] uppercase tracking-wider">
+                            <span className="text-stone-500 font-bold">SKU</span>
+                            <span className="text-stone-900 font-bold">{product.sku}</span>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                   <div className="space-y-1">

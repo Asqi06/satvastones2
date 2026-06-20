@@ -35,6 +35,13 @@ export const getProductSchema = (product: any) => {
     "material": product.material || "Premium Alloy",
     "color": product.variants?.map((v: any) => v.color)?.join(', ') || undefined,
     "keywords": (product.focusKeywords || []).join(', '),
+    ...(product.specifications?.length > 0 ? {
+      "additionalProperty": product.specifications.map((s: any) => ({
+        "@type": "PropertyValue",
+        "name": s.key,
+        "value": s.value
+      }))
+    } : {}),
     "offers": {
       "@type": "Offer",
       "url": url,
