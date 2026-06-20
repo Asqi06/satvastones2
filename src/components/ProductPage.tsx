@@ -91,7 +91,7 @@ export default function ProductPage({
                 key={images[activeImage]}
                 src={optimizeImage(images[activeImage], 1000)}
                 alt={product.title || 'Aesthetic jewelry piece'}
-                loading="lazy"
+                fetchpriority={activeImage === 0 ? 'high' : 'low'}
                 width="1000"
                 height="1000"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -537,6 +537,50 @@ export default function ProductPage({
               </div>
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* SEO Content — Product description block for search indexing */}
+      <section className="bg-white border-t border-stone-100 py-20">
+        <div className="mx-auto max-w-7xl px-4 md:px-8">
+          <div className="max-w-4xl mx-auto space-y-10">
+            <div className="text-center space-y-6">
+              <h2 className="font-display text-2xl md:text-3xl font-bold uppercase tracking-tight">{product.title} — Detailed Guide</h2>
+              <div className="w-12 h-0.5 bg-stone-200 mx-auto"></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-4">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-900">About This Piece</h3>
+                <p className="text-[10px] leading-relaxed text-stone-500 uppercase tracking-tight">
+                  {product.description || `Discover the exquisite ${product.title} from Satvastones — a premium ${(product.material || 'gold-plated').toLowerCase()} jewelry piece designed for the modern aesthetic woman. Each detail is crafted with artisanal precision, from the brilliant clarity of the setting to the smooth hypoallergenic finish that ensures comfortable all-day wear.`}
+                </p>
+                <p className="text-[10px] leading-relaxed text-stone-500 uppercase tracking-tight">
+                  Part of our {product.category || 'signature'} collection, this piece embodies the fusion of Korean minimalism and Western elegance that Satvastones is renowned for. The tarnish-resistant coating and waterproof construction make it perfect for daily wear — whether you are heading to the office, attending a wedding celebration, or curating your weekend aesthetic.
+                </p>
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-900">Why Choose Satvastones</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3 text-[9px] text-stone-500 uppercase tracking-tight">
+                    <span className="w-1.5 h-1.5 rounded-full bg-stone-900 mt-1 shrink-0"></span>
+                    <span><strong className="text-stone-900">Anti-Tarnish Craftsmanship:</strong> Our proprietary coating prevents oxidation, ensuring your jewelry maintains its brilliant luster for years without discoloration or fading.</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-[9px] text-stone-500 uppercase tracking-tight">
+                    <span className="w-1.5 h-1.5 rounded-full bg-stone-900 mt-1 shrink-0"></span>
+                    <span><strong className="text-stone-900">Hypoallergenic Materials:</strong> All pieces are nickel-free and crafted with sensitive skin in mind. No irritation, no green fingers — just pure elegance.</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-[9px] text-stone-500 uppercase tracking-tight">
+                    <span className="w-1.5 h-1.5 rounded-full bg-stone-900 mt-1 shrink-0"></span>
+                    <span><strong className="text-stone-900">Heirloom Quality:</strong> Each piece is meticulously finished with attention to clarity, carat weight, and overall luster — designed to be treasured for generations.</span>
+                  </li>
+                  <li className="flex items-start gap-3 text-[9px] text-stone-500 uppercase tracking-tight">
+                    <span className="w-1.5 h-1.5 rounded-full bg-stone-900 mt-1 shrink-0"></span>
+                    <span><strong className="text-stone-900">Free Shipping:</strong> On prepaid orders above ₹399. Express dispatch within 24-48 hours from our studio in Jaipur. Gift-ready packaging included.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>

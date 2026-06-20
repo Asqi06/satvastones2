@@ -10,6 +10,16 @@
     <meta name="robots" content="index, follow" />
     <!-- Canonical is managed dynamically by SEO component via react-helmet-async -->
 
+    <!-- Preconnect & DNS-Prefetch for critical 3rd-party origins -->
+    <link rel="preconnect" href="https://res.cloudinary.com" />
+    <link rel="preconnect" href="https://upload-widget.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://upload-widget.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+
+    <!-- Preload hero image (LCP candidate) -->
+    <link rel="preload" href="/logo.png" as="image" fetchpriority="high" />
+
     <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
@@ -30,7 +40,7 @@
     <meta name="twitter:description" content="Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399." />
     <meta name="twitter:image" content="https://satvastones.in/logo.png" />
 
-    <script src="https://upload-widget.cloudinary.com/latest/global/all.js" type="text/javascript"></script>
+    <script src="https://upload-widget.cloudinary.com/latest/global/all.js" async type="text/javascript"></script>
   </head>
   <body>
     <noscript>

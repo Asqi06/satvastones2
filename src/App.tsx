@@ -1077,7 +1077,7 @@ function AppContent() {
                       </div>
 
                       <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
-                        <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Satvastones - Premium aesthetic Korean and Western jewelry" loading="lazy" width="1600" height="686" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        <img src={optimizeImage(cmsData.hero.image, 1600)} alt="Satvastones - Premium aesthetic Korean and Western jewelry" fetchpriority="high" width="1600" height="686" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end p-8 md:p-14">
                           <div className="flex flex-col items-center gap-4 mb-4">
                             <p className="text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em]">Browse The Full Collection</p>
@@ -1289,6 +1289,31 @@ function AppContent() {
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
                         {cmsData.products.slice(0, 6).map((p: any) => <DiscoverCard key={p.id} product={p} onClick={() => navigateTo('product', p)} />)}
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* SEO Content — Homepage rich text for indexing */}
+                  <section className="bg-white py-24 md:py-32 border-t border-stone-100">
+                    <div className="mx-auto max-w-7xl px-4 md:px-8">
+                      <div className="max-w-4xl mx-auto text-center space-y-12">
+                        <div className="space-y-6">
+                          <h2 className="font-display text-3xl md:text-4xl font-bold uppercase tracking-tight">Satvastones — Premium Korean & Western Aesthetic Jewelry Online</h2>
+                          <div className="w-16 h-0.5 bg-stone-200 mx-auto"></div>
+                        </div>
+                        <div className="text-[10px] md:text-xs leading-relaxed text-stone-500 uppercase tracking-tight space-y-5 max-w-3xl mx-auto">
+                          <p>Welcome to Satvastones, India's premier destination for aesthetic Korean and Western jewelry. Based in Jaipur, Rajasthan, we curate handcrafted, anti-tarnish, and waterproof jewelry pieces that blend Seoul minimalism with Parisian elegance. Our collection features over 100 meticulously designed pieces including Korean huggie earrings, layered chain necklaces, stackable rings, charm bracelets, personalized name necklaces, and luxury gift hampers.</p>
+                          <p>Every Satvastones piece is crafted using premium materials with a focus on craftsmanship and durability. Our jewelry features 18K gold plating, sterling silver finishes, and hypoallergenic alloy bases — all treated with anti-tarnish coating to ensure long-lasting luster. We guarantee no color fade, no green fingers, and no discoloration. Each piece is designed for the sophisticated woman who values quality, style, and affordability in her everyday aesthetic.</p>
+                          <p>Shop across multiple categories — from minimalist everyday earrings and dainty necklaces to bold statement rings and elegant bracelets. Our ₹99 Flash Sale offers premium anti-tarnish jewelry at accessible price points, while our personalized name necklaces make thoughtful gifts for birthdays, anniversaries, and special occasions. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours.</p>
+                          <p>Follow us on Instagram, Facebook, and Pinterest for daily style inspiration, new arrivals, and exclusive offers. Whether you are dressing up for a wedding, accessorizing for work, or looking for the perfect gift, Satvastones has the perfect aesthetic jewelry piece for every occasion and every woman.</p>
+                        </div>
+                        <div className="flex flex-wrap justify-center gap-3">
+                          {['Anti-Tarnish', 'Waterproof', 'Hypoallergenic', '18K Gold Plated', 'Gift-Ready Packaging', 'Free Shipping over ₹399'].map((tag) => (
+                            <span key={tag} className="text-[8px] bg-stone-100 text-stone-600 px-3 py-1.5 font-bold uppercase tracking-wider rounded-full border border-stone-200">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </section>

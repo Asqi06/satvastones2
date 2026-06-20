@@ -179,6 +179,28 @@ const orderSchema = new mongoose.Schema({
 
 const Order = mongoose.model('Order', orderSchema);
 
+const blogSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  slug: { type: String, unique: true, required: true },
+  excerpt: String,
+  content: String,
+  image: String,
+  author: { type: String, default: 'Satvastones' },
+  category: String,
+  tags: [String],
+  readTime: String,
+  isPublished: { type: Boolean, default: false },
+  publishedAt: Date,
+  // SEO fields
+  metaTitle: String,
+  metaDescription: String,
+  focusKeywords: [String],
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
+
+const Blog = mongoose.model('Blog', blogSchema);
+
 const customerSchema = new mongoose.Schema({
   name: String,
   email: { type: String, unique: true },
