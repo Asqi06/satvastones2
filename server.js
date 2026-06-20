@@ -377,6 +377,75 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
+// --- Blog CRUD ---
+
+app.get('/api/blogs', async (req, res) => {
+  try {
+    const { status } = req.query;
+    const filter = status === 'all' ? {} : { isPublished: status !== 'draft' };
+    const blogs = await Blog.find(filter).sort({ createdAt: -1 });
+    res.json(blogs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/blogs/published', async (req, res) => {
+  try {
+    const blogs = await Blog.find({ isPublished: true }).sort({ publishedAt: -1 });
+    res.json(blogs);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/blogs/:slug', async (req, res) => {
+  try {
+    const blog = await Blog.findOne({ slug: req.params.slug });
+    if (!blog) return res.status(404).json({ error: 'Blog not found' });
+    res.json(blog);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/blogs', async (req, res) => {
+  try {
+    const blog = new Blog(req.body);
+    if (blog.isPublished && !blog.publishedAt) {
+      blog.publishedAt = new Date();
+    }
+    await blog.save();
+    res.json(blog);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/blogs/:id', async (req, res) => {
+  try {
+    const updates = { ...req.body, updatedAt: new Date() };
+    if (updates.isPublished && !updates.publishedAt) {
+      updates.publishedAt = new Date();
+    }
+    const blog = await Blog.findByIdAndUpdate(req.params.id, updates, { new: true });
+    if (!blog) return res.status(404).json({ error: 'Blog not found' });
+    res.json(blog);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/blogs/:id', async (req, res) => {
+  try {
+    const blog = await Blog.findByIdAndDelete(req.params.id);
+    if (!blog) return res.status(404).json({ error: 'Blog not found' });
+    res.json({ message: 'Blog deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/products/:id/reviews', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);

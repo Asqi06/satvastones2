@@ -17,6 +17,7 @@ import CheckoutPage from './components/CheckoutPage';
 import AdminPanel from './components/AdminPanel';
 import ContactPage from './components/ContactPage';
 import BlogsPage from './components/BlogsPage';
+import BlogDetailPage from './components/BlogDetailPage';
 import AuthPage from './components/AuthPage';
 import SearchOverlay from './components/SearchOverlay';
 import OrderSuccessPage from './components/OrderSuccessPage';
@@ -1328,6 +1329,7 @@ function AppContent() {
               <Route path="/account" element={currentUser ? <><SEO title="My Account | Satvastones" description="Manage your orders, addresses, and preferences at Satvastones." canonical="https://satvastones.in/account" noindex={true} keywords={['my account', 'order history', 'satvastones account']} /><AccountDashboard user={currentUser} onLogout={() => { setCurrentUser(null); localStorage.removeItem('satvastones_user'); navigate('/'); }} onShop={() => navigate('/shop')} /></> : <AuthPage onLogin={(data) => { setCurrentUser(data.customer); if (localStorage.getItem('checkout_pending') === 'true') navigate('/checkout'); else navigate('/account'); }} />} />
               <Route path="/contact" element={<><SEO title="Contact Satvastones | Customer Support" description="Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: hello@satvastones.com" canonical="https://satvastones.in/contact" keywords={['contact satvastones', 'jewelry support', 'customer care', 'satvastones help']} /><ContactPage /></>} />
               <Route path="/blogs" element={<><SEO title="The Journal | Satvastones Blog" description="Explore style guides, jewelry care tips, and the latest trends in Korean and Western aesthetic jewelry on the Satvastones Journal." canonical="https://satvastones.in/blogs" keywords={['jewelry blog', 'style guide', 'jewelry care tips', 'korean fashion', 'aesthetic jewelry trends']} /><BlogsPage /></>} />
+              <Route path="/blog/:slug" element={<BlogDetailPage />} />
               <Route path="/order-success" element={<OrderSuccessPage />} />
             </Routes>
           </motion.div>

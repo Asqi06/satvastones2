@@ -249,4 +249,35 @@ export const getProductGroupSchema = (product: any, variants: any[]) => ({
   }))
 });
 
+export const getArticleSchema = (blog: any) => {
+  const url = `https://satvastones.in/blog/${blog.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": blog.metaTitle || blog.title,
+    "description": blog.metaDescription || blog.excerpt || `Read ${blog.title} on Satvastones Journal`,
+    "image": blog.image || "https://satvastones.in/logo.png",
+    "author": {
+      "@type": "Person",
+      "name": blog.author || "Satvastones"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Satvastones",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://satvastones.in/logo.png"
+      }
+    },
+    "datePublished": blog.publishedAt || blog.createdAt,
+    "dateModified": blog.updatedAt || blog.createdAt,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": url
+    },
+    "keywords": (blog.focusKeywords || []).join(', '),
+    "articleSection": blog.category || "Style Guide"
+  };
+};
+
 export default JsonLd;

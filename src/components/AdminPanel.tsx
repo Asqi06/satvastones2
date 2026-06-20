@@ -36,6 +36,60 @@ export default function AdminPanel({
   const [productSearch, setProductSearch] = useState('');
   const [orderSearch, setOrderSearch] = useState('');
   const [showSkuLabel, setShowSkuLabel] = useState<any>(null);
+  const [blogs, setBlogs] = useState<any[]>([]);
+  const [showBlogForm, setShowBlogForm] = useState(false);
+  const [editingBlog, setEditingBlog] = useState<any>(null);
+  const [blogForm, setBlogForm] = useState<any>({ title: '', slug: '', excerpt: '', content: '', image: '', category: '', author: 'SATVASTONES', readTime: '5 min read', published: false });
+
+  // Fetch Blogs
+  React.useEffect(() => {
+    if (activeTab === 'blogs') {
+      fetch(`${API_URL}/blogs`)
+        .then(res => res.json())
+        .then(data => setBlogs(data))
+        .catch(err => console.error("Failed to fetch blogs:", err));
+    }
+  }, [activeTab]);
+
+  const handleBlogSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const body = editingBlog || blogForm;
+      const url = editingBlog ? `${API_URL}/blogs/${editingBlog._id}` : `${API_URL}/blogs`;
+      const method = editingBlog ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+      if (res.ok) {
+        const saved = await res.json();
+        if (editingBlog) {
+          setBlogs(prev => prev.map(b => b._id === saved._id ? saved : b));
+        } else {
+          setBlogs(prev => [saved, ...prev]);
+        }
+        setShowBlogForm(false);
+        setEditingBlog(null);
+        setBlogForm({ title: '', slug: '', excerpt: '', content: '', image: '', category: '', author: 'SATVASTONES', readTime: '5 min read', published: false });
+      }
+    } catch (err) {
+      console.error("Failed to save blog:", err);
+    }
+  };
+
+  const handleEditBlog = (post: any) => {
+    setEditingBlog(post);
+    setShowBlogForm(true);
+  };
+
+  const handleDeleteBlog = async (id: string) => {
+    if (!window.confirm('Delete this blog post?')) return;
+    try {
+      const res = await fetch(`${API_URL}/blogs/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        setBlogs(prev => prev.filter(b => b._id !== id));
+      }
+    } catch (err) {
+      console.error("Failed to delete blog:", err);
+    }
+  };
 
   // Check DB Connection
   React.useEffect(() => {
@@ -172,6 +226,7 @@ export default function AdminPanel({
             { id: 'ninetyNine', icon: Timer, label: '₹99 Sale' },
             { id: 'products', icon: Package, label: 'Products' },
             { id: 'orders', icon: ShoppingBag, label: 'Orders' },
+            { id: 'blogs', icon: Edit3, label: 'Blogs' },
             { id: 'coupons', icon: CheckCircle, label: 'Coupons' },
             { id: 'settings', icon: Settings, label: 'Settings' }
           ].map(tab => (
@@ -1497,6 +1552,113 @@ export default function AdminPanel({
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {activeTab === 'blogs' && (
+        <div className="p-8">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-xs font-black uppercase tracking-[0.3em] text-stone-400">Blog Management</h2>
+            <button 
+              onClick={() => { setEditingBlog(null); setShowBlogForm(true); }}
+              className="bg-black text-white px-6 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-stone-800 transition-all"
+            >
+              New Post
+            </button>
+          </div>
+
+          {showBlogForm && (
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setShowBlogForm(false) }}>
+              <div className="bg-white max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8 shadow-2xl">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="text-xs font-black uppercase tracking-[0.3em]">{editingBlog ? 'Edit Post' : 'New Post'}</h3>
+                  <button onClick={() => setShowBlogForm(false)} className="text-stone-400 hover:text-black"><X className="h-4 w-4" /></button>
+                </div>
+                <form onSubmit={handleBlogSubmit} className="space-y-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Title</label>
+                    <input type="text" required value={editingBlog?.title || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, title: e.target.value}) : setBlogForm({...blogForm, title: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Slug</label>
+                    <input type="text" required value={editingBlog?.slug || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')}) : setBlogForm({...blogForm, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-')})} className="w-full border border-stone-200 p-3 text-sm font-mono focus:border-black outline-hidden" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Excerpt</label>
+                    <textarea rows={2} required value={editingBlog?.excerpt || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, excerpt: e.target.value}) : setBlogForm({...blogForm, excerpt: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Content (HTML)</label>
+                    <textarea rows={12} required value={editingBlog?.content || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, content: e.target.value}) : setBlogForm({...blogForm, content: e.target.value})} className="w-full border border-stone-200 p-3 text-sm font-mono focus:border-black outline-hidden" />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase text-stone-500">Cover Image URL</label>
+                      <input type="url" value={editingBlog?.image || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, image: e.target.value}) : setBlogForm({...blogForm, image: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase text-stone-500">Category</label>
+                      <input type="text" value={editingBlog?.category || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, category: e.target.value}) : setBlogForm({...blogForm, category: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase text-stone-500">Author</label>
+                      <input type="text" value={editingBlog?.author || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, author: e.target.value}) : setBlogForm({...blogForm, author: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-bold uppercase text-stone-500">Read Time</label>
+                      <input type="text" placeholder="5 min read" value={editingBlog?.readTime || ''} onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, readTime: e.target.value}) : setBlogForm({...blogForm, readTime: e.target.value})} className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" />
+                    </div>
+                  </div>
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={editingBlog ? editingBlog.published : (blogForm?.published || false)} 
+                      onChange={(e) => editingBlog ? setEditingBlog({...editingBlog, published: e.target.checked}) : setBlogForm({...blogForm, published: e.target.checked})}
+                      className="w-4 h-4" 
+                    />
+                    <span className="text-[10px] font-bold uppercase text-stone-500">Published</span>
+                  </label>
+                  <div className="flex gap-4 pt-4 border-t border-stone-100">
+                    <button type="submit" className="bg-black text-white px-8 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-stone-800 transition-all">
+                      {editingBlog ? 'Update Post' : 'Create Post'}
+                    </button>
+                    <button type="button" onClick={() => setShowBlogForm(false)} className="text-[10px] font-bold uppercase tracking-widest text-stone-400 hover:text-black transition-all">
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            {blogs.map((post: any) => (
+              <div key={post._id} className="flex items-center justify-between p-4 bg-white border border-stone-100 hover:border-stone-200 transition-all">
+                <div className="flex items-center gap-4 flex-1 min-w-0">
+                  <div className="w-16 h-16 bg-stone-50 overflow-hidden shrink-0">
+                    <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold text-stone-900 truncate">{post.title}</p>
+                    <div className="flex items-center gap-3 mt-1">
+                      <span className={`text-[9px] font-bold uppercase tracking-widest ${post.published ? 'text-green-600' : 'text-stone-300'}`}>{post.published ? 'Published' : 'Draft'}</span>
+                      <span className="text-[9px] text-stone-400">{post.category || 'Uncategorized'}</span>
+                      <span className="text-[9px] text-stone-400">{new Date(post.createdAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0 ml-4">
+                  <button onClick={() => handleEditBlog(post)} className="p-2 text-stone-400 hover:text-black transition-all"><Edit3 className="h-4 w-4" /></button>
+                  <button onClick={() => handleDeleteBlog(post._id)} className="p-2 text-stone-400 hover:text-red-500 transition-all"><Trash2 className="h-4 w-4" /></button>
+                </div>
+              </div>
+            ))}
+            {(!blogs || blogs.length === 0) && (
+              <div className="text-center py-16 border border-dashed border-stone-200">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">No blog posts yet</p>
+                <p className="text-[9px] text-stone-300 mt-2">Create your first journal entry to get started.</p>
+              </div>
+            )}
           </div>
         </div>
       )}
