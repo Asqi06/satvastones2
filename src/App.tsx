@@ -402,8 +402,8 @@ function WishlistPage({
 }
 
 function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }: any) {
-  const { id } = useParams();
-  const product = cmsData?.products?.find((p: any) => p._id === id || p.id === id);
+  const { slug } = useParams();
+  const product = cmsData?.products?.find((p: any) => p.slug === slug || p._id === slug || p.id === slug);
 
   if (!product) {
     return (
@@ -428,7 +428,7 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
         title={metaTitle}
         description={metaDesc}
         image={product.image}
-        canonical={`https://satvastones.in/product/${id}`}
+        canonical={`https://satvastones.in/product/${product.slug || slug}`}
         keywords={metaKeywords}
         type="product"
       />
@@ -436,7 +436,7 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
       <JsonLd data={getBreadcrumbSchema([
         { name: 'Home', url: 'https://satvastones.in/' },
         { name: 'Shop', url: 'https://satvastones.in/shop' },
-        { name: product.title, url: `https://satvastones.in/product/${id}` }
+        { name: product.title, url: `https://satvastones.in/product/${product.slug || slug}` }
       ])} />
       <ProductPage 
         product={product} 
@@ -537,8 +537,8 @@ function AppContent() {
     else if (view === 'contact') navigate('/contact');
     else if (view === 'order-success') navigate('/order-success', { state: { order: data } });
     else if (view === 'product' && data) {
-      const id = data._id || data.id;
-      navigate(`/product/${id}`);
+      const slug = data.slug || data._id || data.id;
+      navigate(`/product/${slug}`);
     }
     window.scrollTo(0, 0);
   };
@@ -1312,7 +1312,7 @@ function AppContent() {
 
               <Route path="/shop" element={<ShopRoute />} />
               <Route path="/shop/:category" element={<ShopRoute />} />
-              <Route path="/product/:id" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} />} />
+              <Route path="/product/:slug" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} />} />
               <Route path="/cart" element={<><SEO title="Your Shopping Bag" description="Review your selected aesthetic jewelry pieces at Satvastones. Secure checkout with UPI, Card & COD available." canonical="https://satvastones.in/cart" keywords={['shopping cart', 'jewelry cart', 'checkout jewelry', 'satvastones cart']} noindex={true} /><CartPage cart={cart} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
               <Route path="/checkout" element={<><SEO title="Secure Checkout" description="Complete your order securely. We accept UPI, Cards, Net Banking & COD." canonical="https://satvastones.in/checkout" noindex={true} /><CheckoutPage cart={cart} currentUser={currentUser} cmsData={cmsData} onBack={() => navigateTo('cart')} onComplete={(order) => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success', order); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
               <Route path="/account" element={currentUser ? <><SEO title="My Account | Satvastones" description="Manage your orders, addresses, and preferences at Satvastones." canonical="https://satvastones.in/account" noindex={true} keywords={['my account', 'order history', 'satvastones account']} /><AccountDashboard user={currentUser} onLogout={() => { setCurrentUser(null); localStorage.removeItem('satvastones_user'); navigate('/'); }} onShop={() => navigate('/shop')} /></> : <AuthPage onLogin={(data) => { setCurrentUser(data.customer); if (localStorage.getItem('checkout_pending') === 'true') navigate('/checkout'); else navigate('/account'); }} />} />

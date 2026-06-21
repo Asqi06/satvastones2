@@ -618,7 +618,7 @@ export default function ProductPage({
                 .map((related: any) => (
                   <Link 
                     key={related._id || related.id}
-                    to={`/product/${related._id || related.id}`}
+                    to={`/product/${related.slug || related._id || related.id}`}
                     className="group flex flex-col gap-3"
                   >
                     <div className="aspect-[4/5] bg-stone-100 overflow-hidden">

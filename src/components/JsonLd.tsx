@@ -14,7 +14,7 @@ const JsonLd = ({ data }: JsonLdProps) => {
 };
 
 export const getProductSchema = (product: any) => {
-  const url = `https://satvastones.in/product/${product._id || product.id}`;
+  const url = `https://satvastones.in/product/${product.slug || product._id || product.id}`;
   const name = product.metaTitle || product.title;
   const description = product.metaDescription || product.description || `Buy ${product.title} at ₹${product.price}. Anti-tarnish, waterproof aesthetic jewelry from Satvastones.`;
   const isInStock = (product.stockQuantity || 0) > 0;
@@ -229,7 +229,7 @@ export const getProductGroupSchema = (product: any, variants: any[]) => ({
   "@type": "ProductGroup",
   "name": product.title,
   "description": product.description || `Shop ${product.title} at Satvastones`,
-  "url": `https://satvastones.in/product/${product._id || product.id}`,
+  "url": `https://satvastones.in/product/${product.slug || product._id || product.id}`,
   "image": [product.image, ...(product.images || [])],
   "brand": {
     "@type": "Brand",
@@ -249,7 +249,7 @@ export const getProductGroupSchema = (product: any, variants: any[]) => ({
       "priceCurrency": "INR",
       "price": product.price,
       "availability": "https://schema.org/InStock",
-      "url": `https://satvastones.in/product/${product._id || product.id}`
+      "url": `https://satvastones.in/product/${product.slug || product._id || product.id}`
     }
   }))
 });

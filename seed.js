@@ -6,7 +6,17 @@ dotenv.config();
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/satvastones';
 
 // Schemas (Local copies for seeding)
-const productSchema = new mongoose.Schema({ title: String, price: Number, oldPrice: Number, rating: Number, reviews: Number, image: String, category: String, description: String });
+const productSchema = new mongoose.Schema({ title: String, slug: { type: String, unique: true, sparse: true }, price: Number, oldPrice: Number, rating: Number, reviews: Number, image: String, category: String, description: String });
+
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 const Product = mongoose.model('Product', productSchema);
 
 const cmsSchema = new mongoose.Schema({ hero: Object, categories: Array, specialOffer: Object, settings: Object });
@@ -73,7 +83,8 @@ async function seed() {
     // Seed Products
     const productsWithIds = initialCMSData.products.map(p => ({
       ...p,
-      _id: new mongoose.Types.ObjectId()
+      _id: new mongoose.Types.ObjectId(),
+      slug: generateSlug(p.title)
     }));
     await Product.insertMany(productsWithIds);
     console.log('Products seeded!');

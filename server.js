@@ -74,6 +74,7 @@ const productSchema = new mongoose.Schema({
   isRestockable: { type: Boolean, default: true },
   restockSubscribers: [{ email: String, subscribedAt: { type: Date, default: Date.now } }],
   // SEO fields
+  slug: { type: String, unique: true, sparse: true },
   metaTitle: String,
   metaDescription: String,
   focusKeywords: [String],
@@ -82,6 +83,27 @@ const productSchema = new mongoose.Schema({
 });
 
 const Product = mongoose.model('Product', productSchema);
+
+// Helper function to generate SEO-friendly slug from title
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// Helper function to ensure unique slug
+async function ensureUniqueSlug(baseSlug, excludeId) {
+  let slug = baseSlug;
+  let counter = 1;
+  while (await Product.findOne({ slug, _id: { $ne: excludeId } })) {
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+  return slug;
+}
 
 // Helper function to deduct stock
 async function deductStock(items) {
@@ -286,7 +308,8 @@ app.get('/api/sitemap.xml', async (req, res) => {
 
     for (const product of products) {
       const lastMod = product.updatedAt ? new Date(product.updatedAt).toISOString() : new Date().toISOString();
-      xml += `  <url>\n    <loc>https://satvastones.in/product/${product._id}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <priority>0.8</priority>\n    <changefreq>weekly</changefreq>\n  </url>\n`;
+      const slug = product.slug || product._id;
+      xml += `  <url>\n    <loc>https://satvastones.in/product/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <priority>0.8</priority>\n    <changefreq>weekly</changefreq>\n  </url>\n`;
     }
 
     xml += '</urlset>';
@@ -357,9 +380,23 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
+app.get('/api/products/slug/:slug', async (req, res) => {
+  try {
+    const product = await Product.findOne({ slug: req.params.slug });
+    if (!product) return res.status(404).json({ error: 'Product not found' });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.post('/api/products', async (req, res) => {
   try {
-    const product = new Product(req.body);
+    const data = { ...req.body };
+    if (!data.slug && data.title) {
+      data.slug = await ensureUniqueSlug(generateSlug(data.title));
+    }
+    const product = new Product(data);
     await product.save();
     res.json(product);
   } catch (err) {
@@ -372,9 +409,36 @@ app.put('/api/products/:id', async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ error: 'Invalid Product ID' });
     }
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const data = { ...req.body };
+    if (data.title) {
+      const existing = await Product.findById(req.params.id);
+      if (!existing) return res.status(404).json({ error: 'Product not found' });
+      // Only auto-generate slug if title changed and no explicit slug provided
+      if (!data.slug && data.title !== existing.title) {
+        data.slug = await ensureUniqueSlug(generateSlug(data.title), existing._id);
+      }
+    }
+    const product = await Product.findByIdAndUpdate(req.params.id, data, { new: true });
     if (!product) return res.status(404).json({ error: 'Product not found' });
     res.json(product);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Migration endpoint: backfill slugs for existing products without one
+app.post('/api/migrate-slugs', async (req, res) => {
+  try {
+    const products = await Product.find({ slug: { $exists: false } });
+    let updated = 0;
+    for (const product of products) {
+      if (product.title) {
+        product.slug = await ensureUniqueSlug(generateSlug(product.title), product._id);
+        await product.save();
+        updated++;
+      }
+    }
+    res.json({ message: `Updated ${updated} products with slugs` });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
