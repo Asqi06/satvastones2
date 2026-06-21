@@ -128,22 +128,47 @@ function routeToDir(p) {
   return resolve(dist, p.slice(1));
 }
 
-function generateSitemap() {
+async function generateSitemap() {
   const sitemapRoutes = routes.filter(r => !r.noindex);
   const today = new Date().toISOString().split('T')[0];
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
   for (const route of sitemapRoutes) {
     const priority = route.path === '/' ? '1.0' : route.path.startsWith('/shop/') ? '0.8' : route.path === '/shop' ? '0.9' : '0.6';
     const changefreq = route.path === '/' ? 'daily' : route.path.startsWith('/shop/') ? 'weekly' : 'monthly';
     xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${priority}</priority>\n    <changefreq>${changefreq}</changefreq>\n  </url>\n`;
   }
+
+  // Fetch products from API and add to sitemap
+  const apiUrl = process.env.VITE_API_URL || 'http://localhost:5000/api';
+  let productCount = 0;
+  try {
+    const res = await fetch(`${apiUrl}/products`);
+    if (res.ok) {
+      const products = await res.json();
+      productCount = products.length;
+      for (const product of products) {
+        const id = product._id || product.id;
+        const lastMod = product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : today;
+        xml += `  <url>\n    <loc>https://satvastones.in/product/${id}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <priority>0.8</priority>\n    <changefreq>weekly</changefreq>\n  </url>\n`;
+      }
+      console.log(`✓ ${productCount} product URLs added to sitemap`);
+    }
+  } catch (err) {
+    console.log('⚠ Could not fetch products for sitemap (API not running)');
+  }
+
   xml += '</urlset>';
+
+  // Write to dist/ (used by Vite build)
   writeFileSync(resolve(dist, 'sitemap.xml'), xml);
-  console.log(`✓ sitemap.xml written with ${sitemapRoutes.length} URLs (lastmod: ${today})`);
+  // Also write to public/ so it's served by Vercel at /sitemap.xml
+  writeFileSync(resolve('public/sitemap.xml'), xml);
+  console.log(`✓ sitemap.xml written with ${sitemapRoutes.length + productCount} URLs (lastmod: ${today})`);
 }
 
-function main() {
+async function main() {
   const src = readFileSync(resolve(dist, 'index.html'), 'utf-8');
 
   for (const route of routes) {
@@ -176,7 +201,7 @@ function main() {
     console.log(`✓ ${route.path} → ${outPath}`);
   }
 
-  generateSitemap();
+  await generateSitemap();
 }
 
 main();

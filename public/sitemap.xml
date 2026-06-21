@@ -2,102 +2,122 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://satvastones.in/</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>1.0</priority>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.9</priority>
-    <changefreq>daily</changefreq>
+    <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://satvastones.in/shop/necklaces</loc>
+    <loc>https://satvastones.in/shop/99-sale</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/earrings</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/shop/necklaces</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/rings</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/bracelets</loc>
-    <priority>0.8</priority>
-    <changefreq>weekly</changefreq>
-  </url>
-  <url>
-    <loc>https://satvastones.in/shop/99-sale</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/gifts</loc>
-    <priority>0.7</priority>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/name-necklace</loc>
-    <priority>0.7</priority>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/accessories</loc>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://satvastones.in/shop/pendant</loc>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://satvastones.in/shop/hampers</loc>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-  <url>
-    <loc>https://satvastones.in/shop/mothers-day</loc>
-    <priority>0.7</priority>
-    <changefreq>yearly</changefreq>
-  </url>
-  <url>
-    <loc>https://satvastones.in/blogs</loc>
-    <priority>0.7</priority>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
-    <loc>https://satvastones.in/contact</loc>
+    <loc>https://satvastones.in/shop/pendant</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/shop/hampers</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/shop/mothers-day</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/about</loc>
+    <lastmod>2026-06-21</lastmod>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://satvastones.in/about</loc>
-    <priority>0.8</priority>
+    <loc>https://satvastones.in/contact</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://satvastones.in/terms</loc>
-    <priority>0.4</priority>
+    <loc>https://satvastones.in/blogs</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/privacy</loc>
-    <priority>0.4</priority>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
-    <loc>https://satvastones.in/shipping</loc>
-    <priority>0.5</priority>
+    <loc>https://satvastones.in/terms</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/returns</loc>
-    <priority>0.5</priority>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.6</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/shipping</loc>
+    <lastmod>2026-06-21</lastmod>
+    <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
 </urlset>

@@ -407,9 +407,12 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xs uppercase tracking-widest text-stone-400">Product not found</p>
-      </div>
+      <>
+        <SEO title="Product Not Found | Satvastones" description="This product is no longer available." noindex />
+        <div className="min-h-screen flex items-center justify-center">
+          <p className="text-xs uppercase tracking-widest text-stone-400">Product not found</p>
+        </div>
+      </>
     );
   }
 
