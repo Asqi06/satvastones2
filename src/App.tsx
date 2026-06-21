@@ -10,7 +10,6 @@ import { HelmetProvider } from 'react-helmet-async';
 import SEO from './components/SEO';
 import JsonLd, { getProductSchema, getOrganizationSchema, getWebsiteSchema, getBreadcrumbSchema, getFaqSchema, getLocalBusinessSchema } from './components/JsonLd';
 import { getSrcSet } from './utils/cloudinary';
-import LoadingScreen from './components/LoadingScreen';
 import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
 import CartPage from './components/CartPage';
@@ -493,7 +492,6 @@ function AppContent() {
   const location = useLocation();
   const [cmsData, setCmsData] = useState<any>(null);
   if (typeof window !== 'undefined') (window as any).cmsData = cmsData;
-  const [isLoading, setIsLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(() => {
     const saved = localStorage.getItem('satvastones_user');
     return saved ? JSON.parse(saved) : null;
@@ -511,7 +509,6 @@ function AppContent() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
-  const [showLoading, setShowLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   const categorySlug = (name: string) => {
@@ -669,11 +666,6 @@ function AppContent() {
   };
   // FETCH DATA
   useEffect(() => {
-    // Show loading screen for at least 2.5 seconds
-    const timer = setTimeout(() => {
-      setShowLoading(false);
-    }, 2500);
-
     const fetchData = async () => {
       try {
         const cmsRes = await fetch(`${API_URL}/cms`);
@@ -694,12 +686,9 @@ function AppContent() {
         }
       } catch (err) {
         console.log("Using local fallback data. Connect to MongoDB to enable live sync.");
-      } finally {
-        setIsLoading(false);
       }
     };
     fetchData();
-    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -882,10 +871,6 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-stone-50 font-sans selection:bg-stone-900 selection:text-white">
-      <AnimatePresence>
-        {showLoading && <LoadingScreen logoUrl={cmsData?.settings?.logoUrl || '/logo.png'} />}
-      </AnimatePresence>
-      
       {cmsData && (
         <>
       {/* Global JSON-LD Structured Data (Organization + WebSite + LocalBusiness) */}
