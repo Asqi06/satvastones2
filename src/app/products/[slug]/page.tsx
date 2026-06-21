@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     product = await prisma.product.findUnique({
       where: { slug },
-      select: { name: true, description: true, images: true },
+      select: { name: true, description: true, images: true, price: true, material: true, category: { select: { name: true } } },
     });
   } catch (e) {
     product = MOCK_PRODUCTS.find(p => p.slug === slug);
@@ -77,9 +77,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   if (!product) return { title: "Product Not Found" };
 
+  const categoryName = product.category?.name || "";
+  const material = product.material || "";
+  const titleParts = [product.name];
+  if (material) titleParts.push(material);
+  if (categoryName) titleParts.push(`${categoryName} for Women`);
+  titleParts.push("SatvaStones");
+  const metaTitle = titleParts.join(" | ");
+
+  const desc = product.description.length > 200
+    ? product.description.substring(0, 197) + "..."
+    : product.description;
+
   return {
-    title: product.name,
-    description: product.description.substring(0, 160),
+    title: metaTitle,
+    description: desc,
     alternates: { canonical: `https://satvastones.in/products/${slug}` },
     openGraph: {
       images: product.images[0] ? [product.images[0]] : [],
@@ -146,6 +158,32 @@ export default async function ProductPage({ params }: Props) {
       : 0;
 
   const reviewCount = product.reviews?.length || 0;
+
+  // Build BreadcrumbList JSON-LD
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://satvastones.in/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": product.category?.name || "Shop",
+        "item": `https://satvastones.in/products/${product.category?.slug || ""}`
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": product.name,
+        "item": `https://satvastones.in/products/${product.slug}`
+      }
+    ]
+  };
 
   // Build JSON-LD structured data for Product schema
   const productJsonLd = {
@@ -245,6 +283,10 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}

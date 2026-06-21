@@ -74,7 +74,7 @@ export default function SearchOverlay({
                           onClick={() => { onSelectProduct(p); onClose(); }}
                         >
                           <div className="w-16 h-20 bg-stone-100 overflow-hidden">
-                            <img src={p.image} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                            <img src={p.image} alt={p.title} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                           </div>
                           <div>
                             <h4 className="text-xs font-bold uppercase tracking-tight text-stone-900 group-hover:text-stone-400 transition-colors">{p.title}</h4>
