@@ -18,45 +18,110 @@ const buildUrl = (url: string, transforms: string): string => {
 };
 
 /**
- * Optimizes a Cloudinary URL by forcing WebP/AVIF auto-format, good quality, and optional sizing.
- * Uses q_auto:good (vs best) for significantly smaller files with negligible visible quality loss.
- * Falls back to original URL for non-Cloudinary images.
+ * Optimizes an image URL (Cloudinary or Unsplash) by forcing format/quality optimization and optional sizing.
+ * Uses q_auto:eco for Cloudinary and q=60 for Unsplash to achieve maximum compression with great visual quality.
  */
 export const optimizeImage = (url: string, width?: number, height?: number) => {
   if (!url) return '';
-  if (!url.includes('cloudinary.com')) return url;
 
-  // f_auto picks WebP/AVIF automatically, q_auto:good is ~60-70% quality — ideal for web
-  let transforms = 'f_auto,q_auto:good';
+  if (url.includes('cloudinary.com')) {
+    // f_auto picks WebP/AVIF automatically, q_auto:eco is optimized for web performance
+    let transforms = 'f_auto,q_auto:eco';
 
-  if (width && height) {
-    transforms += `,c_fill,g_auto:face,w_${width},h_${height}`;
-  } else if (width) {
-    transforms += `,c_limit,w_${width}`;
-  } else if (height) {
-    transforms += `,c_limit,h_${height}`;
+    if (width && height) {
+      transforms += `,c_fill,g_auto:face,w_${width},h_${height}`;
+    } else if (width) {
+      transforms += `,c_limit,w_${width}`;
+    } else if (height) {
+      transforms += `,c_limit,h_${height}`;
+    }
+
+    return buildUrl(url, transforms);
   }
 
-  return buildUrl(url, transforms);
+  if (url.includes('images.unsplash.com')) {
+    try {
+      const parsedUrl = new URL(url);
+      parsedUrl.searchParams.set('auto', 'format');
+      parsedUrl.searchParams.set('q', '60'); // Eco quality
+      if (width) parsedUrl.searchParams.set('w', width.toString());
+      if (height) parsedUrl.searchParams.set('h', height.toString());
+      if (width && height) parsedUrl.searchParams.set('fit', 'crop');
+      return parsedUrl.toString();
+    } catch (e) {
+      return url;
+    }
+  }
+
+  return url;
 };
 
 /**
  * Generates a srcSet string for responsive images at multiple breakpoints.
- * Uses f_auto for format detection and q_auto:good for balanced quality/size.
+ * Supports Cloudinary and Unsplash, with an optional aspect ratio (height / width) to ensure proper cropping.
  */
-export const getSrcSet = (url: string, widths: number[] = [320, 480, 768, 1024, 1280]): string => {
-  if (!url || !url.includes('cloudinary.com')) return '';
-  return widths
-    .map(w => `${buildUrl(url, `f_auto,q_auto:good,c_limit,w_${w}`)} ${w}w`)
-    .join(', ');
+export const getSrcSet = (url: string, widths: number[] = [320, 480, 768, 1024, 1280], aspectRatio?: number): string => {
+  if (!url) return '';
+
+  if (url.includes('cloudinary.com')) {
+    return widths
+      .map(w => {
+        let transforms = `f_auto,q_auto:eco`;
+        if (aspectRatio) {
+          const h = Math.round(w * aspectRatio);
+          transforms += `,c_fill,g_auto:face,w_${w},h_${h}`;
+        } else {
+          transforms += `,c_limit,w_${w}`;
+        }
+        return `${buildUrl(url, transforms)} ${w}w`;
+      })
+      .join(', ');
+  }
+
+  if (url.includes('images.unsplash.com')) {
+    return widths
+      .map(w => {
+        try {
+          const parsedUrl = new URL(url);
+          parsedUrl.searchParams.set('auto', 'format');
+          parsedUrl.searchParams.set('q', '60');
+          parsedUrl.searchParams.set('w', w.toString());
+          if (aspectRatio) {
+            const h = Math.round(w * aspectRatio);
+            parsedUrl.searchParams.set('h', h.toString());
+            parsedUrl.searchParams.set('fit', 'crop');
+          }
+          return `${parsedUrl.toString()} ${w}w`;
+        } catch (e) {
+          return `${url} ${w}w`;
+        }
+      })
+      .join(', ');
+  }
+
+  return '';
 };
 
 /**
  * Returns a low-quality placeholder (blurred thumbnail) for progressive loading.
  */
 export const getPlaceholder = (url: string): string => {
-  if (!url || !url.includes('cloudinary.com')) return '';
-  return buildUrl(url, 'f_auto,q_1,w_20,e_blur:400');
+  if (!url) return '';
+  if (url.includes('cloudinary.com')) {
+    return buildUrl(url, 'f_auto,q_1,w_20,e_blur:400');
+  }
+  if (url.includes('images.unsplash.com')) {
+    try {
+      const parsedUrl = new URL(url);
+      parsedUrl.searchParams.set('w', '20');
+      parsedUrl.searchParams.set('q', '10');
+      parsedUrl.searchParams.set('blur', '10');
+      return parsedUrl.toString();
+    } catch (e) {
+      return url;
+    }
+  }
+  return url;
 };
 
 /**

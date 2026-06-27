@@ -34,99 +34,107 @@ function ScrollToTop() {
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 
-const CategoryCard = ({ category, onClick }: any) => (
-  <div 
-    className={`group relative overflow-hidden bg-stone-100 cursor-pointer ${category.size === 'large' ? 'aspect-[3/4]' : 'aspect-square md:aspect-[16/9]'}`}
-    onClick={onClick}
-  >
-    <img 
-      src={optimizeImage(category.image, 600)} 
-      srcSet={getSrcSet(category.image, [320, 480, 600, 800])}
-      sizes="(max-width: 640px) calc(50vw - 16px), (max-width: 1024px) calc(25vw - 12px), 320px"
-      alt={`Shop ${category.title} at Satvastones`} 
-      loading="lazy"
-      width="600"
-      height="800"
-      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-    />
-    <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:bg-black/20" />
-    
-    {category.sale && (
-      <div className="absolute top-4 right-4 z-10">
-        <span className="inline-flex items-center rounded-full bg-red-600 px-3 py-1 text-[10px] font-bold text-white uppercase tracking-widest animate-pulse">
-          Sale Live
-        </span>
-      </div>
-    )}
-
-    <div className="absolute inset-0 flex items-end justify-between p-6">
-      {/* p used here intentionally — h4 in this context would skip h1→h2→h3 hierarchy */}
-      <p className="font-display text-2xl font-bold tracking-tight text-white uppercase sm:text-3xl md:text-2xl lg:text-3xl">
-        {category.title}
-      </p>
-      <button 
-        className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:scale-110 md:h-12 md:w-12"
-        aria-label={`Shop ${category.title}`}
-      >
-        <ArrowUpRight className="h-5 w-5 text-black" aria-hidden="true" />
-      </button>
-    </div>
-  </div>
-);
-
-const DiscoverCard = ({ product, large = false, onClick }: any) => (
-  <div className="group flex flex-col gap-3 cursor-pointer" onClick={onClick}>
-    <div className={`relative overflow-hidden bg-stone-100 ${large ? 'aspect-[4/5] md:aspect-auto md:h-full' : 'aspect-square'}`}>
+const CategoryCard = ({ category, onClick }: any) => {
+  const ratio = category.size === 'large' ? 1.333 : 1.0;
+  const height = Math.round(600 * ratio);
+  return (
+    <div 
+      className={`group relative overflow-hidden bg-stone-100 cursor-pointer ${category.size === 'large' ? 'aspect-[3/4]' : 'aspect-square md:aspect-[16/9]'}`}
+      onClick={onClick}
+    >
       <img 
-        src={optimizeImage(product.image, 600)} 
-        srcSet={getSrcSet(product.image, [300, 450, 600])}
-        sizes="(max-width: 640px) calc(50vw - 16px), (max-width: 1024px) calc(33vw - 16px), 300px"
-        alt={product.title} 
+        src={optimizeImage(category.image, 600, height)} 
+        srcSet={getSrcSet(category.image, [320, 480, 600, 800], ratio)}
+        sizes="(max-width: 640px) calc(50vw - 16px), (max-width: 1024px) calc(25vw - 12px), 320px"
+        alt={`Shop ${category.title} at Satvastones`} 
         loading="lazy"
         width="600"
-        height="600"
-        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        height={height}
+        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
+      <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:bg-black/20" />
       
-      {/* Wishlist Button */}
-      <button 
-        className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-stone-900 transition-colors hover:bg-white"
-        aria-label={`Add ${product.title} to wishlist`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Heart className="h-4 w-4" aria-hidden="true" />
-      </button>
+      {category.sale && (
+        <div className="absolute top-4 right-4 z-10">
+          <span className="inline-flex items-center rounded-full bg-red-600 px-3 py-1 text-[10px] font-bold text-white uppercase tracking-widest animate-pulse">
+            Sale Live
+          </span>
+        </div>
+      )}
 
-      {/* Hover Actions */}
-      <div className="absolute inset-x-0 bottom-4 z-10 flex translate-y-4 justify-center gap-2 px-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+      <div className="absolute inset-0 flex items-end justify-between p-6">
+        {/* p used here intentionally — h4 in this context would skip h1→h2→h3 hierarchy */}
+        <p className="font-display text-2xl font-bold tracking-tight text-white uppercase sm:text-3xl md:text-2xl lg:text-3xl">
+          {category.title}
+        </p>
         <button 
-          className="flex-1 bg-black py-3 text-[9px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-stone-800"
-          aria-label={`View details for ${product.title}`}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:scale-110 md:h-12 md:w-12"
+          aria-label={`Shop ${category.title}`}
         >
-          View Details
+          <ArrowUpRight className="h-5 w-5 text-black" aria-hidden="true" />
         </button>
       </div>
     </div>
+  );
+};
 
-    <div className="flex flex-col gap-1">
-      <div className="flex items-center justify-between">
-        {/* p used intentionally — heading hierarchy is h1 on page, h2 for sections */}
-        <p className="font-accent text-xs font-bold uppercase tracking-tight text-stone-900">{product.title}</p>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-stone-500 line-through">₹{product.oldPrice}</span>
-          <span className="font-accent text-sm font-bold text-stone-900">₹{product.price}</span>
+const DiscoverCard = ({ product, large = false, onClick }: any) => {
+  const ratio = large ? 1.25 : 1.0;
+  const height = Math.round(600 * ratio);
+  return (
+    <div className="group flex flex-col gap-3 cursor-pointer" onClick={onClick}>
+      <div className={`relative overflow-hidden bg-stone-100 ${large ? 'aspect-[4/5] md:aspect-auto md:h-full' : 'aspect-square'}`}>
+        <img 
+          src={optimizeImage(product.image, 600, height)} 
+          srcSet={getSrcSet(product.image, [300, 450, 600], ratio)}
+          sizes="(max-width: 640px) calc(50vw - 16px), (max-width: 1024px) calc(33vw - 16px), 300px"
+          alt={product.title} 
+          loading="lazy"
+          width="600"
+          height={height}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        
+        {/* Wishlist Button */}
+        <button 
+          className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-stone-900 transition-colors hover:bg-white"
+          aria-label={`Add ${product.title} to wishlist`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Heart className="h-4 w-4" aria-hidden="true" />
+        </button>
+
+        {/* Hover Actions */}
+        <div className="absolute inset-x-0 bottom-4 z-10 flex translate-y-4 justify-center gap-2 px-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <button 
+            className="flex-1 bg-black py-3 text-[9px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-stone-800"
+            aria-label={`View details for ${product.title}`}
+          >
+            View Details
+          </button>
         </div>
       </div>
-      <div className="flex items-center gap-1">
-        <div className="flex text-yellow-500">
-           <span className="text-[10px]">★</span>
+
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center justify-between">
+          {/* p used intentionally — heading hierarchy is h1 on page, h2 for sections */}
+          <p className="font-accent text-xs font-bold uppercase tracking-tight text-stone-900">{product.title}</p>
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-stone-500 line-through">₹{product.oldPrice}</span>
+            <span className="font-accent text-sm font-bold text-stone-900">₹{product.price}</span>
+          </div>
         </div>
-        <span className="text-[10px] font-bold text-stone-900">{product.rating}</span>
-        <span className="text-[10px] text-stone-500 uppercase tracking-tighter">({(product.reviews && Array.isArray(product.reviews)) ? product.reviews.length : (typeof product.reviews === 'number' ? product.reviews : 0)} reviews)</span>
+        <div className="flex items-center gap-1">
+          <div className="flex text-yellow-500">
+             <span className="text-[10px]">★</span>
+          </div>
+          <span className="text-[10px] font-bold text-stone-900">{product.rating}</span>
+          <span className="text-[10px] text-stone-500 uppercase tracking-tighter">({(product.reviews && Array.isArray(product.reviews)) ? product.reviews.length : (typeof product.reviews === 'number' ? product.reviews : 0)} reviews)</span>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // EMPTY INITIAL DATA (Everything flows from DB)
 const initialCMSData = {
@@ -1085,7 +1093,7 @@ function AppContent() {
                       </div>
 
                       <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
-                        <img src={optimizeImage(cmsData.hero.image, 768)} alt="Satvastones - Premium aesthetic Korean and Western jewelry" fetchpriority="high" width="768" height="329" srcSet={getSrcSet(cmsData.hero.image, [360, 480, 768, 1024, 1600])} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                        <img src={optimizeImage(cmsData.hero.image, 768, 432)} alt="Satvastones - Premium aesthetic Korean and Western jewelry" fetchpriority="high" width="768" height="329" srcSet={getSrcSet(cmsData.hero.image, [360, 480, 768, 1024, 1600], 0.5625)} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end p-8 md:p-14">
                           <div className="flex flex-col items-center gap-4 mb-4">
                             <p className="text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em]">Browse The Full Collection</p>
@@ -1208,8 +1216,8 @@ function AppContent() {
                                 >
                                   <div className="aspect-square overflow-hidden relative">
                                     <img
-                                      src={optimizeImage(p.image, 400)}
-                                      srcSet={getSrcSet(p.image, [200, 300, 400])}
+                                      src={optimizeImage(p.image, 400, 400)}
+                                      srcSet={getSrcSet(p.image, [200, 300, 400], 1.0)}
                                       sizes="(max-width: 640px) calc(50vw - 24px), 200px"
                                       alt={p.title}
                                       loading="lazy"
@@ -1252,11 +1260,13 @@ function AppContent() {
                         <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16 md:gap-24">
                           <div className="relative aspect-square lg:aspect-[4/5] overflow-hidden rounded-sm group">
                             <img 
-                              src={optimizeImage(cmsData.specialOffer.image, 1200)} 
+                              src={optimizeImage(cmsData.specialOffer.image, 800, 1000)} 
+                              srcSet={getSrcSet(cmsData.specialOffer.image, [360, 480, 800, 1200], 1.25)}
+                              sizes="(max-width: 1024px) 100vw, 50vw"
                               alt={cmsData.specialOffer.title || 'Special offer - Satvastones premium jewelry'} 
                               loading="lazy"
-                              width="1200"
-                              height="1500"
+                              width="800"
+                              height="1000"
                               className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                             />
                             <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
