@@ -18,16 +18,17 @@ const buildUrl = (url: string, transforms: string): string => {
 };
 
 /**
- * Optimizes a Cloudinary URL by forcing WebP, auto-quality, and optional sizing.
+ * Optimizes a Cloudinary URL by forcing WebP/AVIF auto-format, good quality, and optional sizing.
+ * Uses q_auto:good (vs best) for significantly smaller files with negligible visible quality loss.
  * Falls back to original URL for non-Cloudinary images.
  */
 export const optimizeImage = (url: string, width?: number, height?: number) => {
   if (!url) return '';
   if (!url.includes('cloudinary.com')) return url;
 
-  // Force WebP (smaller than f_auto which sometimes picks PNG), best quality, fill crop
-  let transforms = 'f_webp,q_auto:best';
-  
+  // f_auto picks WebP/AVIF automatically, q_auto:good is ~60-70% quality — ideal for web
+  let transforms = 'f_auto,q_auto:good';
+
   if (width && height) {
     transforms += `,c_fill,g_auto:face,w_${width},h_${height}`;
   } else if (width) {
@@ -41,12 +42,21 @@ export const optimizeImage = (url: string, width?: number, height?: number) => {
 
 /**
  * Generates a srcSet string for responsive images at multiple breakpoints.
+ * Uses f_auto for format detection and q_auto:good for balanced quality/size.
  */
 export const getSrcSet = (url: string, widths: number[] = [320, 480, 768, 1024, 1280]): string => {
   if (!url || !url.includes('cloudinary.com')) return '';
   return widths
-    .map(w => `${buildUrl(url, `f_webp,q_auto:best,c_limit,w_${w}`)} ${w}w`)
+    .map(w => `${buildUrl(url, `f_auto,q_auto:good,c_limit,w_${w}`)} ${w}w`)
     .join(', ');
+};
+
+/**
+ * Returns a low-quality placeholder (blurred thumbnail) for progressive loading.
+ */
+export const getPlaceholder = (url: string): string => {
+  if (!url || !url.includes('cloudinary.com')) return '';
+  return buildUrl(url, 'f_auto,q_1,w_20,e_blur:400');
 };
 
 /**

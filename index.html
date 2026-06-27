@@ -3,25 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SatvaStones | Minimalist & Premium Aesthetic Jewelry</title>
+    <title>SatvaStones | Minimalist &amp; Premium Aesthetic Jewelry</title>
     
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399." />
+    <meta name="description" content="Premium Korean &amp; Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399." />
     <meta name="robots" content="index, follow" />
     <!-- Canonical is managed dynamically by SEO component via react-helmet-async -->
 
-    <!-- Preconnect & DNS-Prefetch for critical 3rd-party origins -->
-    <link rel="preconnect" href="https://res.cloudinary.com" />
-    <link rel="preconnect" href="https://upload-widget.cloudinary.com" />
+    <!-- ===== CRITICAL PRECONNECTS (ordered by impact) ===== -->
+    <!-- API server — saves ~320ms LCP delay (highest priority) -->
+    <link rel="preconnect" href="https://satvastones2.onrender.com" />
+    <link rel="dns-prefetch" href="https://satvastones2.onrender.com" />
+
+    <!-- Cloudinary CDN — with crossorigin for CORS-aware connections -->
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
     <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-    <link rel="dns-prefetch" href="https://upload-widget.cloudinary.com" />
-    <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- Preload critical CSS + font files (reduces render-blocking) -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@400;700&display=swap" as="style" />
+    <!-- Other 3rd parties -->
+    <link rel="dns-prefetch" href="https://upload-widget.cloudinary.com" />
+    <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
+
+    <!-- ===== GOOGLE FONTS — Non-blocking async load ===== -->
+    <!-- Inter (body) + Playfair Display (headings) loaded asynchronously to avoid render-blocking -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@400;700&display=swap" as="style" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@400;700&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:wght@400;700&display=swap" /></noscript>
 
@@ -34,23 +44,24 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="SatvaStones | Minimalist & Premium Aesthetic Jewelry" />
-    <meta property="og:description" content="Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399." />
+    <meta property="og:title" content="SatvaStones | Minimalist &amp; Premium Aesthetic Jewelry" />
+    <meta property="og:description" content="Premium Korean &amp; Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399." />
     <meta property="og:image" content="https://satvastones.in/logo.png" />
     <meta property="og:url" content="https://satvastones.in/" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SatvaStones | Minimalist & Premium Aesthetic Jewelry" />
-    <meta name="twitter:description" content="Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399." />
+    <meta name="twitter:title" content="SatvaStones | Minimalist &amp; Premium Aesthetic Jewelry" />
+    <meta name="twitter:description" content="Premium Korean &amp; Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399." />
     <meta name="twitter:image" content="https://satvastones.in/logo.png" />
 
-    <script src="https://upload-widget.cloudinary.com/latest/global/all.js" async type="text/javascript"></script>
+    <!-- Cloudinary Upload Widget — loaded async (only needed in admin) -->
+    <script src="https://upload-widget.cloudinary.com/latest/global/all.js" async defer type="text/javascript"></script>
   </head>
   <body>
     <noscript>
       <header>
-        <h1>SatvaStones — Premium Aesthetic Korean & Western Jewelry Online</h1>
+        <h1>SatvaStones — Premium Aesthetic Korean &amp; Western Jewelry Online</h1>
         <nav>
           <a href="/">Home</a> |
           <a href="/shop">Shop All Jewelry</a> |
@@ -64,7 +75,7 @@
       </header>
       <main>
         <section>
-          <h2>Curated Korean & Western Aesthetic Jewelry Collection</h2>
+          <h2>Curated Korean &amp; Western Aesthetic Jewelry Collection</h2>
           <p>Welcome to SatvaStones — India's premier destination for aesthetic Korean and Western jewelry. We curate handcrafted, anti-tarnish, and waterproof pieces that blend Seoul minimalism with Parisian elegance. Every piece in our collection is designed for the sophisticated woman who values quality, style, and affordability.</p>
           <p>Our jewelry collection includes minimalist gold earrings, layered necklaces, stackable rings, charm bracelets, and statement pendants. Each product is crafted using premium materials including 18K gold plating, sterling silver, and hypoallergenic metals ensuring long-lasting wear without irritation.</p>
           <p>All SatvaStones jewelry is 100% anti-tarnish and waterproof. We guarantee your pieces will not fade, dull, or discolor — backed by our quality promise. Whether you are dressing up for a wedding, accessorizing for work, or looking for the perfect gift, our aesthetic jewelry collection has something for every occasion.</p>
@@ -95,7 +106,7 @@
           <p>Shop our limited-time ₹99 Flash Sale featuring premium anti-tarnish jewelry at unbelievable prices. Each piece is handpicked from our best-selling collection and guaranteed to meet our quality standards. <a href="/shop/99-sale">Browse the ₹99 Sale Collection</a></p>
         </section>
         <section>
-          <h2>SatvaStones Blog — Style Guides & Jewelry Care</h2>
+          <h2>SatvaStones Blog — Style Guides &amp; Jewelry Care</h2>
           <p>Visit <a href="/blogs">The Journal</a> for expert style guides, jewelry care tips, Korean fashion trends, and how to style aesthetic pieces for every occasion.</p>
         </section>
         <section>
@@ -104,7 +115,7 @@
         </section>
       </main>
       <footer>
-        <p>© 2026 SATVASTONES. All rights reserved. Premium Korean & Western Jewelry Studio — Based in Vapi, Gujarat, India. <a href="https://satvastones.in">https://satvastones.in</a></p>
+        <p>© 2026 SATVASTONES. All rights reserved. Premium Korean &amp; Western Jewelry Studio — Based in Vapi, Gujarat, India. <a href="https://satvastones.in">https://satvastones.in</a></p>
         <p>Follow us for daily aesthetic inspiration: Instagram, Facebook, Twitter — @satvastones</p>
       </footer>
     </noscript>

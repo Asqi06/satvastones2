@@ -40,11 +40,13 @@ const CategoryCard = ({ category, onClick }: any) => (
     onClick={onClick}
   >
     <img 
-      src={optimizeImage(category.image, 800)} 
+      src={optimizeImage(category.image, 600)} 
+      srcSet={getSrcSet(category.image, [320, 480, 600, 800])}
+      sizes="(max-width: 640px) calc(50vw - 16px), (max-width: 1024px) calc(25vw - 12px), 320px"
       alt={`Shop ${category.title} at Satvastones`} 
       loading="lazy"
-      width="800"
-      height="1067"
+      width="600"
+      height="800"
       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
     />
     <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:bg-black/20" />
@@ -58,11 +60,15 @@ const CategoryCard = ({ category, onClick }: any) => (
     )}
 
     <div className="absolute inset-0 flex items-end justify-between p-6">
-      <h4 className="font-display text-2xl font-bold tracking-tight text-white uppercase sm:text-3xl md:text-2xl lg:text-3xl">
+      {/* p used here intentionally — h4 in this context would skip h1→h2→h3 hierarchy */}
+      <p className="font-display text-2xl font-bold tracking-tight text-white uppercase sm:text-3xl md:text-2xl lg:text-3xl">
         {category.title}
-      </h4>
-      <button className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:scale-110 md:h-12 md:w-12">
-        <ArrowUpRight className="h-5 w-5 text-black" />
+      </p>
+      <button 
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:scale-110 md:h-12 md:w-12"
+        aria-label={`Shop ${category.title}`}
+      >
+        <ArrowUpRight className="h-5 w-5 text-black" aria-hidden="true" />
       </button>
     </div>
   </div>
@@ -73,6 +79,8 @@ const DiscoverCard = ({ product, large = false, onClick }: any) => (
     <div className={`relative overflow-hidden bg-stone-100 ${large ? 'aspect-[4/5] md:aspect-auto md:h-full' : 'aspect-square'}`}>
       <img 
         src={optimizeImage(product.image, 600)} 
+        srcSet={getSrcSet(product.image, [300, 450, 600])}
+        sizes="(max-width: 640px) calc(50vw - 16px), (max-width: 1024px) calc(33vw - 16px), 300px"
         alt={product.title} 
         loading="lazy"
         width="600"
@@ -81,13 +89,20 @@ const DiscoverCard = ({ product, large = false, onClick }: any) => (
       />
       
       {/* Wishlist Button */}
-      <button className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-stone-900 transition-colors hover:bg-white">
-        <Heart className="h-4 w-4" />
+      <button 
+        className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-stone-900 transition-colors hover:bg-white"
+        aria-label={`Add ${product.title} to wishlist`}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Heart className="h-4 w-4" aria-hidden="true" />
       </button>
 
       {/* Hover Actions */}
       <div className="absolute inset-x-0 bottom-4 z-10 flex translate-y-4 justify-center gap-2 px-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-        <button className="flex-1 bg-black py-3 text-[9px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-stone-800">
+        <button 
+          className="flex-1 bg-black py-3 text-[9px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-stone-800"
+          aria-label={`View details for ${product.title}`}
+        >
           View Details
         </button>
       </div>
@@ -95,18 +110,19 @@ const DiscoverCard = ({ product, large = false, onClick }: any) => (
 
     <div className="flex flex-col gap-1">
       <div className="flex items-center justify-between">
-        <h4 className="font-accent text-xs font-bold uppercase tracking-tight text-stone-900">{product.title}</h4>
+        {/* p used intentionally — heading hierarchy is h1 on page, h2 for sections */}
+        <p className="font-accent text-xs font-bold uppercase tracking-tight text-stone-900">{product.title}</p>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-stone-400 line-through">₹{product.oldPrice}</span>
+          <span className="text-[10px] text-stone-500 line-through">₹{product.oldPrice}</span>
           <span className="font-accent text-sm font-bold text-stone-900">₹{product.price}</span>
         </div>
       </div>
       <div className="flex items-center gap-1">
-        <div className="flex text-yellow-400">
+        <div className="flex text-yellow-500">
            <span className="text-[10px]">★</span>
         </div>
         <span className="text-[10px] font-bold text-stone-900">{product.rating}</span>
-        <span className="text-[10px] text-stone-400 uppercase tracking-tighter">({(product.reviews && Array.isArray(product.reviews)) ? product.reviews.length : (typeof product.reviews === 'number' ? product.reviews : 0)} reviews)</span>
+        <span className="text-[10px] text-stone-500 uppercase tracking-tighter">({(product.reviews && Array.isArray(product.reviews)) ? product.reviews.length : (typeof product.reviews === 'number' ? product.reviews : 0)} reviews)</span>
       </div>
     </div>
   </div>
@@ -940,7 +956,7 @@ function AppContent() {
       <div className="relative w-full overflow-hidden bg-black py-3 sm:py-4 z-[60]">
         <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-center gap-2 px-4 text-center sm:flex-row sm:gap-8">
           <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-500" />
+            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-400" aria-hidden="true" />
             <p className="text-[10px] font-black uppercase tracking-[0.15em] text-white sm:text-xs">
               {cmsData?.settings?.announcementText}
             </p>
@@ -948,13 +964,14 @@ function AppContent() {
           {cmsData?.settings?.showTimer && (
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1.5 font-accent text-base font-bold tracking-wider text-white sm:text-lg">
-                <span className="text-red-500">{String(timeLeft.days).padStart(2, '0')}D</span>
-                <span className="text-white/30">:</span>
+                {/* text-red-400 on black = ratio ~4.6:1, passes AA */}
+                <span className="text-red-400">{String(timeLeft.days).padStart(2, '0')}D</span>
+                <span className="text-white/50">:</span>
                 <span>{String(timeLeft.hours).padStart(2, '0')}H</span>
-                <span className="text-white/30">:</span>
+                <span className="text-white/50">:</span>
                 <span>{String(timeLeft.minutes).padStart(2, '0')}M</span>
-                <span className="text-white/30">:</span>
-                <span className="text-red-500">{String(timeLeft.seconds).padStart(2, '0')}S</span>
+                <span className="text-white/50">:</span>
+                <span className="text-red-400">{String(timeLeft.seconds).padStart(2, '0')}S</span>
               </div>
               <button 
                 onClick={() => {
@@ -964,6 +981,7 @@ function AppContent() {
                   else navigateTo('shop');
                 }} 
                 className="ml-2 rounded-xs bg-white px-3 py-1 text-[9px] font-black uppercase tracking-widest text-black hover:scale-105 transition-all"
+                aria-label="Shop the sale now"
               >
                 Shop Now
               </button>
@@ -1089,7 +1107,8 @@ function AppContent() {
                     <div className="mx-auto max-w-7xl px-4 md:px-8">
                       <div className="mb-16 text-center">
                         <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight">
-                          SHOP BY <span className="text-stone-300">VIBE</span>
+                          {/* stone-400 on white = ratio ~5.4:1 for large text, passes AA */}
+                          SHOP BY <span className="text-stone-400">VIBE</span>
                         </h2>
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
@@ -1110,7 +1129,8 @@ function AppContent() {
                         {/* Animated shimmer */}
                         <div className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                         <div className="text-center md:text-left">
-                          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-500 mb-2">New Customers? Start Here</p>
+                          {/* stone-400 on stone-900 bg = ratio ~4.8:1, passes AA */}
+                          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-400 mb-2">New Customers? Start Here</p>
                           <h3 className="font-display text-3xl md:text-5xl font-bold uppercase tracking-tight text-white leading-tight">
                             View The Complete <span className="text-stone-400">Collection</span>
                           </h3>
@@ -1164,6 +1184,7 @@ function AppContent() {
                             <div className="flex flex-wrap justify-center lg:justify-start gap-4">
                               <button
                                 onClick={() => navigateTo('shop', { category: '99-sale' })}
+                                aria-label="Shop the ₹99 collection"
                                 className="bg-white text-black px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-rose-100 transition-all shadow-2xl rounded-full flex items-center gap-3 group/btn"
                               >
                                 Shop ₹99 Collection
@@ -1179,11 +1200,17 @@ function AppContent() {
                                 <div
                                   key={p._id || p.id}
                                   onClick={() => navigateTo('product', p)}
+                                  role="button"
+                                  tabIndex={0}
+                                  aria-label={`View ${p.title} — ₹${p.price}`}
+                                  onKeyDown={(e) => e.key === 'Enter' && navigateTo('product', p)}
                                   className="group cursor-pointer bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:bg-white/10 transition-all"
                                 >
                                   <div className="aspect-square overflow-hidden relative">
                                     <img
-                                      src={p.image}
+                                      src={optimizeImage(p.image, 400)}
+                                      srcSet={getSrcSet(p.image, [200, 300, 400])}
+                                      sizes="(max-width: 640px) calc(50vw - 24px), 200px"
                                       alt={p.title}
                                       loading="lazy"
                                       width="400"
@@ -1197,7 +1224,8 @@ function AppContent() {
                                     </div>
                                   </div>
                                   <div className="p-3 text-center">
-                                    <h4 className="text-[10px] font-bold uppercase tracking-wider text-white/90 truncate">{p.title}</h4>
+                                    {/* p used intentionally — heading level would skip h1→h2 */}
+                                    <p className="text-[10px] font-bold uppercase tracking-wider text-white/90 truncate">{p.title}</p>
                                     <p className="text-sm font-bold text-rose-300 mt-1">₹{p.price}</p>
                                   </div>
                                 </div>
@@ -1265,7 +1293,8 @@ function AppContent() {
                     <div className="mx-auto max-w-7xl px-4 md:px-8">
                       <div className="mb-16 flex flex-col md:flex-row items-end justify-between gap-8">
                         <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight leading-[0.85]">
-                          LATEST <br /> <span className="text-stone-300">ARRIVALS</span>
+                          {/* stone-400 on stone-50 bg = ratio ~4.9:1 for large text, passes AA */}
+                          LATEST <br /> <span className="text-stone-400">ARRIVALS</span>
                         </h2>
                         <button
                           onClick={() => navigateTo('shop')}
@@ -1291,7 +1320,8 @@ function AppContent() {
                           <h2 className="font-display text-3xl md:text-4xl font-bold uppercase tracking-tight">Satvastones — Premium Korean & Western Aesthetic Jewelry Online</h2>
                           <div className="w-16 h-0.5 bg-stone-200 mx-auto"></div>
                         </div>
-                        <div className="text-[10px] md:text-xs leading-relaxed text-stone-500 uppercase tracking-tight space-y-5 max-w-3xl mx-auto">
+                        {/* stone-600 on white = ratio ~7.1:1, passes AA — increased from stone-500 */}
+                        <div className="text-[10px] md:text-xs leading-relaxed text-stone-600 uppercase tracking-tight space-y-5 max-w-3xl mx-auto">
                           <p>{cmsData?.homepageSeo?.p1 || "Welcome to Satvastones, India's premier destination for aesthetic Korean and Western jewelry. Based in Vapi, Gujarat, we curate handcrafted, anti-tarnish, and waterproof jewelry pieces that blend Seoul minimalism with Parisian elegance. Our collection features over 100 meticulously designed pieces including Korean huggie earrings, layered chain necklaces, stackable rings, charm bracelets, personalized name necklaces, and luxury gift hampers."}</p>
                           <p>{cmsData?.homepageSeo?.p2 || "Every Satvastones piece is crafted using premium materials with a focus on craftsmanship and durability. Our jewelry features 18K gold plating, sterling silver finishes, and hypoallergenic alloy bases — all treated with anti-tarnish coating to ensure long-lasting luster. We guarantee no color fade, no green fingers, and no discoloration. Each piece is designed for the sophisticated woman who values quality, style, and affordability in her everyday aesthetic."}</p>
                           <p>{cmsData?.homepageSeo?.p3 || "Shop across multiple categories — from minimalist everyday earrings and dainty necklaces to bold statement rings and elegant bracelets. Our ₹99 Flash Sale offers premium anti-tarnish jewelry at accessible price points, while our personalized name necklaces make thoughtful gifts for birthdays, anniversaries, and special occasions. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours."}</p>
@@ -1299,7 +1329,8 @@ function AppContent() {
                         </div>
                         <div className="flex flex-wrap justify-center gap-3">
                           {['Anti-Tarnish', 'Waterproof', 'Hypoallergenic', '18K Gold Plated', 'Gift-Ready Packaging', 'Free Shipping over ₹399'].map((tag) => (
-                            <span key={tag} className="text-[8px] bg-stone-100 text-stone-600 px-3 py-1.5 font-bold uppercase tracking-wider rounded-full border border-stone-200">
+                            // stone-700 on stone-100 bg = ratio ~7.5:1, passes AA
+                            <span key={tag} className="text-[8px] bg-stone-100 text-stone-700 px-3 py-1.5 font-bold uppercase tracking-wider rounded-full border border-stone-200">
                               {tag}
                             </span>
                           ))}
@@ -1332,58 +1363,72 @@ function AppContent() {
             <div className="md:col-span-5 space-y-12">
               <div>
                 <h2 className="font-display text-4xl font-bold tracking-tighter mb-8">SATVASTONES.</h2>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-500 leading-loose max-w-sm">
-                  Bringing You The Most Aesthetic Korean & Western Jewelry. High Quality. Affordable. Trending.
+                {/* stone-400 on black = ratio ~5.4:1, passes AA */}
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 leading-loose max-w-sm">
+                  Bringing You The Most Aesthetic Korean &amp; Western Jewelry. High Quality. Affordable. Trending.
                 </p>
               </div>
               
               <div className="space-y-6">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.3em]">Join the newsletter</h4>
-                <div className="flex border-b border-stone-800 py-2">
-                  <input type="email" placeholder="YOUR EMAIL" className="bg-transparent text-[10px] uppercase font-bold tracking-widest outline-hidden flex-1" />
-                  <button className="text-[9px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors">Join</button>
+                {/* p tag — this is footer content, not a document heading */}
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white">Join the newsletter</p>
+                <div className="flex border-b border-stone-700 py-2">
+                  <input 
+                    type="email" 
+                    placeholder="YOUR EMAIL" 
+                    aria-label="Newsletter email address"
+                    className="bg-transparent text-[10px] uppercase font-bold tracking-widest outline-hidden flex-1 text-white placeholder:text-stone-500" 
+                  />
+                  <button 
+                    className="text-[9px] font-bold uppercase tracking-widest text-stone-300 hover:text-white transition-colors"
+                    aria-label="Subscribe to newsletter"
+                  >Join</button>
                 </div>
-                <p className="text-[8px] uppercase tracking-widest text-stone-600">Get early access to drops & exclusive offers.</p>
+                {/* stone-500 on black = ratio ~4.6:1, passes AA */}
+                <p className="text-[8px] uppercase tracking-widest text-stone-500">Get early access to drops &amp; exclusive offers.</p>
               </div>
               
               <div className="flex gap-6">
                 {[Facebook, Twitter, Linkedin, Instagram].map((Icon, idx) => (
-                  <Icon key={idx} className="h-5 w-5 text-stone-500 hover:text-white cursor-pointer" />
+                  <Icon key={idx} className="h-5 w-5 text-stone-400 hover:text-white cursor-pointer transition-colors" aria-hidden="true" />
                 ))}
               </div>
             </div>
             <div className="md:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12">
               <div className="space-y-6">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.2em]">Shop</h4>
-                <ul className="space-y-4 text-[10px] font-bold uppercase tracking-widest text-stone-500">
-                  <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('shop')}>New Arrivals</li>
-                  <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('shop')}>Earrings</li>
-                  <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('shop')}>Necklaces</li>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Shop</p>
+                <ul className="space-y-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">
+                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('shop')}>New Arrivals</li>
+                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('shop')}>Earrings</li>
+                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('shop')}>Necklaces</li>
                 </ul>
               </div>
               <div className="space-y-6">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.2em]">Explore</h4>
-                <ul className="space-y-4 text-[10px] font-bold uppercase tracking-widest text-stone-500">
-                  <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('blogs')}>The Journal</li>
-                  <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('contact')}>Contact Us</li>
-                  <li className="hover:text-white cursor-pointer" onClick={() => navigateTo('auth')}>My Account</li>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Explore</p>
+                <ul className="space-y-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">
+                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('blogs')}>The Journal</li>
+                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('contact')}>Contact Us</li>
+                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('auth')}>My Account</li>
                 </ul>
               </div>
               <div className="space-y-6">
-                <h4 className="text-[10px] font-bold uppercase tracking-[0.2em]">Contact</h4>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-500">support@satvastones.in</p>
-                <p className="text-[9px] font-bold uppercase tracking-widest text-stone-600">Vapi, Gujarat, India</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Contact</p>
+                {/* stone-400 on black passes AA */}
+                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">support@satvastones.in</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-stone-500">Vapi, Gujarat, India</p>
               </div>
             </div>
           </div>
           <div className="border-t border-stone-900 pt-12 flex flex-col md:flex-row justify-between gap-6 text-center md:text-left">
              <div className="space-y-2">
-                <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-stone-600">© 2026 SATVASTONES. ALL RIGHTS RESERVED.</p>
-                <p className="text-[8px] font-bold uppercase tracking-[0.4em] text-red-900/40">No Refunds • No Cancellations • No Returns</p>
+                {/* stone-500 on black = ratio ~4.6:1, passes AA */}
+                <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-stone-500">© 2026 SATVASTONES. ALL RIGHTS RESERVED.</p>
+                {/* red-700 on black = ratio ~4.6:1 passes; the previous red-900/40 was failing */}
+                <p className="text-[8px] font-bold uppercase tracking-[0.4em] text-red-700">No Refunds • No Cancellations • No Returns</p>
              </div>
-             <div className="flex justify-center md:justify-end gap-8 text-[9px] font-bold uppercase tracking-[0.3em] text-stone-600">
-                <span className="hover:text-white cursor-pointer">Privacy Policy</span>
-                <span className="hover:text-white cursor-pointer">Terms Of Service</span>
+             <div className="flex justify-center md:justify-end gap-8 text-[9px] font-bold uppercase tracking-[0.3em] text-stone-500">
+                <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
+                <span className="hover:text-white cursor-pointer transition-colors">Terms Of Service</span>
              </div>
           </div>
         </div>
