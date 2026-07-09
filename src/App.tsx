@@ -22,6 +22,7 @@ import AuthPage from './components/AuthPage';
 import SearchOverlay from './components/SearchOverlay';
 import OrderSuccessPage from './components/OrderSuccessPage';
 import { optimizeImage } from './utils/cloudinary';
+import { analytics } from './utils/analytics';
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
@@ -430,6 +431,10 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
   const { slug } = useParams();
   const product = cmsData?.products?.find((p: any) => p.slug === slug || p._id === slug || p.id === slug);
 
+  useEffect(() => {
+    if (product) analytics.trackCustom('view_product', { productId: product._id || product.id, title: product.title, price: product.price, category: product.category });
+  }, [product?._id]);
+
   if (!product) {
     return (
       <>
@@ -719,6 +724,19 @@ function AppContent() {
     fetchData();
   }, []);
 
+  // Initialize analytics tracking
+  useEffect(() => {
+    analytics.init();
+    return () => analytics.destroy();
+  }, []);
+
+  // Track page views on route change
+  useEffect(() => {
+    if (window.location.pathname !== '/aniadmin') {
+      setTimeout(() => analytics.trackPageView(), 300);
+    }
+  }, [location.pathname]);
+
   useEffect(() => {
     // URL-based Admin Access
     if (window.location.pathname === '/aniadmin') {
@@ -756,6 +774,7 @@ function AppContent() {
       const baseId = item._id || item.id;
       const key = `${baseId}|${item.variant || ''}|${item.customText || ''}`;
       const existing = prev.find(p => `${p._id || p.id}|${p.variant || ''}|${p.customText || ''}` === key);
+      analytics.trackCustom('add_to_cart', { productId: baseId, title: item.title, price: item.price, variant: item.variant });
       if (existing) {
         return prev.map(p => `${p._id || p.id}|${p.variant || ''}|${p.customText || ''}` === key
           ? { ...p, qty: (p.qty || 1) + (item.qty || 1) }

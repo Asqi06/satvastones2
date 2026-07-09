@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CreditCard, Truck, ShieldCheck, Zap, ArrowLeft, ArrowRight, Wallet } from 'lucide-react';
+import { analytics } from '../utils/analytics';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
@@ -37,6 +38,10 @@ export default function CheckoutPage({
       pincode: ''
     };
   });
+
+  useEffect(() => {
+    analytics.trackCustom('checkout_start', { itemCount: cart.length, total: cart.reduce((s, i) => s + (i.price || 0) * (i.qty || 1), 0) });
+  }, []);
 
   React.useEffect(() => {
     localStorage.setItem('checkout_form', JSON.stringify(formData));

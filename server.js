@@ -260,6 +260,18 @@ const cartSchema = new mongoose.Schema({
 
 const Cart = mongoose.model('Cart', cartSchema);
 
+// --- Analytics Schema ---
+const analyticsEventSchema = new mongoose.Schema({
+  sessionId: { type: String, index: true },
+  eventType: { type: String, index: true },
+  page: String,
+  timestamp: { type: Date, default: Date.now, index: true },
+  data: { type: mongoose.Schema.Types.Mixed },
+  metadata: { type: mongoose.Schema.Types.Mixed }
+});
+analyticsEventSchema.index({ sessionId: 1, timestamp: -1 });
+const AnalyticsEvent = mongoose.model('AnalyticsEvent', analyticsEventSchema);
+
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID);
 
 
@@ -846,6 +858,158 @@ app.post('/api/cart/sync', async (req, res) => {
       { items, lastUpdated: new Date(), reminderSent: false },
       { upsert: true, new: true }
     );
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// --- Analytics Routes ---
+
+// POST /api/analytics/events — batch insert events
+app.post('/api/analytics/events', async (req, res) => {
+  try {
+    const { events } = req.body;
+    if (!events || !Array.isArray(events) || events.length === 0) return res.json({ success: true });
+
+    const docs = events.map((e) => ({
+      sessionId: e.sessionId,
+      eventType: e.eventType,
+      page: e.page,
+      timestamp: e.timestamp ? new Date(e.timestamp) : new Date(),
+      data: e.data || {},
+      metadata: {
+        userAgent: req.headers['user-agent'] || '',
+        referrer: req.headers['referer'] || '',
+        ip: req.ip || req.connection?.remoteAddress || '',
+      }
+    }));
+
+    await AnalyticsEvent.insertMany(docs);
+    res.json({ success: true, count: docs.length });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/analytics/stats — aggregated dashboard stats
+app.get('/api/analytics/stats', async (req, res) => {
+  try {
+    const totalEvents = await AnalyticsEvent.countDocuments({});
+    const totalPageViews = await AnalyticsEvent.countDocuments({ eventType: 'page_view' });
+    const totalClicks = await AnalyticsEvent.countDocuments({ eventType: 'click' });
+
+    // Unique sessions
+    const sessions = await AnalyticsEvent.distinct('sessionId');
+    const totalSessions = sessions.length;
+
+    // Page views per page
+    const pageViewsPerPage = await AnalyticsEvent.aggregate([
+      { $match: { eventType: 'page_view' } },
+      { $group: { _id: '$page', count: { $sum: 1 } } },
+      { $sort: { count: -1 } }
+    ]);
+
+    // Click heatmap — most clicked elements per page
+    const clickHeatmap = await AnalyticsEvent.aggregate([
+      { $match: { eventType: 'click', 'data.selector': { $exists: true } } },
+      { $group: { _id: { page: '$page', selector: '$data.selector' }, count: { $sum: 1 }, texts: { $addToSet: '$data.text' } } },
+      { $sort: { count: -1 } },
+      { $limit: 100 }
+    ]);
+
+    // Scroll depth distribution
+    const scrollDepths = await AnalyticsEvent.aggregate([
+      { $match: { eventType: 'scroll' } },
+      { $group: { _id: '$data.depth', count: { $sum: 1 } } },
+      { $sort: { _id: 1 } }
+    ]);
+
+    // Conversion funnel
+    const funnel = await AnalyticsEvent.aggregate([
+      { $match: { eventType: { $in: ['page_view', 'view_product', 'add_to_cart', 'checkout_start', 'purchase'] } } },
+      { $group: { _id: '$eventType', count: { $sum: 1 } } }
+    ]);
+
+    // Events in last 24 hours
+    const last24h = await AnalyticsEvent.countDocuments({
+      timestamp: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+    });
+
+    // Sessions in last 24h
+    const recentSessions = await AnalyticsEvent.distinct('sessionId', {
+      timestamp: { $gte: new Date(Date.now() - 24 * 60 * 60 * 1000) }
+    });
+
+    res.json({
+      totals: { events: totalEvents, pageViews: totalPageViews, clicks: totalClicks, sessions: totalSessions },
+      last24h: { events: last24h, sessions: recentSessions.length },
+      pageViewsPerPage,
+      clickHeatmap,
+      scrollDepths,
+      funnel
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/analytics/events — paginated raw events
+app.get('/api/analytics/events', async (req, res) => {
+  try {
+    const { page = '1', limit = '50', eventType, sessionId } = req.query;
+    const filter = {};
+    if (eventType) filter.eventType = eventType;
+    if (sessionId) filter.sessionId = sessionId;
+
+    const total = await AnalyticsEvent.countDocuments(filter);
+    const events = await AnalyticsEvent.find(filter)
+      .sort({ timestamp: -1 })
+      .skip((Number(page) - 1) * Number(limit))
+      .limit(Number(limit))
+      .lean();
+
+    // Merge metadata into each event for frontend
+    const merged = events.map((e) => ({ ...e, ...(e.metadata || {}) }));
+
+    res.json({ events: merged, total, page: Number(page), pages: Math.ceil(total / Number(limit)) });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/analytics/sessions — recent sessions with summary
+app.get('/api/analytics/sessions', async (req, res) => {
+  try {
+    const sessions = await AnalyticsEvent.aggregate([
+      { $group: {
+        _id: '$sessionId',
+        firstEvent: { $min: '$timestamp' },
+        lastEvent: { $max: '$timestamp' },
+        events: { $sum: 1 },
+        pageViews: { $sum: { $cond: [{ $eq: ['$eventType', 'page_view'] }, 1, 0] } },
+        clicks: { $sum: { $cond: [{ $eq: ['$eventType', 'click'] }, 1, 0] } },
+        pages: { $addToSet: '$page' }
+      }},
+      { $sort: { lastEvent: -1 } },
+      { $limit: 50 }
+    ]);
+
+    res.json({ sessions });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// DELETE /api/analytics/events — clear all analytics data
+app.delete('/api/analytics/events', async (req, res) => {
+  try {
+    const { sessionId } = req.query;
+    if (sessionId) {
+      await AnalyticsEvent.deleteMany({ sessionId });
+    } else {
+      await AnalyticsEvent.deleteMany({});
+    }
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -1,11 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ShoppingBag, ArrowRight, Mail, MapPin, Truck } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { analytics } from '../utils/analytics';
 
 export default function OrderSuccessPage() {
   const location = useLocation();
   const order = location.state?.order;
+
+  useEffect(() => {
+    if (order) {
+      analytics.trackCustom('purchase', {
+        orderId: order._id || order.orderId,
+        amount: order.amount,
+        discountAmount: order.discountAmount,
+        couponCode: order.couponCode,
+        itemCount: order.items?.length,
+      });
+    }
+  }, [order]);
 
   // Fallback if no order data (e.g. direct URL access)
   if (!order) {
