@@ -5,7 +5,7 @@ import {
   Settings, Package, ShoppingCart, Users, Image as ImageIcon, 
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
   CheckCircle, Clock, ChevronRight, UploadCloud, TrendingUp, ShoppingBag,
-  Menu, ShieldCheck, Search, Barcode as BarcodeIcon
+  Menu, ShieldCheck, Search, Barcode as BarcodeIcon, Video
 } from 'lucide-react';
 import { openUploadWidget } from '../utils/cloudinary';
 
@@ -1172,6 +1172,39 @@ export default function AdminPanel({
                     <span className="text-[8px] font-bold uppercase">Add Image</span>
                   </button>
                 </div>
+              </div>
+
+              <div className="col-span-full space-y-4">
+                <label className="text-[10px] font-bold uppercase text-stone-500">Product Video</label>
+                <div className="flex items-center gap-4">
+                  {(editingProduct ? editingProduct.video : newProduct.video) ? (
+                    <div className="relative w-32 aspect-square bg-stone-100 border border-stone-200 group">
+                      <video src={editingProduct ? editingProduct.video : newProduct.video} className="w-full h-full object-cover" muted />
+                      <button
+                        onClick={() => {
+                          editingProduct ? setEditingProduct({...editingProduct, video: ''}) : setNewProduct({...newProduct, video: ''});
+                        }}
+                        className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="w-32 aspect-square border-2 border-dashed border-stone-200 flex flex-col items-center justify-center gap-1">
+                      <Video className="h-5 w-5 text-stone-400" />
+                      <span className="text-[8px] font-bold uppercase text-stone-400">No Video</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => openUploadWidget((url) => {
+                      editingProduct ? setEditingProduct({...editingProduct, video: url}) : setNewProduct({...newProduct, video: url});
+                    }, cloudinaryConfig, 'video')}
+                    className="px-4 py-3 bg-stone-100 hover:bg-stone-200 text-[10px] font-bold uppercase tracking-widest transition-all border border-stone-200"
+                  >
+                    <UploadCloud className="h-4 w-4 inline mr-2" /> Upload Video
+                  </button>
+                </div>
+                <p className="text-[9px] text-stone-400 italic">Upload a product showcase video. On desktop it plays on hover; on mobile tap to play.</p>
               </div>
 
               <div className="col-span-full space-y-4">

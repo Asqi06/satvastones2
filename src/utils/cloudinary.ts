@@ -128,7 +128,7 @@ export const getPlaceholder = (url: string): string => {
  * Opens the Cloudinary Upload Widget.
  * Requires the script to be loaded in index.html.
  */
-export const openUploadWidget = (callback: (url: string) => void, config?: { cloudName?: string, uploadPreset?: string }) => {
+export const openUploadWidget = (callback: (url: string) => void, config?: { cloudName?: string, uploadPreset?: string }, resourceType: 'image' | 'video' = 'image') => {
   const cloudName = config?.cloudName || import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = config?.uploadPreset || import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
@@ -148,7 +148,8 @@ export const openUploadWidget = (callback: (url: string) => void, config?: { clo
       uploadPreset: uploadPreset,
       sources: ['local', 'url', 'camera'],
       multiple: false,
-      cropping: true,
+      resourceType: resourceType,
+      cropping: resourceType === 'image',
       styles: {
         palette: {
           window: "#FFFFFF",

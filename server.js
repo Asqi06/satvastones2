@@ -49,6 +49,7 @@ const productSchema = new mongoose.Schema({
   reviewsCount: Number,
   image: String,
   images: [String],
+  video: String,
   category: String,
   description: String,
   customOptions: [String],
