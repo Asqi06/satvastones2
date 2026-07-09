@@ -31,8 +31,17 @@ export async function POST(request: Request) {
         user: true,
         items: true,
         shippingAddress: true,
+        coupon: { select: { code: true } },
       },
     });
+
+    // Increment coupon usage count if a coupon was applied
+    if (order.couponId) {
+      await prisma.coupon.update({
+        where: { id: order.couponId },
+        data: { usedCount: { increment: 1 } },
+      });
+    }
 
     // Send order confirmation email
     if (order.user.email) {
@@ -69,6 +78,10 @@ export async function POST(request: Request) {
                   ${itemsHtml}
                 </tbody>
               </table>
+              ${order.couponCode ? `<div style="margin-top: 16px; padding: 12px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px; text-align: center;">
+                <p style="color: #9ca3af; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">Coupon Applied</p>
+                <p style="color: #C9A96E; font-size: 16px; font-weight: bold; letter-spacing: 3px; margin-top: 4px;">${order.couponCode}</p>
+              </div>` : ""}
               <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid #2a2a2a; text-align: right;">
                 <p style="color: #9ca3af; font-size: 14px;">Total: <span style="color: #C9A96E; font-size: 18px; font-weight: bold;">₹${order.finalAmount}</span></p>
               </div>

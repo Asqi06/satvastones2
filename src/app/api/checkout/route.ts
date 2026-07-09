@@ -13,7 +13,7 @@ export async function POST(request: Request) {
 
     const userId = (session.user as any).id;
     const body = await request.json();
-    const { items, shippingAddressId, totalAmount, discountAmount, shippingAmount, finalAmount } = body;
+    const { items, shippingAddressId, totalAmount, discountAmount, shippingAmount, finalAmount, couponId, couponCode } = body;
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
@@ -39,6 +39,8 @@ export async function POST(request: Request) {
         paymentMethod: "razorpay",
         paymentId: razorpayOrder.id,
         paymentStatus: "PENDING",
+        couponId: couponId || null,
+        couponCode: couponCode || null,
         items: {
           create: items.map((item: any) => ({
             productId: item.productId,

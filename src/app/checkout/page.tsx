@@ -25,6 +25,7 @@ export default function CheckoutPage() {
   const [showNewAddress, setShowNewAddress] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [couponId, setCouponId] = useState("");
   const [couponError, setCouponError] = useState("");
 
   const [newAddress, setNewAddress] = useState({
@@ -85,6 +86,7 @@ export default function CheckoutPage() {
         setCouponError(data.error);
       } else {
         setDiscount(data.discount);
+        setCouponId(data.couponId);
       }
     } catch {
       setCouponError("Failed to apply coupon");
@@ -133,6 +135,8 @@ export default function CheckoutPage() {
           discountAmount: discount,
           shippingAmount: shipping,
           finalAmount: total,
+          couponId: couponId || undefined,
+          couponCode: couponId ? couponCode : undefined,
         }),
       });
 

@@ -10,6 +10,7 @@ export default async function AdminOrdersPage() {
       include: {
         user: { select: { name: true, email: true } },
         items: true,
+        coupon: { select: { code: true } },
       },
       orderBy: { createdAt: "desc" },
     });
@@ -44,6 +45,7 @@ export default async function AdminOrdersPage() {
                 <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">Customer</th>
                 <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">Items</th>
                 <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">Total</th>
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">Coupon</th>
                 <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">Payment</th>
                 <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">Status</th>
                 <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">Date</th>
@@ -62,6 +64,15 @@ export default async function AdminOrdersPage() {
                   <td className="px-8 py-6 text-luxury-brown/60 text-[10px] tracking-widest uppercase font-bold">{order.items.length} items</td>
                   <td className="px-8 py-6 text-luxury-brown text-sm font-bold">
                     {formatPrice(order.finalAmount)}
+                  </td>
+                  <td className="px-8 py-6">
+                    {order.couponCode ? (
+                      <span className="text-[10px] px-3 py-1 border border-luxury-gold/30 text-luxury-gold bg-luxury-gold/5 font-bold uppercase tracking-[0.2em]">
+                        {order.couponCode}
+                      </span>
+                    ) : (
+                      <span className="text-luxury-brown/20 text-[9px] tracking-[0.2em] uppercase font-bold">—</span>
+                    )}
                   </td>
                   <td className="px-8 py-6">
                     <span
