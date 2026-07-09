@@ -178,9 +178,14 @@ export default function AdminPanel({
 
   const handleSaveCMS = async () => {
     setIsSaving(true);
-    await onUpdateCMS(tempCMSData);
-    setIsSaving(false);
-    alert('Changes saved successfully!');
+    try {
+      await onUpdateCMS(tempCMSData);
+      alert('Changes saved successfully!');
+    } catch (err: any) {
+      alert('Failed to save: ' + (err?.message || 'Unknown error. Is the server running?'));
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const cloudinaryConfig = {

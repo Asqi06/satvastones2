@@ -332,7 +332,7 @@ const razorpay = new Razorpay({
 
 app.get('/api/cms', async (req, res) => {
   try {
-    let cms = await CMS.findOne();
+    let cms = await CMS.findOne().lean();
     if (!cms) {
       return res.json({ message: 'initialized', hero: {}, categories: [], specialOffer: {}, settings: {}, coupons: [] });
     }
@@ -344,28 +344,20 @@ app.get('/api/cms', async (req, res) => {
 
 app.post('/api/cms', async (req, res) => {
   try {
-    let cms = await CMS.findOne();
-    if (cms) {
-      // Smart Merge: Don't overwrite the whole object, only the parts sent in the request
-      if (req.body.hero) cms.hero = { ...cms.hero, ...req.body.hero };
-      if (req.body.specialOffer) cms.specialOffer = { ...cms.specialOffer, ...req.body.specialOffer };
-      if (req.body.ninetyNineSale) cms.ninetyNineSale = { ...cms.ninetyNineSale, ...req.body.ninetyNineSale };
-      if (req.body.settings) cms.settings = { ...cms.settings, ...req.body.settings };
-      if (req.body.categories) cms.categories = req.body.categories;
-      if (req.body.coupons) cms.coupons = req.body.coupons;
-      
-      cms.markModified('hero');
-      cms.markModified('specialOffer');
-      cms.markModified('ninetyNineSale');
-      cms.markModified('settings');
-      cms.markModified('categories');
-      cms.markModified('coupons');
-      
-      await cms.save();
-    } else {
-      cms = new CMS(req.body);
-      await cms.save();
-    }
+    const existing = await CMS.findOne().lean();
+    const updateData = {};
+    if (req.body.hero) updateData.hero = { ...(existing?.hero || {}), ...req.body.hero };
+    if (req.body.specialOffer) updateData.specialOffer = { ...(existing?.specialOffer || {}), ...req.body.specialOffer };
+    if (req.body.ninetyNineSale) updateData.ninetyNineSale = { ...(existing?.ninetyNineSale || {}), ...req.body.ninetyNineSale };
+    if (req.body.settings) updateData.settings = { ...(existing?.settings || {}), ...req.body.settings };
+    if (req.body.categories) updateData.categories = req.body.categories;
+    if (req.body.coupons !== undefined) updateData.coupons = req.body.coupons;
+
+    const cms = await CMS.findOneAndUpdate(
+      {},
+      { $set: updateData },
+      { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: false }
+    ).lean();
     res.json(cms);
   } catch (err) {
     console.error("CMS SAVE ERROR:", err);

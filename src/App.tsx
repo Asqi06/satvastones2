@@ -809,10 +809,15 @@ function AppContent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newData)
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || `Save failed (${res.status})`);
+      }
       const updated = await res.json();
       setCmsData(prev => ({ ...prev, ...updated }));
     } catch (err) {
       console.error("Failed to update CMS:", err);
+      throw err;
     }
   };
 
