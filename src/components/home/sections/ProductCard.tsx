@@ -1,14 +1,32 @@
-import { Heart, Play, Pause } from 'lucide-react';
+import { Heart } from 'lucide-react';
 import { motion } from 'motion/react';
-import React, { useRef, useState, useCallback } from 'react';
-
-const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 export default function ProductCard({ product, onAddToCart, onWishlist, onNavigate }: any) {
   const discount = product.discount ||
     (product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoPlaying, setVideoPlaying] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [videoActive, setVideoActive] = useState(false);
+
+  useEffect(() => {
+    if (!product.video || !containerRef.current) return;
+    const el = containerRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const v = videoRef.current;
+          if (v) { v.currentTime = 0; v.play().catch(() => {}); setVideoActive(true); }
+        } else {
+          videoRef.current?.pause();
+          setVideoActive(false);
+        }
+      },
+      { rootMargin: '0px 0px -50% 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [product.video]);
 
   const handleClick = () => {
     const slug = product.slug || product._id || product.id;
@@ -16,36 +34,11 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
   };
 
   const handleMouseEnter = useCallback(() => {
-    if (isTouchDevice || !product.video) return;
-    if (videoRef.current) {
-      videoRef.current.currentTime = 0;
-      videoRef.current.play().catch(() => {});
-      setVideoPlaying(true);
-    }
+    if (!product.video || !videoRef.current) return;
+    videoRef.current.currentTime = 0;
+    videoRef.current.play().catch(() => {});
+    setVideoActive(true);
   }, [product.video]);
-
-  const handleMouseLeave = useCallback(() => {
-    if (isTouchDevice || !product.video) return;
-    if (videoRef.current) {
-      videoRef.current.pause();
-      setVideoPlaying(false);
-    }
-  }, [product.video]);
-
-  const handleVideoClick = useCallback((e: React.MouseEvent) => {
-    if (!isTouchDevice || !product.video) return;
-    e.stopPropagation();
-    if (videoRef.current) {
-      if (videoPlaying) {
-        videoRef.current.pause();
-        setVideoPlaying(false);
-      } else {
-        videoRef.current.currentTime = 0;
-        videoRef.current.play().catch(() => {});
-        setVideoPlaying(true);
-      }
-    }
-  }, [product.video, videoPlaying]);
 
   return (
     <motion.div
@@ -57,17 +50,18 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
       onClick={handleClick}
     >
       <div
+        ref={containerRef}
         className="relative mb-3 aspect-square w-full overflow-hidden rounded-[16px] bg-[#F2EBE1]"
         onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
       >
-        {product.video && videoPlaying ? (
+        {product.video && videoActive ? (
           <video
             ref={videoRef}
             src={product.video}
             muted
             loop
             playsInline
+            preload="metadata"
             className="h-full w-full object-cover"
           />
         ) : (
@@ -83,28 +77,6 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
               {product.title?.slice(0, 2) || 'SV'}
             </div>
           )
-        )}
-
-        {isTouchDevice && product.video && !videoPlaying && (
-          <button
-            onClick={handleVideoClick}
-            className="absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity hover:bg-black/30 z-10"
-            aria-label="Play video"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg">
-              <Play className="h-5 w-5 ml-0.5 text-[#3D2B24]" />
-            </div>
-          </button>
-        )}
-
-        {isTouchDevice && product.video && videoPlaying && (
-          <button
-            onClick={handleVideoClick}
-            className="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/60"
-            aria-label="Pause video"
-          >
-            <Pause className="h-3.5 w-3.5 text-white" />
-          </button>
         )}
 
         {discount > 0 && (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, ChevronDown, Filter, LayoutGrid, Square, ArrowUpRight, ArrowRight, CheckCircle, Play, Pause } from 'lucide-react';
+import { Search, ChevronDown, Filter, LayoutGrid, Square, ArrowUpRight, ArrowRight, CheckCircle } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const CATEGORIES = [
@@ -35,7 +35,7 @@ export default function ShopPage({
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
   const videoRefs = useRef<Record<string, HTMLVideoElement>>({});
-  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const containerRefs = useRef<Record<string, HTMLDivElement>>({});
   const collectionSeo = cmsData?.collectionSeo || {};
 
   // Sync state if URL path changes
@@ -82,6 +82,30 @@ export default function ShopPage({
   } else if (sortBy === 'Featured') {
     filteredProducts.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0));
   }
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          const pid = entry.target.getAttribute('data-pid');
+          if (!pid || !videoRefs.current[pid]) return;
+          if (entry.isIntersecting) {
+            const v = videoRefs.current[pid];
+            v.currentTime = 0;
+            v.play().catch(() => {});
+            setActiveVideoId(pid);
+          } else {
+            videoRefs.current[pid]?.pause();
+            setActiveVideoId(prev => prev === pid ? null : prev);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -50% 0px' }
+    );
+    const containers = containerRefs.current;
+    Object.keys(containers).forEach(pid => { const el = containers[pid]; if (el) observer.observe(el); });
+    return () => observer.disconnect();
+  }, [filteredProducts]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -197,19 +221,14 @@ export default function ShopPage({
               onClick={() => onSelectProduct(product)}
             >
               <div
+                data-pid={pid}
+                ref={(el) => { if (el) containerRefs.current[pid] = el; }}
                 className={`relative overflow-hidden bg-stone-100 ${viewMode === 'grid' ? 'aspect-[4/5]' : 'aspect-square'}`}
                 onMouseEnter={() => {
-                  if (!isTouch && product.video && videoRefs.current[pid]) {
-                    const v = videoRefs.current[pid];
-                    v.currentTime = 0;
-                    v.play().catch(() => {});
+                  if (product.video && videoRefs.current[pid]) {
+                    videoRefs.current[pid].currentTime = 0;
+                    videoRefs.current[pid].play().catch(() => {});
                     setActiveVideoId(pid);
-                  }
-                }}
-                onMouseLeave={() => {
-                  if (!isTouch && videoRefs.current[pid]) {
-                    videoRefs.current[pid].pause();
-                    setActiveVideoId(null);
                   }
                 }}
               >
@@ -220,6 +239,7 @@ export default function ShopPage({
                     muted
                     loop
                     playsInline
+                    preload="metadata"
                     className="h-full w-full object-cover"
                   />
                 ) : (
@@ -233,40 +253,6 @@ export default function ShopPage({
                   />
                 )}
                 <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />
-
-                {/* Mobile play button */}
-                {isTouch && product.video && activeVideoId !== pid && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (videoRefs.current[pid]) {
-                        const v = videoRefs.current[pid];
-                        v.currentTime = 0;
-                        v.play().catch(() => {});
-                        setActiveVideoId(pid);
-                      }
-                    }}
-                    className="absolute inset-0 z-10 flex items-center justify-center bg-black/10"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg">
-                      <Play className="h-5 w-5 ml-0.5 text-stone-900" />
-                    </div>
-                  </button>
-                )}
-                {isTouch && product.video && activeVideoId === pid && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (videoRefs.current[pid]) {
-                        videoRefs.current[pid].pause();
-                        setActiveVideoId(null);
-                      }
-                    }}
-                    className="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/50"
-                  >
-                    <Pause className="h-3.5 w-3.5 text-white" />
-                  </button>
-                )}
                 
                 {/* Sold Out Badge */}
                 {(product.stockQuantity || 0) <= 0 && (

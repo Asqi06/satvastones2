@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft, Heart, ShoppingBag, Star, ChevronDown, ChevronUp,
-  ArrowUpRight, Truck, RefreshCcw, ShieldCheck, ChevronLeft, ChevronRight, Zap, Mail, Play, Pause
+  ArrowUpRight, Truck, RefreshCcw, ShieldCheck, ChevronLeft, ChevronRight, Zap, Mail
 } from 'lucide-react';
 import { optimizeImage } from '../utils/cloudinary';
 import { Link } from 'react-router-dom';
@@ -48,8 +48,8 @@ export default function ProductPage({
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
   const [customText, setCustomText] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [videoPlaying, setVideoPlaying] = useState(false);
-  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
   // Dynamic Image Logic: Use variant images if a variant is selected, otherwise fallback to main images
   const images = selectedVariant && selectedVariant.images?.length > 0 
@@ -64,6 +64,25 @@ export default function ProductPage({
     setSelectedVariant(null);
     setActiveImage(0);
   }, [product]);
+
+  useEffect(() => {
+    if (!product.video || !containerRef.current) return;
+    const el = containerRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const v = videoRef.current;
+          if (v) { v.currentTime = 0; v.play().catch(() => {}); setVideoPlaying(true); }
+        } else {
+          videoRef.current?.pause();
+          setVideoPlaying(false);
+        }
+      },
+      { rootMargin: '0px 0px -50% 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [product.video]);
 
   const styles = ['Standard Polish', 'Matte Finish', 'Vintage Aesthetic'];
 
@@ -90,18 +109,13 @@ export default function ProductPage({
           <div className="flex flex-col gap-4">
             {/* Main Image */}
             <div
+              ref={containerRef}
               className="relative aspect-square overflow-hidden bg-stone-100 group"
               onMouseEnter={() => {
-                if (!isTouch && product.video && videoRef.current) {
+                if (product.video && videoRef.current) {
                   videoRef.current.currentTime = 0;
                   videoRef.current.play().catch(() => {});
                   setVideoPlaying(true);
-                }
-              }}
-              onMouseLeave={() => {
-                if (!isTouch && videoRef.current) {
-                  videoRef.current.pause();
-                  setVideoPlaying(false);
                 }
               }}
             >
@@ -112,6 +126,7 @@ export default function ProductPage({
                   muted
                   loop
                   playsInline
+                  preload="metadata"
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -132,39 +147,6 @@ export default function ProductPage({
               >
                 <Heart className={`h-5 w-5 transition-colors ${wishlisted ? 'fill-red-500 stroke-red-500' : 'stroke-stone-400'}`} />
               </button>
-
-              {/* Video play button for mobile */}
-              {isTouch && product.video && !videoPlaying && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (videoRef.current) {
-                      videoRef.current.currentTime = 0;
-                      videoRef.current.play().catch(() => {});
-                      setVideoPlaying(true);
-                    }
-                  }}
-                  className="absolute inset-0 z-10 flex items-center justify-center bg-black/10"
-                >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-lg">
-                    <Play className="h-6 w-6 ml-0.5 text-stone-900" />
-                  </div>
-                </button>
-              )}
-              {isTouch && product.video && videoPlaying && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (videoRef.current) {
-                      videoRef.current.pause();
-                      setVideoPlaying(false);
-                    }
-                  }}
-                  className="absolute top-4 right-16 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50"
-                >
-                  <Pause className="h-4 w-4 text-white" />
-                </button>
-              )}
 
               {/* Anti-Tarnish Badge on Image */}
               {product.isAntiTarnish && (
