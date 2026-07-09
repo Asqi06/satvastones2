@@ -102,7 +102,9 @@ export default function CheckoutPage({
           customer: formData,
           items: cart,
           amount: total,
-          paymentMethod: 'COD'
+          paymentMethod: 'COD',
+          couponCode: activeCoupon?.code || null,
+          discountAmount: discountAmount
         };
         const res = await fetch(`${API_URL}/verify-payment`, {
           method: 'POST',
@@ -163,7 +165,9 @@ export default function CheckoutPage({
                   customer: formData,
                   items: cart,
                   amount: total,
-                  paymentMethod: 'Razorpay'
+                  paymentMethod: 'Razorpay',
+                  couponCode: activeCoupon?.code || null,
+                  discountAmount: discountAmount
                 }
               })
             });

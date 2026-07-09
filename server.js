@@ -209,6 +209,8 @@ const orderSchema = new mongoose.Schema({
     options: [String]
   }],
   amount: Number,
+  discountAmount: Number,
+  couponCode: String,
   status: { type: String, default: 'Pending' },
   trackingId: String,
   paymentMethod: String,

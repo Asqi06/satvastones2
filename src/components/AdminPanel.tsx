@@ -316,7 +316,10 @@ export default function AdminPanel({
                             <p className="text-[10px] font-bold uppercase">{order.customer?.name}</p>
                             <p className="text-[9px] text-stone-400 uppercase">{order.customer?.city}</p>
                           </td>
-                          <td className="py-4 text-[10px] font-bold uppercase text-stone-900">₹{order.amount}</td>
+                          <td className="py-4">
+                            <p className="text-[10px] font-bold uppercase text-stone-900">₹{order.amount}</p>
+                            {order.couponCode && <p className="text-[7px] text-amber-600 uppercase tracking-widest font-bold">{order.couponCode}</p>}
+                          </td>
                           <td className="py-4 text-[9px] text-stone-400 uppercase">{new Date(order.createdAt).toLocaleDateString()}</td>
                         </tr>
                       ))}
@@ -1056,6 +1059,9 @@ export default function AdminPanel({
                   <div className="flex items-center gap-8">
                     <div className="text-right">
                       <p className="text-[11px] font-bold">₹{order.amount || 0}</p>
+                      {order.couponCode && (
+                        <p className="text-[8px] font-bold uppercase tracking-widest text-amber-600">Coupon: {order.couponCode}</p>
+                      )}
                       <p className={`text-[9px] uppercase font-bold tracking-widest ${order.paymentMethod === 'COD' ? 'text-orange-600' : 'text-green-600'}`}>
                         {order.paymentMethod === 'COD' ? 'Pending (COD)' : 'Paid'}
                       </p>
@@ -1576,9 +1582,16 @@ export default function AdminPanel({
                            className="w-full border border-stone-200 p-3 text-[11px] font-bold uppercase tracking-widest focus:border-black outline-hidden"
                          />
                        </div>
-                       <div>
-                         <p className="text-[9px] font-bold uppercase text-stone-400 mb-2">Total Paid</p>
-                         <p className="text-3xl font-display font-bold text-stone-900">₹{selectedOrder.amount}</p>
+                        {selectedOrder.couponCode && (
+                          <div>
+                            <p className="text-[9px] font-bold uppercase text-stone-400 mb-2">Coupon Applied</p>
+                            <p className="text-sm font-bold text-amber-600 uppercase tracking-widest">{selectedOrder.couponCode}</p>
+                            {selectedOrder.discountAmount ? <p className="text-[9px] text-stone-400 mt-1">Discount: -₹{selectedOrder.discountAmount}</p> : null}
+                          </div>
+                        )}
+                        <div>
+                          <p className="text-[9px] font-bold uppercase text-stone-400 mb-2">Total Paid</p>
+                          <p className="text-3xl font-display font-bold text-stone-900">₹{selectedOrder.amount}</p>
                        </div>
                        <div className="pt-4">
                          <button 

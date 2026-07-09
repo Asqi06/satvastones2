@@ -143,7 +143,8 @@ const initialCMSData = {
   specialOffer: { title: '', subTitle: '', description: '', image: '', isActive: false },
   ninetyNineSale: { isActive: false, title: '₹99 Flash Sale', subTitle: 'Limited Stock Deal', description: 'Grab your favorite anti-tarnish jewelry at just ₹99 each!', bannerImage: '', guaranteeText: 'Anti-Tarnish • Waterproof • No Color Fade • 100% Guaranteed', badgeText: '₹99 Only' },
   products: [],
-  settings: { announcementText: '', showTimer: false, timerEnd: '' }
+  settings: { announcementText: '', showTimer: false, timerEnd: '' },
+  coupons: []
 };
 
 function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () => void, onShop: () => void }) {
