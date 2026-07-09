@@ -803,7 +803,7 @@ export default function AdminPanel({
                         const currentCoupons = tempCMSData?.coupons || [];
                         const updatedCoupons = [...currentCoupons, { code: code.toUpperCase(), discount: parseInt(discount), isActive: true }];
                         setTempCMSData({ ...tempCMSData, coupons: updatedCoupons });
-                        onUpdateCMS({ ...tempCMSData, coupons: updatedCoupons });
+                        onUpdateCMS({ coupons: updatedCoupons });
                       }
                     }}
                     className="flex items-center gap-2 bg-stone-900 text-white px-5 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
@@ -829,7 +829,7 @@ export default function AdminPanel({
                           const newCoupons = [...currentCoupons];
                           newCoupons.splice(i, 1);
                           setTempCMSData({ ...tempCMSData, coupons: newCoupons });
-                          onUpdateCMS({ ...tempCMSData, coupons: newCoupons });
+                          onUpdateCMS({ coupons: newCoupons });
                         }}
                         className="text-stone-300 hover:text-red-500 transition-colors"
                       >

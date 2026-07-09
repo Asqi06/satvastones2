@@ -804,10 +804,12 @@ function AppContent() {
 
   const handleUpdateCMS = async (newData: any) => {
     try {
+      // Strip products (managed separately via /api/products, not part of the CMS document)
+      const { products, ...cmsPayload } = newData || {};
       const res = await fetch(`${API_URL}/cms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newData)
+        body: JSON.stringify(cmsPayload)
       });
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
