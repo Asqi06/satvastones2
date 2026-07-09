@@ -753,11 +753,15 @@ function AppContent() {
 
   const addToCart = (item: any) => {
     setCart(prev => {
-      const existing = prev.find(p => p.id === item.id);
+      const baseId = item._id || item.id;
+      const key = `${baseId}|${item.variant || ''}|${item.customText || ''}`;
+      const existing = prev.find(p => `${p._id || p.id}|${p.variant || ''}|${p.customText || ''}` === key);
       if (existing) {
-        return prev.map(p => p.id === item.id ? { ...p, qty: (p.qty || 1) + (item.qty || 1) } : p);
+        return prev.map(p => `${p._id || p.id}|${p.variant || ''}|${p.customText || ''}` === key
+          ? { ...p, qty: (p.qty || 1) + (item.qty || 1) }
+          : p);
       }
-      return [...prev, item];
+      return [...prev, { ...item, id: baseId, _id: item._id, qty: item.qty || 1 }];
     });
     navigateTo('cart');
   };
