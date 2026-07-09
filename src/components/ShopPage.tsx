@@ -36,6 +36,7 @@ export default function ShopPage({
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
   const videoRefs = useRef<Record<string, HTMLVideoElement>>({});
   const containerRefs = useRef<Record<string, HTMLDivElement>>({});
+  const videoEndedRefs = useRef<Record<string, boolean>>({});
   const collectionSeo = cmsData?.collectionSeo || {};
 
   // Sync state if URL path changes
@@ -90,6 +91,7 @@ export default function ShopPage({
           const pid = entry.target.getAttribute('data-pid');
           if (!pid || !videoRefs.current[pid]) return;
           if (entry.isIntersecting) {
+            if (videoEndedRefs.current[pid]) return;
             setActiveVideoId(pid);
             const v = videoRefs.current[pid];
             if (!v) return;
@@ -98,6 +100,7 @@ export default function ShopPage({
             v.play().catch(() => {});
           } else {
             setActiveVideoId(prev => prev === pid ? null : prev);
+            videoEndedRefs.current[pid] = false;
             videoRefs.current[pid]?.pause();
           }
         });
@@ -227,7 +230,7 @@ export default function ShopPage({
                 ref={(el) => { if (el) containerRefs.current[pid] = el; }}
                 className={`relative overflow-hidden bg-stone-100 ${viewMode === 'grid' ? 'aspect-[4/5]' : 'aspect-square'}`}
                 onMouseEnter={() => {
-                  if (!product.video) return;
+                  if (!product.video || videoEndedRefs.current[pid]) return;
                   setActiveVideoId(pid);
                   const v = videoRefs.current[pid];
                   if (!v) return;
@@ -243,6 +246,7 @@ export default function ShopPage({
                   const isInUpperHalf = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
                   if (!isInUpperHalf) {
                     setActiveVideoId(prev => prev === pid ? null : prev);
+                    videoEndedRefs.current[pid] = false;
                     videoRefs.current[pid]?.pause();
                   }
                 }}
@@ -262,7 +266,7 @@ export default function ShopPage({
                     muted
                     playsInline
                     preload="metadata"
-                    onEnded={() => { setActiveVideoId(prev => prev === pid ? null : prev); const v = videoRefs.current[pid]; if (v) { v.pause(); v.currentTime = 0; } }}
+                    onEnded={() => { videoEndedRefs.current[pid] = true; setActiveVideoId(prev => prev === pid ? null : prev); const v = videoRefs.current[pid]; if (v) { v.pause(); v.currentTime = 0; } }}
                     className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 pointer-events-none ${activeVideoId === pid ? 'opacity-100' : 'opacity-0'}`}
                   />
                 )}

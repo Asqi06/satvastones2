@@ -7,10 +7,12 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
     (product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoEndedRef = useRef(false);
   const [videoActive, setVideoActive] = useState(false);
 
   const handleVideoEnded = useCallback(() => {
     setVideoActive(false);
+    videoEndedRef.current = true;
     const v = videoRef.current;
     if (v) { v.pause(); v.currentTime = 0; }
   }, []);
@@ -29,10 +31,12 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          if (videoEndedRef.current) return;
           setVideoActive(true);
           playVideo(true);
         } else {
           setVideoActive(false);
+          videoEndedRef.current = false;
           videoRef.current?.pause();
         }
       },

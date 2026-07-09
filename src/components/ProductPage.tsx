@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   ArrowLeft, Heart, ShoppingBag, Star, ChevronDown, ChevronUp,
-  ArrowUpRight, Truck, RefreshCcw, ShieldCheck, ChevronLeft, ChevronRight, Zap, Mail
+  ArrowUpRight, Truck, RefreshCcw, ShieldCheck, ChevronLeft, ChevronRight, Zap, Mail, Play
 } from 'lucide-react';
 import { optimizeImage } from '../utils/cloudinary';
 import { Link } from 'react-router-dom';
@@ -48,21 +48,19 @@ export default function ProductPage({
   const [selectedVariant, setSelectedVariant] = useState<any>(null);
   const [customText, setCustomText] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [videoPlaying, setVideoPlaying] = useState(false);
-  const handleVideoEnded = () => { setVideoPlaying(false); const v = videoRef.current; if (v) { v.pause(); v.currentTime = 0; } };
-  const playVideo = (seekToStart = true) => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (!v.paused && !v.ended) return;
-    if (seekToStart) v.currentTime = 0;
-    v.play().catch(() => {});
-  };
+  const handleVideoEnded = () => {};
 
   // Dynamic Image Logic: Use variant images if a variant is selected, otherwise fallback to main images
   const images = selectedVariant && selectedVariant.images?.length > 0 
     ? selectedVariant.images 
     : (product.images && product.images.length > 0) ? product.images : [product.image];
+
+  const hasVideo = !!product.video;
+  const galleryItems = hasVideo
+    ? [...images.map((url: string) => ({ type: 'image' as const, url })), { type: 'video' as const, url: product.video, thumbnail: product.image || images[0] }]
+    : images.map((url: string) => ({ type: 'image' as const, url }));
+  const activeIndex = activeImage < galleryItems.length ? activeImage : 0;
+  const galleryItem = galleryItems[activeIndex];
 
   const isCustomizable = ['HAMPERS', 'GIFTS', "MOTHER'S DAY"].includes(product.category);
 
@@ -72,25 +70,6 @@ export default function ProductPage({
     setSelectedVariant(null);
     setActiveImage(0);
   }, [product]);
-
-  useEffect(() => {
-    if (!product.video || !containerRef.current) return;
-    const el = containerRef.current;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVideoPlaying(true);
-          playVideo(true);
-        } else {
-          setVideoPlaying(false);
-          videoRef.current?.pause();
-        }
-      },
-      { rootMargin: '0px 0px -50% 0px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [product.video]);
 
   const styles = ['Standard Polish', 'Matte Finish', 'Vintage Aesthetic'];
 
@@ -116,43 +95,28 @@ export default function ProductPage({
           {/* LEFT — Gallery */}
           <div className="flex flex-col gap-4">
             {/* Main Image */}
-            <div
-              ref={containerRef}
-              className="relative aspect-square overflow-hidden bg-stone-100 group"
-              onMouseEnter={() => {
-                if (!product.video) return;
-                setVideoPlaying(true);
-                playVideo(true);
-              }}
-              onMouseLeave={() => {
-                if (!product.video || !containerRef.current) return;
-                const rect = containerRef.current.getBoundingClientRect();
-                const isInUpperHalf = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
-                if (!isInUpperHalf) {
-                  setVideoPlaying(false);
-                  videoRef.current?.pause();
-                }
-              }}
-            >
-              <img
-                key={images[activeImage]}
-                src={optimizeImage(images[activeImage], 1000)}
-                alt={product.title || 'Aesthetic jewelry piece'}
-                fetchpriority={activeImage === 0 ? 'high' : 'low'}
-                width="1000"
-                height="1000"
-                className={`h-full w-full object-cover transition-opacity duration-500 ${videoPlaying ? 'opacity-0' : 'opacity-100'}`}
-              />
-
-              {product.video && (
+            <div className="relative aspect-square overflow-hidden bg-stone-100 group">
+              {galleryItem.type === 'video' ? (
                 <video
+                  key={activeImage}
                   ref={videoRef}
-                  src={product.video}
+                  src={galleryItem.url}
                   muted
+                  autoPlay
                   playsInline
                   preload="metadata"
                   onEnded={handleVideoEnded}
-                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 pointer-events-none ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <img
+                  key={activeImage}
+                  src={optimizeImage(galleryItem.url, 1000)}
+                  alt={product.title || 'Aesthetic jewelry piece'}
+                  fetchpriority={activeImage === 0 ? 'high' : 'low'}
+                  width="1000"
+                  height="1000"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               )}
               {/* Wishlist */}
@@ -162,6 +126,15 @@ export default function ProductPage({
               >
                 <Heart className={`h-5 w-5 transition-colors ${wishlisted ? 'fill-red-500 stroke-red-500' : 'stroke-stone-400'}`} />
               </button>
+
+              {/* Video badge on image when showing image */}
+              {galleryItem.type === 'image' && hasVideo && (
+                <div className="absolute bottom-4 left-4 z-10">
+                  <span className="inline-flex items-center gap-1.5 bg-white/90 text-stone-900 px-3 py-1.5 text-[9px] font-black uppercase tracking-widest rounded-sm shadow-lg">
+                    <Play className="h-3 w-3" /> Video Available
+                  </span>
+                </div>
+              )}
 
               {/* Anti-Tarnish Badge on Image */}
               {product.isAntiTarnish && (
@@ -173,17 +146,23 @@ export default function ProductPage({
                 </div>
               )}
               {/* Prev / Next */}
-              {images.length > 1 && (
+              {galleryItems.length > 1 && (
                 <>
                   <button
-                    onClick={() => setActiveImage((p) => (p - 1 + images.length) % images.length)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow backdrop-blur-sm transition hover:bg-white"
+                    onClick={() => {
+                      const prev = (activeImage - 1 + galleryItems.length) % galleryItems.length;
+                      setActiveImage(prev);
+                    }}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow backdrop-blur-sm transition hover:bg-white z-10"
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </button>
                   <button
-                    onClick={() => setActiveImage((p) => (p + 1) % images.length)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow backdrop-blur-sm transition hover:bg-white"
+                    onClick={() => {
+                      const next = (activeImage + 1) % galleryItems.length;
+                      setActiveImage(next);
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 shadow backdrop-blur-sm transition hover:bg-white z-10"
                   >
                     <ChevronRight className="h-4 w-4" />
                   </button>
@@ -192,15 +171,26 @@ export default function ProductPage({
             </div>
 
             {/* Thumbnail Strip */}
-            {images.length > 1 && (
+            {galleryItems.length > 1 && (
               <div className="grid grid-cols-5 gap-2">
-                {images.map((img: string, i: number) => (
+                {galleryItems.map((item: any, i: number) => (
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`aspect-square overflow-hidden bg-stone-100 transition-all ${activeImage === i ? 'ring-2 ring-stone-900' : 'opacity-60 hover:opacity-100'}`}
+                    className={`relative aspect-square overflow-hidden bg-stone-100 transition-all ${activeImage === i ? 'ring-2 ring-stone-900' : 'opacity-60 hover:opacity-100'}`}
                   >
-                    <img src={optimizeImage(img, 200)} alt={product.title ? `${product.title} view ${i + 1}` : 'Product thumbnail'} loading="lazy" width="200" height="200" className="h-full w-full object-cover" />
+                    {item.type === 'video' ? (
+                      <>
+                        <img src={optimizeImage(item.thumbnail, 200)} alt="Video" loading="lazy" width="200" height="200" className="h-full w-full object-cover" />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/10">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/90">
+                            <Play className="h-3 w-3 ml-0.5 text-stone-900" />
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <img src={optimizeImage(item.url, 200)} alt={product.title ? `${product.title} view ${i + 1}` : 'Product thumbnail'} loading="lazy" width="200" height="200" className="h-full w-full object-cover" />
+                    )}
                   </button>
                 ))}
               </div>
