@@ -9,6 +9,20 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
   const containerRef = useRef<HTMLDivElement>(null);
   const [videoActive, setVideoActive] = useState(false);
 
+  const handleVideoEnded = useCallback(() => {
+    setVideoActive(false);
+    const v = videoRef.current;
+    if (v) { v.pause(); v.currentTime = 0; }
+  }, []);
+
+  const playVideo = useCallback((seekToStart = true) => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (!v.paused && !v.ended) return;
+    if (seekToStart) v.currentTime = 0;
+    v.play().catch(() => {});
+  }, []);
+
   useEffect(() => {
     if (!product.video || !containerRef.current) return;
     const el = containerRef.current;
@@ -16,8 +30,7 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
       ([entry]) => {
         if (entry.isIntersecting) {
           setVideoActive(true);
-          const v = videoRef.current;
-          if (v) { v.currentTime = 0; v.play().catch(() => {}); }
+          playVideo(true);
         } else {
           setVideoActive(false);
           videoRef.current?.pause();
@@ -27,7 +40,7 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [product.video]);
+  }, [product.video, playVideo]);
 
   const handleClick = () => {
     const slug = product.slug || product._id || product.id;
@@ -37,15 +50,13 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
   const handleMouseEnter = useCallback(() => {
     if (!product.video) return;
     setVideoActive(true);
-    const v = videoRef.current;
-    if (v) { v.currentTime = 0; v.play().catch(() => {}); }
-  }, [product.video]);
+    playVideo(true);
+  }, [product.video, playVideo]);
 
   const handleMouseLeave = useCallback(() => {
     if (!product.video || !containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
-    const viewportH = window.innerHeight;
-    const isInUpperHalf = rect.top < viewportH * 0.5 && rect.bottom > 0;
+    const isInUpperHalf = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
     if (!isInUpperHalf) {
       setVideoActive(false);
       videoRef.current?.pause();
@@ -85,15 +96,15 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
             ref={videoRef}
             src={product.video}
             muted
-            loop
             playsInline
             preload="metadata"
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${videoActive ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+            onEnded={handleVideoEnded}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 pointer-events-none ${videoActive ? 'opacity-100' : 'opacity-0'}`}
           />
         )}
 
         {discount > 0 && (
-          <span className="absolute left-2 top-2 rounded-full bg-[#744D30] px-2.5 py-0.5 text-[10px] font-bold text-card">
+          <span className="absolute left-2 top-2 rounded-full bg-[#744D30] px-2.5 py-0.5 text-[10px] font-bold text-card z-10">
             {discount}% OFF
           </span>
         )}
@@ -103,7 +114,7 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
             e.stopPropagation();
             onWishlist?.(product);
           }}
-          className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur-sm transition-transform hover:scale-110"
+          className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur-sm transition-transform hover:scale-110 z-10"
           aria-label="Add to wishlist"
         >
           <Heart className="h-3.5 w-3.5 text-[#3D2B24]" />
@@ -129,7 +140,7 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
           e.stopPropagation();
           onAddToCart?.(product);
         }}
-        className="flex h-10 w-full items-center justify-center rounded-[20px] bg-[#9C6A3B] text-sm font-semibold text-card transition-transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+        className="flex h-10 w-full items-center justify-center rounded-[20px] bg-[#9C6A3B] text-sm font-semibold text-card transition-transform hover:scale-[1.02] active:scale-95 cursor-pointer z-10"
       >
         Add To Cart
       </button>

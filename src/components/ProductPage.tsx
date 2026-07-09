@@ -50,6 +50,14 @@ export default function ProductPage({
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const handleVideoEnded = () => { setVideoPlaying(false); const v = videoRef.current; if (v) { v.pause(); v.currentTime = 0; } };
+  const playVideo = (seekToStart = true) => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (!v.paused && !v.ended) return;
+    if (seekToStart) v.currentTime = 0;
+    v.play().catch(() => {});
+  };
 
   // Dynamic Image Logic: Use variant images if a variant is selected, otherwise fallback to main images
   const images = selectedVariant && selectedVariant.images?.length > 0 
@@ -72,8 +80,7 @@ export default function ProductPage({
       ([entry]) => {
         if (entry.isIntersecting) {
           setVideoPlaying(true);
-          const v = videoRef.current;
-          if (v) { v.currentTime = 0; v.play().catch(() => {}); }
+          playVideo(true);
         } else {
           setVideoPlaying(false);
           videoRef.current?.pause();
@@ -115,8 +122,7 @@ export default function ProductPage({
               onMouseEnter={() => {
                 if (!product.video) return;
                 setVideoPlaying(true);
-                const v = videoRef.current;
-                if (v) { v.currentTime = 0; v.play().catch(() => {}); }
+                playVideo(true);
               }}
               onMouseLeave={() => {
                 if (!product.video || !containerRef.current) return;
@@ -143,10 +149,10 @@ export default function ProductPage({
                   ref={videoRef}
                   src={product.video}
                   muted
-                  loop
                   playsInline
                   preload="metadata"
-                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${videoPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                  onEnded={handleVideoEnded}
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 pointer-events-none ${videoPlaying ? 'opacity-100' : 'opacity-0'}`}
                 />
               )}
               {/* Wishlist */}
