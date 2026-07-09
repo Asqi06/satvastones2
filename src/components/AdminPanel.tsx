@@ -98,10 +98,14 @@ export default function AdminPanel({
       .catch(() => setDbStatus('error'));
   }, []);
 
-  // Sync temp data when cmsData changes from parent
+  // Sync temp data when cmsData is first loaded (don't overwrite user edits)
+  const cmsInitialized = React.useRef(false);
   React.useEffect(() => {
-    setTempCMSData(cmsData);
-  }, [cmsData]);
+    if (cmsData && !cmsInitialized.current && (tempCMSData === null || tempCMSData === undefined)) {
+      setTempCMSData(cmsData);
+      cmsInitialized.current = true;
+    }
+  }, [cmsData, tempCMSData]);
 
   // Fetch Orders when tab changes
   React.useEffect(() => {
@@ -791,10 +795,10 @@ export default function AdminPanel({
                       const code = window.prompt('Enter Coupon Code:');
                       const discount = window.prompt('Enter Discount Percentage (0-100):');
                       if (code && discount) {
-                        setTempCMSData({
-                          ...tempCMSData,
-                          coupons: [...(tempCMSData.coupons || []), { code: code.toUpperCase(), discount: parseInt(discount), isActive: true }]
-                        });
+                        const currentCoupons = tempCMSData?.coupons || [];
+                        const updatedCoupons = [...currentCoupons, { code: code.toUpperCase(), discount: parseInt(discount), isActive: true }];
+                        setTempCMSData({ ...tempCMSData, coupons: updatedCoupons });
+                        onUpdateCMS({ ...tempCMSData, coupons: updatedCoupons });
                       }
                     }}
                     className="flex items-center gap-2 bg-stone-900 text-white px-5 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-black"
@@ -816,9 +820,11 @@ export default function AdminPanel({
                       </div>
                       <button 
                         onClick={() => {
-                          const newCoupons = [...tempCMSData.coupons];
+                          const currentCoupons = tempCMSData?.coupons || [];
+                          const newCoupons = [...currentCoupons];
                           newCoupons.splice(i, 1);
                           setTempCMSData({ ...tempCMSData, coupons: newCoupons });
+                          onUpdateCMS({ ...tempCMSData, coupons: newCoupons });
                         }}
                         className="text-stone-300 hover:text-red-500 transition-colors"
                       >
