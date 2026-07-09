@@ -90,13 +90,12 @@ export default function ShopPage({
           const pid = entry.target.getAttribute('data-pid');
           if (!pid || !videoRefs.current[pid]) return;
           if (entry.isIntersecting) {
-            const v = videoRefs.current[pid];
-            v.currentTime = 0;
-            v.play().catch(() => {});
             setActiveVideoId(pid);
+            const v = videoRefs.current[pid];
+            if (v) { v.currentTime = 0; v.play().catch(() => {}); }
           } else {
-            videoRefs.current[pid]?.pause();
             setActiveVideoId(prev => prev === pid ? null : prev);
+            videoRefs.current[pid]?.pause();
           }
         });
       },
@@ -225,14 +224,32 @@ export default function ShopPage({
                 ref={(el) => { if (el) containerRefs.current[pid] = el; }}
                 className={`relative overflow-hidden bg-stone-100 ${viewMode === 'grid' ? 'aspect-[4/5]' : 'aspect-square'}`}
                 onMouseEnter={() => {
-                  if (product.video && videoRefs.current[pid]) {
-                    videoRefs.current[pid].currentTime = 0;
-                    videoRefs.current[pid].play().catch(() => {});
-                    setActiveVideoId(pid);
+                  if (!product.video) return;
+                  setActiveVideoId(pid);
+                  const v = videoRefs.current[pid];
+                  if (v) { v.currentTime = 0; v.play().catch(() => {}); }
+                }}
+                onMouseLeave={() => {
+                  if (!product.video) return;
+                  const el = containerRefs.current[pid];
+                  if (!el) return;
+                  const rect = el.getBoundingClientRect();
+                  const isInUpperHalf = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
+                  if (!isInUpperHalf) {
+                    setActiveVideoId(prev => prev === pid ? null : prev);
+                    videoRefs.current[pid]?.pause();
                   }
                 }}
               >
-                {product.video && activeVideoId === pid ? (
+                <img 
+                  src={product.image} 
+                  alt={product.title} 
+                  loading="lazy"
+                  width="600"
+                  height="750"
+                  className={`h-full w-full object-cover transition-opacity duration-500 ${activeVideoId === pid ? 'opacity-0' : 'opacity-100'}`}
+                />
+                {product.video && (
                   <video
                     ref={(el) => { if (el) videoRefs.current[pid] = el; }}
                     src={product.video}
@@ -240,16 +257,7 @@ export default function ShopPage({
                     loop
                     playsInline
                     preload="metadata"
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <img 
-                    src={product.image} 
-                    alt={product.title} 
-                    loading="lazy"
-                    width="600"
-                    height="750"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${activeVideoId === pid ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                   />
                 )}
                 <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />

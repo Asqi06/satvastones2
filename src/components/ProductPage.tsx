@@ -71,11 +71,12 @@ export default function ProductPage({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          setVideoPlaying(true);
           const v = videoRef.current;
-          if (v) { v.currentTime = 0; v.play().catch(() => {}); setVideoPlaying(true); }
+          if (v) { v.currentTime = 0; v.play().catch(() => {}); }
         } else {
-          videoRef.current?.pause();
           setVideoPlaying(false);
+          videoRef.current?.pause();
         }
       },
       { rootMargin: '0px 0px -50% 0px' }
@@ -112,14 +113,32 @@ export default function ProductPage({
               ref={containerRef}
               className="relative aspect-square overflow-hidden bg-stone-100 group"
               onMouseEnter={() => {
-                if (product.video && videoRef.current) {
-                  videoRef.current.currentTime = 0;
-                  videoRef.current.play().catch(() => {});
-                  setVideoPlaying(true);
+                if (!product.video) return;
+                setVideoPlaying(true);
+                const v = videoRef.current;
+                if (v) { v.currentTime = 0; v.play().catch(() => {}); }
+              }}
+              onMouseLeave={() => {
+                if (!product.video || !containerRef.current) return;
+                const rect = containerRef.current.getBoundingClientRect();
+                const isInUpperHalf = rect.top < window.innerHeight * 0.5 && rect.bottom > 0;
+                if (!isInUpperHalf) {
+                  setVideoPlaying(false);
+                  videoRef.current?.pause();
                 }
               }}
             >
-              {product.video && videoPlaying ? (
+              <img
+                key={images[activeImage]}
+                src={optimizeImage(images[activeImage], 1000)}
+                alt={product.title || 'Aesthetic jewelry piece'}
+                fetchpriority={activeImage === 0 ? 'high' : 'low'}
+                width="1000"
+                height="1000"
+                className={`h-full w-full object-cover transition-opacity duration-500 ${videoPlaying ? 'opacity-0' : 'opacity-100'}`}
+              />
+
+              {product.video && (
                 <video
                   ref={videoRef}
                   src={product.video}
@@ -127,17 +146,7 @@ export default function ProductPage({
                   loop
                   playsInline
                   preload="metadata"
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                <img
-                  key={images[activeImage]}
-                  src={optimizeImage(images[activeImage], 1000)}
-                  alt={product.title || 'Aesthetic jewelry piece'}
-                  fetchpriority={activeImage === 0 ? 'high' : 'low'}
-                  width="1000"
-                  height="1000"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${videoPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 />
               )}
               {/* Wishlist */}

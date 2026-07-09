@@ -15,11 +15,12 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          setVideoActive(true);
           const v = videoRef.current;
-          if (v) { v.currentTime = 0; v.play().catch(() => {}); setVideoActive(true); }
+          if (v) { v.currentTime = 0; v.play().catch(() => {}); }
         } else {
-          videoRef.current?.pause();
           setVideoActive(false);
+          videoRef.current?.pause();
         }
       },
       { rootMargin: '0px 0px -50% 0px' }
@@ -34,10 +35,21 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
   };
 
   const handleMouseEnter = useCallback(() => {
-    if (!product.video || !videoRef.current) return;
-    videoRef.current.currentTime = 0;
-    videoRef.current.play().catch(() => {});
+    if (!product.video) return;
     setVideoActive(true);
+    const v = videoRef.current;
+    if (v) { v.currentTime = 0; v.play().catch(() => {}); }
+  }, [product.video]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!product.video || !containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const viewportH = window.innerHeight;
+    const isInUpperHalf = rect.top < viewportH * 0.5 && rect.bottom > 0;
+    if (!isInUpperHalf) {
+      setVideoActive(false);
+      videoRef.current?.pause();
+    }
   }, [product.video]);
 
   return (
@@ -53,8 +65,22 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
         ref={containerRef}
         className="relative mb-3 aspect-square w-full overflow-hidden rounded-[16px] bg-[#F2EBE1]"
         onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        {product.video && videoActive ? (
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.title}
+            className={`h-full w-full object-cover transition-opacity duration-500 ${videoActive ? 'opacity-0' : 'opacity-100'}`}
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-[10px] font-bold uppercase tracking-wider text-[#9C6A3B]">
+            {product.title?.slice(0, 2) || 'SV'}
+          </div>
+        )}
+
+        {product.video && (
           <video
             ref={videoRef}
             src={product.video}
@@ -62,21 +88,8 @@ export default function ProductCard({ product, onAddToCart, onWishlist, onNaviga
             loop
             playsInline
             preload="metadata"
-            className="h-full w-full object-cover"
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${videoActive ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
           />
-        ) : (
-          product.image ? (
-            <img
-              src={product.image}
-              alt={product.title}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              loading="lazy"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center text-[10px] font-bold uppercase tracking-wider text-[#9C6A3B]">
-              {product.title?.slice(0, 2) || 'SV'}
-            </div>
-          )
         )}
 
         {discount > 0 && (
