@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Search, ShoppingBag, User, ArrowLeft, ArrowRight, ChevronRight, 
-  ArrowUpRight, Facebook, Twitter, Linkedin, Instagram, 
-  ArrowRight as ArrowRightIcon, Menu, X, Heart, Shield, Trash2, CheckCircle
+  Menu, X, Heart, Shield, Trash2, Home, LayoutGrid
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
@@ -20,9 +19,20 @@ import BlogsPage from './components/BlogsPage';
 import BlogDetailPage from './components/BlogDetailPage';
 import AuthPage from './components/AuthPage';
 import SearchOverlay from './components/SearchOverlay';
+import ExitIntentPopup from './components/ExitIntentPopup';
 import OrderSuccessPage from './components/OrderSuccessPage';
 import { optimizeImage } from './utils/cloudinary';
 import { analytics } from './utils/analytics';
+import NewHeroBanner from './components/home/NewHeroBanner';
+import NewCategoryShowcase from './components/home/NewCategoryShowcase';
+import ProductSection from './components/home/ProductSection';
+import ShopByTrend from './components/home/ShopByTrend';
+import CustomerReviews from './components/home/CustomerReviews';
+import ConnectWithUs from './components/home/ConnectWithUs';
+import FaqSection from './components/home/FaqSection';
+import SaleSection from './components/home/SaleSection';
+import NewFooter from './components/home/NewFooter';
+import WishlistPage from './components/WishlistPage';
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
@@ -34,108 +44,6 @@ function ScrollToTop() {
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-
-const CategoryCard = ({ category, onClick }: any) => {
-  const ratio = category.size === 'large' ? 1.333 : 1.0;
-  const height = Math.round(600 * ratio);
-  return (
-    <div 
-      className={`group relative overflow-hidden bg-stone-100 cursor-pointer ${category.size === 'large' ? 'aspect-[3/4]' : 'aspect-square md:aspect-[16/9]'}`}
-      onClick={onClick}
-    >
-      <img 
-        src={optimizeImage(category.image, 600, height)} 
-        srcSet={getSrcSet(category.image, [320, 480, 600, 800], ratio)}
-        sizes="(max-width: 640px) calc(50vw - 16px), (max-width: 1024px) calc(25vw - 12px), 320px"
-        alt={`Shop ${category.title} at Satvastones`} 
-        loading="lazy"
-        width="600"
-        height={height}
-        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-      />
-      <div className="absolute inset-0 bg-black/10 transition-opacity group-hover:bg-black/20" />
-      
-      {category.sale && (
-        <div className="absolute top-4 right-4 z-10">
-          <span className="inline-flex items-center rounded-full bg-red-600 px-3 py-1 text-[10px] font-bold text-white uppercase tracking-widest animate-pulse">
-            Sale Live
-          </span>
-        </div>
-      )}
-
-      <div className="absolute inset-0 flex items-end justify-between p-6">
-        {/* p used here intentionally — h4 in this context would skip h1→h2→h3 hierarchy */}
-        <p className="font-display text-2xl font-bold tracking-tight text-white uppercase sm:text-3xl md:text-2xl lg:text-3xl">
-          {category.title}
-        </p>
-        <button 
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white transition-transform duration-300 group-hover:scale-110 md:h-12 md:w-12"
-          aria-label={`Shop ${category.title}`}
-        >
-          <ArrowUpRight className="h-5 w-5 text-black" aria-hidden="true" />
-        </button>
-      </div>
-    </div>
-  );
-};
-
-const DiscoverCard = ({ product, large = false, onClick }: any) => {
-  const ratio = large ? 1.25 : 1.0;
-  const height = Math.round(600 * ratio);
-  return (
-    <div className="group flex flex-col gap-3 cursor-pointer" onClick={onClick}>
-      <div className={`relative overflow-hidden bg-stone-100 ${large ? 'aspect-[4/5] md:aspect-auto md:h-full' : 'aspect-square'}`}>
-        <img 
-          src={optimizeImage(product.image, 600, height)} 
-          srcSet={getSrcSet(product.image, [300, 450, 600], ratio)}
-          sizes="(max-width: 640px) calc(50vw - 16px), (max-width: 1024px) calc(33vw - 16px), 300px"
-          alt={product.title} 
-          loading="lazy"
-          width="600"
-          height={height}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-        
-        {/* Wishlist Button */}
-        <button 
-          className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-stone-900 transition-colors hover:bg-white"
-          aria-label={`Add ${product.title} to wishlist`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Heart className="h-4 w-4" aria-hidden="true" />
-        </button>
-
-        {/* Hover Actions */}
-        <div className="absolute inset-x-0 bottom-4 z-10 flex translate-y-4 justify-center gap-2 px-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <button 
-            className="flex-1 bg-black py-3 text-[9px] font-bold uppercase tracking-widest text-white transition-colors hover:bg-stone-800"
-            aria-label={`View details for ${product.title}`}
-          >
-            View Details
-          </button>
-        </div>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between">
-          {/* p used intentionally — heading hierarchy is h1 on page, h2 for sections */}
-          <p className="font-accent text-xs font-bold uppercase tracking-tight text-stone-900">{product.title}</p>
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] text-stone-500 line-through">₹{product.oldPrice}</span>
-            <span className="font-accent text-sm font-bold text-stone-900">₹{product.price}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="flex text-yellow-500">
-             <span className="text-[10px]">★</span>
-          </div>
-          <span className="text-[10px] font-bold text-stone-900">{product.rating}</span>
-          <span className="text-[10px] text-stone-500 uppercase tracking-tighter">({(product.reviews && Array.isArray(product.reviews)) ? product.reviews.length : (typeof product.reviews === 'number' ? product.reviews : 0)} reviews)</span>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // EMPTY INITIAL DATA (Everything flows from DB)
 const initialCMSData = {
@@ -365,69 +273,7 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
   );
 }
 
-function WishlistPage({ 
-  items, 
-  onRemove, 
-  onAddToCart,
-  onShop
-}: { 
-  items: any[], 
-  onRemove: (product: any) => void, 
-  onAddToCart: (product: any) => void,
-  onShop: () => void
-}) {
-  return (
-    <div className="min-h-screen bg-white py-24">
-      <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
-          <h1 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight">Your <br /> <span className="text-stone-300">Wishlist</span></h1>
-          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-stone-500 pb-4">({items.length} AESTHETIC PIECES SAVED)</p>
-        </div>
-
-        {items.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {items.map(p => (
-              <div key={p.id || p._id} className="group space-y-4">
-                  <div className="relative aspect-[3/4] bg-stone-100 overflow-hidden">
-                  <img src={p.image} alt={p.title} loading="lazy" width="400" height="533" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <button 
-                    onClick={() => onRemove(p)}
-                    className="absolute top-4 right-4 bg-white/80 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </button>
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-[10px] font-bold uppercase tracking-widest">{p.title}</h3>
-                  <p className="text-[10px] font-bold text-stone-900">₹{p.price}</p>
-                </div>
-                <button 
-                  onClick={() => onAddToCart(p)}
-                  className="w-full bg-stone-900 text-white py-3 text-[9px] font-bold uppercase tracking-widest hover:bg-black transition-all"
-                >
-                  Move To Bag
-                </button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-32 bg-stone-50 border border-stone-100">
-            <Heart className="h-10 w-10 mx-auto text-stone-200 mb-6" />
-            <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-stone-400">Your wishlist is empty</h2>
-            <button 
-              onClick={onShop}
-              className="mt-8 bg-black text-white px-10 py-4 text-[9px] font-bold uppercase tracking-widest hover:bg-stone-800 transition-all"
-            >
-              Start Exploring
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }: any) {
+function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview, wishlist, toggleWishlist }: any) {
   const { slug } = useParams();
   const product = cmsData?.products?.find((p: any) => p.slug === slug || p._id === slug || p.id === slug);
 
@@ -474,6 +320,8 @@ function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview }
         onBack={() => navigateTo('home')} 
         onAddToCart={addToCart}
         onAddReview={handleAddReview}
+        isWishlisted={wishlist?.some((w: any) => (w._id || w.id) === (product._id || product.id))}
+        onToggleWishlist={() => toggleWishlist(product)}
       />
     </>
   );
@@ -543,6 +391,7 @@ function AppContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [adminPassword, setAdminPassword] = useState('');
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [homepageData, setHomepageData] = useState<any>(null);
 
   const categorySlug = (name: string) => {
     const slugMap: Record<string, string> = {
@@ -703,6 +552,7 @@ function AppContent() {
       try {
         const cmsRes = await fetch(`${API_URL}/cms`);
         const prodRes = await fetch(`${API_URL}/products`);
+        const homepageRes = await fetch(`${API_URL}/homepage`);
         
         if (cmsRes.ok && prodRes.ok) {
           const cms = await cmsRes.json();
@@ -716,6 +566,11 @@ function AppContent() {
             settings: { ...initialCMSData.settings, ...cms.settings },
             products: prods || [] 
           });
+        }
+        
+        if (homepageRes.ok) {
+          const homepage = await homepageRes.json();
+          setHomepageData(homepage);
         }
       } catch (err) {
         console.log("Using local fallback data. Connect to MongoDB to enable live sync.");
@@ -936,53 +791,6 @@ function AppContent() {
       <JsonLd data={getWebsiteSchema()} />
       <JsonLd data={getLocalBusinessSchema()} />
 
-      {/* Mobile Sidebar */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 z-[70] bg-black/40 backdrop-blur-sm"
-            />
-            <motion.div 
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-[80] w-[85%] max-w-sm bg-white p-8 shadow-2xl"
-            >
-              <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between mb-12">
-                  <span className="font-display text-2xl font-bold tracking-tighter">SATVASTONES.</span>
-                  <button onClick={() => setIsMenuOpen(false)} className="p-2 -mr-2"><X className="h-6 w-6" /></button>
-                </div>
-
-                <div className="flex flex-col gap-8">
-                  <Link to="/" onClick={() => setIsMenuOpen(false)} className="text-3xl font-display font-bold uppercase tracking-tight hover:text-stone-400 transition-colors">Home</Link>
-                  <Link to="/shop" onClick={() => setIsMenuOpen(false)} className="text-3xl font-display font-bold uppercase tracking-tight hover:text-stone-400 transition-colors">Shop</Link>
-                  <Link to="/blogs" onClick={() => setIsMenuOpen(false)} className="text-3xl font-display font-bold uppercase tracking-tight hover:text-stone-400 transition-colors">The Journal</Link>
-                  <Link to="/contact" onClick={() => setIsMenuOpen(false)} className="text-3xl font-display font-bold uppercase tracking-tight hover:text-stone-400 transition-colors">Contact</Link>
-                </div>
-
-                <div className="mt-auto pt-12 border-t border-stone-100">
-                  <Link to="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 group">
-                    <div className="w-10 h-10 rounded-full bg-stone-50 flex items-center justify-center group-hover:bg-black group-hover:text-white transition-all">
-                      <User className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest">{currentUser ? 'My Account' : 'Sign In'}</p>
-                      <p className="text-[8px] text-stone-400 uppercase tracking-widest">{currentUser ? currentUser.email : 'Member Access'}</p>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
 
       <SearchOverlay 
         isOpen={isSearchOpen} 
@@ -991,70 +799,84 @@ function AppContent() {
         onSelectProduct={(p) => navigateTo('product', p)} 
       />
 
-      {/* Announcement Bar */}
-      <div className="relative w-full overflow-hidden bg-black py-3 sm:py-4 z-[60]">
-        <div className="relative mx-auto flex max-w-7xl flex-col items-center justify-center gap-2 px-4 text-center sm:flex-row sm:gap-8">
-          <div className="flex items-center gap-2">
-            <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-red-400" aria-hidden="true" />
-            <p className="text-[10px] font-black uppercase tracking-[0.15em] text-white sm:text-xs">
-              {cmsData?.settings?.announcementText}
-            </p>
-          </div>
-          {cmsData?.settings?.showTimer && (
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 font-accent text-base font-bold tracking-wider text-white sm:text-lg">
-                {/* text-red-400 on black = ratio ~4.6:1, passes AA */}
-                <span className="text-red-400">{String(timeLeft.days).padStart(2, '0')}D</span>
-                <span className="text-white/50">:</span>
-                <span>{String(timeLeft.hours).padStart(2, '0')}H</span>
-                <span className="text-white/50">:</span>
-                <span>{String(timeLeft.minutes).padStart(2, '0')}M</span>
-                <span className="text-white/50">:</span>
-                <span className="text-red-400">{String(timeLeft.seconds).padStart(2, '0')}S</span>
-              </div>
-              <button 
-                onClick={() => {
-                  const hamperId = cmsData.specialOffer?.productId || 'md-hamper';
-                  const hamper = cmsData.products.find((p: any) => p.id === hamperId || p._id === hamperId);
-                  if (hamper) navigateTo('product', hamper);
-                  else navigateTo('shop');
-                }} 
-                className="ml-2 rounded-xs bg-white px-3 py-1 text-[9px] font-black uppercase tracking-widest text-black hover:scale-105 transition-all"
-                aria-label="Shop the sale now"
-              >
-                Shop Now
-              </button>
-            </div>
-          )}
+      <ExitIntentPopup />
+
+      {/* Announcement Bar - Scrolling marquee */}
+      <div className="w-full bg-[#d4535f] overflow-hidden py-2 sm:py-2.5 z-[60]">
+        <div className="announcement-scroll">
+          {[...Array(8)].map((_, i) => {
+            const rawText = cmsData?.settings?.announcementText || 'Free Shipping Above INR 599 | Free Gift On Order Above INR 699 | COD Available | Easy Return | Summer Sale Is Live - Upto 70% Off';
+            const items = rawText.split('|').map((s: string) => s.trim()).filter(Boolean);
+            return (
+              <span key={i} className="flex items-center gap-2 sm:gap-3 px-2 sm:px-3 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-white whitespace-nowrap">
+                {items.map((item: string, j: number) => (
+                  <span key={j} className="flex items-center gap-2 sm:gap-3">
+                    <span>{item}</span>
+                    {j < items.length - 1 && <span className="w-1 h-1 rounded-full bg-white/70" />}
+                  </span>
+                ))}
+                <span className="w-1 h-1 rounded-full bg-white/70 mr-2 sm:mr-3" />
+              </span>
+            );
+          })}
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="border-b border-stone-200 sticky top-0 bg-white/80 backdrop-blur-md z-50">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-8">
-          <div className="flex flex-1 items-center gap-6">
-            <button className="md:hidden p-1" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+      {/* Navigation - Pink Navbar */}
+      <nav className="sticky top-0 bg-[#f2707f] z-50 shadow-sm">
+        {/* Main Nav Row */}
+        <div className="flex items-center justify-between px-4 sm:px-5 md:px-10 py-4 sm:py-5 md:py-6">
+          {/* Left: Hamburger (mobile) */}
+          <button 
+            className="md:hidden p-1 text-white" 
+            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+
+          {/* Left: Desktop nav links */}
+          <div className="hidden md:flex items-center gap-6 lg:gap-8">
+            <Link to="/shop" className="text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-white/80 transition-colors">
+              Shop
+            </Link>
+            <Link to="/shop?sale=true" className="text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-white/80 transition-colors">
+              Hot Deals
+            </Link>
+            <Link to="/contact" className="text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-white/80 transition-colors">
+              Contact
+            </Link>
+          </div>
+
+          {/* Center: Logo placeholder - white text */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <Link to="/" className="block">
+              <span className="font-logo text-3xl sm:text-4xl md:text-5xl text-white tracking-wide">
+                Your Logo
+              </span>
+            </Link>
+          </div>
+
+          {/* Right: Icons */}
+          <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+            <button onClick={() => setIsSearchOpen(true)} className="p-1 text-white hover:text-white/80 transition-colors" aria-label="Search">
+              <Search className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
             </button>
-            <div className="hidden md:flex items-center gap-8">
-              <Link to="/" className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${location.pathname === '/' ? 'text-black' : 'text-stone-400'}`}>Home</Link>
-              <Link to="/shop" className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${location.pathname === '/shop' ? 'text-black' : 'text-stone-400'}`}>Shop</Link>
-              <Link to="/blogs" className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${location.pathname === '/blogs' ? 'text-black' : 'text-stone-400'}`}>Blogs</Link>
-              <Link to="/contact" className={`text-[10px] font-bold uppercase tracking-widest hover:text-stone-400 transition-colors ${location.pathname === '/contact' ? 'text-black' : 'text-stone-400'}`}>Contact</Link>
-            </div>
-          </div>
-
-          <div className="flex-1 text-center">
-            <Link to="/" className="font-display text-2xl md:text-3xl font-bold tracking-tighter">SATVASTONES.</Link>
-          </div>
-
-          <div className="flex flex-1 items-center justify-end gap-3 md:gap-6">
-            <button onClick={() => setIsSearchOpen(true)} className="p-1 hover:text-stone-400 transition-colors" aria-label="Search"><Search className="h-5 w-5" /></button>
-            <Link to="/account" aria-label="My Account" className="p-1 hover:text-stone-400 transition-colors"><User className="h-5 w-5" /></Link>
-            <Link to="/cart" aria-label="Shopping Cart" className="p-1 hover:text-stone-400 transition-colors relative">
-              <ShoppingBag className="h-5 w-5" />
+            <Link to="/account" aria-label="My Account" className="p-1 text-white hover:text-white/80 transition-colors">
+              <User className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
+            </Link>
+            <Link to="/wishlist" aria-label="Wishlist" className="p-1 text-white hover:text-white/80 transition-colors relative">
+              <Heart className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
+              {wishlist.length > 0 && (
+                <span className="absolute -top-1 -right-1.5 bg-white text-[#d4535f] text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
+            <Link to="/cart" aria-label="Shopping Cart" className="p-1 text-white hover:text-white/80 transition-colors relative">
+              <ShoppingBag className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-black text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1.5 bg-white text-[#d4535f] text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -1062,6 +884,65 @@ function AppContent() {
           </div>
         </div>
       </nav>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 z-[70] md:hidden"
+              onClick={() => setIsMenuOpen(false)}
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
+              className="fixed top-0 left-0 bottom-0 w-72 bg-white z-[80] md:hidden shadow-xl"
+            >
+              <div className="flex items-center justify-between p-4 border-b border-pink-100 bg-[#f2707f]">
+                <span className="font-logo text-2xl text-white">Your Logo</span>
+                <button onClick={() => setIsMenuOpen(false)} className="p-1 text-white"><X className="h-6 w-6" /></button>
+              </div>
+              <div className="p-4 space-y-1">
+                {[
+                  { label: 'Home', path: '/' },
+                  { label: 'Shop All', path: '/shop' },
+                  { label: 'New Arrivals', path: '/shop' },
+                  { label: 'Hot Deals', path: '/shop?sale=true' },
+                  { label: 'Wishlist', path: '/wishlist' },
+                  { label: 'Blogs', path: '/blogs' },
+                  { label: 'Contact', path: '/contact' },
+                  { label: 'Track Order', path: '/account' },
+                ].map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block py-2.5 px-3 text-[11px] font-bold uppercase tracking-[0.15em] text-gray-700 hover:text-[#d4535f] hover:bg-pink-50 rounded-lg transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100">
+                <Link to="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 group">
+                  <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-[#D44638] group-hover:text-white transition-all">
+                    <User className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-widest">{currentUser ? 'My Account' : 'Sign In'}</p>
+                    <p className="text-[8px] text-gray-400 uppercase tracking-widest">{currentUser ? currentUser.email : 'Member Access'}</p>
+                  </div>
+                </Link>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Main Content Render with Routes */}
       <main className="relative">
@@ -1104,288 +985,80 @@ function AppContent() {
                       answer: 'Yes, our jewelry is waterproof and can withstand daily wear. However, we recommend removing before swimming or showering to maintain longevity.'
                     }
                   ])} />
-                  {/* Hero Section */}
-                  <section className="relative overflow-hidden pt-8 pb-16 md:pt-16 md:pb-24">
-                    <div className="mx-auto max-w-7xl px-4 md:px-8">
-                      <div className="flex flex-col mb-8 md:mb-12">
-                        <h1 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-9xl lg:text-[10rem]">
-                          {cmsData.hero.title?.split(' ')[0] || ''} <span className="text-stone-300">{cmsData.hero.title?.split(' ')[1] || ''}</span>
-                        </h1>
-                        <div className="flex flex-col md:flex-row items-center md:items-start justify-between mt-4 md:mt-2">
-                          <div className="max-w-[280px] md:pt-4 mb-6 md:mb-0 text-center md:text-left">
-                            <p className="text-[10px] font-bold leading-relaxed tracking-[0.2em] text-stone-500 uppercase">
-                              {cmsData.hero.description}
-                            </p>
-                          </div>
-                          <h2 className="font-display text-[12vw] font-bold leading-[0.75] tracking-tight uppercase md:text-8xl lg:text-[10rem]">
-                            {cmsData.hero.subTitle}
-                          </h2>
-                        </div>
-                      </div>
 
-                      <div className="relative aspect-video md:aspect-[21/9] overflow-hidden rounded-sm group cursor-pointer" onClick={() => navigateTo('shop')}>
-                        <img src={optimizeImage(cmsData.hero.image, 768, 432)} alt="Satvastones - Premium aesthetic Korean and Western jewelry" fetchpriority="high" width="768" height="329" srcSet={getSrcSet(cmsData.hero.image, [360, 480, 768, 1024, 1600], 0.5625)} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px" className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col items-center justify-end p-8 md:p-14">
-                          <div className="flex flex-col items-center gap-4 mb-4">
-                            <p className="text-white/70 text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em]">Browse The Full Collection</p>
-                            <button className="group/btn relative flex items-center gap-4 bg-white text-black pl-8 pr-6 py-4 md:py-5 text-[11px] md:text-sm font-black uppercase tracking-[0.25em] shadow-2xl hover:bg-black hover:text-white transition-all duration-300 rounded-full">
-                              <span>Shop All Jewelry</span>
-                              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-white group-hover/btn:bg-white group-hover/btn:text-black transition-all duration-300">
-                                <ArrowRight className="h-4 w-4" />
-                              </span>
-                            </button>
-                            <p className="text-white/50 text-[8px] uppercase tracking-widest">{cmsData.products?.length || 0}+ Aesthetic Pieces</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </section>
+                  {/* Hero Banner - Full-width auto-carousel */}
+                  <NewHeroBanner 
+                    banners={homepageData?.banners || []} 
+                    onBannerClick={(banner) => {
+                      if (banner.linkUrl) {
+                        navigateTo('shop', { category: banner.linkUrl });
+                      } else if (banner.link) {
+                        navigateTo('shop', { category: banner.link });
+                      }
+                    }}
+                  />
 
-                  {/* Categories */}
-                  <section className="bg-white py-20 md:py-32">
-                    <div className="mx-auto max-w-7xl px-4 md:px-8">
-                      <div className="mb-16 text-center">
-                        <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight">
-                          {/* stone-400 on white = ratio ~5.4:1 for large text, passes AA */}
-                          SHOP BY <span className="text-stone-400">VIBE</span>
-                        </h2>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                        {cmsData.categories.map((cat: any, i: number) => (
-                          <CategoryCard 
-                            key={i} 
-                            category={cat} 
-                            onClick={() => navigateTo('shop', { category: (cat.name || cat.title || 'all').toLowerCase() })} 
-                          />
-                        ))}
-                      </div>
+                  {/* Category Showcase - Scrollable cards */}
+                  <NewCategoryShowcase 
+                    categories={cmsData?.categories || []} 
+                    onCategoryClick={(cat) => navigateTo('shop', { category: cat })}
+                  />
 
-                      {/* Full-width Shop CTA Banner */}
-                      <div
-                        onClick={() => navigateTo('shop')}
-                        className="mt-12 cursor-pointer group relative overflow-hidden bg-stone-900 rounded-sm px-8 py-10 md:py-14 flex flex-col md:flex-row items-center justify-between gap-6"
-                      >
-                        {/* Animated shimmer */}
-                        <div className="pointer-events-none absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-                        <div className="text-center md:text-left">
-                          {/* stone-400 on stone-900 bg = ratio ~4.8:1, passes AA */}
-                          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-400 mb-2">New Customers? Start Here</p>
-                          <h3 className="font-display text-3xl md:text-5xl font-bold uppercase tracking-tight text-white leading-tight">
-                            View The Complete <span className="text-stone-400">Collection</span>
-                          </h3>
-                          <p className="text-[11px] text-stone-400 uppercase tracking-wider mt-3">{cmsData.products?.length || 0}+ Pieces • Earrings, Necklaces, Rings, Bracelets & More</p>
-                        </div>
-                        <button className="shrink-0 flex items-center gap-4 bg-white text-black pl-8 pr-5 py-4 md:py-5 text-[11px] font-black uppercase tracking-[0.2em] rounded-full shadow-xl group-hover:bg-stone-100 transition-all">
-                          Shop Everything
-                          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-black text-white">
-                            <ArrowRight className="h-4 w-4" />
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </section>
+                  {/* Dynamic Product Sections from Admin */}
+                  {homepageData?.sections?.map((section: any) => (
+                    <ProductSection
+                      section={section}
+                      onProductClick={(p) => navigateTo('product', p)}
+                      onViewAll={() => {
+                        if (section.shopLink) {
+                          navigateTo('shop', { category: section.shopLink });
+                        } else {
+                          navigateTo('shop');
+                        }
+                      }}
+                      key={section._id}
+                    />
+                  ))}
 
-                  {/* ₹99 Flash Sale */}
-                  {cmsData.ninetyNineSale?.isActive && (
-                    <section className="relative overflow-hidden bg-gradient-to-br from-rose-950 via-rose-900 to-pink-900 py-20 md:py-28">
-                      {/* Animated background particles */}
-                      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                        <div className="absolute -top-20 -right-20 w-80 h-80 bg-rose-500/10 rounded-full blur-3xl animate-pulse"></div>
-                        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-                      </div>
-                      <div className="mx-auto max-w-7xl px-4 md:px-8 relative z-10">
-                        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-                          {/* Left - Content */}
-                          <div className="flex-1 text-center lg:text-left space-y-8">
-                            <div className="space-y-4">
-                              <span className="inline-flex items-center gap-2 bg-rose-500/20 text-rose-200 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.3em] rounded-full border border-rose-400/20">
-                                <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping"></span>
-                                {cmsData.ninetyNineSale.subTitle}
-                              </span>
-                              <h2 className="font-display text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-white leading-[0.85]">
-                                {cmsData.ninetyNineSale.title}
-                              </h2>
-                              <p className="text-sm md:text-base text-rose-200/80 font-bold uppercase tracking-[0.2em] leading-loose max-w-lg mx-auto lg:mx-0">
-                                {cmsData.ninetyNineSale.description}
-                              </p>
-                            </div>
+                  {/* Shop By Trend */}
+                  <ShopByTrend 
+                    trends={homepageData?.trends || []}
+                    onTrendClick={(t) => navigateTo('shop')}
+                  />
 
-                            {/* Guarantee badges */}
-                            <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                              {cmsData.ninetyNineSale.guaranteeText.split('•').map((item: string, i: number) => (
-                                <span key={i} className="inline-flex items-center gap-1.5 bg-white/10 text-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-widest rounded-full border border-white/10">
-                                  <CheckCircle className="h-3 w-3 text-emerald-400" />
-                                  {item.trim()}
-                                </span>
-                              ))}
-                            </div>
+                  {/* Sale Sections */}
+                  {(homepageData?.sales || []).map((sale: any) => (
+                    <SaleSection 
+                      key={sale._id}
+                      sale={sale}
+                      onProductClick={(p) => navigateTo('product', p)}
+                    />
+                  ))}
 
-                            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-                              <button
-                                onClick={() => navigateTo('shop', { category: '99-sale' })}
-                                aria-label="Shop the ₹99 collection"
-                                className="bg-white text-black px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] hover:bg-rose-100 transition-all shadow-2xl rounded-full flex items-center gap-3 group/btn"
-                              >
-                                Shop ₹99 Collection
-                                <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
-                              </button>
-                            </div>
-                          </div>
+                  {/* Customer Reviews */}
+                  <CustomerReviews reviews={homepageData?.reviews || []} />
 
-                          {/* Right - Product Grid */}
-                          <div className="flex-1 w-full max-w-lg">
-                            <div className="grid grid-cols-2 gap-4">
-                              {cmsData.products.filter((p: any) => p.isNinetyNine).slice(0, 4).map((p: any) => (
-                                <div
-                                  key={p._id || p.id}
-                                  onClick={() => navigateTo('product', p)}
-                                  role="button"
-                                  tabIndex={0}
-                                  aria-label={`View ${p.title} — ₹${p.price}`}
-                                  onKeyDown={(e) => e.key === 'Enter' && navigateTo('product', p)}
-                                  className="group cursor-pointer bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:bg-white/10 transition-all"
-                                >
-                                  <div className="aspect-square overflow-hidden relative">
-                                    <img
-                                      src={optimizeImage(p.image, 400, 400)}
-                                      srcSet={getSrcSet(p.image, [200, 300, 400], 1.0)}
-                                      sizes="(max-width: 640px) calc(50vw - 24px), 200px"
-                                      alt={p.title}
-                                      loading="lazy"
-                                      width="400"
-                                      height="400"
-                                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    />
-                                    <div className="absolute top-2 left-2">
-                                      <span className="bg-rose-500 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-widest shadow-lg">
-                                        {cmsData.ninetyNineSale.badgeText}
-                                      </span>
-                                    </div>
-                                  </div>
-                                  <div className="p-3 text-center">
-                                    {/* p used intentionally — heading level would skip h1→h2 */}
-                                    <p className="text-[10px] font-bold uppercase tracking-wider text-white/90 truncate">{p.title}</p>
-                                    <p className="text-sm font-bold text-rose-300 mt-1">₹{p.price}</p>
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                            {cmsData.products.filter((p: any) => p.isNinetyNine).length > 4 && (
-                              <button
-                                onClick={() => navigateTo('shop')}
-                                className="w-full mt-4 text-center text-[9px] font-bold uppercase tracking-widest text-rose-200/60 hover:text-white transition-colors"
-                              >
-                                +{cmsData.products.filter((p: any) => p.isNinetyNine).length - 4} More ₹99 Items
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </section>
-                  )}
+                  {/* Connect With Us */}
+                  <ConnectWithUs />
 
-                  {/* Special Offer */}
-                  {cmsData.specialOffer?.isActive && (
-                    <section className="bg-stone-900 py-20 md:py-32 overflow-hidden">
-                      <div className="mx-auto max-w-7xl px-4 md:px-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-16 md:gap-24">
-                          <div className="relative aspect-square lg:aspect-[4/5] overflow-hidden rounded-sm group">
-                            <img 
-                              src={optimizeImage(cmsData.specialOffer.image, 800, 1000)} 
-                              srcSet={getSrcSet(cmsData.specialOffer.image, [360, 480, 800, 1200], 1.25)}
-                              sizes="(max-width: 1024px) 100vw, 50vw"
-                              alt={cmsData.specialOffer.title || 'Special offer - Satvastones premium jewelry'} 
-                              loading="lazy"
-                              width="800"
-                              height="1000"
-                              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                            />
-                            <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
-                          </div>
-                          <div className="space-y-10">
-                            <div className="space-y-4">
-                              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-stone-500">Exclusive Drop</span>
-                              <h2 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight text-white leading-[0.85]">
-                                {cmsData.specialOffer.title} <br />
-                                <span className="text-stone-700">{cmsData.specialOffer.subTitle}</span>
-                              </h2>
-                            </div>
-                            <p className="text-sm font-bold uppercase tracking-[0.2em] text-stone-400 leading-loose max-w-md">
-                              {cmsData.specialOffer.description}
-                            </p>
-                            <button 
-                              onClick={() => {
-                                const prod = cmsData.products.find((p: any) => p._id === cmsData.specialOffer.productId || p.id === cmsData.specialOffer.productId);
-                                if (prod) navigateTo('product', prod);
-                                else navigateTo('shop');
-                              }}
-                              className="bg-white text-black px-12 py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-stone-200 transition-all shadow-2xl"
-                            >
-                              Shop The Offer
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </section>
-                  )}
+                  {/* FAQ */}
+                  <FaqSection faqs={homepageData?.faqs || []} />
 
-                  {/* Discover */}
-                  <section className="bg-stone-50 py-20 md:py-32">
-                    <div className="mx-auto max-w-7xl px-4 md:px-8">
-                      <div className="mb-16 flex flex-col md:flex-row items-end justify-between gap-8">
-                        <h2 className="font-display text-4xl md:text-7xl font-bold uppercase tracking-tight leading-[0.85]">
-                          {/* stone-400 on stone-50 bg = ratio ~4.9:1 for large text, passes AA */}
-                          LATEST <br /> <span className="text-stone-400">ARRIVALS</span>
-                        </h2>
-                        <button
-                          onClick={() => navigateTo('shop')}
-                          className="group/btn flex items-center gap-3 bg-black text-white pl-7 pr-5 py-3.5 text-[10px] font-black uppercase tracking-widest rounded-full hover:bg-stone-800 transition-all shadow-lg"
-                        >
-                          View All {cmsData.products?.length || ''} Pieces
-                          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-black group-hover/btn:scale-110 transition-transform">
-                            <ArrowRight className="h-3.5 w-3.5" />
-                          </span>
-                        </button>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                        {cmsData.products.slice(0, 6).map((p: any) => <DiscoverCard key={p.id} product={p} onClick={() => navigateTo('product', p)} />)}
-                      </div>
-                    </div>
-                  </section>
-
-                  {/* SEO Content — Homepage rich text for indexing */}
-                  <section className="bg-white py-24 md:py-32 border-t border-stone-100">
-                    <div className="mx-auto max-w-7xl px-4 md:px-8">
-                      <div className="max-w-4xl mx-auto text-center space-y-12">
-                        <div className="space-y-6">
-                          <h2 className="font-display text-3xl md:text-4xl font-bold uppercase tracking-tight">Satvastones — Premium Korean & Western Aesthetic Jewelry Online</h2>
-                          <div className="w-16 h-0.5 bg-stone-200 mx-auto"></div>
-                        </div>
-                        {/* stone-600 on white = ratio ~7.1:1, passes AA — increased from stone-500 */}
-                        <div className="text-[10px] md:text-xs leading-relaxed text-stone-600 uppercase tracking-tight space-y-5 max-w-3xl mx-auto">
-                          <p>{cmsData?.homepageSeo?.p1 || "Welcome to Satvastones, India's premier destination for aesthetic Korean and Western jewelry. Based in Vapi, Gujarat, we curate handcrafted, anti-tarnish, and waterproof jewelry pieces that blend Seoul minimalism with Parisian elegance. Our collection features over 100 meticulously designed pieces including Korean huggie earrings, layered chain necklaces, stackable rings, charm bracelets, personalized name necklaces, and luxury gift hampers."}</p>
-                          <p>{cmsData?.homepageSeo?.p2 || "Every Satvastones piece is crafted using premium materials with a focus on craftsmanship and durability. Our jewelry features 18K gold plating, sterling silver finishes, and hypoallergenic alloy bases — all treated with anti-tarnish coating to ensure long-lasting luster. We guarantee no color fade, no green fingers, and no discoloration. Each piece is designed for the sophisticated woman who values quality, style, and affordability in her everyday aesthetic."}</p>
-                          <p>{cmsData?.homepageSeo?.p3 || "Shop across multiple categories — from minimalist everyday earrings and dainty necklaces to bold statement rings and elegant bracelets. Our ₹99 Flash Sale offers premium anti-tarnish jewelry at accessible price points, while our personalized name necklaces make thoughtful gifts for birthdays, anniversaries, and special occasions. We offer free shipping on prepaid orders above ₹399, secure payments via UPI and cards, and express dispatch within 24-48 hours."}</p>
-                          <p>{cmsData?.homepageSeo?.p4 || "Follow us on Instagram, Facebook, and Pinterest for daily style inspiration, new arrivals, and exclusive offers. Whether you are dressing up for a wedding, accessorizing for work, or looking for the perfect gift, Satvastones has the perfect aesthetic jewelry piece for every occasion and every woman."}</p>
-                        </div>
-                        <div className="flex flex-wrap justify-center gap-3">
-                          {['Anti-Tarnish', 'Waterproof', 'Hypoallergenic', '18K Gold Plated', 'Gift-Ready Packaging', 'Free Shipping over ₹399'].map((tag) => (
-                            // stone-700 on stone-100 bg = ratio ~7.5:1, passes AA
-                            <span key={tag} className="text-[8px] bg-stone-100 text-stone-700 px-3 py-1.5 font-bold uppercase tracking-wider rounded-full border border-stone-200">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </section>
                 </>
               } />
 
               <Route path="/shop" element={<ShopRoute />} />
               <Route path="/shop/:category" element={<ShopRoute />} />
-              <Route path="/product/:slug" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} />} />
-              <Route path="/cart" element={<><SEO title="Your Shopping Bag" description="Review your selected aesthetic jewelry pieces at Satvastones. Secure checkout with UPI, Card & COD available." canonical="https://satvastones.in/cart" keywords={['shopping cart', 'jewelry cart', 'checkout jewelry', 'satvastones cart']} noindex={true} /><CartPage cart={cart} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
+              <Route path="/product/:slug" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} wishlist={wishlist} toggleWishlist={toggleWishlist} />} />
+              <Route path="/wishlist" element={
+                <WishlistPage 
+                  wishlist={wishlist} 
+                  onRemove={(id) => setWishlist(prev => prev.filter(i => (i._id || i.id) !== id))}
+                  onAddToCart={(product) => { addToCart(product); setWishlist(prev => prev.filter(i => (i._id || i.id) !== (product._id || product.id))); }}
+                  onProductClick={(p) => navigateTo('product', p)}
+                />
+              } />
+              <Route path="/cart" element={<><SEO title="Your Shopping Bag" description="Review your selected aesthetic jewelry pieces at Satvastones. Secure checkout with UPI, Card & COD available." canonical="https://satvastones.in/cart" keywords={['shopping cart', 'jewelry cart', 'checkout jewelry', 'satvastones cart']} noindex={true} /><CartPage cart={cart} allProducts={cmsData.products || []} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
               <Route path="/checkout" element={<><SEO title="Secure Checkout" description="Complete your order securely. We accept UPI, Cards, Net Banking & COD." canonical="https://satvastones.in/checkout" noindex={true} /><CheckoutPage cart={cart} currentUser={currentUser} cmsData={cmsData} onBack={() => navigateTo('cart')} onComplete={(order) => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success', order); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
               <Route path="/account" element={currentUser ? <><SEO title="My Account | Satvastones" description="Manage your orders, addresses, and preferences at Satvastones." canonical="https://satvastones.in/account" noindex={true} keywords={['my account', 'order history', 'satvastones account']} /><AccountDashboard user={currentUser} onLogout={() => { setCurrentUser(null); localStorage.removeItem('satvastones_user'); navigate('/'); }} onShop={() => navigate('/shop')} /></> : <AuthPage onLogin={(data) => { setCurrentUser(data.customer); if (localStorage.getItem('checkout_pending') === 'true') navigate('/checkout'); else navigate('/account'); }} />} />
               <Route path="/contact" element={<><SEO title="Contact Satvastones | Customer Support" description="Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: support@satvastones.in" canonical="https://satvastones.in/contact" keywords={['contact satvastones', 'jewelry support', 'customer care', 'satvastones help']} /><ContactPage /></>} />
@@ -1397,83 +1070,42 @@ function AppContent() {
         </AnimatePresence>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-black text-white pt-24 pb-12">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-16 mb-24">
-            <div className="md:col-span-5 space-y-12">
-              <div>
-                <h2 className="font-display text-4xl font-bold tracking-tighter mb-8">SATVASTONES.</h2>
-                {/* stone-400 on black = ratio ~5.4:1, passes AA */}
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 leading-loose max-w-sm">
-                  Bringing You The Most Aesthetic Korean &amp; Western Jewelry. High Quality. Affordable. Trending.
-                </p>
-              </div>
-              
-              <div className="space-y-6">
-                {/* p tag — this is footer content, not a document heading */}
-                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white">Join the newsletter</p>
-                <div className="flex border-b border-stone-700 py-2">
-                  <input 
-                    type="email" 
-                    placeholder="YOUR EMAIL" 
-                    aria-label="Newsletter email address"
-                    className="bg-transparent text-[10px] uppercase font-bold tracking-widest outline-hidden flex-1 text-white placeholder:text-stone-500" 
-                  />
-                  <button 
-                    className="text-[9px] font-bold uppercase tracking-widest text-stone-300 hover:text-white transition-colors"
-                    aria-label="Subscribe to newsletter"
-                  >Join</button>
-                </div>
-                {/* stone-500 on black = ratio ~4.6:1, passes AA */}
-                <p className="text-[8px] uppercase tracking-widest text-stone-500">Get early access to drops &amp; exclusive offers.</p>
-              </div>
-              
-              <div className="flex gap-6">
-                {[Facebook, Twitter, Linkedin, Instagram].map((Icon, idx) => (
-                  <Icon key={idx} className="h-5 w-5 text-stone-400 hover:text-white cursor-pointer transition-colors" aria-hidden="true" />
-                ))}
-              </div>
-            </div>
-            <div className="md:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12">
-              <div className="space-y-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Shop</p>
-                <ul className="space-y-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">
-                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('shop')}>New Arrivals</li>
-                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('shop')}>Earrings</li>
-                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('shop')}>Necklaces</li>
-                </ul>
-              </div>
-              <div className="space-y-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Explore</p>
-                <ul className="space-y-4 text-[10px] font-bold uppercase tracking-widest text-stone-400">
-                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('blogs')}>The Journal</li>
-                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('contact')}>Contact Us</li>
-                  <li className="hover:text-white cursor-pointer transition-colors" onClick={() => navigateTo('auth')}>My Account</li>
-                </ul>
-              </div>
-              <div className="space-y-6">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Contact</p>
-                {/* stone-400 on black passes AA */}
-                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">support@satvastones.in</p>
-                <p className="text-[9px] font-bold uppercase tracking-widest text-stone-500">Vapi, Gujarat, India</p>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-stone-900 pt-12 flex flex-col md:flex-row justify-between gap-6 text-center md:text-left">
-             <div className="space-y-2">
-                {/* stone-500 on black = ratio ~4.6:1, passes AA */}
-                <p className="text-[9px] font-bold uppercase tracking-[0.3em] text-stone-500">© 2026 SATVASTONES. ALL RIGHTS RESERVED.</p>
-                {/* red-700 on black = ratio ~4.6:1 passes; the previous red-900/40 was failing */}
-                <p className="text-[8px] font-bold uppercase tracking-[0.4em] text-red-700">No Refunds • No Cancellations • No Returns</p>
-             </div>
-             <div className="flex justify-center md:justify-end gap-8 text-[9px] font-bold uppercase tracking-[0.3em] text-stone-500">
-                <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
-                <span className="hover:text-white cursor-pointer transition-colors">Terms Of Service</span>
-             </div>
-          </div>
+      {/* Mobile Bottom Navigation */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 safe-bottom">
+        <div className="flex items-center justify-around py-1.5 px-2">
+          <Link to="/" className="flex flex-col items-center gap-0.5 py-1 px-3 text-gray-500 hover:text-[#d4535f] transition-colors">
+            <Home className="w-5 h-5" />
+            <span className="text-[9px] font-medium">Home</span>
+          </Link>
+          <Link to="/account" className="flex flex-col items-center gap-0.5 py-1 px-3 text-gray-500 hover:text-[#d4535f] transition-colors">
+            <User className="w-5 h-5" />
+            <span className="text-[9px] font-medium">Log in</span>
+          </Link>
+          <Link to="/shop" className="flex flex-col items-center gap-0.5 py-1 px-3 text-gray-500 hover:text-[#d4535f] transition-colors">
+            <LayoutGrid className="w-5 h-5" />
+            <span className="text-[9px] font-medium">Collections</span>
+          </Link>
+          <button className="flex flex-col items-center gap-0.5 py-1 px-3 text-gray-500 hover:text-[#d4535f] transition-colors relative">
+            <Heart className="w-5 h-5" />
+            <span className="text-[9px] font-medium">Wishlist</span>
+          </button>
+          <Link to="/cart" className="flex flex-col items-center gap-0.5 py-1 px-3 text-gray-500 hover:text-[#d4535f] transition-colors relative">
+            <ShoppingBag className="w-5 h-5" />
+            <span className="text-[9px] font-medium">Cart</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-0.5 right-1 bg-[#D44638] text-white text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                {cartCount}
+              </span>
+            )}
+          </Link>
         </div>
-      </footer>
+      </nav>
+
+      {/* Spacer for mobile bottom nav */}
+      <div className="md:hidden h-14" />
+
+      {/* Footer */}
+      <NewFooter />
     </>
     )}
     </div>

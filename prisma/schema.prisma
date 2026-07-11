@@ -162,6 +162,8 @@ model Product {
   orderItems OrderItem[]
   wishlist   Wishlist[]
   cartItems  CartItem[]
+  homepageSections HomepageSectionProduct[]
+  trends           TrendProduct[]
 
   @@index([slug])
   @@index([categoryId])
@@ -287,4 +289,101 @@ model Newsletter {
   subscribedAt DateTime @default(now())
 
   @@index([email])
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  title     String
+  image     String
+  link      String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model HomepageSection {
+  id        String   @id @default(cuid())
+  title     String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products HomepageSectionProduct[]
+
+  @@index([sortOrder])
+}
+
+model HomepageSectionProduct {
+  id              String           @id @default(cuid())
+  sectionId       String
+  productId       String
+  sortOrder       Int              @default(0)
+  badge           String?
+  createdAt       DateTime         @default(now())
+
+  section HomepageSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  product Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([sectionId, productId])
+  @@index([sectionId])
+  @@index([productId])
+}
+
+model Trend {
+  id        String   @id @default(cuid())
+  title     String
+  image     String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products TrendProduct[]
+
+  @@index([sortOrder])
+}
+
+model TrendProduct {
+  id        String   @id @default(cuid())
+  trendId   String
+  productId String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  trend   Trend   @relation(fields: [trendId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([trendId, productId])
+  @@index([trendId])
+  @@index([productId])
+}
+
+model CustomerReview {
+  id        String   @id @default(cuid())
+  name      String
+  rating    Int
+  title     String
+  comment   String   @db.Text
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model Faq {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String   @db.Text
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
 }

@@ -2,18 +2,22 @@ import NewArrivalsSlider from "@/components/home/HeroBanner";
 import BenefitBanner from "@/components/home/BenefitBanner";
 import BestSellers from "@/components/home/FeaturedProducts";
 import CollectionGallery from "@/components/home/CollectionGallery";
+import CategoryShowcase from "@/components/home/CategoryShowcase";
+import SocialProof from "@/components/home/SocialProof";
 import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Satvastones | High-End Luxury Jewellery Curation",
-  description: "Explore the intersection of Seoul minimalism and Parisian chic. Handcrafted luxury jewellery artifacts designed for the sophisticated woman.",
+  title: "Satvastones | BIS Hallmarked Gold, Diamond & Gemstone Jewellery Online India",
+  description: "Buy 100% BIS Hallmarked gold, diamond & gemstone jewellery online. Lifetime exchange, free shipping ₹1999+, 30-day returns, COD available. Certified jewellers since 2010. Shop rings, necklaces, bridal sets, silver & men's jewellery.",
   alternates: { canonical: "https://satvastones.in" },
   openGraph: {
     type: "website",
     locale: "en_IN",
     siteName: "Satvastones",
     url: "https://satvastones.in",
+    title: "Satvastones | Certified Jewellery Online India",
+    description: "BIS Hallmarked • Lifetime Exchange • Free Shipping • 30-Day Returns",
   },
 };
 
@@ -65,7 +69,6 @@ export default async function HomePage() {
   let bestSellers: any[] = [];
 
   try {
-    // Fetch all active products for the Gallery
     allProducts = await prisma.product.findMany({
       where: { isActive: true },
       orderBy: { createdAt: "desc" },
@@ -81,7 +84,6 @@ export default async function HomePage() {
       },
     });
 
-    // Fetch featured products for the Best Sellers section
     bestSellers = await prisma.product.findMany({
       where: { isActive: true, isFeatured: true },
       take: 4,
@@ -101,22 +103,27 @@ export default async function HomePage() {
     console.log("DB not ready yet, using mock fallback");
   }
 
-  // Fallback to mock data if DB is empty to ensure UI visibility for the user
   const displayBestSellers = bestSellers.length > 0 ? bestSellers : MOCK_PRODUCTS;
   const displayAllProducts = allProducts.length > 0 ? allProducts : MOCK_PRODUCTS;
 
   return (
-    <main className="bg-luxury-cream relative">
-      {/* 1. New Collection Sliders (Hero) */}
+    <main className="bg-white relative">
+      {/* Hero Banner */}
       <NewArrivalsSlider />
 
-      {/* 1.5. Benefit Banner */}
+      {/* Category Showcase - Traditional Indian Jewellery Style */}
+      <CategoryShowcase />
+
+      {/* Social Proof - Reviews, Ratings & Trust */}
+      <SocialProof />
+
+      {/* Benefit Banner */}
       <BenefitBanner />
 
-      {/* 2. Best Sellers */}
+      {/* Best Sellers */}
       <BestSellers products={displayBestSellers} />
 
-      {/* 3. Whole Collection Gallery */}
+      {/* Whole Collection Gallery */}
       <CollectionGallery products={displayAllProducts} />
     </main>
   );

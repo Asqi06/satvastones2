@@ -5,7 +5,8 @@ import {
   Settings, Package, ShoppingCart, Users, Image as ImageIcon, 
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
   CheckCircle, Clock, ChevronRight, UploadCloud, TrendingUp, ShoppingBag,
-  Menu, ShieldCheck, Search, Barcode as BarcodeIcon, Video, BarChart3
+  Menu, ShieldCheck, Search, Barcode as BarcodeIcon, Video, BarChart3,
+  Layout, Star, HelpCircle, GripVertical
 } from 'lucide-react';
 import { openUploadWidget } from '../utils/cloudinary';
 import AnalyticsDashboard from './AnalyticsDashboard';
@@ -41,6 +42,203 @@ export default function AdminPanel({
   const [showBlogForm, setShowBlogForm] = useState(false);
   const [editingBlog, setEditingBlog] = useState<any>(null);
   const [blogForm, setBlogForm] = useState<any>({ title: '', slug: '', excerpt: '', content: '', image: '', category: '', author: 'SATVASTONES', readTime: '5 min read', isPublished: false });
+
+  // Homepage Management State
+  const [banners, setBanners] = useState<any[]>([]);
+  const [sections, setSections] = useState<any[]>([]);
+  const [trends, setTrends] = useState<any[]>([]);
+  const [customerReviews, setCustomerReviews] = useState<any[]>([]);
+  const [faqs, setFaqs] = useState<any[]>([]);
+  const [sales, setSales] = useState<any[]>([]);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
+
+  // Forms
+  const [bannerForm, setBannerForm] = useState<any>({ title: '', image: '', link: '', sortOrder: 0, isActive: true });
+  const [sectionForm, setSectionForm] = useState<any>({ title: '', sortOrder: 0, isActive: true, productIds: [], badge: 'Hot Selling', shopLink: '' });
+  const [trendForm, setTrendForm] = useState<any>({ title: '', image: '', sortOrder: 0, isActive: true, productIds: [] });
+  const [reviewForm, setReviewForm] = useState<any>({ name: '', rating: 5, title: '', comment: '', sortOrder: 0, isActive: true });
+  const [faqForm, setFaqForm] = useState<any>({ question: '', answer: '', sortOrder: 0, isActive: true });
+  const [saleForm, setSaleForm] = useState<any>({ title: '', subtitle: '', discountPercent: 0, productIds: [], isActive: true, bgColor: '#f2707f' });
+
+  const [editingBanner, setEditingBanner] = useState<any>(null);
+  const [editingSection, setEditingSection] = useState<any>(null);
+  const [editingTrend, setEditingTrend] = useState<any>(null);
+  const [editingReview, setEditingReview] = useState<any>(null);
+  const [editingFaq, setEditingFaq] = useState<any>(null);
+  const [editingSale, setEditingSale] = useState<any>(null);
+
+  const [showBannerForm, setShowBannerForm] = useState(false);
+  const [showSectionForm, setShowSectionForm] = useState(false);
+  const [showTrendForm, setShowTrendForm] = useState(false);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showFaqForm, setShowFaqForm] = useState(false);
+  const [showSaleForm, setShowSaleForm] = useState(false);
+
+  // Fetch Homepage Data
+  React.useEffect(() => {
+    if (['banners', 'homepage-sections', 'trends', 'reviews', 'faqs', 'sales'].includes(activeTab)) {
+      Promise.all([
+        fetch(`${API_URL}/banners`).then(r => r.json()),
+        fetch(`${API_URL}/homepage-sections`).then(r => r.json()),
+        fetch(`${API_URL}/trends`).then(r => r.json()),
+        fetch(`${API_URL}/customer-reviews`).then(r => r.json()),
+        fetch(`${API_URL}/faqs`).then(r => r.json()),
+        fetch(`${API_URL}/sales`).then(r => r.json()),
+        fetch(`${API_URL}/products`).then(r => r.json()),
+      ]).then(([b, s, t, r, f, sa, p]) => {
+        setBanners(b || []);
+        setSections(s || []);
+        setTrends(t || []);
+        setCustomerReviews(r || []);
+        setFaqs(f || []);
+        setSales(sa || []);
+        setAllProducts(p || []);
+      }).catch(err => console.error("Failed to fetch homepage data:", err));
+    }
+  }, [activeTab]);
+
+  // Banner CRUD
+  const saveBanner = async (banner: any, isEdit: boolean) => {
+    try {
+      const url = isEdit ? `${API_URL}/banners/${banner._id}` : `${API_URL}/banners`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(banner) });
+      if (res.ok) {
+        const saved = await res.json();
+        setBanners(prev => isEdit ? prev.map(b => b._id === saved._id ? saved : b) : [saved, ...prev]);
+        setShowBannerForm(false);
+        setEditingBanner(null);
+        setBannerForm({ title: '', image: '', link: '', sortOrder: 0, isActive: true });
+      }
+    } catch (err) { console.error("Failed to save banner:", err); }
+  };
+
+  const deleteBanner = async (id: string) => {
+    if (!window.confirm('Delete this banner?')) return;
+    try {
+      await fetch(`${API_URL}/banners/${id}`, { method: 'DELETE' });
+      setBanners(prev => prev.filter(b => b._id !== id));
+    } catch (err) { console.error("Failed to delete banner:", err); }
+  };
+
+  // Section CRUD
+  const saveSection = async (section: any, isEdit: boolean) => {
+    try {
+      const url = isEdit ? `${API_URL}/homepage-sections/${section._id}` : `${API_URL}/homepage-sections`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(section) });
+      if (res.ok) {
+        const saved = await res.json();
+        setSections(prev => isEdit ? prev.map(s => s._id === saved._id ? saved : s) : [saved, ...prev]);
+        setShowSectionForm(false);
+        setEditingSection(null);
+        setSectionForm({ title: '', sortOrder: 0, isActive: true, productIds: [], badge: 'Hot Selling', shopLink: '' });
+      }
+    } catch (err) { console.error("Failed to save section:", err); }
+  };
+
+  const deleteSection = async (id: string) => {
+    if (!window.confirm('Delete this section?')) return;
+    try {
+      await fetch(`${API_URL}/homepage-sections/${id}`, { method: 'DELETE' });
+      setSections(prev => prev.filter(s => s._id !== id));
+    } catch (err) { console.error("Failed to delete section:", err); }
+  };
+
+  // Trend CRUD
+  const saveTrend = async (trend: any, isEdit: boolean) => {
+    try {
+      const url = isEdit ? `${API_URL}/trends/${trend._id}` : `${API_URL}/trends`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(trend) });
+      if (res.ok) {
+        const saved = await res.json();
+        setTrends(prev => isEdit ? prev.map(t => t._id === saved._id ? saved : t) : [saved, ...prev]);
+        setShowTrendForm(false);
+        setEditingTrend(null);
+        setTrendForm({ title: '', image: '', sortOrder: 0, isActive: true, productIds: [] });
+      }
+    } catch (err) { console.error("Failed to save trend:", err); }
+  };
+
+  const deleteTrend = async (id: string) => {
+    if (!window.confirm('Delete this trend?')) return;
+    try {
+      await fetch(`${API_URL}/trends/${id}`, { method: 'DELETE' });
+      setTrends(prev => prev.filter(t => t._id !== id));
+    } catch (err) { console.error("Failed to delete trend:", err); }
+  };
+
+  // Review CRUD
+  const saveReview = async (review: any, isEdit: boolean) => {
+    try {
+      const url = isEdit ? `${API_URL}/customer-reviews/${review._id}` : `${API_URL}/customer-reviews`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(review) });
+      if (res.ok) {
+        const saved = await res.json();
+        setCustomerReviews(prev => isEdit ? prev.map(r => r._id === saved._id ? saved : r) : [saved, ...prev]);
+        setShowReviewForm(false);
+        setEditingReview(null);
+        setReviewForm({ name: '', rating: 5, title: '', comment: '', sortOrder: 0, isActive: true });
+      }
+    } catch (err) { console.error("Failed to save review:", err); }
+  };
+
+  const deleteReview = async (id: string) => {
+    if (!window.confirm('Delete this review?')) return;
+    try {
+      await fetch(`${API_URL}/customer-reviews/${id}`, { method: 'DELETE' });
+      setCustomerReviews(prev => prev.filter(r => r._id !== id));
+    } catch (err) { console.error("Failed to delete review:", err); }
+  };
+
+  // FAQ CRUD
+  const saveFaq = async (faq: any, isEdit: boolean) => {
+    try {
+      const url = isEdit ? `${API_URL}/faqs/${faq._id}` : `${API_URL}/faqs`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(faq) });
+      if (res.ok) {
+        const saved = await res.json();
+        setFaqs(prev => isEdit ? prev.map(f => f._id === saved._id ? saved : f) : [saved, ...prev]);
+        setShowFaqForm(false);
+        setEditingFaq(null);
+        setFaqForm({ question: '', answer: '', sortOrder: 0, isActive: true });
+      }
+    } catch (err) { console.error("Failed to save FAQ:", err); }
+  };
+
+  const deleteFaq = async (id: string) => {
+    if (!window.confirm('Delete this FAQ?')) return;
+    try {
+      await fetch(`${API_URL}/faqs/${id}`, { method: 'DELETE' });
+      setFaqs(prev => prev.filter(f => f._id !== id));
+    } catch (err) { console.error("Failed to delete FAQ:", err); }
+  };
+
+  const saveSale = async (sale: any, isEdit: boolean) => {
+    try {
+      const url = isEdit ? `${API_URL}/sales/${sale._id}` : `${API_URL}/sales`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sale) });
+      if (res.ok) {
+        const saved = await res.json();
+        setSales(prev => isEdit ? prev.map(s => s._id === saved._id ? saved : s) : [saved, ...prev]);
+        setShowSaleForm(false);
+        setEditingSale(null);
+        setSaleForm({ title: '', subtitle: '', discountPercent: 0, productIds: [], isActive: true, bgColor: '#f2707f' });
+      }
+    } catch (err) { console.error("Failed to save sale:", err); }
+  };
+
+  const deleteSale = async (id: string) => {
+    if (!window.confirm('Delete this sale?')) return;
+    try {
+      await fetch(`${API_URL}/sales/${id}`, { method: 'DELETE' });
+      setSales(prev => prev.filter(s => s._id !== id));
+    } catch (err) { console.error("Failed to delete sale:", err); }
+  };
 
   // Fetch Blogs
   React.useEffect(() => {
@@ -232,6 +430,12 @@ export default function AdminPanel({
           {[
             { id: 'dashboard', icon: TrendingUp, label: 'Dashboard' },
             { id: 'content', icon: ImageIcon, label: 'Home Content' },
+            { id: 'banners', icon: Layout, label: 'Hero Banners' },
+            { id: 'homepage-sections', icon: Package, label: 'Product Sections' },
+            { id: 'trends', icon: TrendingUp, label: 'Trends' },
+            { id: 'reviews', icon: Star, label: 'Reviews' },
+            { id: 'faqs', icon: HelpCircle, label: 'FAQs' },
+            { id: 'sales', icon: Zap, label: 'Sale Sections' },
             { id: 'special', icon: Zap, label: 'Special Offer' },
             { id: 'ninetyNine', icon: Timer, label: '₹99 Sale' },
             { id: 'products', icon: Package, label: 'Products' },
@@ -863,6 +1067,317 @@ export default function AdminPanel({
           {/* Analytics Tab */}
           {activeTab === 'analytics' && <AnalyticsDashboard />}
 
+          {/* Hero Banners Tab */}
+          {activeTab === 'banners' && (
+            <div className="p-8 space-y-8">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400">Hero Banner Images</h3>
+                <button onClick={() => { setShowBannerForm(true); setEditingBanner(null); setBannerForm({ title: '', image: '', link: '', sortOrder: 0, isActive: true }); }} className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800">
+                  <Plus className="h-3 w-3" /> Add Banner
+                </button>
+              </div>
+
+              {(showBannerForm || editingBanner) && (
+                <div className="bg-stone-50 p-6 border border-stone-200 space-y-4">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest">{editingBanner ? 'Edit Banner' : 'New Banner'}</h4>
+                  <input type="text" placeholder="Title (for admin reference)" value={bannerForm.title} onChange={e => setBannerForm({...bannerForm, title: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Image URL</label>
+                    <div className="flex gap-2">
+                      <input type="text" placeholder="Image URL" value={bannerForm.image} onChange={e => setBannerForm({...bannerForm, image: e.target.value})} className="flex-1 border border-stone-200 p-3 text-sm" />
+                      <button onClick={() => openUploadWidget((url) => setBannerForm({...bannerForm, image: url}), cloudinaryConfig)} className="bg-stone-900 text-white px-4 py-2 text-[10px] font-bold uppercase flex items-center gap-2"><UploadCloud className="h-3 w-3" /> Upload</button>
+                    </div>
+                    {bannerForm.image && <img src={bannerForm.image} alt="Preview" className="w-32 h-20 object-cover mt-2" />}
+                  </div>
+                  <input type="text" placeholder="Link URL (optional)" value={bannerForm.link} onChange={e => setBannerForm({...bannerForm, link: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <div className="flex gap-4">
+                    <input type="number" placeholder="Sort Order" value={bannerForm.sortOrder} onChange={e => setBannerForm({...bannerForm, sortOrder: parseInt(e.target.value) || 0})} className="w-32 border border-stone-200 p-3 text-sm" />
+                    <label className="flex items-center gap-2"><input type="checkbox" checked={bannerForm.isActive} onChange={e => setBannerForm({...bannerForm, isActive: e.target.checked})} /> Active</label>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => saveBanner(editingBanner ? { ...bannerForm, _id: editingBanner._id } : bannerForm, !!editingBanner)} className="bg-black text-white px-6 py-2 text-[10px] font-bold uppercase">{editingBanner ? 'Update' : 'Create'}</button>
+                    <button onClick={() => { setShowBannerForm(false); setEditingBanner(null); }} className="text-stone-400 px-4 py-2 text-[10px] font-bold uppercase">Cancel</button>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {banners.map((banner) => (
+                  <div key={banner._id} className="flex items-center gap-4 p-4 border border-stone-200 hover:bg-stone-50">
+                    <GripVertical className="h-4 w-4 text-stone-300" />
+                    {banner.image && <img src={banner.image} alt={banner.title} className="w-20 h-14 object-cover" />}
+                    <div className="flex-1">
+                      <p className="text-sm font-bold">{banner.title}</p>
+                      <p className="text-[10px] text-stone-400">Order: {banner.sortOrder} | {banner.isActive ? 'Active' : 'Inactive'}</p>
+                    </div>
+                    <button onClick={() => { setEditingBanner(banner); setBannerForm(banner); setShowBannerForm(true); }} className="text-stone-400 hover:text-black"><Edit3 className="h-4 w-4" /></button>
+                    <button onClick={() => deleteBanner(banner._id)} className="text-stone-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                ))}
+                {banners.length === 0 && <p className="text-center text-stone-400 py-12 text-[10px] uppercase tracking-widest">No banners yet. Add your first hero banner image.</p>}
+              </div>
+            </div>
+          )}
+
+          {/* Product Sections Tab */}
+          {activeTab === 'homepage-sections' && (
+            <div className="p-8 space-y-8">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400">Product Sections (e.g., Viral Hand Stacks, Waist Chain Belts)</h3>
+                <button onClick={() => { setShowSectionForm(true); setEditingSection(null); setSectionForm({ title: '', sortOrder: 0, isActive: true, productIds: [], badge: 'Hot Selling', shopLink: '' }); }} className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800">
+                  <Plus className="h-3 w-3" /> Add Section
+                </button>
+              </div>
+
+              {(showSectionForm || editingSection) && (
+                <div className="bg-stone-50 p-6 border border-stone-200 space-y-4">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest">{editingSection ? 'Edit Section' : 'New Section'}</h4>
+                  <input type="text" placeholder="Section Title (e.g., Viral Hand Stacks)" value={sectionForm.title} onChange={e => setSectionForm({...sectionForm, title: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <input type="text" placeholder="Badge Text (e.g., Hot Selling)" value={sectionForm.badge} onChange={e => setSectionForm({...sectionForm, badge: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <input type="text" placeholder="Shop Link Category (e.g., necklaces, rings, earrings)" value={sectionForm.shopLink || ''} onChange={e => setSectionForm({...sectionForm, shopLink: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <p className="text-[9px] text-stone-400">When "View All" is clicked, it will navigate to /shop/[this category]. Leave empty to go to /shop</p>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Select Products</label>
+                    <div className="max-h-60 overflow-y-auto border border-stone-200 p-2 space-y-1">
+                      {allProducts.map((p) => (
+                        <label key={p._id} className="flex items-center gap-2 p-2 hover:bg-white cursor-pointer">
+                          <input type="checkbox" checked={sectionForm.productIds.includes(p._id)} onChange={e => {
+                            if (e.target.checked) setSectionForm({...sectionForm, productIds: [...sectionForm.productIds, p._id]});
+                            else setSectionForm({...sectionForm, productIds: sectionForm.productIds.filter((id: string) => id !== p._id)});
+                          }} />
+                          <img src={p.image} alt="" className="w-8 h-8 object-cover" />
+                          <span className="text-xs">{p.title}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <input type="number" placeholder="Sort Order" value={sectionForm.sortOrder} onChange={e => setSectionForm({...sectionForm, sortOrder: parseInt(e.target.value) || 0})} className="w-32 border border-stone-200 p-3 text-sm" />
+                    <label className="flex items-center gap-2"><input type="checkbox" checked={sectionForm.isActive} onChange={e => setSectionForm({...sectionForm, isActive: e.target.checked})} /> Active</label>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => saveSection(editingSection ? { ...sectionForm, _id: editingSection._id } : sectionForm, !!editingSection)} className="bg-black text-white px-6 py-2 text-[10px] font-bold uppercase">{editingSection ? 'Update' : 'Create'}</button>
+                    <button onClick={() => { setShowSectionForm(false); setEditingSection(null); }} className="text-stone-400 px-4 py-2 text-[10px] font-bold uppercase">Cancel</button>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {sections.map((section) => (
+                  <div key={section._id} className="flex items-center gap-4 p-4 border border-stone-200 hover:bg-stone-50">
+                    <GripVertical className="h-4 w-4 text-stone-300" />
+                    <div className="flex-1">
+                      <p className="text-sm font-bold">{section.title}</p>
+                      <p className="text-[10px] text-stone-400">{section.productIds?.length || 0} products | Badge: {section.badge} | Order: {section.sortOrder} | {section.isActive ? 'Active' : 'Inactive'}</p>
+                    </div>
+                    <button onClick={() => { setEditingSection(section); setSectionForm({ ...section, productIds: section.productIds?.map((p: any) => p._id || p) || [] }); setShowSectionForm(true); }} className="text-stone-400 hover:text-black"><Edit3 className="h-4 w-4" /></button>
+                    <button onClick={() => deleteSection(section._id)} className="text-stone-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                ))}
+                {sections.length === 0 && <p className="text-center text-stone-400 py-12 text-[10px] uppercase tracking-widest">No product sections yet.</p>}
+              </div>
+            </div>
+          )}
+
+          {/* Trends Tab */}
+          {activeTab === 'trends' && (
+            <div className="p-8 space-y-8">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400">Shop By Trend (e.g., Office Girl, Dreamy Girl)</h3>
+                <button onClick={() => { setShowTrendForm(true); setEditingTrend(null); setTrendForm({ title: '', image: '', sortOrder: 0, isActive: true, productIds: [] }); }} className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800">
+                  <Plus className="h-3 w-3" /> Add Trend
+                </button>
+              </div>
+
+              {(showTrendForm || editingTrend) && (
+                <div className="bg-stone-50 p-6 border border-stone-200 space-y-4">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest">{editingTrend ? 'Edit Trend' : 'New Trend'}</h4>
+                  <input type="text" placeholder="Trend Title (e.g., Office Girl)" value={trendForm.title} onChange={e => setTrendForm({...trendForm, title: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Cover Image</label>
+                    <div className="flex gap-2">
+                      <input type="text" placeholder="Image URL" value={trendForm.image} onChange={e => setTrendForm({...trendForm, image: e.target.value})} className="flex-1 border border-stone-200 p-3 text-sm" />
+                      <button onClick={() => openUploadWidget((url) => setTrendForm({...trendForm, image: url}), cloudinaryConfig)} className="bg-stone-900 text-white px-4 py-2 text-[10px] font-bold uppercase flex items-center gap-2"><UploadCloud className="h-3 w-3" /> Upload</button>
+                    </div>
+                    {trendForm.image && <img src={trendForm.image} alt="Preview" className="w-24 h-32 object-cover mt-2" />}
+                  </div>
+                  <div className="flex gap-4">
+                    <input type="number" placeholder="Sort Order" value={trendForm.sortOrder} onChange={e => setTrendForm({...trendForm, sortOrder: parseInt(e.target.value) || 0})} className="w-32 border border-stone-200 p-3 text-sm" />
+                    <label className="flex items-center gap-2"><input type="checkbox" checked={trendForm.isActive} onChange={e => setTrendForm({...trendForm, isActive: e.target.checked})} /> Active</label>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => saveTrend(editingTrend ? { ...trendForm, _id: editingTrend._id } : trendForm, !!editingTrend)} className="bg-black text-white px-6 py-2 text-[10px] font-bold uppercase">{editingTrend ? 'Update' : 'Create'}</button>
+                    <button onClick={() => { setShowTrendForm(false); setEditingTrend(null); }} className="text-stone-400 px-4 py-2 text-[10px] font-bold uppercase">Cancel</button>
+                  </div>
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {trends.map((trend) => (
+                  <div key={trend._id} className="relative group border border-stone-200 overflow-hidden">
+                    {trend.image && <img src={trend.image} alt={trend.title} className="w-full aspect-[3/4] object-cover" />}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button onClick={() => { setEditingTrend(trend); setTrendForm(trend); setShowTrendForm(true); }} className="bg-white p-2 rounded-full"><Edit3 className="h-4 w-4" /></button>
+                      <button onClick={() => deleteTrend(trend._id)} className="bg-white p-2 rounded-full"><Trash2 className="h-4 w-4 text-red-500" /></button>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80">
+                      <p className="text-white text-xs font-bold">{trend.title}</p>
+                    </div>
+                  </div>
+                ))}
+                {trends.length === 0 && <p className="col-span-full text-center text-stone-400 py-12 text-[10px] uppercase tracking-widest">No trends yet.</p>}
+              </div>
+            </div>
+          )}
+
+          {/* Reviews Tab */}
+          {activeTab === 'reviews' && (
+            <div className="p-8 space-y-8">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400">Customer Reviews</h3>
+                <button onClick={() => { setShowReviewForm(true); setEditingReview(null); setReviewForm({ name: '', rating: 5, title: '', comment: '', sortOrder: 0, isActive: true }); }} className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800">
+                  <Plus className="h-3 w-3" /> Add Review
+                </button>
+              </div>
+
+              {(showReviewForm || editingReview) && (
+                <div className="bg-stone-50 p-6 border border-stone-200 space-y-4">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest">{editingReview ? 'Edit Review' : 'New Review'}</h4>
+                  <input type="text" placeholder="Customer Name" value={reviewForm.name} onChange={e => setReviewForm({...reviewForm, name: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <input type="text" placeholder="Review Title" value={reviewForm.title} onChange={e => setReviewForm({...reviewForm, title: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <textarea placeholder="Review Comment" value={reviewForm.comment} onChange={e => setReviewForm({...reviewForm, comment: e.target.value})} className="w-full border border-stone-200 p-3 text-sm h-24" />
+                  <div className="flex gap-4">
+                    <select value={reviewForm.rating} onChange={e => setReviewForm({...reviewForm, rating: parseInt(e.target.value)})} className="border border-stone-200 p-3 text-sm">
+                      {[5,4,3,2,1].map(r => <option key={r} value={r}>{r} Stars</option>)}
+                    </select>
+                    <input type="number" placeholder="Sort Order" value={reviewForm.sortOrder} onChange={e => setReviewForm({...reviewForm, sortOrder: parseInt(e.target.value) || 0})} className="w-32 border border-stone-200 p-3 text-sm" />
+                    <label className="flex items-center gap-2"><input type="checkbox" checked={reviewForm.isActive} onChange={e => setReviewForm({...reviewForm, isActive: e.target.checked})} /> Active</label>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => saveReview(editingReview ? { ...reviewForm, _id: editingReview._id } : reviewForm, !!editingReview)} className="bg-black text-white px-6 py-2 text-[10px] font-bold uppercase">{editingReview ? 'Update' : 'Create'}</button>
+                    <button onClick={() => { setShowReviewForm(false); setEditingReview(null); }} className="text-stone-400 px-4 py-2 text-[10px] font-bold uppercase">Cancel</button>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {customerReviews.map((review) => (
+                  <div key={review._id} className="flex items-start gap-4 p-4 border border-stone-200 hover:bg-stone-50">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-bold">{review.name}</p>
+                        <span className="text-yellow-500 text-xs">{'★'.repeat(review.rating)}</span>
+                      </div>
+                      <p className="text-xs font-bold text-stone-600 mt-1">{review.title}</p>
+                      <p className="text-xs text-stone-400 mt-1 line-clamp-2">{review.comment}</p>
+                    </div>
+                    <button onClick={() => { setEditingReview(review); setReviewForm(review); setShowReviewForm(true); }} className="text-stone-400 hover:text-black"><Edit3 className="h-4 w-4" /></button>
+                    <button onClick={() => deleteReview(review._id)} className="text-stone-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                ))}
+                {customerReviews.length === 0 && <p className="text-center text-stone-400 py-12 text-[10px] uppercase tracking-widest">No reviews yet.</p>}
+              </div>
+            </div>
+          )}
+
+          {/* FAQs Tab */}
+          {activeTab === 'faqs' && (
+            <div className="p-8 space-y-8">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400">Frequently Asked Questions</h3>
+                <button onClick={() => { setShowFaqForm(true); setEditingFaq(null); setFaqForm({ question: '', answer: '', sortOrder: 0, isActive: true }); }} className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800">
+                  <Plus className="h-3 w-3" /> Add FAQ
+                </button>
+              </div>
+
+              {(showFaqForm || editingFaq) && (
+                <div className="bg-stone-50 p-6 border border-stone-200 space-y-4">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest">{editingFaq ? 'Edit FAQ' : 'New FAQ'}</h4>
+                  <input type="text" placeholder="Question" value={faqForm.question} onChange={e => setFaqForm({...faqForm, question: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <textarea placeholder="Answer" value={faqForm.answer} onChange={e => setFaqForm({...faqForm, answer: e.target.value})} className="w-full border border-stone-200 p-3 text-sm h-24" />
+                  <div className="flex gap-4">
+                    <input type="number" placeholder="Sort Order" value={faqForm.sortOrder} onChange={e => setFaqForm({...faqForm, sortOrder: parseInt(e.target.value) || 0})} className="w-32 border border-stone-200 p-3 text-sm" />
+                    <label className="flex items-center gap-2"><input type="checkbox" checked={faqForm.isActive} onChange={e => setFaqForm({...faqForm, isActive: e.target.checked})} /> Active</label>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => saveFaq(editingFaq ? { ...faqForm, _id: editingFaq._id } : faqForm, !!editingFaq)} className="bg-black text-white px-6 py-2 text-[10px] font-bold uppercase">{editingFaq ? 'Update' : 'Create'}</button>
+                    <button onClick={() => { setShowFaqForm(false); setEditingFaq(null); }} className="text-stone-400 px-4 py-2 text-[10px] font-bold uppercase">Cancel</button>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {faqs.map((faq) => (
+                  <div key={faq._id} className="flex items-start gap-4 p-4 border border-stone-200 hover:bg-stone-50">
+                    <div className="flex-1">
+                      <p className="text-sm font-bold">{faq.question}</p>
+                      <p className="text-xs text-stone-400 mt-1 line-clamp-2">{faq.answer}</p>
+                    </div>
+                    <button onClick={() => { setEditingFaq(faq); setFaqForm(faq); setShowFaqForm(true); }} className="text-stone-400 hover:text-black"><Edit3 className="h-4 w-4" /></button>
+                    <button onClick={() => deleteFaq(faq._id)} className="text-stone-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                ))}
+                {faqs.length === 0 && <p className="text-center text-stone-400 py-12 text-[10px] uppercase tracking-widest">No FAQs yet.</p>}
+              </div>
+            </div>
+          )}
+
+          {/* Sales Tab */}
+          {activeTab === 'sales' && (
+            <div className="p-8 space-y-8">
+              <div className="flex justify-between items-center">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400">Sale Sections</h3>
+                <button onClick={() => { setShowSaleForm(true); setEditingSale(null); setSaleForm({ title: '', subtitle: '', discountPercent: 0, productIds: [], isActive: true, bgColor: '#f2707f' }); }} className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800">
+                  <Plus className="h-3 w-3" /> Add Sale
+                </button>
+              </div>
+
+              {(showSaleForm || editingSale) && (
+                <div className="bg-stone-50 p-6 border border-stone-200 space-y-4">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest">{editingSale ? 'Edit Sale' : 'New Sale'}</h4>
+                  <input type="text" placeholder="Title (e.g. Summer Sale)" value={saleForm.title} onChange={e => setSaleForm({...saleForm, title: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <input type="text" placeholder="Subtitle (optional)" value={saleForm.subtitle} onChange={e => setSaleForm({...saleForm, subtitle: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
+                  <input type="number" placeholder="Discount %" value={saleForm.discountPercent} onChange={e => setSaleForm({...saleForm, discountPercent: parseInt(e.target.value) || 0})} className="w-32 border border-stone-200 p-3 text-sm" />
+                  <div>
+                    <label className="text-[10px] font-bold uppercase tracking-widest text-stone-500 mb-2 block">Select Products</label>
+                    <div className="max-h-60 overflow-y-auto border border-stone-200 bg-white p-2 space-y-1">
+                      {allProducts.map(p => (
+                        <label key={p._id} className="flex items-center gap-2 p-2 hover:bg-stone-50 cursor-pointer text-xs">
+                          <input type="checkbox" checked={saleForm.productIds.includes(p._id)} onChange={e => {
+                            if (e.target.checked) setSaleForm({...saleForm, productIds: [...saleForm.productIds, p._id]});
+                            else setSaleForm({...saleForm, productIds: saleForm.productIds.filter((id: string) => id !== p._id)});
+                          }} />
+                          <span className="truncate">{p.title}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <p className="text-[9px] text-stone-400 mt-1">{saleForm.productIds.length} products selected</p>
+                  </div>
+                  <label className="flex items-center gap-2"><input type="checkbox" checked={saleForm.isActive} onChange={e => setSaleForm({...saleForm, isActive: e.target.checked})} /> Active</label>
+                  <div className="flex gap-2">
+                    <button onClick={() => saveSale(editingSale ? { ...saleForm, _id: editingSale._id } : saleForm, !!editingSale)} className="bg-black text-white px-6 py-2 text-[10px] font-bold uppercase">{editingSale ? 'Update' : 'Create'}</button>
+                    <button onClick={() => { setShowSaleForm(false); setEditingSale(null); }} className="text-stone-400 px-4 py-2 text-[10px] font-bold uppercase">Cancel</button>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {sales.map((sale) => (
+                  <div key={sale._id} className="flex items-start gap-4 p-4 border border-stone-200 hover:bg-stone-50">
+                    <div className="flex-1">
+                      <p className="text-sm font-bold">{sale.title}</p>
+                      {sale.subtitle && <p className="text-xs text-stone-400 mt-0.5">{sale.subtitle}</p>}
+                      <p className="text-[10px] text-stone-400 mt-1">{sale.productIds?.length || 0} products | {sale.discountPercent || 0}% off | {sale.isActive ? 'Active' : 'Inactive'}</p>
+                    </div>
+                    <button onClick={() => { setEditingSale(sale); setSaleForm(sale); setShowSaleForm(true); }} className="text-stone-400 hover:text-black"><Edit3 className="h-4 w-4" /></button>
+                    <button onClick={() => deleteSale(sale._id)} className="text-stone-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                  </div>
+                ))}
+                {sales.length === 0 && <p className="text-center text-stone-400 py-12 text-[10px] uppercase tracking-widest">No sale sections yet.</p>}
+              </div>
+            </div>
+          )}
+
 
           {activeTab === 'settings' && (
             <div className="p-8 space-y-12">
@@ -872,11 +1387,13 @@ export default function AdminPanel({
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="col-span-full space-y-2">
-                    <label className="text-[10px] font-bold uppercase text-stone-500">Announcement Text</label>
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Announcement Bar Text</label>
+                    <p className="text-[9px] text-stone-400">Use | (pipe) to separate items. They will scroll in the pink bar at the top.</p>
                     <input 
                       type="text" 
                       value={tempCMSData?.settings?.announcementText || ''}
                       onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, announcementText: e.target.value }})}
+                      placeholder="Free Shipping Above INR 599 | Free Gift On Order Above INR 699 | COD Available | Easy Return"
                       className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
                     />
                   </div>

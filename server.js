@@ -260,6 +260,74 @@ const cartSchema = new mongoose.Schema({
 
 const Cart = mongoose.model('Cart', cartSchema);
 
+// --- Homepage Banner Schema ---
+const bannerSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  image: { type: String, required: true },
+  link: String,
+  sortOrder: { type: Number, default: 0 },
+  isActive: { type: Boolean, default: true },
+  createdAt: { type: Date, default: Date.now }
+});
+const Banner = mongoose.model('Banner', bannerSchema);
+
+// --- Homepage Section Schema (e.g., "Viral Hand Stacks", "Waist Chain Belts") ---
+const homepageSectionSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  sortOrder: { type: Number, default: 0 },
+  isActive: { type: Boolean, default: true },
+  productIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+  badge: { type: String, default: 'Hot Selling' },
+  shopLink: { type: String, default: '' },
+  createdAt: { type: Date, default: Date.now }
+});
+const HomepageSection = mongoose.model('HomepageSection', homepageSectionSchema);
+
+// --- Trend Schema (e.g., "Office Girl", "Dreamy Girl") ---
+const trendSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  image: { type: String, required: true },
+  sortOrder: { type: Number, default: 0 },
+  isActive: { type: Boolean, default: true },
+  productIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+  createdAt: { type: Date, default: Date.now }
+});
+const Trend = mongoose.model('Trend', trendSchema);
+
+// --- Customer Review Schema ---
+const customerReviewSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  rating: { type: Number, default: 5 },
+  title: String,
+  comment: { type: String, required: true },
+  sortOrder: { type: Number, default: 0 },
+  isActive: { type: Boolean, default: true },
+  createdAt: { type: Date, default: Date.now }
+});
+const CustomerReview = mongoose.model('CustomerReview', customerReviewSchema);
+
+// --- FAQ Schema ---
+const faqSchema = new mongoose.Schema({
+  question: { type: String, required: true },
+  answer: { type: String, required: true },
+  sortOrder: { type: Number, default: 0 },
+  isActive: { type: Boolean, default: true },
+  createdAt: { type: Date, default: Date.now }
+});
+const Faq = mongoose.model('Faq', faqSchema);
+
+// --- Sale Schema ---
+const saleSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  subtitle: String,
+  discountPercent: { type: Number, default: 0 },
+  productIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+  isActive: { type: Boolean, default: true },
+  bgColor: { type: String, default: '#f2707f' },
+  createdAt: { type: Date, default: Date.now }
+});
+const Sale = mongoose.model('Sale', saleSchema);
+
 // --- Analytics Schema ---
 const analyticsEventSchema = new mongoose.Schema({
   sessionId: { type: String, index: true },
@@ -865,6 +933,249 @@ app.post('/api/cart/sync', async (req, res) => {
 });
 
 // --- Analytics Routes ---
+
+// --- Banner CRUD ---
+app.get('/api/banners', async (req, res) => {
+  try {
+    const banners = await Banner.find().sort({ sortOrder: 1 });
+    res.json(banners);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/banners/active', async (req, res) => {
+  try {
+    const banners = await Banner.find({ isActive: true }).sort({ sortOrder: 1 });
+    res.json(banners);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/banners', async (req, res) => {
+  try {
+    const banner = new Banner(req.body);
+    await banner.save();
+    res.json(banner);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.put('/api/banners/:id', async (req, res) => {
+  try {
+    const banner = await Banner.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!banner) return res.status(404).json({ error: 'Banner not found' });
+    res.json(banner);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.delete('/api/banners/:id', async (req, res) => {
+  try {
+    await Banner.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// --- Homepage Sections CRUD ---
+app.get('/api/homepage-sections', async (req, res) => {
+  try {
+    const sections = await HomepageSection.find().sort({ sortOrder: 1 }).populate('productIds');
+    res.json(sections);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/homepage-sections/active', async (req, res) => {
+  try {
+    const sections = await HomepageSection.find({ isActive: true }).sort({ sortOrder: 1 }).populate('productIds');
+    res.json(sections);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/homepage-sections', async (req, res) => {
+  try {
+    const section = new HomepageSection(req.body);
+    await section.save();
+    res.json(section);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.put('/api/homepage-sections/:id', async (req, res) => {
+  try {
+    const section = await HomepageSection.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!section) return res.status(404).json({ error: 'Section not found' });
+    res.json(section);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.delete('/api/homepage-sections/:id', async (req, res) => {
+  try {
+    await HomepageSection.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// --- Trends CRUD ---
+app.get('/api/trends', async (req, res) => {
+  try {
+    const trends = await Trend.find().sort({ sortOrder: 1 }).populate('productIds');
+    res.json(trends);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/trends/active', async (req, res) => {
+  try {
+    const trends = await Trend.find({ isActive: true }).sort({ sortOrder: 1 }).populate('productIds');
+    res.json(trends);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/trends', async (req, res) => {
+  try {
+    const trend = new Trend(req.body);
+    await trend.save();
+    res.json(trend);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.put('/api/trends/:id', async (req, res) => {
+  try {
+    const trend = await Trend.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!trend) return res.status(404).json({ error: 'Trend not found' });
+    res.json(trend);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.delete('/api/trends/:id', async (req, res) => {
+  try {
+    await Trend.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// --- Customer Reviews CRUD ---
+app.get('/api/customer-reviews', async (req, res) => {
+  try {
+    const reviews = await CustomerReview.find().sort({ sortOrder: 1 });
+    res.json(reviews);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/customer-reviews/active', async (req, res) => {
+  try {
+    const reviews = await CustomerReview.find({ isActive: true }).sort({ sortOrder: 1 });
+    res.json(reviews);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/customer-reviews', async (req, res) => {
+  try {
+    const review = new CustomerReview(req.body);
+    await review.save();
+    res.json(review);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.put('/api/customer-reviews/:id', async (req, res) => {
+  try {
+    const review = await CustomerReview.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!review) return res.status(404).json({ error: 'Review not found' });
+    res.json(review);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.delete('/api/customer-reviews/:id', async (req, res) => {
+  try {
+    await CustomerReview.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// --- FAQ CRUD ---
+app.get('/api/faqs', async (req, res) => {
+  try {
+    const faqs = await Faq.find().sort({ sortOrder: 1 });
+    res.json(faqs);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/faqs/active', async (req, res) => {
+  try {
+    const faqs = await Faq.find({ isActive: true }).sort({ sortOrder: 1 });
+    res.json(faqs);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/faqs', async (req, res) => {
+  try {
+    const faq = new Faq(req.body);
+    await faq.save();
+    res.json(faq);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.put('/api/faqs/:id', async (req, res) => {
+  try {
+    const faq = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!faq) return res.status(404).json({ error: 'FAQ not found' });
+    res.json(faq);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.delete('/api/faqs/:id', async (req, res) => {
+  try {
+    await Faq.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// --- Sale Routes ---
+app.get('/api/sales', async (req, res) => {
+  try {
+    const sales = await Sale.find().populate('productIds').sort({ createdAt: -1 });
+    res.json(sales);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.get('/api/sales/active', async (req, res) => {
+  try {
+    const sales = await Sale.find({ isActive: true }).populate('productIds').sort({ createdAt: -1 });
+    res.json(sales);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.post('/api/sales', async (req, res) => {
+  try {
+    const sale = new Sale(req.body);
+    await sale.save();
+    res.json(sale);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.put('/api/sales/:id', async (req, res) => {
+  try {
+    const sale = await Sale.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!sale) return res.status(404).json({ error: 'Sale not found' });
+    res.json(sale);
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+app.delete('/api/sales/:id', async (req, res) => {
+  try {
+    await Sale.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Deleted' });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// --- Homepage Data (single endpoint for all homepage data) ---
+app.get('/api/homepage', async (req, res) => {
+  try {
+    const [banners, sections, trends, reviews, faqs, sales] = await Promise.all([
+      Banner.find({ isActive: true }).sort({ sortOrder: 1 }),
+      HomepageSection.find({ isActive: true }).sort({ sortOrder: 1 }).populate('productIds'),
+      Trend.find({ isActive: true }).sort({ sortOrder: 1 }).populate('productIds'),
+      CustomerReview.find({ isActive: true }).sort({ sortOrder: 1 }),
+      Faq.find({ isActive: true }).sort({ sortOrder: 1 }),
+      Sale.find({ isActive: true }).populate('productIds').sort({ createdAt: -1 })
+    ]);
+    res.json({ banners, sections, trends, reviews, faqs, sales });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
 
 // POST /api/analytics/events — batch insert events
 app.post('/api/analytics/events', async (req, res) => {

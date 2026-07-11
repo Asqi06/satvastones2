@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, Send } from 'lucide-react';
+import { Mail, Phone, MapPin, Instagram, Facebook, Twitter, Send, MessageCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
@@ -22,143 +23,112 @@ export default function ContactPage() {
       setIsSubmitting(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero */}
-      <div className="bg-stone-50 py-16 md:py-24 text-center px-4">
-        <h1 className="font-display text-5xl md:text-8xl font-bold uppercase tracking-tight text-stone-900">
-          Get In <span className="text-stone-400">Touch</span>
-        </h1>
-        <p className="mt-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-stone-500">
-          We'd Love to Hear From Our Aesthetic Community
-        </p>
+      {/* Breadcrumb */}
+      <div className="px-4 py-2.5 text-[10px] text-gray-400 border-b border-gray-100">
+        <Link to="/" className="hover:text-gray-600">Home</Link>
+        <span className="mx-1">/</span>
+        <span className="text-gray-700 font-medium">Contact Us</span>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 md:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-          
+      {/* Header */}
+      <div className="bg-[#f79da6] px-4 py-6 text-center">
+        <h1 className="text-xl font-bold text-white">Contact Us</h1>
+        <p className="text-white/80 text-[10px] mt-1">We'd Love to Hear From You</p>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        {/* Contact Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          <div className="flex items-center gap-3 p-4 bg-pink-50 rounded-xl">
+            <div className="w-10 h-10 bg-[#f2707f] rounded-full flex items-center justify-center shrink-0">
+              <Mail className="h-4 w-4 text-white" />
+            </div>
+            <div>
+              <p className="text-[9px] text-gray-500 font-bold uppercase">Email Us</p>
+              <p className="text-[10px] font-bold text-gray-800">support@satvastones.in</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 p-4 bg-pink-50 rounded-xl">
+            <div className="w-10 h-10 bg-[#f2707f] rounded-full flex items-center justify-center shrink-0">
+              <Phone className="h-4 w-4 text-white" />
+            </div>
+            <div>
+              <p className="text-[9px] text-gray-500 font-bold uppercase">Call Us</p>
+              <p className="text-[10px] font-bold text-gray-800">+91 98765 43210</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 p-4 bg-pink-50 rounded-xl">
+            <div className="w-10 h-10 bg-[#f2707f] rounded-full flex items-center justify-center shrink-0">
+              <MapPin className="h-4 w-4 text-white" />
+            </div>
+            <div>
+              <p className="text-[9px] text-gray-500 font-bold uppercase">Our Studio</p>
+              <p className="text-[10px] font-bold text-gray-800">Vapi, Gujarat, India</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Info */}
-          <div className="space-y-12">
-            <div className="space-y-6">
-              <h2 className="font-display text-4xl font-bold uppercase tracking-tight text-stone-900">Connect With Us</h2>
-              <p className="text-stone-500 text-xs uppercase tracking-widest leading-loose max-w-md">
-                Have a question about your order or just want to say hi? Our team is here to help you find your perfect aesthetic vibe.
-              </p>
-            </div>
-
-            <div className="text-stone-500 text-[10px] uppercase tracking-wider leading-relaxed space-y-3 max-w-md">
-              <p>Satvastones is India's premier destination for aesthetic Korean and Western jewelry. Based in Vapi, Gujarat, we curate anti-tarnish, waterproof pieces including earrings, necklaces, rings, and bracelets that blend Seoul minimalism with Parisian elegance.</p>
-              <p>Our customer support team responds within 24 hours. Whether you need help with sizing, order tracking, or styling advice for our gold-plated and silver jewelry collections, we are here to assist you every step of the way.</p>
-              <p>Bulk and wholesale inquiries for boutique owners are welcome. Join thousands of happy customers who trust Satvastones for trend-forward, affordable jewelry that never compromises on quality.</p>
-            </div>
-
-            <div className="space-y-8">
-              <div className="flex items-center gap-6">
-                <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center shrink-0">
-                  <Mail className="h-5 w-5 text-stone-900" />
-                </div>
-                <div>
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Email Us</p>
-                  <p className="text-xs font-bold uppercase text-stone-900">support@satvastones.in</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-6">
-                <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center shrink-0">
-                  <Phone className="h-5 w-5 text-stone-900" />
-                </div>
-                <div>
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Call Us</p>
-                  <p className="text-xs font-bold uppercase text-stone-900">+91 98765 43210</p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-6">
-                <div className="w-12 h-12 bg-stone-50 rounded-full flex items-center justify-center shrink-0">
-                  <MapPin className="h-5 w-5 text-stone-900" />
-                </div>
-                <div>
-                  <p className="text-[9px] font-bold uppercase tracking-widest text-stone-400">Our Studio</p>
-                  <p className="text-xs font-bold uppercase text-stone-900">Vapi, Gujarat, India</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-8 border-t border-stone-100 flex gap-6">
-               {[Instagram, Facebook, Twitter].map((Icon, i) => (
-                 <button key={i} className="w-10 h-10 border border-stone-200 rounded-full flex items-center justify-center hover:bg-black hover:text-white transition-all">
-                   <Icon className="h-4 w-4" />
-                 </button>
-               ))}
+          <div className="space-y-4">
+            <h2 className="text-sm font-bold text-gray-900">Get In Touch</h2>
+            <p className="text-[10px] text-gray-500 leading-relaxed">
+              Have a question about your order or just want to say hi? Our team is here to help you find your perfect aesthetic vibe.
+            </p>
+            <p className="text-[10px] text-gray-500 leading-relaxed">
+              Satvastones is India's premier destination for aesthetic Korean and Western jewelry. Based in Vapi, Gujarat, we curate anti-tarnish, waterproof pieces.
+            </p>
+            <div className="flex gap-2">
+              <a href="https://www.instagram.com/satvastonesjewelry" target="_blank" rel="noopener noreferrer" className="w-9 h-9 bg-pink-50 rounded-full flex items-center justify-center hover:bg-[#f2707f] hover:text-white transition-colors text-gray-600">
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a href="#" className="w-9 h-9 bg-pink-50 rounded-full flex items-center justify-center hover:bg-[#f2707f] hover:text-white transition-colors text-gray-600">
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a href="#" className="w-9 h-9 bg-pink-50 rounded-full flex items-center justify-center hover:bg-[#f2707f] hover:text-white transition-colors text-gray-600">
+                <Twitter className="h-4 w-4" />
+              </a>
             </div>
           </div>
 
           {/* Form */}
-          <div className="bg-stone-50 p-8 md:p-12">
+          <div className="bg-gray-50 rounded-xl p-5">
             {success ? (
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-6 py-12">
-                <div className="w-16 h-16 bg-black text-white rounded-full flex items-center justify-center">
-                  <Send className="h-6 w-6" />
+              <div className="flex flex-col items-center justify-center py-10 text-center">
+                <div className="w-12 h-12 bg-[#f2707f] rounded-full flex items-center justify-center mb-3">
+                  <Send className="h-5 w-5 text-white" />
                 </div>
-                <h3 className="font-display text-3xl font-bold uppercase tracking-tight">Message Sent</h3>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Our team will reach out to you shortly.</p>
+                <h3 className="text-sm font-bold text-gray-900 mb-1">Message Sent!</h3>
+                <p className="text-[10px] text-gray-500">Our team will reach out to you shortly.</p>
               </div>
             ) : (
-              <form className="space-y-8" onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">Full Name</label>
-                  <input 
-                    type="text" 
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full border-b border-stone-200 bg-transparent py-3 text-sm focus:border-black outline-hidden" 
-                    placeholder="NAME" 
-                    required 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">Email Address</label>
-                  <input 
-                    type="email" 
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full border-b border-stone-200 bg-transparent py-3 text-sm focus:border-black outline-hidden" 
-                    placeholder="EMAIL" 
-                    required 
-                  />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">Subject</label>
-                <input 
-                  type="text" 
-                  value={formData.subject}
-                  onChange={(e) => setFormData({...formData, subject: e.target.value})}
-                  className="w-full border-b border-stone-200 bg-transparent py-3 text-sm focus:border-black outline-hidden" 
-                  placeholder="SUBJECT" 
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400">Message</label>
-                  <textarea 
-                    rows={4} 
-                    value={formData.message}
-                    onChange={(e) => setFormData({...formData, message: e.target.value})}
-                    className="w-full border-b border-stone-200 bg-transparent py-3 text-sm focus:border-black outline-hidden resize-none" 
-                    placeholder="HOW CAN WE HELP?" 
-                    required
-                  ></textarea>
-                </div>
-                <button 
-                  disabled={isSubmitting}
-                  className="w-full bg-black text-white py-5 text-[10px] font-bold uppercase tracking-[0.3em] flex items-center justify-center gap-3 hover:bg-stone-800 transition-all shadow-xl disabled:bg-stone-400"
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'} <Send className="h-4 w-4" />
+              <form className="space-y-3" onSubmit={handleSubmit}>
+                <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Your Name" required
+                  className="w-full border border-gray-200 p-2.5 text-xs rounded-lg bg-white outline-none focus:border-[#f2707f]" />
+                <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="Email Address" required
+                  className="w-full border border-gray-200 p-2.5 text-xs rounded-lg bg-white outline-none focus:border-[#f2707f]" />
+                <input type="text" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} placeholder="Subject"
+                  className="w-full border border-gray-200 p-2.5 text-xs rounded-lg bg-white outline-none focus:border-[#f2707f]" />
+                <textarea value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} placeholder="Your Message" rows={4} required
+                  className="w-full border border-gray-200 p-2.5 text-xs rounded-lg bg-white outline-none focus:border-[#f2707f] resize-none" />
+                <button disabled={isSubmitting}
+                  className="w-full py-3 bg-[#f2707f] hover:bg-[#d4535f] text-white text-xs font-bold rounded-lg uppercase tracking-wider transition-colors disabled:bg-gray-300 flex items-center justify-center gap-2">
+                  {isSubmitting ? 'Sending...' : 'Send Message'} <Send className="h-3.5 w-3.5" />
                 </button>
-            </form>
+              </form>
             )}
           </div>
+        </div>
+
+        {/* WhatsApp */}
+        <div className="mt-6 text-center">
+          <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-lg text-xs font-bold uppercase hover:bg-green-600 transition-colors">
+            <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
+          </a>
         </div>
       </div>
     </div>
