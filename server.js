@@ -164,6 +164,8 @@ const cmsSchema = new mongoose.Schema({
     businessPan: String,
     businessAddress: String,
     logoUrl: String,
+    useLogo: { type: Boolean, default: false },
+    brandName: { type: String, default: 'Satvastones' },
     seoTitle: String,
     seoDescription: String
   },

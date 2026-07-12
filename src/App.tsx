@@ -855,15 +855,15 @@ function AppContent() {
           {/* Center: Logo */}
           <div className="absolute left-1/2 -translate-x-1/2">
             <Link to="/" className="block">
-              {cmsData?.settings?.logoUrl ? (
+              {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl ? (
                 <img 
                   src={cmsData.settings.logoUrl} 
                   alt="Satvastones" 
                   className="h-10 sm:h-12 md:h-14 w-auto object-contain brightness-0 invert"
                 />
               ) : (
-                <span className="font-logo text-3xl sm:text-4xl md:text-5xl text-white tracking-wide">
-                  SATVASTONES
+                <span className="font-logo text-3xl sm:text-4xl md:text-5xl text-white tracking-widest font-light uppercase">
+                  {cmsData?.settings?.brandName || 'Satvastones'}
                 </span>
               )}
             </Link>
@@ -916,10 +916,10 @@ function AppContent() {
               className="fixed top-0 left-0 bottom-0 w-72 bg-white z-[80] md:hidden shadow-xl"
             >
               <div className="flex items-center justify-between p-4 border-b border-pink-100 bg-[#f2707f]">
-                {cmsData?.settings?.logoUrl ? (
+                {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl ? (
                   <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-8 w-auto object-contain brightness-0 invert" />
                 ) : (
-                  <span className="font-logo text-2xl text-white">SATVASTONES</span>
+                  <span className="font-logo text-2xl text-white tracking-widest font-light uppercase">{cmsData?.settings?.brandName || 'Satvastones'}</span>
                 )}
                 <button onClick={() => setIsMenuOpen(false)} className="p-1 text-white"><X className="h-6 w-6" /></button>
               </div>
