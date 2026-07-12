@@ -20,7 +20,7 @@ export default function ConnectWithUs() {
             </div>
             <div>
               <h4 className="font-bold text-gray-900 text-[11px] sm:text-xs lg:text-sm">Call Us</h4>
-              <p className="text-[9px] sm:text-[10px] lg:text-xs text-gray-500">Call now +91-9643196811</p>
+              <p className="text-[9px] sm:text-[10px] lg:text-xs text-gray-500">Call now +91-90167-03180</p>
             </div>
           </div>
           

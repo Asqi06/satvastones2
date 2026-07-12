@@ -217,8 +217,8 @@ export default function CheckoutPage({
                 <div className="bg-pink-50 rounded-lg p-3 flex items-start gap-2">
                   <Zap className="h-4 w-4 text-[#f2707f] mt-0.5 shrink-0" />
                   <div>
-                    <p className="text-[10px] font-bold text-gray-800">Free shipping on orders above ₹399</p>
-                    <p className="text-[9px] text-gray-500 mt-0.5">Final Sale: No Refunds, Cancellations or Returns.</p>
+                    <p className="text-[10px] font-bold text-gray-800">Free shipping on prepaid orders above ₹399</p>
+                    <p className="text-[9px] text-gray-500 mt-0.5">Save more with UPI — COD charges ₹40–₹95 extra.</p>
                   </div>
                 </div>
 
@@ -288,12 +288,24 @@ export default function CheckoutPage({
       {showCodDialog && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-white w-full max-w-sm p-6 rounded-xl shadow-2xl space-y-4">
-            <h3 className="text-sm font-bold text-gray-900">COD Shipping Note</h3>
-            <p className="text-[10px] text-gray-500 leading-relaxed">
-              Cash on Delivery charges apply based on distance from Vapi hub.
-              <br />• Local: <span className="text-green-600 font-bold">FREE</span>
-              <br />• Other: <span className="text-gray-800 font-bold">₹40 charge</span>
-            </p>
+            <h3 className="text-sm font-bold text-gray-900">COD Shipping Charges</h3>
+            <div className="space-y-2">
+              <p className="text-[10px] text-gray-500 leading-relaxed">
+                Cash on Delivery charges apply based on distance from our Vapi, Gujarat hub:
+              </p>
+              <div className="bg-gray-50 rounded-lg p-3 space-y-1">
+                <p className="text-[10px] text-gray-600">• Local (Vapi/Gujarat): <span className="font-bold">₹40</span></p>
+                <p className="text-[10px] text-gray-600">• Maharashtra: <span className="font-bold">₹55</span></p>
+                <p className="text-[10px] text-gray-600">• North/Central India: <span className="font-bold">₹65</span></p>
+                <p className="text-[10px] text-gray-600">• South/East/NE India: <span className="font-bold">₹85–₹95</span></p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-3 flex items-start gap-2">
+                <Zap className="h-3.5 w-3.5 text-green-600 mt-0.5 shrink-0" />
+                <p className="text-[10px] text-green-700 font-bold leading-relaxed">
+                  Pay via UPI and save ₹40–₹95! UPI shipping starts at just ₹20 and is FREE above ₹399.
+                </p>
+              </div>
+            </div>
             <button onClick={() => setShowCodDialog(false)} className="w-full py-3 bg-[#f2707f] text-white rounded-lg text-xs font-bold uppercase">I Understand</button>
           </div>
         </div>

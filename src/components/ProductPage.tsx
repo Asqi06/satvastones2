@@ -184,7 +184,7 @@ export default function ProductPage({
               {(product.stockQuantity || 0) <= 0 ? 'SOLD OUT' : 'ADD TO CART'}
             </button>
 
-            <a href={`https://wa.me/919876543210?text=Hi, I'm interested in ${product.title}`} target="_blank" rel="noopener noreferrer"
+            <a href={`https://wa.me/919016703180?text=Hi, I'm interested in ${product.title}`} target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-green-500 hover:bg-green-600 text-white text-sm font-bold transition-colors">
               <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
             </a>
@@ -224,9 +224,10 @@ export default function ProductPage({
         </AccordionItem>
         <AccordionItem title="Shipping & Returns">
           <div className="space-y-2">
-            <p className="text-[10px] text-gray-500">Free shipping on prepaid orders above Rs. 399</p>
-            <p className="text-[10px] text-gray-500">Dispatch within 24-48 hours</p>
-            <p className="text-[10px] text-gray-500">All products are final sale. No returns or exchanges.</p>
+            <p className="text-[10px] text-gray-500">Free shipping on prepaid/UPI orders above ₹399</p>
+            <p className="text-[10px] text-gray-500">COD charges ₹40–₹95 extra based on location — save with UPI!</p>
+            <p className="text-[10px] text-gray-500">Dispatch within 24–48 hours from Vapi, Gujarat</p>
+            <p className="text-[10px] text-gray-500">Returns accepted only for damaged/defective items (unboxing video required)</p>
           </div>
         </AccordionItem>
       </div>

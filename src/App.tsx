@@ -33,6 +33,11 @@ import FaqSection from './components/home/FaqSection';
 import SaleSection from './components/home/SaleSection';
 import NewFooter from './components/home/NewFooter';
 import WishlistPage from './components/WishlistPage';
+import ShippingPolicy from './components/policies/ShippingPolicy';
+import ReturnExchange from './components/policies/ReturnExchange';
+import TermsConditions from './components/policies/TermsConditions';
+import RefundPolicy from './components/policies/RefundPolicy';
+import PrivacyPolicy from './components/policies/PrivacyPolicy';
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
@@ -524,26 +529,25 @@ function AppContent() {
     const zone = pincode.charAt(0);
     const isNearby = pincode.startsWith('39'); // Local Vapi/Valsad area
     
-    // 1. COD GRADIENT (No Free Delivery)
+    // COD GRADIENT (₹40–₹95, No Free Delivery)
     if (paymentMethod === 'cod') {
-      if (isNearby) return 35; 
-      if (zone === '3') return 45; // Rest of Gujarat
-      if (zone === '4') return 55; // Maharashtra
-      if (['1', '2', '5'].includes(zone)) return 65; // North/Central
-      return 85; // South/East/NE (Max)
+      if (isNearby) return 40;
+      if (zone === '3') return 50; // Rest of Gujarat
+      if (zone === '4') return 65; // Maharashtra
+      if (['1', '2', '5'].includes(zone)) return 80; // North/Central
+      return 95; // South/East/NE (Max)
     }
 
-    // 2. PREPAID / UPI GRADIENT (Includes >399 Perks)
-    // Rule: Free Shipping override for any UPI order over 399 (except very far zones)
+    // PREPAID / UPI GRADIENT (₹20–₹75, Free above ₹399)
     if (subtotal > 399) {
-      if (['6', '7', '8'].includes(zone)) return 45; // Discounted even for far zones
+      if (['6', '7', '8'].includes(zone)) return 45; // Discounted for far zones
       return 0; // Free for everywhere else
     }
 
-    if (isNearby) return 0;
-    if (zone === '3') return 25; // Non-local Gujarat
-    if (zone === '4') return 35; // Maharashtra
-    if (['1', '2', '5'].includes(zone)) return 55; // North/Central
+    if (isNearby) return 20;
+    if (zone === '3') return 30; // Non-local Gujarat
+    if (zone === '4') return 45; // Maharashtra
+    if (['1', '2', '5'].includes(zone)) return 60; // North/Central
     return 75; // South/East/NE
   };
   // FETCH DATA
@@ -1076,6 +1080,11 @@ function AppContent() {
               <Route path="/contact" element={<><SEO title="Contact Satvastones | Customer Support" description="Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: support@satvastones.in" canonical="https://satvastones.in/contact" keywords={['contact satvastones', 'jewelry support', 'customer care', 'satvastones help']} /><ContactPage /></>} />
               <Route path="/blogs" element={<><SEO title="The Journal | Satvastones Blog" description="Explore style guides, jewelry care tips, and the latest trends in Korean and Western aesthetic jewelry on the Satvastones Journal." canonical="https://satvastones.in/blogs" keywords={['jewelry blog', 'style guide', 'jewelry care tips', 'korean fashion', 'aesthetic jewelry trends']} /><BlogsPage /></>} />
               <Route path="/blog/:slug" element={<BlogDetailPage />} />
+              <Route path="/shipping" element={<ShippingPolicy />} />
+              <Route path="/returns" element={<ReturnExchange />} />
+              <Route path="/terms" element={<TermsConditions />} />
+              <Route path="/refund" element={<RefundPolicy />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="/order-success" element={<OrderSuccessPage />} />
             </Routes>
           </motion.div>

@@ -30,10 +30,9 @@ export default function NewFooter() {
           <div>
             <h4 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Quick Links</h4>
             <ul className="space-y-1 sm:space-y-1.5">
-              <li><a href="/shop" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Search</a></li>
+              <li><a href="/shop" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Shop All</a></li>
               <li><a href="/about" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">About Us</a></li>
               <li><a href="/contact" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Contact</a></li>
-              <li><a href="/shop" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Returns / Exchange</a></li>
             </ul>
           </div>
           
@@ -41,9 +40,10 @@ export default function NewFooter() {
           <div>
             <h4 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Store Policy</h4>
             <ul className="space-y-1 sm:space-y-1.5">
-              <li><a href="/terms" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Terms Of Service</a></li>
               <li><a href="/shipping" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Shipping Policy</a></li>
-              <li><a href="/returns" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Refund Policy</a></li>
+              <li><a href="/returns" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Return & Exchange</a></li>
+              <li><a href="/refund" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Refund Policy</a></li>
+              <li><a href="/terms" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Terms & Conditions</a></li>
               <li><a href="/privacy" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Privacy Policy</a></li>
             </ul>
           </div>

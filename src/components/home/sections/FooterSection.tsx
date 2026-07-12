@@ -77,11 +77,11 @@ export default function FooterSection({ data, onNavigate }: any) {
             <div className="mt-6 hidden space-y-3 md:block">
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 shrink-0 text-[#9C6A3B]" />
-                <span className="text-sm text-[#3D2B24]">hello@satvastones.in</span>
+                <span className="text-sm text-[#3D2B24]">support@satvastones.in</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0 text-[#9C6A3B]" />
-                <span className="text-sm text-[#3D2B24]">+91 98765 43210</span>
+                <span className="text-sm text-[#3D2B24]">+91 90167 03180</span>
               </div>
             </div>
           </div>
@@ -116,11 +116,11 @@ export default function FooterSection({ data, onNavigate }: any) {
             <div className="mb-6 space-y-3 rounded-[18px] bg-card px-4 py-4 shadow-[0_1px_6px_rgba(0,0,0,0.04)] md:hidden">
               <div className="flex items-center gap-3">
                 <Mail className="h-4 w-4 shrink-0 text-[#9C6A3B]" />
-                <span className="text-sm text-[#3D2B24]">hello@satvastones.in</span>
+                <span className="text-sm text-[#3D2B24]">support@satvastones.in</span>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-4 w-4 shrink-0 text-[#9C6A3B]" />
-                <span className="text-sm text-[#3D2B24]">+91 98765 43210</span>
+                <span className="text-sm text-[#3D2B24]">+91 90167 03180</span>
               </div>
             </div>
 

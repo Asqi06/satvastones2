@@ -57,7 +57,7 @@ export default function ContactPage() {
             </div>
             <div>
               <p className="text-[9px] text-gray-500 font-bold uppercase">Call Us</p>
-              <p className="text-[10px] font-bold text-gray-800">+91 98765 43210</p>
+              <p className="text-[10px] font-bold text-gray-800">+91 90167 03180</p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-4 bg-pink-50 rounded-xl">
@@ -125,7 +125,7 @@ export default function ContactPage() {
 
         {/* WhatsApp */}
         <div className="mt-6 text-center">
-          <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer"
+          <a href="https://wa.me/919016703180" target="_blank" rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-green-500 text-white px-6 py-3 rounded-lg text-xs font-bold uppercase hover:bg-green-600 transition-colors">
             <MessageCircle className="h-4 w-4" /> Chat on WhatsApp
           </a>

@@ -43,7 +43,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
     { icon: Truck, label: "Free Shipping\n₹1,999+", desc: "Insured Delivery\nPan India" },
     { icon: RotateCcw, label: "30 Days\nReturn", desc: "Hassle-Free\nReturns Policy" },
     { icon: Lock, label: "Secure\nPayment", desc: "100% Safe &\nEncrypted" },
-    { icon: MessageSquare, label: "24/7\nSupport", desc: "Call/WhatsApp\n+91-98765-43210" },
+    { icon: MessageSquare, label: "24/7\nSupport", desc: "Call/WhatsApp\n+91-90167-03180" },
   ];
 
   const policyLinks = [
@@ -330,8 +330,8 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
             <div className="border-t border-[#E8E2D9] pt-6">
               <h3 className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]/50 mb-4">Contact Us</h3>
               <div className="space-y-3 text-sm text-[#241A14]/70">
-                <a href="tel:+919876543210" className="flex items-center gap-3 p-3 bg-[#FAF9F6] rounded-lg hover:border-[#C5A059]/50 border border-[#E8E2D9] transition-colors"><Phone className="w-5 h-5 text-[#C5A059]" /><span>Call / WhatsApp: +91 98765 43210</span></a>
-                <a href="mailto:curation@satvastones.com" className="flex items-center gap-3 p-3 bg-[#FAF9F6] rounded-lg hover:border-[#C5A059]/50 border border-[#E8E2D9] transition-colors"><Mail className="w-5 h-5 text-[#C5A059]" /><span>Email: curation@satvastones.com</span></a>
+                <a href="tel:+919016703180" className="flex items-center gap-3 p-3 bg-[#FAF9F6] rounded-lg hover:border-[#C5A059]/50 border border-[#E8E2D9] transition-colors"><Phone className="w-5 h-5 text-[#C5A059]" /><span>Call / WhatsApp: +91 90167 03180</span></a>
+                <a href="mailto:support@satvastones.in" className="flex items-center gap-3 p-3 bg-[#FAF9F6] rounded-lg hover:border-[#C5A059]/50 border border-[#E8E2D9] transition-colors"><Mail className="w-5 h-5 text-[#C5A059]" /><span>Email: support@satvastones.in</span></a>
                 <div className="flex items-start gap-3 p-3 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9]"><MapPin className="w-5 h-5 text-[#C5A059] mt-0.5 flex-shrink-0" /><span>Mumbai HQ: 123 Jewellery Street, Zaveri Bazaar, Mumbai 400002<br />Delhi • Bangalore • Chennai • Kolkata</span></div>
               </div>
             </div>
