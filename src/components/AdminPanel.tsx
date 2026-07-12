@@ -6,7 +6,7 @@ import {
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
   CheckCircle, Clock, ChevronRight, UploadCloud, TrendingUp, ShoppingBag,
   Menu, ShieldCheck, Search, Barcode as BarcodeIcon, Video, BarChart3,
-  Layout, Star, HelpCircle, GripVertical
+  Layout, Star, HelpCircle, GripVertical, User
 } from 'lucide-react';
 import { openUploadWidget } from '../utils/cloudinary';
 import AnalyticsDashboard from './AnalyticsDashboard';
