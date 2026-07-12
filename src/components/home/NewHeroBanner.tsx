@@ -33,8 +33,8 @@ export default function NewHeroBanner({ banners, onBannerClick }: {
 
   return (
     <section className="relative w-full overflow-hidden" style={{ background: '#f79da6' }}>
-      {/* Shorter banner */}
-      <div className="relative w-full" style={{ paddingBottom: 'min(70vw, 30%)' }}>
+      {/* Taller banner */}
+      <div className="relative w-full" style={{ paddingBottom: 'min(90vw, 45%)' }}>
         {banners.map((banner, index) => (
           <div
             key={banner._id}
