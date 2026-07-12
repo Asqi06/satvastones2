@@ -20,6 +20,8 @@ export default function ProductForm({ productId }: { productId?: string }) {
     sku: "",
     categoryId: "",
     isFeatured: false,
+    isBestSeller: false,
+    isNewCollection: false,
     isActive: true,
   });
 
@@ -55,6 +57,8 @@ export default function ProductForm({ productId }: { productId?: string }) {
           sku: p.sku || "",
           categoryId: p.categoryId,
           isFeatured: p.isFeatured,
+          isBestSeller: p.isBestSeller || false,
+          isNewCollection: p.isNewCollection || false,
           isActive: p.isActive,
         });
         setImages(p.images || []);
@@ -267,7 +271,7 @@ export default function ProductForm({ productId }: { productId?: string }) {
           </div>
 
           {/* Flags */}
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-6">
             <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
               <input
                 type="checkbox"
@@ -276,6 +280,24 @@ export default function ProductForm({ productId }: { productId?: string }) {
                 className="accent-[#C9A96E]"
               />
               Featured Product
+            </label>
+            <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.isBestSeller}
+                onChange={(e) => setForm({ ...form, isBestSeller: e.target.checked })}
+                className="accent-[#C9A96E]"
+              />
+              Best Seller
+            </label>
+            <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={form.isNewCollection}
+                onChange={(e) => setForm({ ...form, isNewCollection: e.target.checked })}
+                className="accent-[#C9A96E]"
+              />
+              New Collection
             </label>
             <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
               <input

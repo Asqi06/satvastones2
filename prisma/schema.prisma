@@ -139,23 +139,25 @@ model Category {
 }
 
 model Product {
-  id           String       @id @default(cuid())
-  name         String
-  slug         String       @unique
-  description  String       @db.Text
-  price        Float
-  comparePrice Float?
-  images       String[]
-  material     String?
-  style        ProductStyle @default(WESTERN)
-  stock        Int          @default(0)
-  sku          String?      @unique
-  weight       Float?
-  isFeatured   Boolean      @default(false)
-  isActive     Boolean      @default(true)
-  categoryId   String
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id              String       @id @default(cuid())
+  name            String
+  slug            String       @unique
+  description     String       @db.Text
+  price           Float
+  comparePrice    Float?
+  images          String[]
+  material        String?
+  style           ProductStyle @default(WESTERN)
+  stock           Int          @default(0)
+  sku             String?      @unique
+  weight          Float?
+  isFeatured      Boolean      @default(false)
+  isBestSeller    Boolean      @default(false)
+  isNewCollection Boolean      @default(false)
+  isActive        Boolean      @default(true)
+  categoryId      String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
   category   Category    @relation(fields: [categoryId], references: [id], onDelete: Restrict)
   reviews    Review[]
@@ -164,10 +166,13 @@ model Product {
   cartItems  CartItem[]
   homepageSections HomepageSectionProduct[]
   trends           TrendProduct[]
+  saleProducts     SaleProduct[]
 
   @@index([slug])
   @@index([categoryId])
   @@index([isFeatured])
+  @@index([isBestSeller])
+  @@index([isNewCollection])
   @@index([isActive])
   @@index([style])
 }
@@ -386,4 +391,45 @@ model Faq {
   updatedAt DateTime @updatedAt
 
   @@index([sortOrder])
+}
+
+model Sale {
+  id             String   @id @default(cuid())
+  title          String
+  subtitle       String?
+  discountPercent Int?
+  bgColor        String?
+  type           String   @default("regular") @db.VarChar(20)
+  sortOrder      Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  products SaleProduct[]
+
+  @@index([sortOrder])
+  @@index([type])
+}
+
+model SaleProduct {
+  id        String   @id @default(cuid())
+  saleId    String
+  productId String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  sale    Sale    @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([saleId, productId])
+  @@index([saleId])
+  @@index([productId])
+}
+
+model StoreSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String @db.Text
+
+  @@index([key])
 }

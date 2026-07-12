@@ -67,6 +67,7 @@ const MOCK_PRODUCTS = [
 export default async function HomePage() {
   let allProducts: any[] = [];
   let bestSellers: any[] = [];
+  let newCollectionProducts: any[] = [];
 
   try {
     allProducts = await prisma.product.findMany({
@@ -85,7 +86,23 @@ export default async function HomePage() {
     });
 
     bestSellers = await prisma.product.findMany({
-      where: { isActive: true, isFeatured: true },
+      where: { isActive: true, isBestSeller: true },
+      take: 4,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        price: true,
+        comparePrice: true,
+        images: true,
+        material: true,
+        style: true,
+      },
+    });
+
+    newCollectionProducts = await prisma.product.findMany({
+      where: { isActive: true, isNewCollection: true },
       take: 4,
       orderBy: { createdAt: "desc" },
       select: {
@@ -104,6 +121,7 @@ export default async function HomePage() {
   }
 
   const displayBestSellers = bestSellers.length > 0 ? bestSellers : MOCK_PRODUCTS;
+  const displayNewCollection = newCollectionProducts.length > 0 ? newCollectionProducts : MOCK_PRODUCTS;
   const displayAllProducts = allProducts.length > 0 ? allProducts : MOCK_PRODUCTS;
 
   return (
@@ -122,6 +140,9 @@ export default async function HomePage() {
 
       {/* Best Sellers */}
       <BestSellers products={displayBestSellers} />
+
+      {/* New Collection */}
+      <BestSellers products={displayNewCollection} />
 
       {/* Whole Collection Gallery */}
       <CollectionGallery products={displayAllProducts} />
