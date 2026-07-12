@@ -162,7 +162,10 @@ const cmsSchema = new mongoose.Schema({
     businessName: String,
     gstin: String,
     businessPan: String,
-    businessAddress: String
+    businessAddress: String,
+    logoUrl: String,
+    seoTitle: String,
+    seoDescription: String
   },
   coupons: [{
     code: String,
