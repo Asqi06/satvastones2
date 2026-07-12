@@ -213,24 +213,24 @@ export default function CouponsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-[#2a2a2a] pb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-luxury-brown/5 pb-8">
         <div>
-          <p className="text-[#C9A96E] text-[10px] tracking-[0.5em] uppercase font-bold mb-3">
+          <p className="text-luxury-gold text-[10px] tracking-[0.5em] uppercase font-bold mb-3">
             Promotions
           </p>
-          <h1 className="text-3xl lg:text-5xl font-serif text-white">
+          <h1 className="text-3xl lg:text-5xl font-serif text-luxury-brown">
             Coupons
           </h1>
         </div>
         <div className="flex items-center gap-4">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-luxury-brown/40" />
             <input
               type="text"
               placeholder="Search codes..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 pr-4 py-2.5 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E] w-56 transition-colors"
+              className="pl-10 pr-4 py-2.5 bg-white border border-luxury-brown/10 rounded-lg text-luxury-brown text-sm placeholder-luxury-brown/40 focus:outline-none focus:border-luxury-gold w-56 transition-colors"
             />
           </div>
           <button
@@ -238,7 +238,7 @@ export default function CouponsPage() {
               resetForm();
               setShowForm(!showForm);
             }}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#C9A96E] text-black font-semibold rounded-lg hover:bg-[#b8955d] transition-colors text-sm"
+            className="flex items-center gap-2 px-5 py-2.5 bg-luxury-gold text-black font-semibold rounded-lg hover:bg-luxury-brown transition-colors text-sm"
           >
             <Plus className="w-4 h-4" />
             Add Coupon
@@ -247,14 +247,14 @@ export default function CouponsPage() {
       </div>
 
       {showForm && (
-        <div className="bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] p-6">
+        <div className="bg-white rounded-xl border border-luxury-brown/10 p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-serif text-white">
+            <h2 className="text-lg font-serif text-luxury-brown">
               {editingCoupon ? "Edit Coupon" : "New Coupon"}
             </h2>
             <button
               onClick={resetFormAndClose}
-              className="text-gray-500 hover:text-white transition-colors"
+              className="text-luxury-brown/40 hover:text-luxury-brown transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -270,12 +270,12 @@ export default function CouponsPage() {
                     setForm({ ...form, code: e.target.value.toUpperCase() });
                     if (formErrors.code) setFormErrors({ ...formErrors, code: "" });
                   }}
-                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E] transition-colors ${
-                    formErrors.code ? "border-red-500" : "border-[#2a2a2a]"
+                  className={`w-full px-4 py-3 bg-white border rounded-lg text-luxury-brown text-sm placeholder-luxury-brown/40 focus:outline-none focus:border-luxury-gold transition-colors ${
+                    formErrors.code ? "border-red-500" : "border-luxury-brown/10"
                   }`}
                 />
                 {formErrors.code && (
-                  <p className="text-red-400 text-xs mt-1">{formErrors.code}</p>
+                  <p className="text-red-600 text-xs mt-1">{formErrors.code}</p>
                 )}
               </div>
               <div>
@@ -284,7 +284,7 @@ export default function CouponsPage() {
                   onChange={(e) =>
                     setForm({ ...form, discountType: e.target.value })
                   }
-                  className="w-full px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm focus:outline-none focus:border-[#C9A96E]"
+                  className="w-full px-4 py-3 bg-white border border-luxury-brown/10 rounded-lg text-luxury-brown text-sm focus:outline-none focus:border-luxury-gold"
                 >
                   <option value="PERCENTAGE">Percentage (%)</option>
                   <option value="FIXED">Fixed Amount (₹)</option>
@@ -302,14 +302,14 @@ export default function CouponsPage() {
                   }}
                   min="0"
                   max={form.discountType === "PERCENTAGE" ? "100" : undefined}
-                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E] transition-colors ${
+                  className={`w-full px-4 py-3 bg-white border rounded-lg text-luxury-brown text-sm placeholder-luxury-brown/40 focus:outline-none focus:border-luxury-gold transition-colors ${
                     formErrors.discountValue
                       ? "border-red-500"
-                      : "border-[#2a2a2a]"
+                      : "border-luxury-brown/10"
                   }`}
                 />
                 {formErrors.discountValue && (
-                  <p className="text-red-400 text-xs mt-1">
+                  <p className="text-red-600 text-xs mt-1">
                     {formErrors.discountValue}
                   </p>
                 )}
@@ -325,14 +325,14 @@ export default function CouponsPage() {
                       setFormErrors({ ...formErrors, minOrder: "" });
                   }}
                   min="0"
-                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E] transition-colors ${
+                  className={`w-full px-4 py-3 bg-white border rounded-lg text-luxury-brown text-sm placeholder-luxury-brown/40 focus:outline-none focus:border-luxury-gold transition-colors ${
                     formErrors.minOrder
                       ? "border-red-500"
-                      : "border-[#2a2a2a]"
+                      : "border-luxury-brown/10"
                   }`}
                 />
                 {formErrors.minOrder && (
-                  <p className="text-red-400 text-xs mt-1">
+                  <p className="text-red-600 text-xs mt-1">
                     {formErrors.minOrder}
                   </p>
                 )}
@@ -348,14 +348,14 @@ export default function CouponsPage() {
                       setFormErrors({ ...formErrors, maxUses: "" });
                   }}
                   min="1"
-                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E] transition-colors ${
+                  className={`w-full px-4 py-3 bg-white border rounded-lg text-luxury-brown text-sm placeholder-luxury-brown/40 focus:outline-none focus:border-luxury-gold transition-colors ${
                     formErrors.maxUses
                       ? "border-red-500"
-                      : "border-[#2a2a2a]"
+                      : "border-luxury-brown/10"
                   }`}
                 />
                 {formErrors.maxUses && (
-                  <p className="text-red-400 text-xs mt-1">
+                  <p className="text-red-600 text-xs mt-1">
                     {formErrors.maxUses}
                   </p>
                 )}
@@ -369,14 +369,14 @@ export default function CouponsPage() {
                     if (formErrors.expiresAt)
                       setFormErrors({ ...formErrors, expiresAt: "" });
                   }}
-                  className={`w-full px-4 py-3 bg-[#0f0f0f] border rounded-lg text-white text-sm focus:outline-none focus:border-[#C9A96E] transition-colors ${
+                  className={`w-full px-4 py-3 bg-white border rounded-lg text-luxury-brown text-sm focus:outline-none focus:border-luxury-gold transition-colors ${
                     formErrors.expiresAt
                       ? "border-red-500"
-                      : "border-[#2a2a2a]"
+                      : "border-luxury-brown/10"
                   }`}
                 />
                 {formErrors.expiresAt && (
-                  <p className="text-red-400 text-xs mt-1">
+                  <p className="text-red-600 text-xs mt-1">
                     {formErrors.expiresAt}
                   </p>
                 )}
@@ -388,8 +388,8 @@ export default function CouponsPage() {
                 onClick={() => setForm({ ...form, isActive: !form.isActive })}
                 className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   form.isActive
-                    ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                    : "bg-gray-500/10 text-gray-400 border border-gray-500/20"
+                    ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/20"
+                    : "bg-luxury-cream/20 text-luxury-brown/50 border border-luxury-brown/10"
                 }`}
               >
                 {form.isActive ? (
@@ -403,14 +403,14 @@ export default function CouponsPage() {
             <div className="flex gap-3 pt-2">
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-[#C9A96E] text-black font-semibold rounded-lg hover:bg-[#b8955d] transition-colors text-sm"
+                className="px-6 py-2.5 bg-luxury-gold text-black font-semibold rounded-lg hover:bg-luxury-brown transition-colors text-sm"
               >
                 {editingCoupon ? "Update Coupon" : "Create Coupon"}
               </button>
               <button
                 type="button"
                 onClick={resetFormAndClose}
-                className="px-6 py-2.5 border border-[#2a2a2a] text-gray-400 rounded-lg text-sm hover:text-white hover:border-gray-500 transition-colors"
+                className="px-6 py-2.5 border border-luxury-brown/10 text-luxury-brown/50 rounded-lg text-sm hover:text-luxury-brown hover:border-luxury-brown/20 transition-colors"
               >
                 Cancel
               </button>
@@ -420,29 +420,29 @@ export default function CouponsPage() {
       )}
 
       {deleteConfirm && (
-        <div className="bg-[#1a1a1a] rounded-xl border border-red-500/30 p-6">
+        <div className="bg-white rounded-xl border border-red-200 p-6">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center">
-              <AlertTriangle className="w-6 h-6 text-red-400" />
+            <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center">
+              <AlertTriangle className="w-6 h-6 text-red-600" />
             </div>
             <div className="flex-1">
-              <p className="text-white font-bold text-sm">
+              <p className="text-luxury-brown font-bold text-sm">
                 Delete this coupon permanently?
               </p>
-              <p className="text-gray-400 text-xs mt-1">
+              <p className="text-luxury-brown/50 text-xs mt-1">
                 This action cannot be undone. All usage history will be lost.
               </p>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => handleDelete(deleteConfirm)}
-                className="px-4 py-2 bg-red-500 text-white text-sm font-semibold rounded-lg hover:bg-red-600 transition-colors"
+                className="px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 transition-colors"
               >
                 Delete
               </button>
               <button
                 onClick={() => setDeleteConfirm(null)}
-                className="px-4 py-2 border border-[#2a2a2a] text-gray-400 text-sm rounded-lg hover:text-white transition-colors"
+                className="px-4 py-2 border border-luxury-brown/10 text-luxury-brown/50 text-sm rounded-lg hover:text-luxury-brown transition-colors"
               >
                 Cancel
               </button>
@@ -451,35 +451,35 @@ export default function CouponsPage() {
         </div>
       )}
 
-      <div className="bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] overflow-hidden">
+      <div className="bg-white rounded-xl border border-luxury-brown/10 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#2a2a2a]">
-                <th className="text-left text-[9px] text-gray-500 uppercase tracking-[0.3em] px-6 py-5 font-bold">
+              <tr className="border-b border-luxury-brown/5 bg-luxury-cream/30">
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">
                   Code
                 </th>
-                <th className="text-left text-[9px] text-gray-500 uppercase tracking-[0.3em] px-6 py-5 font-bold">
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">
                   Discount
                 </th>
-                <th className="text-left text-[9px] text-gray-500 uppercase tracking-[0.3em] px-6 py-5 font-bold">
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">
                   Min Order
                 </th>
-                <th className="text-left text-[9px] text-gray-500 uppercase tracking-[0.3em] px-6 py-5 font-bold">
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">
                   Usage
                 </th>
-                <th className="text-left text-[9px] text-gray-500 uppercase tracking-[0.3em] px-6 py-5 font-bold">
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">
                   Expires
                 </th>
-                <th className="text-left text-[9px] text-gray-500 uppercase tracking-[0.3em] px-6 py-5 font-bold">
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">
                   Status
                 </th>
-                <th className="text-right text-[9px] text-gray-500 uppercase tracking-[0.3em] px-6 py-5 font-bold">
+                <th className="text-right text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-6 font-bold">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#2a2a2a]">
+            <tbody className="divide-y divide-luxury-brown/5">
               {filteredCoupons.map((coupon) => {
                 const expired = isExpired(coupon.expiresAt);
                 const usagePercent = getUsagePercentage(coupon);
@@ -489,59 +489,59 @@ export default function CouponsPage() {
                 return (
                   <tr
                     key={coupon.id}
-                    className={`hover:bg-[#0f0f0f]/50 transition-colors ${
+                    className={`hover:bg-luxury-cream/20 transition-colors ${
                       expired || atLimit ? "opacity-60" : ""
                     }`}
                   >
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-3">
-                        <span className="text-[#C9A96E] font-mono text-sm font-bold">
+                        <span className="text-luxury-gold font-mono text-sm font-bold">
                           {coupon.code}
                         </span>
                         <button
                           onClick={() => handleCopyCode(coupon.code, coupon.id)}
-                          className="text-gray-600 hover:text-[#C9A96E] transition-colors"
+                          className="text-luxury-brown/30 hover:text-luxury-gold transition-colors"
                           title="Copy code"
                         >
                           {copiedId === coupon.id ? (
-                            <Check className="w-3.5 h-3.5 text-green-400" />
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
                           ) : (
                             <Copy className="w-3.5 h-3.5" />
                           )}
                         </button>
                       </div>
                     </td>
-                    <td className="px-6 py-5 text-white text-sm font-bold">
+                    <td className="px-8 py-6 text-luxury-brown text-sm font-bold">
                       {coupon.discountType === "PERCENTAGE"
                         ? `${coupon.discountValue}%`
                         : `₹${coupon.discountValue}`}
                     </td>
-                    <td className="px-6 py-5 text-gray-400 text-sm">
+                    <td className="px-8 py-6 text-luxury-brown/50 text-sm">
                       {coupon.minOrder > 0 ? `₹${coupon.minOrder}` : "—"}
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-3">
                         <div className="flex-1 max-w-[120px]">
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-gray-400 text-xs">
+                            <span className="text-luxury-brown/50 text-xs">
                               {coupon.usedCount}
                               {coupon.maxUses ? ` / ${coupon.maxUses}` : ""}
                             </span>
                             {coupon.maxUses && (
-                              <span className="text-gray-500 text-[10px]">
+                              <span className="text-luxury-brown/40 text-[10px]">
                                 {Math.round(usagePercent)}%
                               </span>
                             )}
                           </div>
                           {coupon.maxUses && (
-                            <div className="h-1.5 bg-[#0f0f0f] rounded-full overflow-hidden">
+                            <div className="h-1.5 bg-luxury-cream/30 rounded-full overflow-hidden">
                               <div
                                 className={`h-full rounded-full transition-all ${
                                   atLimit
                                     ? "bg-red-500"
                                     : usagePercent > 70
                                       ? "bg-yellow-500"
-                                      : "bg-[#C9A96E]"
+                                      : "bg-luxury-gold"
                                 }`}
                                 style={{ width: `${usagePercent}%` }}
                               />
@@ -550,11 +550,11 @@ export default function CouponsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-2">
                         <span
                           className={`text-sm ${
-                            expired ? "text-red-400" : "text-gray-400"
+                            expired ? "text-red-600" : "text-luxury-brown/50"
                           }`}
                         >
                           {coupon.expiresAt
@@ -562,20 +562,20 @@ export default function CouponsPage() {
                             : "Never"}
                         </span>
                         {expired && (
-                          <span className="text-[9px] px-2 py-0.5 bg-red-500/10 text-red-400 rounded-full uppercase tracking-wider font-bold">
+                          <span className="text-[9px] px-2 py-0.5 bg-red-50 text-red-600 rounded-full uppercase tracking-wider font-bold">
                             Expired
                           </span>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
                       <button
                         onClick={() => handleToggleActive(coupon)}
                         disabled={togglingId === coupon.id}
                         className={`flex items-center gap-2 text-xs font-bold px-3 py-1.5 rounded-full transition-all ${
                           coupon.isActive
-                            ? "bg-green-500/10 text-green-400 hover:bg-green-500/20"
-                            : "bg-gray-500/10 text-gray-400 hover:bg-gray-500/20"
+                            ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20"
+                            : "bg-luxury-cream/20 text-luxury-brown/50 hover:bg-luxury-cream/30"
                         } ${togglingId === coupon.id ? "opacity-50" : ""}`}
                       >
                         {coupon.isActive ? (
@@ -586,18 +586,18 @@ export default function CouponsPage() {
                         {coupon.isActive ? "Active" : "Inactive"}
                       </button>
                     </td>
-                    <td className="px-6 py-5">
+                    <td className="px-8 py-6">
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => handleEdit(coupon)}
-                          className="p-2 text-gray-400 hover:text-[#C9A96E] transition-colors rounded-lg hover:bg-[#C9A96E]/10"
+                          className="p-2 text-luxury-brown/40 hover:text-luxury-gold transition-colors rounded-lg hover:bg-luxury-gold/10"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => setDeleteConfirm(coupon.id)}
-                          className="p-2 text-gray-400 hover:text-red-400 transition-colors rounded-lg hover:bg-red-500/10"
+                          className="p-2 text-luxury-brown/40 hover:text-red-600 transition-colors rounded-lg hover:bg-red-50"
                           title="Delete"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -611,7 +611,7 @@ export default function CouponsPage() {
           </table>
           {filteredCoupons.length === 0 && (
             <div className="py-16 text-center">
-              <p className="text-gray-500 text-sm tracking-wider">
+              <p className="text-luxury-brown/40 text-sm tracking-wider">
                 {search
                   ? `No coupons match "${search}"`
                   : "No coupons yet"}

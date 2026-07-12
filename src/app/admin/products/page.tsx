@@ -136,14 +136,15 @@ export default function AdminProductsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-8 pb-10 border-b border-luxury-brown/5">
         <div>
-          <h1 className="text-3xl font-serif text-luxury-brown">Products</h1>
-          <p className="text-sm text-luxury-brown/50 mt-1">{pagination.total} product{pagination.total !== 1 ? "s" : ""} total</p>
+          <p className="text-luxury-gold text-[10px] tracking-[0.5em] uppercase font-bold mb-4">Inventory</p>
+          <h1 className="text-4xl lg:text-6xl font-serif text-luxury-brown">Products</h1>
+          <p className="text-sm text-luxury-brown/50 mt-3">{pagination.total} product{pagination.total !== 1 ? "s" : ""} total</p>
         </div>
         <Link
           href="/admin/products/new"
-          className="inline-flex items-center gap-2 bg-luxury-gold text-white px-6 py-3 text-[11px] font-bold tracking-widest uppercase hover:bg-luxury-brown transition-all shadow-md"
+          className="inline-flex items-center gap-2 bg-luxury-gold text-white px-8 py-3 text-[11px] font-bold tracking-widest uppercase hover:bg-luxury-brown transition-all"
         >
           <Plus className="w-4 h-4" />
           Add Product
@@ -152,19 +153,19 @@ export default function AdminProductsPage() {
 
       <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3">
         <div className="relative flex-1 w-full lg:max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-luxury-brown/30 w-4 h-4" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-luxury-brown/30 w-4 h-4" />
           <input
             type="text"
             placeholder="Search by name..."
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white border border-luxury-brown/10 text-sm focus:outline-none focus:border-luxury-gold transition-colors"
+            className="w-full pl-11 pr-4 py-3 bg-white border border-luxury-brown/10 text-sm focus:outline-none focus:border-luxury-gold transition-colors"
           />
         </div>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-4 py-2.5 bg-white border border-luxury-brown/10 text-xs tracking-wider uppercase font-bold outline-none focus:border-luxury-gold transition-colors"
+          className="px-4 py-3 bg-white border border-luxury-brown/10 text-sm focus:outline-none focus:border-luxury-gold transition-colors"
         >
           <option value="">All Categories</option>
           {categories.map((cat) => (
@@ -174,7 +175,7 @@ export default function AdminProductsPage() {
         <select
           value={stockFilter}
           onChange={(e) => setStockFilter(e.target.value)}
-          className="px-4 py-2.5 bg-white border border-luxury-brown/10 text-xs tracking-wider uppercase font-bold outline-none focus:border-luxury-gold transition-colors"
+          className="px-4 py-3 bg-white border border-luxury-brown/10 text-sm focus:outline-none focus:border-luxury-gold transition-colors"
         >
           <option value="">All Stock</option>
           <option value="in-stock">In Stock</option>
@@ -202,12 +203,12 @@ export default function AdminProductsPage() {
         </div>
       )}
 
-      <div className="bg-white border border-luxury-brown/5 overflow-hidden shadow-sm">
+      <div className="bg-white border border-luxury-brown/5 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-luxury-brown/10 bg-luxury-cream/30">
-                <th className="px-5 py-4 w-10">
+                <th className="px-8 py-5 w-10">
                   <input
                     type="checkbox"
                     checked={products.length > 0 && selectedIds.size === products.length}
@@ -215,32 +216,32 @@ export default function AdminProductsPage() {
                     className="accent-luxury-gold w-4 h-4"
                   />
                 </th>
-                <th className="text-left text-[10px] text-luxury-brown/50 uppercase tracking-widest px-5 py-4 font-bold">Product</th>
-                <th className="text-left text-[10px] text-luxury-brown/50 uppercase tracking-widest px-5 py-4 font-bold">SKU</th>
-                <th className="text-left text-[10px] text-luxury-brown/50 uppercase tracking-widest px-5 py-4 font-bold">Category</th>
-                <th className="text-left text-[10px] text-luxury-brown/50 uppercase tracking-widest px-5 py-4 font-bold">Stock</th>
-                <th className="text-right text-[10px] text-luxury-brown/50 uppercase tracking-widest px-5 py-4 font-bold">Price</th>
-                <th className="text-center text-[10px] text-luxury-brown/50 uppercase tracking-widest px-5 py-4 font-bold">Status</th>
-                <th className="text-right text-[10px] text-luxury-brown/50 uppercase tracking-widest px-5 py-4 font-bold">Actions</th>
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-5 font-bold">Product</th>
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-5 font-bold">SKU</th>
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-5 font-bold">Category</th>
+                <th className="text-left text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-5 font-bold">Stock</th>
+                <th className="text-right text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-5 font-bold">Price</th>
+                <th className="text-center text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-5 font-bold">Status</th>
+                <th className="text-right text-[9px] text-luxury-brown/60 uppercase tracking-[0.3em] px-8 py-5 font-bold">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-luxury-brown/5 text-sm">
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="px-5 py-20 text-center">
+                  <td colSpan={8} className="px-8 py-20 text-center">
                     <Loader2 className="w-6 h-6 text-luxury-gold animate-spin mx-auto" />
                   </td>
                 </tr>
               ) : products.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="px-5 py-20 text-center text-luxury-brown/30 uppercase tracking-[0.3em] font-bold text-xs">
+                  <td colSpan={8} className="px-8 py-20 text-center text-luxury-brown/30 uppercase tracking-[0.3em] font-bold text-xs">
                     No products found
                   </td>
                 </tr>
               ) : (
                 products.map((product) => (
                   <tr key={product.id} className="hover:bg-luxury-cream/20 transition-colors group">
-                    <td className="px-5 py-4">
+                    <td className="px-8 py-6">
                       <input
                         type="checkbox"
                         checked={selectedIds.has(product.id)}
@@ -248,7 +249,7 @@ export default function AdminProductsPage() {
                         className="accent-luxury-gold w-4 h-4"
                       />
                     </td>
-                    <td className="px-5 py-4">
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-4">
                         <div className="w-11 h-11 bg-luxury-cream relative rounded-sm overflow-hidden border border-luxury-brown/5 shrink-0">
                           {product.images?.[0] && (
@@ -259,7 +260,7 @@ export default function AdminProductsPage() {
                           <div className="flex items-center gap-1.5">
                             <span className="font-medium text-luxury-brown truncate">{product.name}</span>
                             {product.isBestSeller && (
-                              <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500 shrink-0" />
+                              <Star className="w-3.5 h-3.5 text-luxury-gold fill-luxury-gold shrink-0" />
                             )}
                             {product.isNewCollection && (
                               <Sparkles className="w-3.5 h-3.5 text-blue-500 fill-blue-500 shrink-0" />
@@ -268,16 +269,16 @@ export default function AdminProductsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-luxury-brown/40 text-[11px] font-mono tracking-tighter uppercase">{product.sku}</td>
-                    <td className="px-5 py-4 text-luxury-brown/60 text-sm">{product.category?.name || "—"}</td>
-                    <td className="px-5 py-4">
+                    <td className="px-8 py-6 text-luxury-brown/40 text-[11px] font-mono tracking-tighter uppercase">{product.sku}</td>
+                    <td className="px-8 py-6 text-luxury-brown/60 text-sm">{product.category?.name || "\u2014"}</td>
+                    <td className="px-8 py-6">
                       <div className="flex items-center gap-2">
                         {getStockBadge(product.stock)}
                         <span className="text-[11px] text-luxury-brown/40">({product.stock})</span>
                       </div>
                     </td>
-                    <td className="px-5 py-4 text-right font-bold text-luxury-brown">{formatPrice(product.price)}</td>
-                    <td className="px-5 py-4 text-center">
+                    <td className="px-8 py-6 text-right font-bold text-luxury-brown">{formatPrice(product.price)}</td>
+                    <td className="px-8 py-6 text-center">
                       <span className={`inline-flex px-2.5 py-1 text-[10px] font-bold rounded-full ${
                         product.isActive
                           ? "bg-green-100 text-green-700"
@@ -286,11 +287,11 @@ export default function AdminProductsPage() {
                         {product.isActive ? "Active" : "Draft"}
                       </span>
                     </td>
-                    <td className="px-5 py-4">
+                    <td className="px-8 py-6">
                       <div className="flex items-center justify-end gap-1">
                         <Link
                           href={`/admin/products/new?id=${product.id}`}
-                          className="p-2 text-luxury-brown/30 hover:text-luxury-gold hover:bg-luxury-gold/5 transition-colors rounded"
+                          className="p-2 text-luxury-brown/40 hover:text-luxury-gold hover:bg-luxury-gold/5 transition-colors rounded"
                           title="Edit"
                         >
                           <Edit className="w-4 h-4" />
@@ -298,7 +299,7 @@ export default function AdminProductsPage() {
                         <button
                           onClick={() => handleDelete(product.id)}
                           disabled={deleting === product.id}
-                          className="p-2 text-luxury-brown/30 hover:text-red-500 hover:bg-red-50 transition-colors rounded disabled:opacity-50"
+                          className="p-2 text-luxury-brown/40 hover:text-red-500 hover:bg-red-50 transition-colors rounded disabled:opacity-50"
                           title="Delete"
                         >
                           {deleting === product.id ? (
