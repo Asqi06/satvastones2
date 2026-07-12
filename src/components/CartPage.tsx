@@ -6,6 +6,7 @@ export default function CartPage({
   allProducts = [],
   onUpdateQty,
   onRemove,
+  onAddToCart,
   onCheckout,
   onContinueShopping
 }: {
@@ -13,6 +14,7 @@ export default function CartPage({
   allProducts?: any[];
   onUpdateQty: (id: number, delta: number) => void,
   onRemove: (id: number) => void,
+  onAddToCart?: (item: any) => void,
   onCheckout: () => void,
   onContinueShopping: () => void
 }) {
@@ -150,10 +152,8 @@ export default function CartPage({
                       <p className="text-[10px] font-bold text-[#f2707f] mt-0.5">₹ {product.price}</p>
                       <button
                         onClick={() => {
-                          if (!inCart) {
-                            onRemove(product._id || product.id);
-                            const event = new CustomEvent('add-to-cart', { detail: product });
-                            window.dispatchEvent(event);
+                          if (!inCart && onAddToCart) {
+                            onAddToCart(product);
                           }
                         }}
                         className="w-full mt-1.5 py-1.5 text-[8px] font-bold uppercase tracking-wider rounded-md border border-[#f2707f] text-[#f2707f] hover:bg-[#f2707f] hover:text-white transition-colors"

@@ -848,12 +848,20 @@ function AppContent() {
             </Link>
           </div>
 
-          {/* Center: Logo placeholder - white text */}
+          {/* Center: Logo */}
           <div className="absolute left-1/2 -translate-x-1/2">
             <Link to="/" className="block">
-              <span className="font-logo text-3xl sm:text-4xl md:text-5xl text-white tracking-wide">
-                Your Logo
-              </span>
+              {cmsData?.settings?.logoUrl ? (
+                <img 
+                  src={cmsData.settings.logoUrl} 
+                  alt="Satvastones" 
+                  className="h-10 sm:h-12 md:h-14 w-auto object-contain brightness-0 invert"
+                />
+              ) : (
+                <span className="font-logo text-3xl sm:text-4xl md:text-5xl text-white tracking-wide">
+                  SATVASTONES
+                </span>
+              )}
             </Link>
           </div>
 
@@ -904,7 +912,11 @@ function AppContent() {
               className="fixed top-0 left-0 bottom-0 w-72 bg-white z-[80] md:hidden shadow-xl"
             >
               <div className="flex items-center justify-between p-4 border-b border-pink-100 bg-[#f2707f]">
-                <span className="font-logo text-2xl text-white">Your Logo</span>
+                {cmsData?.settings?.logoUrl ? (
+                  <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-8 w-auto object-contain brightness-0 invert" />
+                ) : (
+                  <span className="font-logo text-2xl text-white">SATVASTONES</span>
+                )}
                 <button onClick={() => setIsMenuOpen(false)} className="p-1 text-white"><X className="h-6 w-6" /></button>
               </div>
               <div className="p-4 space-y-1">
@@ -1058,7 +1070,7 @@ function AppContent() {
                   onProductClick={(p) => navigateTo('product', p)}
                 />
               } />
-              <Route path="/cart" element={<><SEO title="Your Shopping Bag" description="Review your selected aesthetic jewelry pieces at Satvastones. Secure checkout with UPI, Card & COD available." canonical="https://satvastones.in/cart" keywords={['shopping cart', 'jewelry cart', 'checkout jewelry', 'satvastones cart']} noindex={true} /><CartPage cart={cart} allProducts={cmsData.products || []} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
+              <Route path="/cart" element={<><SEO title="Your Shopping Bag" description="Review your selected aesthetic jewelry pieces at Satvastones. Secure checkout with UPI, Card & COD available." canonical="https://satvastones.in/cart" keywords={['shopping cart', 'jewelry cart', 'checkout jewelry', 'satvastones cart']} noindex={true} /><CartPage cart={cart} allProducts={cmsData.products || []} onUpdateQty={(id, d) => setCart(prev => prev.map(i => i.id === id ? {...i, qty: Math.max(1, (i.qty || 1) + d)} : i))} onRemove={(id) => setCart(prev => prev.filter(i => i.id !== id))} onAddToCart={addToCart} onCheckout={() => navigateTo('checkout')} onContinueShopping={() => navigateTo('shop')} /></>} />
               <Route path="/checkout" element={<><SEO title="Secure Checkout" description="Complete your order securely. We accept UPI, Cards, Net Banking & COD." canonical="https://satvastones.in/checkout" noindex={true} /><CheckoutPage cart={cart} currentUser={currentUser} cmsData={cmsData} onBack={() => navigateTo('cart')} onComplete={(order) => { setCart([]); localStorage.removeItem('checkout_form'); navigateTo('order-success', order); }} onLoginRedirect={() => navigateTo('auth')} calculateShipping={calculateShipping} /></>} />
               <Route path="/account" element={currentUser ? <><SEO title="My Account | Satvastones" description="Manage your orders, addresses, and preferences at Satvastones." canonical="https://satvastones.in/account" noindex={true} keywords={['my account', 'order history', 'satvastones account']} /><AccountDashboard user={currentUser} onLogout={() => { setCurrentUser(null); localStorage.removeItem('satvastones_user'); navigate('/'); }} onShop={() => navigate('/shop')} /></> : <AuthPage onLogin={(data) => { setCurrentUser(data.customer); if (localStorage.getItem('checkout_pending') === 'true') navigate('/checkout'); else navigate('/account'); }} />} />
               <Route path="/contact" element={<><SEO title="Contact Satvastones | Customer Support" description="Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: support@satvastones.in" canonical="https://satvastones.in/contact" keywords={['contact satvastones', 'jewelry support', 'customer care', 'satvastones help']} /><ContactPage /></>} />

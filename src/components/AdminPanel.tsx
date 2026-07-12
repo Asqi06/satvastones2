@@ -1508,15 +1508,34 @@ export default function AdminPanel({
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-2">
-                    <label className="text-[10px] font-bold uppercase text-stone-500">Website Logo URL</label>
-                    <input 
-                      type="text" 
-                      placeholder="https://your-logo-url.com/logo.png"
-                      value={tempCMSData.settings.logoUrl || ''}
-                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, logoUrl: e.target.value }})}
-                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
-                    />
-                    <p className="text-[9px] text-stone-400 italic">Upload your logo to Cloudinary and paste the URL here</p>
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Website Logo</label>
+                    <div className="flex gap-2">
+                      <input 
+                        type="text" 
+                        placeholder="https://your-logo-url.com/logo.png"
+                        value={tempCMSData.settings.logoUrl || ''}
+                        onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, logoUrl: e.target.value }})}
+                        className="flex-1 border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                      />
+                      <button 
+                        onClick={() => openUploadWidget((url) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, logoUrl: url }}), cloudinaryConfig)}
+                        className="bg-stone-900 text-white px-4 py-3 text-[10px] font-bold uppercase flex items-center gap-2 shrink-0 hover:bg-black transition-all"
+                      >
+                        <UploadCloud className="h-3 w-3" /> Upload
+                      </button>
+                    </div>
+                    {tempCMSData.settings.logoUrl && (
+                      <div className="mt-3 p-3 bg-stone-50 border border-stone-100 flex items-center gap-4">
+                        <img src={tempCMSData.settings.logoUrl} alt="Logo preview" className="h-10 w-auto object-contain" />
+                        <button 
+                          onClick={() => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, logoUrl: '' }})}
+                          className="text-[9px] font-bold uppercase text-red-500 hover:text-red-700"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                    <p className="text-[9px] text-stone-400 italic">Upload your logo image. It will appear white in the navbar.</p>
                   </div>
                   <div className="space-y-2">
                     <label className="text-[10px] font-bold uppercase text-stone-500">SEO Title</label>
