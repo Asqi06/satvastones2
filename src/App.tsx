@@ -883,7 +883,7 @@ function AppContent() {
                   className="h-7 sm:h-8 md:h-10 w-auto object-contain brightness-0 invert"
                 />
               )}
-              <span className="font-logo text-lg sm:text-xl md:text-2xl text-white tracking-widest font-light uppercase whitespace-nowrap">
+              <span className="font-logo text-lg sm:text-xl md:text-2xl text-white tracking-wider">
                 {cmsData?.settings?.brandName || 'Satvastones'}
               </span>
             </Link>
@@ -940,7 +940,7 @@ function AppContent() {
                   {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl && (
                     <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-7 w-auto object-contain brightness-0 invert" />
                   )}
-                  <span className="font-logo text-lg text-white tracking-widest font-light uppercase">{cmsData?.settings?.brandName || 'Satvastones'}</span>
+                  <span className="font-logo text-lg text-white tracking-wider">{cmsData?.settings?.brandName || 'Satvastones'}</span>
                 </Link>
                 <button onClick={() => setIsMenuOpen(false)} className="p-1 text-white"><X className="h-6 w-6" /></button>
               </div>
