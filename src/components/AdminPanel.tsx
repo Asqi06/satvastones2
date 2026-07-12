@@ -493,84 +493,129 @@ export default function AdminPanel({
           const totalSales = orders.reduce((acc, o) => acc + (o.amount || 0), 0);
           const totalOrders = orders.length;
           const avgOrder = totalOrders > 0 ? (totalSales / totalOrders).toFixed(0) : 0;
+          const todayOrders = orders.filter(o => {
+            const d = new Date(o.createdAt);
+            const now = new Date();
+            return d.toDateString() === now.toDateString();
+          }).length;
+          const lowStockCount = (cmsData?.products || []).filter((p: any) => (p.stockQuantity || 0) < 5).length;
           
           return (
-            <div className="p-8 space-y-12">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="bg-stone-50 p-8 border border-stone-200">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2">Total Revenue</p>
-                  <h4 className="font-display text-4xl font-bold tracking-tighter">₹{totalSales.toLocaleString()}</h4>
+            <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
+              {/* Welcome Banner */}
+              <div className="bg-gradient-to-r from-stone-900 to-stone-800 rounded-xl p-6 text-white">
+                <h2 className="text-lg font-bold">Welcome back, Admin</h2>
+                <p className="text-stone-400 text-xs mt-1">Here's what's happening with your store today.</p>
+              </div>
+
+              {/* Stat Cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
+                <div className="bg-white p-4 lg:p-5 border border-stone-200 rounded-xl hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-9 h-9 bg-green-50 rounded-lg flex items-center justify-center">
+                      <TrendingUp className="h-4 w-4 text-green-600" />
+                    </div>
+                    <span className="text-[9px] font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">REVENUE</span>
+                  </div>
+                  <p className="text-xl lg:text-2xl font-bold text-stone-900">₹{totalSales.toLocaleString()}</p>
+                  <p className="text-[10px] text-stone-400 mt-1">Total Revenue</p>
                 </div>
-                <div className="bg-stone-50 p-8 border border-stone-200">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2">Total Orders</p>
-                  <h4 className="font-display text-4xl font-bold tracking-tighter">{totalOrders}</h4>
+
+                <div className="bg-white p-4 lg:p-5 border border-stone-200 rounded-xl hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center">
+                      <ShoppingBag className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <span className="text-[9px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">ORDERS</span>
+                  </div>
+                  <p className="text-xl lg:text-2xl font-bold text-stone-900">{totalOrders}</p>
+                  <p className="text-[10px] text-stone-400 mt-1">Total Orders</p>
                 </div>
-                <div className="bg-stone-50 p-8 border border-stone-200">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mb-2">Avg. Order Value</p>
-                  <h4 className="font-display text-4xl font-bold tracking-tighter">₹{avgOrder}</h4>
+
+                <div className="bg-white p-4 lg:p-5 border border-stone-200 rounded-xl hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-9 h-9 bg-purple-50 rounded-lg flex items-center justify-center">
+                      <BarChart3 className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <span className="text-[9px] font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full">AVERAGE</span>
+                  </div>
+                  <p className="text-xl lg:text-2xl font-bold text-stone-900">₹{avgOrder}</p>
+                  <p className="text-[10px] text-stone-400 mt-1">Avg. Order Value</p>
+                </div>
+
+                <div className="bg-white p-4 lg:p-5 border border-stone-200 rounded-xl hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-9 h-9 bg-orange-50 rounded-lg flex items-center justify-center">
+                      <Timer className="h-4 w-4 text-orange-600" />
+                    </div>
+                    <span className="text-[9px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full">TODAY</span>
+                  </div>
+                  <p className="text-xl lg:text-2xl font-bold text-stone-900">{todayOrders}</p>
+                  <p className="text-[10px] text-stone-400 mt-1">Orders Today</p>
                 </div>
               </div>
 
-              <section>
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-400 mb-6">Recent Sales Activity</h3>
-                <div className="overflow-x-auto -mx-8 px-8">
-                  <table className="w-full text-left min-w-[600px]">
-                    <thead>
-                      <tr className="border-b border-stone-100">
-                        <th className="py-4 text-[9px] font-bold uppercase tracking-widest text-stone-400">Order ID</th>
-                        <th className="py-4 text-[9px] font-bold uppercase tracking-widest text-stone-400">Customer</th>
-                        <th className="py-4 text-[9px] font-bold uppercase tracking-widest text-stone-400">Amount</th>
-                        <th className="py-4 text-[9px] font-bold uppercase tracking-widest text-stone-400">Date</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-stone-50">
-                      {orders.slice(0, 5).map(order => (
-                        <tr key={order.id || order._id} className="group">
-                          <td className="py-4 text-[10px] font-bold uppercase tracking-tight text-stone-900">#{order.orderId?.slice(-8) || 'N/A'}</td>
-                          <td className="py-4">
-                            <p className="text-[10px] font-bold uppercase">{order.customer?.name}</p>
-                            <p className="text-[9px] text-stone-400 uppercase">{order.customer?.city}</p>
-                          </td>
-                          <td className="py-4">
-                            <p className="text-[10px] font-bold uppercase text-stone-900">₹{order.amount}</p>
-                            {order.couponCode && <p className="text-[7px] text-amber-600 uppercase tracking-widest font-bold">{order.couponCode}</p>}
-                          </td>
-                          <td className="py-4 text-[9px] text-stone-400 uppercase">{new Date(order.createdAt).toLocaleDateString()}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-
-              {/* Low Stock Radar */}
-              <section className="pt-12 border-t border-stone-100">
-                <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 mb-6 flex items-center gap-2">
-                  <Package className="h-4 w-4" /> Stock Radar: Low Inventory Alerts
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {(cmsData?.products || [])
-                    .filter((p: any) => (p.stockQuantity || 0) < 5)
-                    .map((p: any) => (
-                      <div key={p._id} className="flex items-center gap-4 p-4 bg-red-50 border border-red-100 rounded-sm">
-                        <div className="w-12 h-16 bg-white overflow-hidden shrink-0 shadow-sm">
-                          <img src={p.image} className="w-full h-full object-cover" />
+              {/* Quick Actions + Low Stock */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+                {/* Recent Orders */}
+                <div className="lg:col-span-2 bg-white border border-stone-200 rounded-xl overflow-hidden">
+                  <div className="p-4 lg:p-5 border-b border-stone-100 flex items-center justify-between">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-stone-700">Recent Orders</h3>
+                    <button onClick={() => setActiveTab('orders')} className="text-[9px] font-bold text-[#f2707f] hover:text-[#d4535f] uppercase tracking-wider">View All</button>
+                  </div>
+                  <div className="divide-y divide-stone-50">
+                    {orders.slice(0, 5).map(order => (
+                      <div key={order.id || order._id} className="px-4 lg:px-5 py-3 flex items-center justify-between hover:bg-stone-50 transition-colors cursor-pointer" onClick={() => { setActiveTab('orders'); }}>
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-stone-100 rounded-full flex items-center justify-center shrink-0">
+                            <User className="h-3.5 w-3.5 text-stone-400" />
+                          </div>
+                          <div>
+                            <p className="text-[11px] font-bold text-stone-800">{order.customer?.name || 'Guest'}</p>
+                            <p className="text-[9px] text-stone-400">#{order.orderId?.slice(-6) || order._id?.slice(-6)}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-[10px] font-bold uppercase text-stone-900 leading-tight">{p.title}</p>
-                          <p className="text-[9px] font-bold uppercase text-red-600 mt-1 font-accent">STOCK: {p.stockQuantity || 0} LEFT</p>
-                          <p className="text-[8px] text-stone-400 mt-0.5 uppercase tracking-tighter font-mono">SKU: {p.sku || 'N/A'}</p>
+                        <div className="text-right">
+                          <p className="text-[11px] font-bold text-stone-900">₹{order.amount}</p>
+                          <p className="text-[9px] text-stone-400">{new Date(order.createdAt).toLocaleDateString()}</p>
                         </div>
                       </div>
                     ))}
-                  {(cmsData?.products || []).filter((p: any) => (p.stockQuantity || 0) < 5).length === 0 && (
-                    <div className="col-span-full py-12 text-center bg-stone-50 border border-stone-100 italic text-[10px] text-stone-300 uppercase tracking-widest">
-                      <ShieldCheck className="h-6 w-6 mx-auto mb-3 text-stone-200" />
-                      All inventory levels are healthy.
-                    </div>
-                  )}
+                    {orders.length === 0 && (
+                      <div className="p-8 text-center text-[10px] text-stone-400 uppercase tracking-wider">No orders yet</div>
+                    )}
+                  </div>
                 </div>
-              </section>
+
+                {/* Low Stock Alerts */}
+                <div className="bg-white border border-stone-200 rounded-xl overflow-hidden">
+                  <div className="p-4 lg:p-5 border-b border-stone-100 flex items-center justify-between">
+                    <h3 className="text-xs font-bold uppercase tracking-wider text-stone-700">Low Stock</h3>
+                    {lowStockCount > 0 && <span className="text-[9px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">{lowStockCount} alerts</span>}
+                  </div>
+                  <div className="divide-y divide-stone-50 max-h-64 overflow-y-auto">
+                    {(cmsData?.products || [])
+                      .filter((p: any) => (p.stockQuantity || 0) < 5)
+                      .map((p: any) => (
+                        <div key={p._id} className="px-4 py-3 flex items-center gap-3 hover:bg-stone-50 transition-colors">
+                          <div className="w-8 h-10 bg-stone-100 rounded overflow-hidden shrink-0">
+                            <img src={p.image} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-[10px] font-bold text-stone-800 truncate">{p.title}</p>
+                            <p className="text-[9px] font-bold text-red-500">{p.stockQuantity || 0} left</p>
+                          </div>
+                        </div>
+                      ))}
+                    {lowStockCount === 0 && (
+                      <div className="p-6 text-center">
+                        <ShieldCheck className="h-6 w-6 mx-auto text-green-400 mb-2" />
+                        <p className="text-[10px] text-stone-400 uppercase tracking-wider">All stock healthy</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           );
         })()}

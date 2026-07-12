@@ -94,92 +94,119 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
   }, [user.email, location.search]);
 
   return (
-    <div className="min-h-screen bg-white py-24">
-      <div className="mx-auto max-w-5xl px-4 md:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+    <div className="min-h-screen bg-stone-50 py-20 sm:py-24">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-bold text-stone-900">My Account</h1>
+          <p className="text-sm text-stone-500 mt-1">Manage your orders and account settings</p>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           
           {/* Profile Card */}
-          <div className="w-full md:w-80 space-y-8">
-            <div className="bg-stone-50 p-10 border border-stone-100 text-center">
-              <div className="w-20 h-20 bg-stone-900 rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold mb-6">
-                {user.name?.[0] || 'U'}
+          <div className="w-full lg:w-80 space-y-4">
+            <div className="bg-white rounded-xl p-6 border border-stone-200 shadow-sm">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-[#f2707f] to-[#d4535f] rounded-full flex items-center justify-center text-white text-xl font-bold shrink-0">
+                  {user.name?.[0] || 'U'}
+                </div>
+                <div className="min-w-0">
+                  <h2 className="text-sm font-bold text-stone-900 truncate">{user.name}</h2>
+                  <p className="text-[10px] text-stone-400 truncate">{user.email}</p>
+                </div>
               </div>
-              <h2 className="font-display text-2xl font-bold uppercase tracking-tight">{user.name}</h2>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400 mt-1">{user.email}</p>
-              <button 
-                onClick={onLogout}
-                className="mt-8 text-[9px] font-bold uppercase tracking-[0.2em] text-red-600 hover:text-red-800 transition-colors"
-              >
-                Sign Out Of Account
-              </button>
+              <div className="border-t border-stone-100 pt-4 grid grid-cols-3 gap-2 text-center">
+                <div>
+                  <p className="text-lg font-bold text-stone-900">{orders.length}</p>
+                  <p className="text-[9px] text-stone-400 uppercase tracking-wider">Orders</p>
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-stone-900">₹{orders.reduce((acc, o) => acc + (o.amount || 0), 0).toLocaleString()}</p>
+                  <p className="text-[9px] text-stone-400 uppercase tracking-wider">Spent</p>
+                </div>
+                <div>
+                  <p className="text-lg font-bold text-green-600">Active</p>
+                  <p className="text-[9px] text-stone-400 uppercase tracking-wider">Status</p>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-900">Aesthetic Membership</h3>
-              <div className="p-6 border border-stone-100 bg-stone-50/50">
-                <p className="text-[10px] leading-relaxed text-stone-500 uppercase">You are part of our exclusive tribe. Enjoy priority support and early access to drops.</p>
-              </div>
+            {/* Quick Links */}
+            <div className="bg-white rounded-xl border border-stone-200 shadow-sm divide-y divide-stone-100">
+              <button onClick={() => onShop()} className="w-full flex items-center gap-3 px-5 py-3.5 text-left hover:bg-stone-50 transition-colors rounded-t-xl">
+                <ShoppingBag className="h-4 w-4 text-stone-400" />
+                <span className="text-[11px] font-medium text-stone-700">Continue Shopping</span>
+              </button>
+              <Link to="/wishlist" className="w-full flex items-center gap-3 px-5 py-3.5 text-left hover:bg-stone-50 transition-colors">
+                <Heart className="h-4 w-4 text-stone-400" />
+                <span className="text-[11px] font-medium text-stone-700">My Wishlist</span>
+              </Link>
+              <button onClick={onLogout} className="w-full flex items-center gap-3 px-5 py-3.5 text-left hover:bg-red-50 transition-colors rounded-b-xl">
+                <X className="h-4 w-4 text-red-400" />
+                <span className="text-[11px] font-medium text-red-500">Sign Out</span>
+              </button>
             </div>
           </div>
 
           {/* Activity Section */}
-          <div className="flex-1 space-y-12 w-full">
-            <section>
-              <h3 className="font-display text-3xl font-bold uppercase tracking-tight mb-8">Recent Orders</h3>
-              <div className="space-y-4">
+          <div className="flex-1 space-y-6 w-full">
+            {/* Orders */}
+            <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-stone-100">
+                <h3 className="text-sm font-bold text-stone-900">Order History</h3>
+              </div>
+              <div className="divide-y divide-stone-50">
                 {loading ? (
-                  <div className="p-12 text-center text-[10px] uppercase tracking-widest text-stone-400 animate-pulse">Loading History...</div>
+                  <div className="p-12 text-center text-[10px] uppercase tracking-widest text-stone-400 animate-pulse">Loading orders...</div>
                 ) : orders.length > 0 ? (
                   orders.map(order => (
                     <div 
                       key={order._id} 
                       onClick={() => setSelectedOrder(order)}
-                      className="group border border-stone-100 p-6 flex items-center justify-between hover:bg-stone-50 transition-all cursor-pointer"
+                      className="px-5 py-4 flex items-center justify-between hover:bg-stone-50 transition-colors cursor-pointer"
                     >
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <p className="text-[10px] font-bold uppercase tracking-widest group-hover:text-stone-900">Order #{order.orderNumber || order._id?.slice(-8)}</p>
-                          <ChevronRight className="h-3 w-3 text-stone-300 group-hover:text-stone-900 transition-transform group-hover:translate-x-1" />
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-stone-100 rounded-lg flex items-center justify-center shrink-0">
+                          <Package className="h-4 w-4 text-stone-400" />
                         </div>
-                        <p className="text-[9px] text-stone-400 uppercase mt-1">
-                          {new Date(order.createdAt).toLocaleDateString()} • {order.items?.length || 0} ITEMS • ₹{order.amount}
-                        </p>
+                        <div>
+                          <p className="text-[11px] font-bold text-stone-800">Order #{order.orderNumber || order._id?.slice(-6)}</p>
+                          <p className="text-[9px] text-stone-400 mt-0.5">
+                            {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })} • {order.items?.length || 0} items
+                          </p>
+                        </div>
                       </div>
-                      <span className="px-3 py-1 bg-stone-900 text-white text-[8px] font-bold uppercase tracking-widest rounded-full">
-                        {order.status || 'Received'}
-                      </span>
+                      <div className="flex items-center gap-3">
+                        <div className="text-right">
+                          <p className="text-[11px] font-bold text-stone-900">₹{order.amount}</p>
+                          <span className={`inline-block text-[8px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full mt-0.5 ${
+                            order.status === 'Delivered' ? 'bg-green-50 text-green-600' :
+                            order.status === 'Shipped' ? 'bg-blue-50 text-blue-600' :
+                            'bg-stone-100 text-stone-500'
+                          }`}>
+                            {order.status || 'Received'}
+                          </span>
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-stone-300" />
+                      </div>
                     </div>
                   ))
                 ) : (
-                  <div className="bg-white border border-stone-100 p-12 text-center space-y-4">
-                    <ShoppingBag className="h-8 w-8 mx-auto text-stone-200" />
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">No recent orders found</p>
+                  <div className="p-12 text-center">
+                    <ShoppingBag className="h-10 w-10 mx-auto text-stone-200 mb-3" />
+                    <p className="text-sm font-medium text-stone-500 mb-3">No orders yet</p>
                     <button 
                       onClick={onShop}
-                      className="text-[10px] font-bold uppercase tracking-[0.2em] text-stone-900 underline underline-offset-4"
+                      className="bg-[#f2707f] text-white px-6 py-2.5 rounded-lg text-[11px] font-bold uppercase tracking-wider hover:bg-[#d4535f] transition-colors"
                     >
-                      Enter The Shop
+                      Start Shopping
                     </button>
                   </div>
                 )}
               </div>
-            </section>
-
-            <section className="pt-12 border-t border-stone-100">
-              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-900 mb-6">Account Settings</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <button className="text-left p-6 border border-stone-100 hover:bg-stone-50 transition-colors">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Default Address</p>
-                  <p className="text-[9px] text-stone-400 uppercase mt-1">Manage your delivery locations</p>
-                </button>
-                <button className="text-left p-6 border border-stone-100 hover:bg-stone-50 transition-colors">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-stone-900">Wishlist</p>
-                  <p className="text-[9px] text-stone-400 uppercase mt-1">View your saved aesthetic pieces</p>
-                </button>
-              </div>
-            </section>
+            </div>
           </div>
-
         </div>
       </div>
 
@@ -191,82 +218,76 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white w-full max-w-2xl rounded-sm shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
             >
-              <div className="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+              <div className="p-5 border-b border-stone-100 flex justify-between items-center bg-stone-50">
                 <div>
-                  <h3 className="font-display text-xl font-bold uppercase tracking-tight">Order Details</h3>
-                  <p className="text-[9px] font-bold text-stone-400 uppercase tracking-widest">Order #{selectedOrder.orderNumber || selectedOrder._id?.slice(-8)}</p>
+                  <h3 className="text-sm font-bold text-stone-900">Order Details</h3>
+                  <p className="text-[10px] text-stone-400">#{selectedOrder.orderNumber || selectedOrder._id?.slice(-6)}</p>
                 </div>
-                <button onClick={() => setSelectedOrder(null)} className="text-stone-400 hover:text-black p-2"><X className="h-6 w-6" /></button>
+                <button onClick={() => setSelectedOrder(null)} className="text-stone-400 hover:text-black p-1"><X className="h-5 w-5" /></button>
               </div>
 
-              <div className="p-8 overflow-y-auto space-y-10 no-scrollbar">
+              <div className="p-5 overflow-y-auto space-y-5 no-scrollbar">
                 {/* Status Stepper */}
-                <div className="flex justify-between items-center px-4 relative">
-                  <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-stone-100 -translate-y-1/2 -z-10" />
-                  {['Confirmed', 'Shipped', 'Delivered'].map((step, i) => {
+                <div className="flex justify-between items-center px-2 relative">
+                  <div className="absolute top-3 left-0 right-0 h-[2px] bg-stone-100 -z-10" />
+                  {['Confirmed', 'Shipped', 'Delivered'].map((step) => {
                     const isCompleted = ['Confirmed', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered'].indexOf(selectedOrder.status) >= ['Confirmed', 'Shipped', 'Delivered'].indexOf(step);
                     return (
-                      <div key={step} className="flex flex-col items-center gap-3 bg-white px-2">
-                        <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isCompleted ? 'bg-black border-black' : 'border-stone-100 bg-white'}`}>
-                          {isCompleted && <CheckCircle className="h-3 w-3 text-white" />}
+                      <div key={step} className="flex flex-col items-center gap-2 bg-white px-1">
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isCompleted ? 'bg-[#f2707f] text-white' : 'bg-stone-100 text-stone-300'}`}>
+                          {isCompleted ? <CheckCircle className="h-3.5 w-3.5" /> : <span className="w-2 h-2 bg-current rounded-full" />}
                         </div>
-                        <span className={`text-[8px] font-bold uppercase tracking-widest ${isCompleted ? 'text-black' : 'text-stone-300'}`}>{step}</span>
+                        <span className={`text-[8px] font-bold uppercase tracking-wider ${isCompleted ? 'text-[#f2707f]' : 'text-stone-300'}`}>{step}</span>
                       </div>
                     );
                   })}
                 </div>
 
-                {/* Tracking Info */}
+                {/* Tracking */}
                 {selectedOrder.trackingId && (
-                  <div className="bg-stone-50 border border-stone-100 p-6 flex items-center justify-between">
+                  <div className="bg-stone-50 rounded-lg p-4 flex items-center justify-between">
                     <div>
-                      <p className="text-[8px] font-bold uppercase tracking-[0.3em] text-stone-400 mb-1">Tracking Number</p>
-                      <p className="text-sm font-bold tracking-widest">{selectedOrder.trackingId}</p>
+                      <p className="text-[9px] font-bold text-stone-400 uppercase">Tracking ID</p>
+                      <p className="text-xs font-bold text-stone-800">{selectedOrder.trackingId}</p>
                     </div>
-                    <button className="bg-black text-white px-6 py-3 text-[8px] font-bold uppercase tracking-widest hover:bg-stone-800 transition-all">
-                      Track Now
-                    </button>
                   </div>
                 )}
 
                 {/* Items */}
-                <div className="space-y-6">
-                  <h4 className="text-[9px] font-black uppercase tracking-widest text-stone-900 border-b border-stone-100 pb-3">Items Purchased</h4>
-                  <div className="space-y-4">
+                <div>
+                  <h4 className="text-[10px] font-bold uppercase text-stone-500 mb-3">Items</h4>
+                  <div className="space-y-3">
                     {selectedOrder.items.map((item: any, i: number) => (
-                      <div key={i} className="flex justify-between items-center">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-16 bg-stone-50 overflow-hidden shrink-0">
-                            <img src={item.image} alt={item.title} loading="lazy" width="48" height="64" className="w-full h-full object-cover" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold uppercase text-stone-900">{item.title}</p>
-                            <p className="text-[8px] text-stone-400 uppercase">{item.variant || 'Standard'} • QTY: {item.qty}</p>
-                            {item.customText && <p className="text-[8px] text-red-600 font-bold uppercase mt-1">Name: {item.customText}</p>}
-                          </div>
+                      <div key={i} className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-stone-100 rounded-lg overflow-hidden shrink-0">
+                          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                         </div>
-                        <span className="text-xs font-bold text-stone-900">₹{item.price * item.qty}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[11px] font-bold text-stone-800 truncate">{item.title}</p>
+                          <p className="text-[9px] text-stone-400">{item.variant || 'Standard'} × {item.qty}</p>
+                          {item.customText && <p className="text-[9px] text-[#f2707f] font-bold">Name: {item.customText}</p>}
+                        </div>
+                        <span className="text-[11px] font-bold text-stone-900 shrink-0">₹{item.price * item.qty}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Summary */}
-                <div className="pt-8 border-t border-stone-100 grid grid-cols-2 gap-10">
-                  <div className="space-y-4">
-                    <h4 className="text-[9px] font-black uppercase tracking-widest text-stone-900">Shipping To</h4>
-                    <p className="text-[10px] text-stone-500 uppercase leading-relaxed font-medium">
-                      {selectedOrder.customer.name}<br />
-                      {selectedOrder.shippingAddress?.address || selectedOrder.customer.address}<br />
-                      {selectedOrder.shippingAddress?.city || selectedOrder.customer.city} - {selectedOrder.shippingAddress?.pincode || selectedOrder.customer.pincode}
-                    </p>
+                <div className="border-t border-stone-100 pt-4 space-y-3">
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-stone-500">Shipping To</span>
+                    <span className="text-stone-800 font-medium text-right max-w-[60%]">{selectedOrder.customer?.name}, {selectedOrder.shippingAddress?.city || selectedOrder.customer?.city}</span>
                   </div>
-                  <div className="space-y-2 text-right">
-                     <p className="text-[9px] font-bold uppercase text-stone-400">Total Amount Paid</p>
-                     <p className="text-3xl font-display font-bold text-stone-900">₹{selectedOrder.amount}</p>
-                     <p className="text-[8px] font-bold text-green-600 uppercase tracking-widest">Payment: {selectedOrder.paymentMethod}</p>
+                  <div className="flex justify-between text-[11px]">
+                    <span className="text-stone-500">Payment</span>
+                    <span className={`font-bold uppercase ${selectedOrder.paymentMethod === 'COD' ? 'text-orange-600' : 'text-green-600'}`}>{selectedOrder.paymentMethod}</span>
+                  </div>
+                  <div className="flex justify-between text-sm font-bold border-t border-stone-100 pt-3">
+                    <span className="text-stone-900">Total</span>
+                    <span className="text-stone-900">₹{selectedOrder.amount}</span>
                   </div>
                 </div>
               </div>
@@ -852,43 +873,42 @@ function AppContent() {
             </Link>
           </div>
 
-          {/* Center: Logo */}
+          {/* Center: Logo + Brand Name */}
           <div className="absolute left-1/2 -translate-x-1/2">
-            <Link to="/" className="block">
-              {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl ? (
+            <Link to="/" className="flex items-center gap-2">
+              {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl && (
                 <img 
                   src={cmsData.settings.logoUrl} 
                   alt="Satvastones" 
-                  className="h-10 sm:h-12 md:h-14 w-auto object-contain brightness-0 invert"
+                  className="h-7 sm:h-8 md:h-10 w-auto object-contain brightness-0 invert"
                 />
-              ) : (
-                <span className="font-logo text-3xl sm:text-4xl md:text-5xl text-white tracking-widest font-light uppercase">
-                  {cmsData?.settings?.brandName || 'Satvastones'}
-                </span>
               )}
+              <span className="font-logo text-lg sm:text-xl md:text-2xl text-white tracking-widest font-light uppercase whitespace-nowrap">
+                {cmsData?.settings?.brandName || 'Satvastones'}
+              </span>
             </Link>
           </div>
 
           {/* Right: Icons */}
-          <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+          <div className="flex items-center gap-2 sm:gap-3 md:gap-5">
             <button onClick={() => setIsSearchOpen(true)} className="p-1 text-white hover:text-white/80 transition-colors" aria-label="Search">
-              <Search className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
+              <Search className="h-4 w-4 sm:h-5 sm:w-5 md:h-5.5 md:w-5.5" />
             </button>
-            <Link to="/account" aria-label="My Account" className="p-1 text-white hover:text-white/80 transition-colors">
-              <User className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
+            <Link to="/account" aria-label="My Account" className="p-1 text-white hover:text-white/80 transition-colors hidden sm:block">
+              <User className="h-4 w-4 sm:h-5 sm:w-5 md:h-5.5 md:w-5.5" />
             </Link>
             <Link to="/wishlist" aria-label="Wishlist" className="p-1 text-white hover:text-white/80 transition-colors relative">
-              <Heart className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
+              <Heart className="h-4 w-4 sm:h-5 sm:w-5 md:h-5.5 md:w-5.5" />
               {wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1.5 bg-white text-[#d4535f] text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 sm:-right-1.5 bg-white text-[#d4535f] text-[7px] font-bold w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full flex items-center justify-center">
                   {wishlist.length}
                 </span>
               )}
             </Link>
             <Link to="/cart" aria-label="Shopping Cart" className="p-1 text-white hover:text-white/80 transition-colors relative">
-              <ShoppingBag className="h-5 w-5 sm:h-5.5 sm:w-5.5" />
+              <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 md:h-5.5 md:w-5.5" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1.5 bg-white text-[#d4535f] text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 sm:-right-1.5 bg-white text-[#d4535f] text-[7px] font-bold w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -916,11 +936,12 @@ function AppContent() {
               className="fixed top-0 left-0 bottom-0 w-72 bg-white z-[80] md:hidden shadow-xl"
             >
               <div className="flex items-center justify-between p-4 border-b border-pink-100 bg-[#f2707f]">
-                {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl ? (
-                  <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-8 w-auto object-contain brightness-0 invert" />
-                ) : (
-                  <span className="font-logo text-2xl text-white tracking-widest font-light uppercase">{cmsData?.settings?.brandName || 'Satvastones'}</span>
-                )}
+                <Link to="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
+                  {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl && (
+                    <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-7 w-auto object-contain brightness-0 invert" />
+                  )}
+                  <span className="font-logo text-lg text-white tracking-widest font-light uppercase">{cmsData?.settings?.brandName || 'Satvastones'}</span>
+                </Link>
                 <button onClick={() => setIsMenuOpen(false)} className="p-1 text-white"><X className="h-6 w-6" /></button>
               </div>
               <div className="p-4 space-y-1">
