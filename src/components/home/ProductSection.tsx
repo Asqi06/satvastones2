@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from 'react-router-dom';
 import { optimizeImage, getSrcSet } from '../../utils/cloudinary';
 
 interface Product {
@@ -39,10 +40,10 @@ export default function ProductSection({
         
         <div className="flex gap-2.5 sm:gap-3 lg:gap-5 overflow-x-auto no-scrollbar pb-2">
           {section.productIds.map((product) => (
-            <div
+            <Link
               key={product._id}
-              className="flex-shrink-0 w-[45%] sm:w-[48%] lg:w-72 cursor-pointer group"
-              onClick={() => onProductClick(product)}
+              to={`/product/${product.slug || product._id}`}
+              className="flex-shrink-0 w-[45%] sm:w-[48%] lg:w-72 group"
             >
               <div className="relative aspect-square overflow-hidden rounded-lg lg:rounded-xl bg-gray-100">
                 <img
@@ -86,17 +87,17 @@ export default function ProductSection({
                   Add to Cart
                 </button>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         
         <div className="flex justify-center mt-4 sm:mt-5 lg:mt-6">
-          <button
-            onClick={onViewAll}
+          <Link
+            to="/shop"
             className="border-2 border-[#f2707f] text-[#d4535f] hover:bg-[#f2707f] hover:text-white text-[10px] sm:text-xs font-bold px-6 sm:px-8 py-2 sm:py-2.5 lg:py-3 rounded-lg uppercase tracking-wider transition-colors"
           >
             View All
-          </button>
+          </Link>
         </div>
       </div>
     </section>

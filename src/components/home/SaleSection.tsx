@@ -46,7 +46,7 @@ export default function SaleSection({ sale, onProductClick }: { sale: SaleData; 
           {sale.productIds.map((product) => {
             const hasDiscount = product.oldPrice && product.oldPrice > product.price;
             return (
-              <div key={product._id} className="group cursor-pointer" onClick={() => onProductClick(product)}>
+              <Link key={product._id} to={`/product/${product.slug || product._id}`} className="group">
                 <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
                   <img src={product.image} alt={product.title} loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0" />
@@ -67,7 +67,7 @@ export default function SaleSection({ sale, onProductClick }: { sale: SaleData; 
                     {hasDiscount && <span className="text-[10px] text-gray-400 line-through">Rs. {product.oldPrice}</span>}
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { optimizeImage, getSrcSet } from '../../utils/cloudinary';
 
 interface Category {
@@ -83,27 +84,31 @@ export default function NewCategoryShowcase({ categories, onCategoryClick }: {
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
         >
-          {items.map((cat, index) => (
-            <div
-              key={`${cat.title}-${index}`}
-              onClick={() => onCategoryClick(cat.title?.toLowerCase())}
-              className="flex-shrink-0 cursor-pointer group"
-            >
-              <div className="w-24 h-24 sm:w-32 sm:h-32 lg:w-52 lg:h-52 rounded-xl lg:rounded-2xl overflow-hidden bg-white/50 transition-transform duration-300 group-hover:scale-105 shadow-sm">
-                <img
-                  src={optimizeImage(cat.image, 300, 300)}
-                  srcSet={getSrcSet(cat.image, [96, 128, 208], 1.0)}
-                  sizes="(max-width: 640px) 96px, (max-width: 1024px) 128px, 208px"
-                  alt={cat.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </div>
-              <p className="text-center text-[10px] sm:text-xs lg:text-sm font-medium text-gray-800 mt-1.5 sm:mt-2 lg:mt-2.5">
-                {cat.title}
-              </p>
-            </div>
-          ))}
+          {items.map((cat, index) => {
+            const isDuplicate = index < categories.length || index >= categories.length * 2;
+            return (
+              <Link
+                key={`${cat.title}-${index}`}
+                to={`/shop/${cat.title?.toLowerCase()}`}
+                className="flex-shrink-0 group"
+                {...(isDuplicate ? { 'aria-hidden': 'true', tabIndex: -1 } : {})}
+              >
+                <div className="w-24 h-24 sm:w-32 sm:h-32 lg:w-52 lg:h-52 rounded-xl lg:rounded-2xl overflow-hidden bg-white/50 transition-transform duration-300 group-hover:scale-105 shadow-sm">
+                  <img
+                    src={optimizeImage(cat.image, 300, 300)}
+                    srcSet={getSrcSet(cat.image, [96, 128, 208], 1.0)}
+                    sizes="(max-width: 640px) 96px, (max-width: 1024px) 128px, 208px"
+                    alt={cat.title}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+                <p className="text-center text-[10px] sm:text-xs lg:text-sm font-medium text-gray-800 mt-1.5 sm:mt-2 lg:mt-2.5">
+                  {cat.title}
+                </p>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from 'react-router-dom';
 import { optimizeImage, getSrcSet } from '../../utils/cloudinary';
 
 interface Trend {
@@ -27,10 +28,10 @@ export default function ShopByTrend({
         
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-5">
           {trends.map((trend) => (
-            <div
+            <Link
               key={trend._id}
-              onClick={() => onTrendClick(trend)}
-              className="cursor-pointer group relative aspect-[3/4] overflow-hidden rounded-lg lg:rounded-xl bg-gray-100"
+              to="/shop"
+              className="group relative aspect-[3/4] overflow-hidden rounded-lg lg:rounded-xl bg-gray-100"
             >
               <img
                 src={optimizeImage(trend.image, 400, 533)}
@@ -49,7 +50,7 @@ export default function ShopByTrend({
                   Jewellery
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

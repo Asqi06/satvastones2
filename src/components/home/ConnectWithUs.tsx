@@ -46,7 +46,7 @@ export default function ConnectWithUs() {
         </div>
         
         <p className="text-center text-[10px] sm:text-xs lg:text-xs text-gray-500 mt-4 sm:mt-6 lg:mt-8">
-          Trusted by 9 Lakh+ Customers. We always try to bring the best experience to customers when shopping at Satvastones.
+          Loved by customers across India. We always try to bring the best experience to customers when shopping at Satvastones.
         </p>
       </div>
     </section>

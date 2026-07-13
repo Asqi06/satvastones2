@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowRight, Star, Heart, Gift, Package, Store, ChevronRight, Facebook, Instagram, Twitter } from 'lucide-react';
 
@@ -103,10 +104,10 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
           </h2>
           <div className="grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-6">
             {COLLECTIONS.map((item) => (
-              <div
+              <Link
                 key={item.title}
-                onClick={() => navigateTo('shop', { category: item.title.toLowerCase() })}
-                className="group cursor-pointer"
+                to={`/shop/${item.title.toLowerCase()}`}
+                className="group"
               >
                 <div className="relative aspect-square overflow-hidden" style={{ backgroundColor: item.color }}>
                   <img
@@ -132,22 +133,22 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
             FIND THE PERFECT GIFT
           </h2>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="group relative aspect-[4/5] overflow-hidden cursor-pointer" onClick={() => navigateTo('shop', { category: 'necklaces' })}>
+            <Link to="/shop/necklaces" className="group relative aspect-[4/5] overflow-hidden">
               <img src={ASSETS.layering} alt="For the trendsetter" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               <div className="absolute bottom-6 left-6">
                 <p className="text-xl font-semibold tracking-wider text-white md:text-2xl" style={{ fontFamily: "'Georgia',serif" }}>FOR THE TRENDSETTER</p>
                 <p className="mt-1 text-xs tracking-[0.15em] text-white/70" style={{ fontFamily: "'Inter',sans-serif" }}>SHOP LAYERED NECKLACES</p>
               </div>
-            </div>
-            <div className="group relative aspect-[4/5] overflow-hidden cursor-pointer" onClick={() => navigateTo('shop', { category: 'gifts' })}>
+            </Link>
+            <Link to="/shop/gifts" className="group relative aspect-[4/5] overflow-hidden">
               <img src={ASSETS.giftBox} alt="Gift boxed earrings" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               <div className="absolute bottom-6 left-6">
                 <p className="text-xl font-semibold tracking-wider text-white md:text-2xl" style={{ fontFamily: "'Georgia',serif" }}>GIFT BOXED EARRINGS</p>
                 <p className="mt-1 text-xs tracking-[0.15em] text-white/70" style={{ fontFamily: "'Inter',sans-serif" }}>SHOP THE COLLECTION</p>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -160,7 +161,7 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
           </h2>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {TRENDING.map((item) => (
-              <div key={item.title} className="group cursor-pointer" onClick={() => navigateTo('shop')}>
+              <Link key={item.title} to="/shop" className="group">
                 <div className="relative aspect-square overflow-hidden bg-[#f5f5f5]">
                   <img src={item.image} alt={item.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                 </div>
@@ -168,7 +169,7 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
                   <p className="text-sm font-semibold tracking-[0.05em] text-[#222]" style={{ fontFamily: "'Georgia',serif" }}>{item.title}</p>
                   <p className="mt-1 text-[10px] font-semibold tracking-[0.2em] text-[#999]" style={{ fontFamily: "'Inter',sans-serif" }}>{item.sub}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
           <div className="mt-10 flex items-center justify-center gap-2">
@@ -185,7 +186,7 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div className="flex flex-col gap-6">
               {DISCOVER_LEFT.map((item) => (
-                <div key={item.title} className="group relative aspect-[16/10] overflow-hidden cursor-pointer" onClick={() => navigateTo('shop')}>
+                <Link key={item.title} to="/shop" className="group relative aspect-[16/10] overflow-hidden">
                   <img src={item.image} alt={item.title} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   <div className="absolute bottom-6 left-6 right-6">
@@ -193,25 +194,21 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
                     <p className="mt-1 text-xs tracking-[0.1em] text-white/70" style={{ fontFamily: "'Inter',sans-serif" }}>{item.desc}</p>
                     <p className="mt-3 text-[10px] font-semibold tracking-[0.2em] text-white underline underline-offset-4" style={{ fontFamily: "'Inter',sans-serif" }}>LEARN MORE</p>
                   </div>
-                </div>
-              ))}
+              </Link>
+            ))}
             </div>
-            <div className="group relative aspect-square md:aspect-auto overflow-hidden cursor-pointer" onClick={() => navigateTo('shop')}>
+            <Link to="/shop" className="group relative aspect-square md:aspect-auto overflow-hidden">
               <img src={ASSETS.darkHairedWoman} alt="Up to 30% off selected styles" loading="lazy" className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               <div className="absolute bottom-6 left-6 right-6">
                 <p className="text-3xl font-semibold tracking-wider text-white md:text-4xl lg:text-5xl" style={{ fontFamily: "'Georgia',serif" }}>
                   UP TO 30% OFF<br />SELECTED STYLES
                 </p>
-                <button
-                  onClick={(e) => { e.stopPropagation(); navigateTo('shop'); }}
-                  className="mt-6 bg-white px-8 py-3 text-xs font-semibold tracking-[0.15em] text-[#222] transition-colors hover:bg-[#f0f0f0]"
-                  style={{ fontFamily: "'Inter',sans-serif" }}
-                >
+                <span className="mt-6 inline-block bg-white px-8 py-3 text-xs font-semibold tracking-[0.15em] text-[#222] transition-colors hover:bg-[#f0f0f0]" style={{ fontFamily: "'Inter',sans-serif" }}>
                   SHOP SALE
-                </button>
+                </span>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
@@ -307,13 +304,13 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
                 Unlock exclusive access to early collections, special events, and personalized offers. Join the list.
               </p>
             </div>
-            <button
-              onClick={() => navigateTo('contact')}
+            <Link
+              to="/contact"
               className="inline-flex items-center gap-2 bg-[#222] px-8 py-4 text-[10px] font-semibold tracking-[0.2em] text-white transition-colors hover:bg-[#444]"
               style={{ fontFamily: "'Inter',sans-serif" }}
             >
               SIGN UP <ArrowRight className="h-3 w-3" />
-            </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -345,13 +342,13 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
                 <ul className="space-y-3">
                   {col.links.map((link) => (
                     <li key={link}>
-                      <button
-                        onClick={() => navigateTo('shop')}
+                      <Link
+                        to="/shop"
                         className="text-[10px] font-medium tracking-[0.05em] text-[#888] transition-colors hover:text-[#222]"
                         style={{ fontFamily: "'Inter',sans-serif" }}
                       >
                         {link}
-                      </button>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -367,18 +364,21 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
           <div className="flex flex-col items-center gap-6">
             <div className="flex items-center gap-6">
               {[
-                { icon: Facebook, label: 'Facebook' },
-                { icon: Twitter, label: 'Twitter' },
-                { icon: Instagram, label: 'Instagram' },
+                { icon: Facebook, label: 'Facebook', href: 'https://facebook.com/satvastones' },
+                { icon: Twitter, label: 'Twitter', href: 'https://twitter.com/satvastones' },
+                { icon: Instagram, label: 'Instagram', href: 'https://instagram.com/satvastones' },
               ].map((item) => (
-                <button
+                <a
                   key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.2em] text-[#888] transition-colors hover:text-[#222]"
                   style={{ fontFamily: "'Inter',sans-serif" }}
                 >
                   <item.icon className="h-3.5 w-3.5" />
                   {item.label.toUpperCase()}
-                </button>
+                </a>
               ))}
             </div>
             <p className="text-[9px] font-medium tracking-[0.1em] text-[#aaa]" style={{ fontFamily: "'Inter',sans-serif" }}>
