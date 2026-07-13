@@ -1,5 +1,18 @@
 {
   "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.satvastones.in" }],
+      "destination": "https://satvastones.in/$1",
+      "permanent": true
+    },
+    {
+      "source": "/:path*/",
+      "destination": "/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

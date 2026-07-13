@@ -301,11 +301,18 @@ function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () 
 
 function ProductRouteWrapper({ cmsData, navigateTo, addToCart, handleAddReview, wishlist, toggleWishlist }: any) {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const product = cmsData?.products?.find((p: any) => p.slug === slug || p._id === slug || p.id === slug);
 
   useEffect(() => {
     if (product) analytics.trackCustom('view_product', { productId: product._id || product.id, title: product.title, price: product.price, category: product.category });
   }, [product?._id]);
+
+  useEffect(() => {
+    if (product?.slug && slug !== product.slug) {
+      navigate(`/product/${product.slug}`, { replace: true });
+    }
+  }, [product, slug, navigate]);
 
   if (!product) {
     return (

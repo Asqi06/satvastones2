@@ -196,7 +196,7 @@ async function main() {
       const products = await res.json();
       productCount = products.length;
       for (const product of products) {
-        const slug = product.slug || product._id || product.id;
+        if (!product.slug) continue;
         const lastMod = product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
         const price = product.price || 0;
         const title = product.metaTitle || `${product.title} | Satvastones`;
@@ -205,7 +205,7 @@ async function main() {
         const desc = product.metaDescription || `Buy ${product.title} at ₹${price}. ${product.isAntiTarnish ? 'Anti-tarnish, ' : ''}waterproof ${category}. Free shipping & COD. Shop authentic ${category} at Satvastones.`;
 
         allRoutes.push({
-          path: `/product/${slug}`,
+          path: `/product/${product.slug}`,
           title,
           desc,
           image: product.image || null,

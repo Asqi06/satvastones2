@@ -387,9 +387,9 @@ app.get('/api/sitemap.xml', async (req, res) => {
     }
 
     for (const product of products) {
+      if (!product.slug) continue;
       const lastMod = product.updatedAt ? new Date(product.updatedAt).toISOString() : new Date().toISOString();
-      const slug = product.slug || product._id;
-      xml += `  <url>\n    <loc>https://satvastones.in/product/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n`;
+      xml += `  <url>\n    <loc>https://satvastones.in/product/${product.slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n`;
       if (product.image) {
         xml += `    <image:image>\n      <image:loc>${product.image}</image:loc>\n    </image:image>\n`;
       }
@@ -484,6 +484,10 @@ app.get('/api/products/slug/:slug', async (req, res) => {
     const redirected = await followRedirect(slug);
     if (redirected) {
       product = await Product.findOne({ slug: redirected });
+      if (product) return res.json(product);
+    }
+    if (mongoose.Types.ObjectId.isValid(slug)) {
+      product = await Product.findById(slug);
       if (product) return res.json(product);
     }
     res.status(404).json({ error: 'Product not found' });
