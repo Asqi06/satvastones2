@@ -28,12 +28,36 @@ export function generateOrderNumber(): string {
   return `SV-${timestamp}-${random}`;
 }
 
-export function slugify(text: string): string {
-  return text
+export function slugify(text: string, maxLength: number = 0): string {
+  let slug = text
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .trim()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  if (maxLength > 0 && slug.length > maxLength) {
+    const cut = slug.slice(0, maxLength);
+    const lastHyphen = cut.lastIndexOf('-');
+    slug = (lastHyphen > 0 ? cut.slice(0, lastHyphen) : cut).replace(/-+$/, '');
+  }
+
+  return slug;
+}
+
+export async function ensureUniqueSlug(
+  baseSlug: string,
+  exists: (slug: string) => boolean | Promise<boolean>
+): Promise<string> {
+  let slug = baseSlug;
+  let counter = 1;
+  while (await exists(slug)) {
+    slug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+  return slug;
 }
 
 export function truncate(text: string, length: number): string {

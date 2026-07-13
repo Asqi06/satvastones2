@@ -7,7 +7,7 @@ import crypto from 'crypto';
 import { sendEmail, emailTemplates, generateInvoice } from './emailService.js';
 import { OAuth2Client } from 'google-auth-library';
 import compression from 'compression';
-
+import { slugify, ensureUniqueSlug } from './src/lib/utils.ts';
 
 dotenv.config();
 
@@ -84,27 +84,6 @@ const productSchema = new mongoose.Schema({
 });
 
 const Product = mongoose.model('Product', productSchema);
-
-// Helper function to generate SEO-friendly slug from title
-function generateSlug(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
-// Helper function to ensure unique slug
-async function ensureUniqueSlug(baseSlug, excludeId) {
-  let slug = baseSlug;
-  let counter = 1;
-  while (await Product.findOne({ slug, _id: { $ne: excludeId } })) {
-    slug = `${baseSlug}-${counter}`;
-    counter++;
-  }
-  return slug;
-}
 
 // Helper function to deduct stock
 async function deductStock(items) {
@@ -363,41 +342,54 @@ Sitemap: https://satvastones.in/api/sitemap.xml
 
 app.get('/api/sitemap.xml', async (req, res) => {
   try {
-    const products = await Product.find({}, 'title price images updatedAt category');
+    const [products, blogs] = await Promise.all([
+      Product.find({}, 'title slug image price images updatedAt category'),
+      Blog.find({ isPublished: true }, 'title slug image updatedAt category')
+    ]);
     const staticPages = [
-      { loc: 'https://satvastones.in/', priority: '1.0', changefreq: 'daily' },
-      { loc: 'https://satvastones.in/shop', priority: '0.9', changefreq: 'daily' },
-      { loc: 'https://satvastones.in/shop/necklaces', priority: '0.8', changefreq: 'weekly' },
-      { loc: 'https://satvastones.in/shop/earrings', priority: '0.8', changefreq: 'weekly' },
-      { loc: 'https://satvastones.in/shop/rings', priority: '0.8', changefreq: 'weekly' },
-      { loc: 'https://satvastones.in/shop/bracelets', priority: '0.8', changefreq: 'weekly' },
-      { loc: 'https://satvastones.in/shop/99-sale', priority: '0.8', changefreq: 'weekly' },
-      { loc: 'https://satvastones.in/shop/gifts', priority: '0.7', changefreq: 'weekly' },
-      { loc: 'https://satvastones.in/shop/name-necklace', priority: '0.7', changefreq: 'weekly' },
-      { loc: 'https://satvastones.in/shop/accessories', priority: '0.6', changefreq: 'monthly' },
-      { loc: 'https://satvastones.in/shop/pendant', priority: '0.6', changefreq: 'monthly' },
-      { loc: 'https://satvastones.in/shop/hampers', priority: '0.6', changefreq: 'monthly' },
-      { loc: 'https://satvastones.in/shop/mothers-day', priority: '0.7', changefreq: 'yearly' },
-      { loc: 'https://satvastones.in/blogs', priority: '0.6', changefreq: 'weekly' },
-      { loc: 'https://satvastones.in/contact', priority: '0.5', changefreq: 'monthly' },
-      { loc: 'https://satvastones.in/about', priority: '0.7', changefreq: 'monthly' },
-      { loc: 'https://satvastones.in/terms', priority: '0.4', changefreq: 'monthly' },
-      { loc: 'https://satvastones.in/privacy', priority: '0.4', changefreq: 'monthly' },
-      { loc: 'https://satvastones.in/shipping', priority: '0.5', changefreq: 'monthly' },
-      { loc: 'https://satvastones.in/returns', priority: '0.5', changefreq: 'monthly' },
+      'https://satvastones.in/',
+      'https://satvastones.in/shop',
+      'https://satvastones.in/shop/necklaces',
+      'https://satvastones.in/shop/earrings',
+      'https://satvastones.in/shop/rings',
+      'https://satvastones.in/shop/bracelets',
+      'https://satvastones.in/shop/99-sale',
+      'https://satvastones.in/shop/gifts',
+      'https://satvastones.in/shop/name-necklace',
+      'https://satvastones.in/shop/accessories',
+      'https://satvastones.in/shop/pendant',
+      'https://satvastones.in/shop/hampers',
+      'https://satvastones.in/shop/mothers-day',
+      'https://satvastones.in/blogs',
+      'https://satvastones.in/contact',
+      'https://satvastones.in/about',
+      'https://satvastones.in/terms',
+      'https://satvastones.in/privacy',
+      'https://satvastones.in/shipping',
+      'https://satvastones.in/returns',
     ];
 
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n';
+    xml += '  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
 
-    for (const page of staticPages) {
-      xml += `  <url>\n    <loc>${page.loc}</loc>\n    <priority>${page.priority}</priority>\n    <changefreq>${page.changefreq}</changefreq>\n  </url>\n`;
+    for (const loc of staticPages) {
+      xml += `  <url>\n    <loc>${loc}</loc>\n  </url>\n`;
     }
 
     for (const product of products) {
       const lastMod = product.updatedAt ? new Date(product.updatedAt).toISOString() : new Date().toISOString();
       const slug = product.slug || product._id;
-      xml += `  <url>\n    <loc>https://satvastones.in/product/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <priority>0.8</priority>\n    <changefreq>weekly</changefreq>\n  </url>\n`;
+      xml += `  <url>\n    <loc>https://satvastones.in/product/${slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n`;
+      if (product.image) {
+        xml += `    <image:image>\n      <image:loc>${product.image}</image:loc>\n    </image:image>\n`;
+      }
+      xml += '  </url>\n';
+    }
+
+    for (const blog of blogs) {
+      const lastMod = blog.updatedAt ? new Date(blog.updatedAt).toISOString() : new Date().toISOString();
+      xml += `  <url>\n    <loc>https://satvastones.in/blog/${blog.slug}</loc>\n    <lastmod>${lastMod}</lastmod>\n  </url>\n`;
     }
 
     xml += '</urlset>';
@@ -474,7 +466,7 @@ app.post('/api/products', async (req, res) => {
   try {
     const data = { ...req.body };
     if (!data.slug && data.title) {
-      data.slug = await ensureUniqueSlug(generateSlug(data.title));
+      data.slug = await ensureUniqueSlug(slugify(data.title), (slug) => Product.findOne({ slug }));
     }
     const product = new Product(data);
     await product.save();
@@ -495,7 +487,7 @@ app.put('/api/products/:id', async (req, res) => {
       if (!existing) return res.status(404).json({ error: 'Product not found' });
       // Only auto-generate slug if title changed and no explicit slug provided
       if (!data.slug && data.title !== existing.title) {
-        data.slug = await ensureUniqueSlug(generateSlug(data.title), existing._id);
+        data.slug = await ensureUniqueSlug(slugify(data.title), (slug) => Product.findOne({ slug, _id: { $ne: existing._id } }));
       }
     }
     const product = await Product.findByIdAndUpdate(req.params.id, data, { new: true });
@@ -513,7 +505,7 @@ app.post('/api/migrate-slugs', async (req, res) => {
     let updated = 0;
     for (const product of products) {
       if (product.title) {
-        product.slug = await ensureUniqueSlug(generateSlug(product.title), product._id);
+        product.slug = await ensureUniqueSlug(slugify(product.title), (slug) => Product.findOne({ slug, _id: { $ne: product._id } }));
         await product.save();
         updated++;
       }

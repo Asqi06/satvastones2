@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { slugify } from './src/lib/utils.ts';
 
 dotenv.config();
 
@@ -7,15 +8,6 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/satvas
 
 // Schemas (Local copies for seeding)
 const productSchema = new mongoose.Schema({ title: String, slug: { type: String, unique: true, sparse: true }, price: Number, oldPrice: Number, rating: Number, reviews: Number, image: String, category: String, description: String });
-
-function generateSlug(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
 
 const Product = mongoose.model('Product', productSchema);
 
@@ -84,7 +76,7 @@ async function seed() {
     const productsWithIds = initialCMSData.products.map(p => ({
       ...p,
       _id: new mongoose.Types.ObjectId(),
-      slug: generateSlug(p.title)
+      slug: slugify(p.title)
     }));
     await Product.insertMany(productsWithIds);
     console.log('Products seeded!');

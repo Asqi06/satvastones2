@@ -6,68 +6,47 @@ const API_URL = process.env.VITE_API_URL || 'https://satvastones2.onrender.com/a
 
 const STATIC_ROUTES = [
   { path: '/',            title: 'SatvaStones | Minimalist & Premium Aesthetic Jewelry',
-    desc: 'Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399.',
-    priority: '1.0', changefreq: 'daily' },
+    desc: 'Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399.' },
   { path: '/shop',        title: 'Shop Aesthetic Jewelry Online | Premium Korean & Western Collection | Satvastones',
-    desc: 'Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available.',
-    priority: '0.9', changefreq: 'daily' },
+    desc: 'Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available.' },
   { path: '/shop/99-sale', title: 'Shop ₹99 Sale | Satvastones',
-    desc: 'Shop trendy aesthetic jewelry at just ₹99 each — Korean studs, Western hoops, stacking rings, and delicate chain necklaces. Anti-tarnish, waterproof. Free shipping over ₹399.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Shop trendy aesthetic jewelry at just ₹99 each — Korean studs, Western hoops, stacking rings, and delicate chain necklaces. Anti-tarnish, waterproof. Free shipping over ₹399.' },
   { path: '/shop/earrings', title: 'Shop Earrings | Minimalist Korean & Western Hoops | Satvastones',
-    desc: 'Explore 100+ aesthetic earrings for women — Korean minimalist studs, Western hoop earrings, drop earrings, and statement chandbalis. Anti-tarnish, hypoallergenic, waterproof.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Explore 100+ aesthetic earrings for women — Korean minimalist studs, Western hoop earrings, drop earrings, and statement chandbalis. Anti-tarnish, hypoallergenic, waterproof.' },
   { path: '/shop/necklaces', title: 'Shop Necklaces | Anti-Tarnish Gold Chains & Pendants | Satvastones',
-    desc: 'Discover aesthetic necklaces for women — anti-tarnish gold-plated chains, Korean chokers, pendant necklaces, and layered styles. Waterproof, hypoallergenic. Free shipping over ₹399.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Discover aesthetic necklaces for women — anti-tarnish gold-plated chains, Korean chokers, pendant necklaces, and layered styles. Waterproof, hypoallergenic. Free shipping over ₹399.' },
   { path: '/shop/rings',   title: 'Shop Rings | Stackable & Minimalist Rings for Women | Satvastones',
-    desc: 'Browse aesthetic rings for women — Korean stacking rings, gold-plated bands, statement cocktail rings, and minimalist designs. Waterproof, anti-tarnish, adjustable sizes.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Browse aesthetic rings for women — Korean stacking rings, gold-plated bands, statement cocktail rings, and minimalist designs. Waterproof, anti-tarnish, adjustable sizes.' },
   { path: '/shop/bracelets', title: 'Shop Bracelets | Gold Chains, Bangles & Cuffs | Satvastones',
-    desc: 'Shop aesthetic bracelets and bangles — gold-plated chains, Korean beaded bracelets, tennis bracelets, and cuffs. Anti-tarnish, waterproof, everyday elegance.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Shop aesthetic bracelets and bangles — gold-plated chains, Korean beaded bracelets, tennis bracelets, and cuffs. Anti-tarnish, waterproof, everyday elegance.' },
   { path: '/shop/gifts',  title: 'Shop Jewelry Gifts for Her | Satvastones',
-    desc: 'Find the perfect jewelry gifts for her — curated gift-ready pieces including earrings, necklaces, rings, and personalized name necklaces. Beautifully packaged, shipped across India.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Find the perfect jewelry gifts for her — curated gift-ready pieces including earrings, necklaces, rings, and personalized name necklaces. Beautifully packaged, shipped across India.' },
   { path: '/shop/name-necklace', title: 'Shop Name Necklaces | Personalized Gold & Silver | Satvastones',
-    desc: 'Shop personalized name necklaces in gold and silver finishes — custom engraved, anti-tarnish, and waterproof. The perfect gift for her, crafted in Mumbai.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Shop personalized name necklaces in gold and silver finishes — custom engraved, anti-tarnish, and waterproof. The perfect gift for her, crafted in Mumbai.' },
   { path: '/shop/accessories', title: 'Shop Jewelry Accessories | Anklets, Brooches & More | Satvastones',
-    desc: 'Discover premium jewelry accessories — anklets, hair accessories, brooches, and jewelry organizers. Complete your aesthetic look with Satvastones.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Discover premium jewelry accessories — anklets, hair accessories, brooches, and jewelry organizers. Complete your aesthetic look with Satvastones.' },
   { path: '/shop/pendant', title: 'Shop Pendants | Gold-Plated & Anti-Tarnish | Satvastones',
-    desc: 'Shop aesthetic pendants for women — gold-plated, anti-tarnish pendants in Korean and Western styles. Perfect for layering or gifting. Free shipping over ₹399.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Shop aesthetic pendants for women — gold-plated, anti-tarnish pendants in Korean and Western styles. Perfect for layering or gifting. Free shipping over ₹399.' },
   { path: '/shop/hampers', title: 'Shop Gift Hampers | Luxury Jewelry Sets | Satvastones',
-    desc: 'Shop luxury jewelry gift hampers — curated sets of Korean and Western aesthetic jewelry in elegant packaging. Perfect for birthdays, anniversaries, and festivals.',
-    priority: '0.8', changefreq: 'weekly' },
+    desc: 'Shop luxury jewelry gift hampers — curated sets of Korean and Western aesthetic jewelry in elegant packaging. Perfect for birthdays, anniversaries, and festivals.' },
   { path: '/shop/mothers-day', title: "Shop Mother's Day Jewelry Gifts | Satvastones",
-    desc: "Shop Mother's Day jewelry gifts — elegant earrings, personalized name necklaces, and curated gift sets mom will love. Anti-tarnish, waterproof, beautifully packaged.",
-    priority: '0.8', changefreq: 'weekly' },
+    desc: "Shop Mother's Day jewelry gifts — elegant earrings, personalized name necklaces, and curated gift sets mom will love. Anti-tarnish, waterproof, beautifully packaged." },
   { path: '/about',       title: 'About SatvaStones | Korean & Western Aesthetic Jewelry Studio',
-    desc: 'Discover the SatvaStones story — an Indian jewelry brand curating premium Korean aesthetic earrings, anti-tarnish gold necklaces, and Western minimalist accessories.',
-    priority: '0.6', changefreq: 'monthly' },
+    desc: 'Discover the SatvaStones story — an Indian jewelry brand curating premium Korean aesthetic earrings, anti-tarnish gold necklaces, and Western minimalist accessories.' },
   { path: '/contact',     title: 'Contact Satvastones | Customer Support',
-    desc: 'Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: support@satvastones.in',
-    priority: '0.6', changefreq: 'monthly' },
+    desc: 'Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: support@satvastones.in' },
   { path: '/blogs',       title: 'The Journal | Satvastones Blog — Style Guides & Jewelry Care',
-    desc: 'Explore style guides, jewelry care tips, and the latest trends in Korean and Western aesthetic jewelry on the Satvastones Journal.',
-    priority: '0.7', changefreq: 'weekly' },
+    desc: 'Explore style guides, jewelry care tips, and the latest trends in Korean and Western aesthetic jewelry on the Satvastones Journal.' },
   { path: '/privacy',     title: 'Privacy Policy | Satvastones',
-    desc: 'Satvastones privacy policy — how we collect, use, and protect your personal data. Compliant with Indian IT Act 2000 and international standards.',
-    priority: '0.4', changefreq: 'monthly' },
+    desc: 'Satvastones privacy policy — how we collect, use, and protect your personal data. Compliant with Indian IT Act 2000 and international standards.' },
   { path: '/terms',       title: 'Terms & Conditions | Satvastones',
-    desc: 'Satvastones terms and conditions — order policies, payment terms, shipping, returns, and dispute resolution.',
-    priority: '0.4', changefreq: 'monthly' },
+    desc: 'Satvastones terms and conditions — order policies, payment terms, shipping, returns, and dispute resolution.' },
   { path: '/returns',     title: 'Returns & Refunds | Satvastones',
-    desc: 'Satvastones return and refund policy — due to hygiene and handcrafted nature, all jewelry sales are final. Damaged items can be reported within 48 hours.',
-    priority: '0.5', changefreq: 'monthly' },
+    desc: 'Satvastones return and refund policy — due to hygiene and handcrafted nature, all jewelry sales are final. Damaged items can be reported within 48 hours.' },
   { path: '/shipping',    title: 'Shipping Policy | Satvastones — Free Shipping Over ₹399',
-    desc: 'Satvastones shipping policy — free shipping over ₹399, express delivery 3-7 business days. COD available. International shipping via India Post.',
-    priority: '0.5', changefreq: 'monthly' },
+    desc: 'Satvastones shipping policy — free shipping over ₹399, express delivery 3-7 business days. COD available. International shipping via India Post.' },
   { path: '/refund',      title: 'Refund Policy | Satvastones',
-    desc: 'Satvastones refund policy — details on order cancellation, refunds, and store credit.',
-    priority: '0.4', changefreq: 'monthly' },
+    desc: 'Satvastones refund policy — details on order cancellation, refunds, and store credit.' },
 ];
 
 const NOINDEX_ROUTES = ['/cart', '/checkout', '/account', '/wishlist'];
@@ -147,10 +126,15 @@ async function fetchWithTimeout(url, timeoutMs = 8000) {
 async function generateSitemap(allRoutes) {
   const today = new Date().toISOString().split('T')[0];
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n';
+  xml += '  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
 
   for (const route of allRoutes) {
-    xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <lastmod>${route.lastmod || today}</lastmod>\n    <priority>${route.priority}</priority>\n    <changefreq>${route.changefreq}</changefreq>\n  </url>\n`;
+    xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <lastmod>${route.lastmod || today}</lastmod>\n`;
+    if (route.image) {
+      xml += `    <image:image>\n      <image:loc>${route.image}</image:loc>\n    </image:image>\n`;
+    }
+    xml += '  </url>\n';
   }
 
   xml += '</urlset>';
@@ -224,8 +208,7 @@ async function main() {
           path: `/product/${slug}`,
           title,
           desc,
-          priority: '0.8',
-          changefreq: 'weekly',
+          image: product.image || null,
           lastmod: lastMod,
         });
       }
@@ -251,8 +234,7 @@ async function main() {
           path: `/blog/${blog.slug}`,
           title,
           desc,
-          priority: '0.7',
-          changefreq: 'monthly',
+          image: blog.image || null,
           lastmod: lastMod,
         });
       }

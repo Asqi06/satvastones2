@@ -17,10 +17,10 @@ export default function NewFooter() {
               <a href="https://www.instagram.com/satvastonesjewelry" target="_blank" rel="noopener noreferrer" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
                 <Instagram className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
               </a>
-              <a href="#" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+              <a href="https://facebook.com/satvastones" target="_blank" rel="noopener noreferrer" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
                 <Facebook className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
               </a>
-              <a href="#" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+              <a href="https://twitter.com/satvastones" target="_blank" rel="noopener noreferrer" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
                 <Twitter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
               </a>
             </div>
