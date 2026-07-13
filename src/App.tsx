@@ -21,6 +21,7 @@ import AuthPage from './components/AuthPage';
 import SearchOverlay from './components/SearchOverlay';
 import ExitIntentPopup from './components/ExitIntentPopup';
 import OrderSuccessPage from './components/OrderSuccessPage';
+import HotDealsPage from './components/HotDealsPage';
 import { optimizeImage } from './utils/cloudinary';
 import { analytics } from './utils/analytics';
 import NewHeroBanner from './components/home/NewHeroBanner';
@@ -932,7 +933,7 @@ function AppContent() {
           </div>
 
           {/* HOT DEALS with SALE badge */}
-          <Link to="/shop?sale=true" className="relative flex items-center gap-1.5 text-[11px] lg:text-xs font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#d4535f] transition-colors">
+          <Link to="/hot-deals" className="relative flex items-center gap-1.5 text-[11px] lg:text-xs font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#d4535f] transition-colors">
             HOT DEALS
             <span className="absolute -top-2.5 -right-6 bg-[#d4535f] text-white text-[7px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
               SALE
@@ -1007,7 +1008,7 @@ function AppContent() {
                   { label: 'Home', path: '/' },
                   { label: 'Shop All', path: '/shop' },
                   { label: 'New Arrivals', path: '/shop' },
-                  { label: 'Hot Deals', path: '/shop?sale=true' },
+                  { label: 'Hot Deals', path: '/hot-deals' },
                   { label: 'Track Order', path: '/account' },
                   { label: 'Returns / Exchange', path: '/returns' },
                   { label: 'Contact Us', path: '/contact' },
@@ -1170,6 +1171,21 @@ function AppContent() {
 
               <Route path="/shop" element={<ShopRoute />} />
               <Route path="/shop/:category" element={<ShopRoute />} />
+              <Route path="/hot-deals" element={
+                <>
+                  <SEO 
+                    title="Hot Deals & Sales | Satvastones" 
+                    description="Grab the best deals on aesthetic jewelry. ₹99 Flash Sale, discounted earrings, necklaces, rings & more. Limited time offers with free shipping." 
+                    canonical="https://satvastones.in/hot-deals" 
+                    keywords={['jewelry sale', 'hot deals', '₹99 sale', 'discounted jewelry', 'flash sale india', 'satvastones offers']} 
+                  />
+                  <HotDealsPage 
+                    products={cmsData.products || []} 
+                    cmsData={cmsData} 
+                    onSelectProduct={(p) => navigateTo('product', p)} 
+                  />
+                </>
+              } />
               <Route path="/product/:slug" element={<ProductRouteWrapper cmsData={cmsData} navigateTo={navigateTo} addToCart={addToCart} handleAddReview={handleAddReview} wishlist={wishlist} toggleWishlist={toggleWishlist} />} />
               <Route path="/wishlist" element={
                 <WishlistPage 

@@ -49,6 +49,8 @@ const STATIC_ROUTES = [
     desc: 'Satvastones refund policy — details on order cancellation, refunds, and store credit.' },
   { path: '/aniadmin',    title: 'Admin Portal | Satvastones',
     desc: 'Satvastones admin panel — manage products, orders, CMS settings, and site configuration.', noindex: true },
+  { path: '/hot-deals',   title: 'Hot Deals & Sales | ₹99 Flash Sale | Satvastones',
+    desc: 'Grab the best deals on aesthetic jewelry. ₹99 Flash Sale, discounted earrings, necklaces, rings & more. Limited time offers with free shipping.' },
 ];
 
 const NOINDEX_ROUTES = ['/cart', '/checkout', '/account', '/wishlist'];
