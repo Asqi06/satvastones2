@@ -47,6 +47,8 @@ const STATIC_ROUTES = [
     desc: 'Satvastones shipping policy — free shipping over ₹399, express delivery 3-7 business days. COD available. International shipping via India Post.' },
   { path: '/refund',      title: 'Refund Policy | Satvastones',
     desc: 'Satvastones refund policy — details on order cancellation, refunds, and store credit.' },
+  { path: '/aniadmin',    title: 'Admin Portal | Satvastones',
+    desc: 'Satvastones admin panel — manage products, orders, CMS settings, and site configuration.', noindex: true },
 ];
 
 const NOINDEX_ROUTES = ['/cart', '/checkout', '/account', '/wishlist'];
