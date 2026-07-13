@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { optimizeImage, getSrcSet } from '../utils/cloudinary';
 
 const CATEGORIES = [
   { slug: 'all', label: 'All' },
@@ -191,18 +192,24 @@ export default function ShopPage({
               {/* Image */}
               <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
                 {/* Primary Image */}
-                <img 
-                  src={product.image} 
-                  alt={product.title} 
+                <img
+                  src={optimizeImage(product.image, 480)}
+                  srcSet={getSrcSet(product.image, [320, 480, 768])}
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                  alt={product.title}
                   loading="lazy"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
                 />
                 {/* Secondary Image on Hover */}
                 {product.images && product.images.length > 1 && (
-                  <img 
-                    src={product.images[1]} 
-                    alt={product.title} 
+                  <img
+                    src={optimizeImage(product.images[1], 480)}
+                    srcSet={getSrcSet(product.images[1], [320, 480, 768])}
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    alt={product.title}
                     loading="lazy"
+                    decoding="async"
                     className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
                   />
                 )}

@@ -85,6 +85,15 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model('Product', productSchema);
 
+// --- Redirect Schema (tracks retired slugs for 301 forwarding) ---
+const redirectSchema = new mongoose.Schema({
+  fromSlug: { type: String, required: true, unique: true, index: true },
+  toSlug: { type: String, required: true },
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+  createdAt: { type: Date, default: Date.now },
+});
+const Redirect = mongoose.model('Redirect', redirectSchema);
+
 // Helper function to deduct stock
 async function deductStock(items) {
   for (const item of items) {
@@ -452,11 +461,42 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
+async function followRedirect(slug, maxHops = 5) {
+  if (await Product.findOne({ slug })) return null;
+  const redirect = await Redirect.findOne({ fromSlug: slug });
+  if (!redirect) return null;
+  let finalSlug = redirect.toSlug;
+  let hops = 0;
+  while (hops < maxHops) {
+    const next = await Redirect.findOne({ fromSlug: finalSlug });
+    if (!next) break;
+    finalSlug = next.toSlug;
+    hops++;
+  }
+  return finalSlug;
+}
+
 app.get('/api/products/slug/:slug', async (req, res) => {
   try {
-    const product = await Product.findOne({ slug: req.params.slug });
-    if (!product) return res.status(404).json({ error: 'Product not found' });
-    res.json(product);
+    const slug = req.params.slug;
+    let product = await Product.findOne({ slug });
+    if (product) return res.json(product);
+    const redirected = await followRedirect(slug);
+    if (redirected) {
+      product = await Product.findOne({ slug: redirected });
+      if (product) return res.json(product);
+    }
+    res.status(404).json({ error: 'Product not found' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/redirects/:slug', async (req, res) => {
+  try {
+    const redirected = await followRedirect(req.params.slug);
+    if (redirected) return res.json({ fromSlug: req.params.slug, toSlug: redirected, redirect: true });
+    res.json({ fromSlug: req.params.slug, redirect: false });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -487,7 +527,16 @@ app.put('/api/products/:id', async (req, res) => {
       if (!existing) return res.status(404).json({ error: 'Product not found' });
       // Only auto-generate slug if title changed and no explicit slug provided
       if (!data.slug && data.title !== existing.title) {
-        data.slug = await ensureUniqueSlug(slugify(data.title), (slug) => Product.findOne({ slug, _id: { $ne: existing._id } }));
+        const newSlug = await ensureUniqueSlug(slugify(data.title), (slug) => Product.findOne({ slug, _id: { $ne: existing._id } }));
+        // Record redirect from old slug to new slug
+        if (newSlug !== existing.slug) {
+          await Redirect.findOneAndUpdate(
+            { fromSlug: existing.slug },
+            { fromSlug: existing.slug, toSlug: newSlug, productId: existing._id },
+            { upsert: true }
+          );
+          data.slug = newSlug;
+        }
       }
     }
     const product = await Product.findByIdAndUpdate(req.params.id, data, { new: true });

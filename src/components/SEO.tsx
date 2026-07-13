@@ -22,14 +22,15 @@ const DEFAULT_KEYWORDS = [
   'satvastones', 'online jewelry store india', 'affordable jewelry', 'fashion jewelry'
 ];
 
-function stripQueryParams(url: string): string {
+const FILTER_PARAMS = ['style', 'category', 'material', 'maxPrice', 'sort', 'minPrice', 'color'];
+
+function getCanonicalUrl(rawUrl: string): string {
   try {
-    const u = new URL(url);
-    u.search = '';
-    u.hash = '';
-    return u.toString();
+    const url = new URL(rawUrl, SITE_URL);
+    FILTER_PARAMS.forEach((p) => url.searchParams.delete(p));
+    return url.toString();
   } catch {
-    return url;
+    return rawUrl;
   }
 }
 
@@ -46,7 +47,7 @@ const SEO = ({
 }: SEOProps) => {
   const siteTitle = title.includes(SITE_NAME) ? title : `${title} | ${SITE_NAME}`;
   const allKeywords = [...new Set([...(keywords || []), ...DEFAULT_KEYWORDS])].join(', ');
-  const cleanCanonical = stripQueryParams(canonical);
+  const cleanCanonical = getCanonicalUrl(canonical);
 
   return (
     <Helmet>
@@ -54,10 +55,7 @@ const SEO = ({
       <meta name="description" content={description} />
       <meta name="keywords" content={allKeywords} />
       <link rel="canonical" href={cleanCanonical} />
-      <link rel="alternate" hrefLang="en-IN" href={cleanCanonical} />
-      <link rel="alternate" hrefLang="en" href={cleanCanonical} />
-      <link rel="alternate" hrefLang="x-default" href={cleanCanonical} />
-      <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large'} />
+      <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-snippet:-1, max-image-preview:large'} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="theme-color" content="#0a0a0a" />
       <meta name="format-detection" content="telephone=no" />

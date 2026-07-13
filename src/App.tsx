@@ -478,6 +478,8 @@ function AppContent() {
 
   const ShopRoute = () => {
     const { category } = useParams<{ category?: string }>();
+    const location = useLocation();
+    const hasFacetParams = ['style', 'material', 'maxPrice', 'minPrice', 'sort', 'color'].some(p => new URLSearchParams(location.search).has(p));
     const catLabel = category ? (CATEGORY_LABELS[category] || category) : null;
     const materialForTitle = 'Gold-Plated';
     const title = category 
@@ -506,6 +508,7 @@ function AppContent() {
         title={title}
         description={description}
         canonical={canonical}
+        noindex={hasFacetParams}
         keywords={['shop jewelry online india', 'buy aesthetic jewelry', 'korean jewelry shop', 'western jewelry collection', 'anti-tarnish jewelry online', 'trendy earrings india', 'gold plated necklace']}
       />
       <JsonLd data={getBreadcrumbSchema(breadcrumbs)} />

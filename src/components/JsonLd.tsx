@@ -18,15 +18,42 @@ export const getProductSchema = (product: any) => {
   const name = product.metaTitle || product.title;
   const description = product.metaDescription || product.description || `Buy ${product.title} at ₹${product.price}. Anti-tarnish, waterproof aesthetic jewelry from Satvastones.`;
   const isInStock = (product.stockQuantity || 0) > 0;
+  const hasVariants = product.variants?.length > 0;
 
   const schema: any = {
     "@context": "https://schema.org/",
-    "@type": "Product",
+    "@id": `${url}#product`,
+    ...(hasVariants ? {
+      "@type": "ProductGroup",
+      "productGroupID": product.sku || product._id || product.id,
+      "variesBy": [
+        "https://schema.org/color",
+        ...(product.variants?.some((v: any) => v.size) ? ["https://schema.org/size"] : [])
+      ],
+      "hasVariant": product.variants.map((v: any) => ({
+        "@type": "Product",
+        "@id": `https://satvastones.in/product/${v.slug || product.slug || product._id || product.id}#product`,
+        "name": v.color ? `${name} - ${v.color}` : name,
+        "color": v.color,
+        "size": v.size,
+        "image": v.images?.[0] || product.image,
+        "offers": {
+          "@type": "Offer",
+          "priceCurrency": "INR",
+          "price": product.price,
+          "availability": (v.stockQuantity ?? product.stockQuantity ?? 0) > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          "url": url
+        }
+      }))
+    } : {
+      "@type": "Product",
+    }),
     "name": name,
     "image": [product.image, ...(product.images || [])],
     "description": description,
     "sku": product.sku || product._id || product.id,
     "mpn": product.sku || product._id || product.id,
+    ...(product.gtin13 ? { "gtin13": product.gtin13 } : {}),
     "brand": {
       "@type": "Brand",
       "name": "Satvastones"

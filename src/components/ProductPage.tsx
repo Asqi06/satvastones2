@@ -3,7 +3,7 @@ import {
   Heart, Star, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
   Truck, RefreshCcw, ShieldCheck, MessageCircle
 } from 'lucide-react';
-import { optimizeImage } from '../utils/cloudinary';
+import { optimizeImage, getSrcSet, getPlaceholder } from '../utils/cloudinary';
 import { Link } from 'react-router-dom';
 
 const AccordionItem = ({ title, children, defaultOpen = false }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) => {
@@ -82,13 +82,23 @@ export default function ProductPage({
                 {images.map((url: string, i: number) => (
                   <button key={i} onClick={() => setActiveImage(i)}
                     className={`w-12 h-12 md:w-14 md:h-14 rounded-lg overflow-hidden shrink-0 border-2 transition-all ${activeImage === i ? 'border-[#f2707f]' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-                    <img src={optimizeImage(url, 100)} alt="" className="w-full h-full object-cover" />
+                    <img src={optimizeImage(url, 100)} alt={product.title} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>
             )}
             <div className="relative flex-1 aspect-square rounded-xl overflow-hidden bg-gray-50">
-              <img src={optimizeImage(images[activeImage] || product.image, 800)} alt={product.title} className="w-full h-full object-cover" />
+              <img
+                src={optimizeImage(images[activeImage] || product.image, 800)}
+                srcSet={getSrcSet(images[activeImage] || product.image, [320, 480, 768, 1024, 1280])}
+                sizes="(max-width: 768px) 100vw, 800px"
+                alt={product.title}
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+                className="w-full h-full object-cover"
+                style={{ backgroundImage: `url(${getPlaceholder(images[activeImage] || product.image)})`, backgroundSize: 'cover' }}
+              />
               {hasDiscount && (
                 <span className="absolute top-3 left-3 bg-[#f2707f] text-white text-[10px] font-bold px-2.5 py-1 rounded-md">-{discountPercent}%</span>
               )}
@@ -328,7 +338,15 @@ export default function ProductPage({
               {allProducts.filter((p: any) => (p._id || p.id) !== (product._id || product.id)).slice(0, 4).map((related: any) => (
                 <Link key={related._id || related.id} to={`/product/${related.slug || related._id || related.id}`} className="group">
                   <div className="aspect-square bg-gray-50 rounded-lg overflow-hidden">
-                    <img src={optimizeImage(related.image, 400)} alt={related.title} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img
+                      src={optimizeImage(related.image, 400)}
+                      srcSet={getSrcSet(related.image, [200, 320, 400])}
+                      sizes="(max-width: 640px) 50vw, 25vw"
+                      alt={related.title}
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
                   <div className="mt-1.5">
                     <h3 className="text-[10px] font-medium text-gray-800 truncate">{related.title}</h3>
