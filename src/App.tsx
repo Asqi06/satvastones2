@@ -839,7 +839,7 @@ function AppContent() {
       {/* Announcement Bar - Scrolling marquee */}
       <div className="w-full bg-[#d4535f] overflow-hidden py-2 sm:py-2.5 z-[60]">
         <div className="announcement-scroll">
-          {[...Array(8)].map((_, i) => {
+          {[...Array(2)].map((_, i) => {
             const rawText = cmsData?.settings?.announcementText || 'Free Shipping Above INR 599 | Free Gift On Order Above INR 699 | COD Available | Easy Return | Summer Sale Is Live - Upto 70% Off';
             const items = rawText.split('|').map((s: string) => s.trim()).filter(Boolean);
             return (

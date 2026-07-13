@@ -56,7 +56,6 @@ const SEO = ({
       <meta name="keywords" content={allKeywords} />
       <link rel="canonical" href={cleanCanonical} />
       <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-snippet:-1, max-image-preview:large'} />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="theme-color" content="#0a0a0a" />
       <meta name="format-detection" content="telephone=no" />
       <meta name="geo.region" content="IN" />

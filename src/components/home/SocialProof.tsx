@@ -50,10 +50,34 @@ const stats = [
   { label: "Average Rating", value: "4.7/5", icon: Star },
 ];
 
+const reviewSchema = {
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "Satvastones Jewelry",
+  "url": "https://satvastones.in",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "10",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "review": [...featuredReviews, ...allReviews].map(r => ({
+    "@type": "Review",
+    "reviewRating": { "@type": "Rating", "ratingValue": r.rating, "bestRating": "5" },
+    "author": { "@type": "Person", "name": r.name },
+    "datePublished": r.date,
+    "reviewBody": r.text,
+    "itemReviewed": { "@type": "Product", "name": r.productName }
+  }))
+};
+
 export default function SocialProof() {
   const [activeTab, setActiveTab] = useState<"featured" | "all" | "stats">("featured");
 
   return (
+    <>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewSchema) }} />
     <section className="bg-[#FAF9F6] py-16 lg:py-24" aria-labelledby="reviews-heading">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         
@@ -112,6 +136,7 @@ export default function SocialProof() {
         </div>
       </div>
     </section>
+    </>
   );
 }
 
