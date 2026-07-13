@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Search, ShoppingBag, User, ArrowLeft, ArrowRight, ChevronRight, 
-  Menu, X, Heart, Shield, Trash2, Home, LayoutGrid
+  Menu, X, Heart, Shield, Trash2, Home, LayoutGrid, Clock, ChevronDown
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate, useLocation, useParams } from 'react-router-dom';
@@ -839,8 +839,125 @@ function AppContent() {
 
       <ExitIntentPopup />
 
-      {/* Announcement Bar - Scrolling marquee */}
-      <div className="w-full bg-[#d4535f] overflow-hidden py-2 sm:py-2.5 z-[60]">
+      {/* Top Brand Bar - White background with brand name centered */}
+      <div className="w-full bg-white border-b border-gray-100 z-[60]">
+        <div className="flex items-center justify-between px-4 sm:px-5 md:px-10 py-3 sm:py-4">
+          {/* Left: Hamburger (mobile) */}
+          <button 
+            className="md:hidden p-1 text-gray-800" 
+            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+
+          {/* Center: Brand Name */}
+          <div className="absolute left-1/2 -translate-x-1/2">
+            <Link to="/" className="flex items-center">
+              {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl ? (
+                <img 
+                  src={cmsData.settings.logoUrl} 
+                  alt="Satvastones" 
+                  className="h-7 sm:h-8 md:h-10 w-auto object-contain"
+                />
+              ) : (
+                <span className="font-logo text-2xl sm:text-3xl md:text-4xl text-[#d4535f] tracking-wider italic font-bold">
+                  {cmsData?.settings?.brandName || 'Satvastones'}
+                </span>
+              )}
+            </Link>
+          </div>
+
+          {/* Right: Icons */}
+          <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+            <button onClick={() => setIsSearchOpen(true)} className="p-1 text-gray-800 hover:text-[#d4535f] transition-colors" aria-label="Search">
+              <Search className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
+            </button>
+            <Link to="/account" aria-label="My Account" className="p-1 text-gray-800 hover:text-[#d4535f] transition-colors hidden sm:block">
+              <User className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
+            </Link>
+            <Link to="/account" aria-label="Recent Orders" className="p-1 text-gray-800 hover:text-[#d4535f] transition-colors hidden sm:block">
+              <Clock className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
+            </Link>
+            <Link to="/wishlist" aria-label="Wishlist" className="p-1 text-gray-800 hover:text-[#d4535f] transition-colors relative">
+              <Heart className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
+              {wishlist.length > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 sm:-right-2 bg-[#d4535f] text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {wishlist.length}
+                </span>
+              )}
+            </Link>
+            <Link to="/cart" aria-label="Shopping Cart" className="p-1 text-gray-800 hover:text-[#d4535f] transition-colors relative">
+              <ShoppingBag className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 sm:-right-2 bg-[#d4535f] text-white text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Navigation Bar - Centered links with CATEGORIES dropdown */}
+      <nav className="sticky top-0 bg-white z-50 border-b border-gray-100 shadow-sm">
+        <div className="hidden md:flex items-center justify-center gap-6 lg:gap-10 py-3">
+          {/* CATEGORIES with dropdown */}
+          <div className="relative group">
+            <button className="flex items-center gap-1.5 text-[11px] lg:text-xs font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#d4535f] transition-colors">
+              CATEGORIES <ChevronDown className="h-3.5 w-3.5" />
+            </button>
+            <div className="absolute top-full left-0 pt-2 hidden group-hover:block z-50">
+              <div className="bg-white border border-gray-100 shadow-lg rounded-lg py-2 min-w-[200px]">
+                {[
+                  { label: 'Necklaces', path: '/shop/necklaces' },
+                  { label: 'Name Necklace', path: '/shop/name-necklace' },
+                  { label: 'Earrings', path: '/shop/earrings' },
+                  { label: 'Rings', path: '/shop/rings' },
+                  { label: 'Bracelets', path: '/shop/bracelets' },
+                  { label: 'Accessories', path: '/shop/accessories' },
+                  { label: 'Pendant', path: '/shop/pendant' },
+                  { label: 'Gifts', path: '/shop/gifts' },
+                  { label: 'Hampers', path: '/shop/hampers' },
+                  { label: 'Mother\'s Day', path: '/shop/mothers-day' },
+                ].map((cat) => (
+                  <Link
+                    key={cat.label}
+                    to={cat.path}
+                    className="block px-4 py-2 text-[11px] font-medium uppercase tracking-wider text-gray-700 hover:text-[#d4535f] hover:bg-pink-50 transition-colors"
+                  >
+                    {cat.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* HOT DEALS with SALE badge */}
+          <Link to="/shop?sale=true" className="relative flex items-center gap-1.5 text-[11px] lg:text-xs font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#d4535f] transition-colors">
+            HOT DEALS
+            <span className="absolute -top-2.5 -right-6 bg-[#d4535f] text-white text-[7px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+              SALE
+            </span>
+          </Link>
+
+          <Link to="/shop" className="text-[11px] lg:text-xs font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#d4535f] transition-colors">
+            STORE
+          </Link>
+          <Link to="/account" className="text-[11px] lg:text-xs font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#d4535f] transition-colors">
+            TRACK ORDER
+          </Link>
+          <Link to="/returns" className="text-[11px] lg:text-xs font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#d4535f] transition-colors">
+            RETURNS / EXCHANGE
+          </Link>
+          <Link to="/contact" className="text-[11px] lg:text-xs font-bold uppercase tracking-[0.15em] text-gray-800 hover:text-[#d4535f] transition-colors">
+            CONTACT US
+          </Link>
+        </div>
+      </nav>
+
+      {/* Announcement Bar - Pink scrolling marquee */}
+      <div className="w-full bg-[#d4535f] overflow-hidden py-2 sm:py-2.5">
         <div className="announcement-scroll">
           {[...Array(2)].map((_, i) => {
             const rawText = cmsData?.settings?.announcementText || 'Free Shipping Above INR 599 | Free Gift On Order Above INR 699 | COD Available | Easy Return | Summer Sale Is Live - Upto 70% Off';
@@ -860,76 +977,6 @@ function AppContent() {
         </div>
       </div>
 
-      {/* Navigation - Pink Navbar */}
-      <nav className="sticky top-0 bg-[#f2707f] z-50 shadow-sm">
-        {/* Main Nav Row */}
-        <div className="flex items-center justify-between px-4 sm:px-5 md:px-10 py-4 sm:py-5 md:py-6">
-          {/* Left: Hamburger (mobile) */}
-          <button 
-            className="md:hidden p-1 text-white" 
-            onClick={() => setIsMenuOpen(!isMenuOpen)} 
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
-
-          {/* Left: Desktop nav links */}
-          <div className="hidden md:flex items-center gap-6 lg:gap-8">
-            <Link to="/shop" className="text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-white/80 transition-colors">
-              Shop
-            </Link>
-            <Link to="/shop?sale=true" className="text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-white/80 transition-colors">
-              Hot Deals
-            </Link>
-            <Link to="/contact" className="text-[10px] lg:text-[11px] font-bold uppercase tracking-[0.15em] text-white hover:text-white/80 transition-colors">
-              Contact
-            </Link>
-          </div>
-
-          {/* Center: Logo + Brand Name */}
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <Link to="/" className="flex items-center gap-2">
-              {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl && (
-                <img 
-                  src={cmsData.settings.logoUrl} 
-                  alt="Satvastones" 
-                  className="h-7 sm:h-8 md:h-10 w-auto object-contain brightness-0 invert"
-                />
-              )}
-              <span className="font-logo text-xl sm:text-2xl md:text-3xl text-white tracking-wider italic">
-                {cmsData?.settings?.brandName || 'Satvastones'}
-              </span>
-            </Link>
-          </div>
-
-          {/* Right: Icons */}
-          <div className="flex items-center gap-2 sm:gap-3 md:gap-5">
-            <button onClick={() => setIsSearchOpen(true)} className="p-1 text-white hover:text-white/80 transition-colors" aria-label="Search">
-              <Search className="h-4 w-4 sm:h-5 sm:w-5 md:h-5.5 md:w-5.5" />
-            </button>
-            <Link to="/account" aria-label="My Account" className="p-1 text-white hover:text-white/80 transition-colors hidden sm:block">
-              <User className="h-4 w-4 sm:h-5 sm:w-5 md:h-5.5 md:w-5.5" />
-            </Link>
-            <Link to="/wishlist" aria-label="Wishlist" className="p-1 text-white hover:text-white/80 transition-colors relative">
-              <Heart className="h-4 w-4 sm:h-5 sm:w-5 md:h-5.5 md:w-5.5" />
-              {wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1 sm:-right-1.5 bg-white text-[#d4535f] text-[7px] font-bold w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full flex items-center justify-center">
-                  {wishlist.length}
-                </span>
-              )}
-            </Link>
-            <Link to="/cart" aria-label="Shopping Cart" className="p-1 text-white hover:text-white/80 transition-colors relative">
-              <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 md:h-5.5 md:w-5.5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 sm:-right-1.5 bg-white text-[#d4535f] text-[7px] font-bold w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full flex items-center justify-center">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
-          </div>
-        </div>
-      </nav>
-
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {isMenuOpen && (
@@ -948,14 +995,14 @@ function AppContent() {
               transition={{ type: 'tween', duration: 0.3 }}
               className="fixed top-0 left-0 bottom-0 w-72 bg-white z-[80] md:hidden shadow-xl"
             >
-              <div className="flex items-center justify-between p-4 border-b border-pink-100 bg-[#f2707f]">
+              <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
                 <Link to="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                   {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl && (
-                    <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-7 w-auto object-contain brightness-0 invert" />
+                    <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-7 w-auto object-contain" />
                   )}
-                  <span className="font-logo text-xl text-white tracking-wider italic">{cmsData?.settings?.brandName || 'Satvastones'}</span>
+                  <span className="font-logo text-xl text-[#d4535f] tracking-wider italic font-bold">{cmsData?.settings?.brandName || 'Satvastones'}</span>
                 </Link>
-                <button onClick={() => setIsMenuOpen(false)} className="p-1 text-white"><X className="h-6 w-6" /></button>
+                <button onClick={() => setIsMenuOpen(false)} className="p-1 text-gray-800"><X className="h-6 w-6" /></button>
               </div>
               <div className="p-4 space-y-1">
                 {[
@@ -963,10 +1010,11 @@ function AppContent() {
                   { label: 'Shop All', path: '/shop' },
                   { label: 'New Arrivals', path: '/shop' },
                   { label: 'Hot Deals', path: '/shop?sale=true' },
+                  { label: 'Track Order', path: '/account' },
+                  { label: 'Returns / Exchange', path: '/returns' },
+                  { label: 'Contact Us', path: '/contact' },
                   { label: 'Wishlist', path: '/wishlist' },
                   { label: 'Blogs', path: '/blogs' },
-                  { label: 'Contact', path: '/contact' },
-                  { label: 'Track Order', path: '/account' },
                 ].map((item) => (
                   <Link
                     key={item.label}
@@ -977,10 +1025,34 @@ function AppContent() {
                     {item.label}
                   </Link>
                 ))}
+                {/* Mobile Categories */}
+                <div className="pt-2 border-t border-gray-100 mt-2">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-gray-400 px-3 mb-2">Categories</p>
+                  {[
+                    { label: 'Necklaces', path: '/shop/necklaces' },
+                    { label: 'Name Necklace', path: '/shop/name-necklace' },
+                    { label: 'Earrings', path: '/shop/earrings' },
+                    { label: 'Rings', path: '/shop/rings' },
+                    { label: 'Bracelets', path: '/shop/bracelets' },
+                    { label: 'Accessories', path: '/shop/accessories' },
+                    { label: 'Pendant', path: '/shop/pendant' },
+                    { label: 'Gifts', path: '/shop/gifts' },
+                    { label: 'Hampers', path: '/shop/hampers' },
+                  ].map((cat) => (
+                    <Link
+                      key={cat.label}
+                      to={cat.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block py-2 px-3 text-[10px] font-medium uppercase tracking-wider text-gray-500 hover:text-[#d4535f] hover:bg-pink-50 rounded-lg transition-colors"
+                    >
+                      {cat.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-100">
                 <Link to="/account" onClick={() => setIsMenuOpen(false)} className="flex items-center gap-3 group">
-                  <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-[#D44638] group-hover:text-white transition-all">
+                  <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-[#d4535f] group-hover:text-white transition-all">
                     <User className="h-4 w-4" />
                   </div>
                   <div>
