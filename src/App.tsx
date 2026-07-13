@@ -841,10 +841,10 @@ function AppContent() {
 
       {/* Top Brand Bar - White background with brand name centered */}
       <div className="w-full bg-white border-b border-gray-100 z-[60]">
-        <div className="flex items-center justify-between px-4 sm:px-5 md:px-10 py-3 sm:py-4">
+        <div className="flex items-center justify-between px-6 sm:px-8 md:px-12 py-3 sm:py-4">
           {/* Left: Hamburger (mobile) */}
           <button 
-            className="md:hidden p-1 text-gray-800" 
+            className="md:hidden p-1 text-gray-800 flex-shrink-0" 
             onClick={() => setIsMenuOpen(!isMenuOpen)} 
             aria-label="Toggle menu"
           >
@@ -852,24 +852,22 @@ function AppContent() {
           </button>
 
           {/* Center: Brand Name */}
-          <div className="absolute left-1/2 -translate-x-1/2">
-            <Link to="/" className="flex items-center">
-              {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl ? (
-                <img 
-                  src={cmsData.settings.logoUrl} 
-                  alt="Satvastones" 
-                  className="h-7 sm:h-8 md:h-10 w-auto object-contain"
-                />
-              ) : (
-                <span className="font-logo text-2xl sm:text-3xl md:text-4xl text-[#d4535f] tracking-wider italic font-bold">
-                  {cmsData?.settings?.brandName || 'Satvastones'}
-                </span>
-              )}
-            </Link>
-          </div>
+          <Link to="/" className="absolute left-1/2 -translate-x-1/2">
+            {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl ? (
+              <img 
+                src={cmsData.settings.logoUrl} 
+                alt="Satvastones" 
+                className="h-8 sm:h-9 md:h-11 w-auto object-contain"
+              />
+            ) : (
+              <span className="font-display text-2xl sm:text-3xl md:text-[2.5rem] text-[#d4535f] font-bold tracking-normal">
+                {cmsData?.settings?.brandName || 'Satvastones'}
+              </span>
+            )}
+          </Link>
 
           {/* Right: Icons */}
-          <div className="flex items-center gap-3 sm:gap-4 md:gap-5">
+          <div className="flex items-center gap-3 sm:gap-4 md:gap-5 flex-shrink-0">
             <button onClick={() => setIsSearchOpen(true)} className="p-1 text-gray-800 hover:text-[#d4535f] transition-colors" aria-label="Search">
               <Search className="h-5 w-5 sm:h-5.5 sm:w-5.5 md:h-6 md:w-6" />
             </button>
@@ -998,9 +996,9 @@ function AppContent() {
               <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
                 <Link to="/" className="flex items-center gap-2" onClick={() => setIsMenuOpen(false)}>
                   {cmsData?.settings?.useLogo && cmsData?.settings?.logoUrl && (
-                    <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-7 w-auto object-contain" />
+                    <img src={cmsData.settings.logoUrl} alt="Satvastones" className="h-8 w-auto object-contain" />
                   )}
-                  <span className="font-logo text-xl text-[#d4535f] tracking-wider italic font-bold">{cmsData?.settings?.brandName || 'Satvastones'}</span>
+                  <span className="font-display text-2xl text-[#d4535f] font-bold">{cmsData?.settings?.brandName || 'Satvastones'}</span>
                 </Link>
                 <button onClick={() => setIsMenuOpen(false)} className="p-1 text-gray-800"><X className="h-6 w-6" /></button>
               </div>
