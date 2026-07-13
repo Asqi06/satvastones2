@@ -6,7 +6,7 @@ import {
   Type, Plus, Trash2, Edit3, Save, X, Timer, Zap, ArrowLeft, 
   CheckCircle, Clock, ChevronRight, UploadCloud, TrendingUp, ShoppingBag,
   Menu, ShieldCheck, Search, Barcode as BarcodeIcon, Video, BarChart3,
-  Layout, Star, HelpCircle, GripVertical, User
+  Layout, Star, HelpCircle, GripVertical, User, Phone
 } from 'lucide-react';
 import { openUploadWidget } from '../utils/cloudinary';
 import AnalyticsDashboard from './AnalyticsDashboard';
@@ -1637,7 +1637,152 @@ export default function AdminPanel({
                       className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden min-h-[80px]" 
                     />
                   </div>
+                  <div className="col-span-full space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Homepage H1 (SR-only for SEO)</label>
+                    <input 
+                      type="text" 
+                      placeholder="SatvaStones — Premium Aesthetic Korean & Western Jewelry Online"
+                      value={tempCMSData.settings.seoH1 || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, seoH1: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                    <p className="text-[9px] text-stone-400 italic">This h1 is visually hidden but critical for SEO. It appears on the homepage hero banner.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Shop Page Title (optional)</label>
+                    <input 
+                      type="text" 
+                      placeholder="Shop Aesthetic Jewelry Online | Premium Korean & Western Collection | Satvastones"
+                      value={tempCMSData.settings.shopPageTitle || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, shopPageTitle: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="col-span-full space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Shop Page Description (optional)</label>
+                    <textarea 
+                      placeholder="Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available."
+                      value={tempCMSData.settings.shopPageDescription || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, shopPageDescription: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden min-h-[80px]" 
+                    />
+                  </div>
                 </div>
+              </section>
+
+              <section className="pt-12 border-t border-stone-100">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <Phone className="h-4 w-4" /> Connect with Us
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Phone Number</label>
+                    <input 
+                      type="text" 
+                      placeholder="+91-90167-03180"
+                      value={tempCMSData.settings.connectPhone || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, connectPhone: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Email Address</label>
+                    <input 
+                      type="text" 
+                      placeholder="support@satvastones.in"
+                      value={tempCMSData.settings.connectEmail || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, connectEmail: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden" 
+                    />
+                  </div>
+                  <div className="col-span-full space-y-2">
+                    <label className="text-[10px] font-bold uppercase text-stone-500">Tagline (shown below contact cards)</label>
+                    <textarea 
+                      placeholder="Loved by customers across India. We always try to bring the best experience to customers when shopping at Satvastones."
+                      value={tempCMSData.settings.connectTagline || ''}
+                      onChange={(e) => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, connectTagline: e.target.value }})}
+                      className="w-full border border-stone-200 p-3 text-sm focus:border-black outline-hidden min-h-[60px]" 
+                    />
+                  </div>
+                </div>
+              </section>
+
+              <section className="pt-12 border-t border-stone-100">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <Star className="h-4 w-4" /> Category SEO (per collection)
+                </h3>
+                <p className="text-[9px] text-stone-400 italic mb-4">Override the title (h2) and meta description for each category page. Leave blank to use defaults.</p>
+                <div className="grid grid-cols-1 gap-6">
+                  {['necklaces', 'name-necklace', 'earrings', 'rings', 'bracelets', 'accessories', 'pendant', 'gifts', 'hampers', 'mothers-day'].map(slug => (
+                    <div key={slug} className="border border-stone-100 rounded-lg p-4 space-y-3">
+                      <h4 className="text-[10px] font-bold uppercase tracking-wider text-stone-600">{slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h4>
+                      <input 
+                        type="text" 
+                        placeholder="SEO Title (h2)"
+                        value={tempCMSData.collectionSeo?.[slug]?.h2 || ''}
+                        onChange={(e) => setTempCMSData({ ...tempCMSData, collectionSeo: { ...tempCMSData.collectionSeo, [slug]: { ...(tempCMSData.collectionSeo?.[slug] || {}), h2: e.target.value }}})}
+                        className="w-full border border-stone-200 p-2.5 text-sm focus:border-black outline-hidden" 
+                      />
+                      <textarea 
+                        placeholder="Meta Description"
+                        value={tempCMSData.collectionSeo?.[slug]?.content || ''}
+                        onChange={(e) => setTempCMSData({ ...tempCMSData, collectionSeo: { ...tempCMSData.collectionSeo, [slug]: { ...(tempCMSData.collectionSeo?.[slug] || {}), content: e.target.value }}})}
+                        className="w-full border border-stone-200 p-2.5 text-sm focus:border-black outline-hidden min-h-[60px]" 
+                      />
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="pt-12 border-t border-stone-100">
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400 mb-6 flex items-center gap-2">
+                  <HelpCircle className="h-4 w-4" /> FAQ (Homepage JSON-LD)
+                </h3>
+                <p className="text-[9px] text-stone-400 italic mb-4">These FAQs appear as structured data on the homepage for rich search results.</p>
+                {(tempCMSData.faqs || []).map((faq: any, idx: number) => (
+                  <div key={idx} className="border border-stone-100 rounded-lg p-4 mb-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase text-stone-500">FAQ #{idx + 1}</span>
+                      <button 
+                        onClick={() => {
+                          const updated = [...(tempCMSData.faqs || [])];
+                          updated.splice(idx, 1);
+                          setTempCMSData({ ...tempCMSData, faqs: updated });
+                        }}
+                        className="text-red-400 hover:text-red-600 text-[9px] font-bold uppercase"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <input 
+                      type="text" 
+                      placeholder="Question"
+                      value={faq.question || ''}
+                      onChange={(e) => {
+                        const updated = [...(tempCMSData.faqs || [])];
+                        updated[idx] = { ...updated[idx], question: e.target.value };
+                        setTempCMSData({ ...tempCMSData, faqs: updated });
+                      }}
+                      className="w-full border border-stone-200 p-2.5 text-sm focus:border-black outline-hidden" 
+                    />
+                    <textarea 
+                      placeholder="Answer"
+                      value={faq.answer || ''}
+                      onChange={(e) => {
+                        const updated = [...(tempCMSData.faqs || [])];
+                        updated[idx] = { ...updated[idx], answer: e.target.value };
+                        setTempCMSData({ ...tempCMSData, faqs: updated });
+                      }}
+                      className="w-full border border-stone-200 p-2.5 text-sm focus:border-black outline-hidden min-h-[60px]" 
+                    />
+                  </div>
+                ))}
+                <button 
+                  onClick={() => setTempCMSData({ ...tempCMSData, faqs: [...(tempCMSData.faqs || []), { question: '', answer: '' }] })}
+                  className="text-[10px] font-bold uppercase text-stone-500 hover:text-black flex items-center gap-2"
+                >
+                  <Plus className="h-3 w-3" /> Add FAQ
+                </button>
               </section>
 
               <div className="pt-8 border-t border-stone-100 flex justify-end">

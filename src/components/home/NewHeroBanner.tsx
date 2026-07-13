@@ -11,7 +11,8 @@ interface Banner {
   linkUrl?: string;
 }
 
-export default function NewHeroBanner({ banners, onBannerClick }: { 
+export default function NewHeroBanner({ cmsData, banners, onBannerClick }: { 
+  cmsData?: any;
   banners: Banner[];
   onBannerClick?: (banner: Banner) => void;
 }) {
@@ -32,7 +33,8 @@ export default function NewHeroBanner({ banners, onBannerClick }: {
   if (!banners || banners.length === 0) return null;
 
   return (
-    <section className="relative w-full overflow-hidden" style={{ background: '#f79da6' }}>
+    <section className="relative w-full overflow-hidden" style={{ background: '#f79da6' }} aria-label="Featured promotions">
+      <h1 className="sr-only">{cmsData?.settings?.seoH1 || 'SatvaStones — Premium Aesthetic Korean & Western Jewelry Online'}</h1>
       {/* Taller banner */}
       <div className="relative w-full" style={{ paddingBottom: 'min(90vw, 45%)' }}>
         {banners.map((banner, index) => (

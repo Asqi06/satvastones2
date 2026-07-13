@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "include": [
+    "/*"
+  ],
+  "exclude": [
+    "/aniadmin",
+    "/aniadmin/*",
+    "/cart",
+    "/checkout",
+    "/order-success",
+    "/account",
+    "/wishlist",
+    "/contact",
+    "/about",
+    "/privacy",
+    "/returns",
+    "/shipping",
+    "/terms"
+  ]
+}

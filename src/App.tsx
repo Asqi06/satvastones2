@@ -57,8 +57,11 @@ const initialCMSData = {
   specialOffer: { title: '', subTitle: '', description: '', image: '', isActive: false },
   ninetyNineSale: { isActive: false, title: '₹99 Flash Sale', subTitle: 'Limited Stock Deal', description: 'Grab your favorite anti-tarnish jewelry at just ₹99 each!', bannerImage: '', guaranteeText: 'Anti-Tarnish • Waterproof • No Color Fade • 100% Guaranteed', badgeText: '₹99 Only' },
   products: [],
-  settings: { announcementText: '', showTimer: false, timerEnd: '' },
-  coupons: []
+  settings: { announcementText: '', showTimer: false, timerEnd: '', seoH1: '', shopPageTitle: '', shopPageDescription: '', connectPhone: '', connectEmail: '', connectTagline: '' },
+  coupons: [],
+  faqs: [],
+  homepageSeo: {},
+  collectionSeo: {}
 };
 
 function AccountDashboard({ user, onLogout, onShop }: { user: any, onLogout: () => void, onShop: () => void }) {
@@ -488,16 +491,16 @@ function AppContent() {
     const location = useLocation();
     const hasFacetParams = ['style', 'material', 'maxPrice', 'minPrice', 'sort', 'color'].some(p => new URLSearchParams(location.search).has(p));
     const catLabel = category ? (CATEGORY_LABELS[category] || category) : null;
-    const materialForTitle = 'Gold-Plated';
+    const collectionSeo = category && cmsData?.collectionSeo?.[category];
     const title = category 
-      ? `${catLabel || category} | Premium ${materialForTitle} Jewelry | Satvastones` 
-      : 'Shop Aesthetic Jewelry Online | Premium Korean & Western Collection | Satvastones';
+      ? (collectionSeo?.h2 || `${catLabel || category} | Premium Gold-Plated Jewelry | Satvastones`) 
+      : (cmsData?.settings?.shopPageTitle || 'Shop Aesthetic Jewelry Online | Premium Korean & Western Collection | Satvastones');
     const canonical = category 
       ? `https://satvastones.in/shop/${category}` 
       : 'https://satvastones.in/shop';
     const description = category 
-      ? (CATEGORY_DESCRIPTIONS[category] || `Shop our curated collection of ${catLabel?.toLowerCase() || category} — premium Korean & Western aesthetic jewelry.`)
-      : 'Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available.';
+      ? (collectionSeo?.content || CATEGORY_DESCRIPTIONS[category] || `Shop our curated collection of ${catLabel?.toLowerCase() || category} — premium Korean & Western aesthetic jewelry.`)
+      : (cmsData?.settings?.shopPageDescription || 'Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available.');
     const breadcrumbs = category 
       ? [
           { name: 'Home', url: 'https://satvastones.in/' },
@@ -1010,7 +1013,7 @@ function AppContent() {
                     canonical="https://satvastones.in/"
                     keywords={['aesthetic jewelry', 'korean jewelry', 'western jewelry', 'anti-tarnish jewelry', 'waterproof jewelry', 'online jewelry store india', 'satvastones', 'trendy earrings', 'gold plated necklace', 'minimalist rings', 'bracelets india', 'fashion jewelry online']}
                   />
-                  <JsonLd data={getFaqSchema([
+                  <JsonLd data={getFaqSchema((cmsData?.faqs && cmsData.faqs.length > 0) ? cmsData.faqs : [
                     {
                       question: 'Is Satvastones jewelry anti-tarnish?',
                       answer: 'Yes! All our jewelry is anti-tarnish, waterproof, and designed to maintain its color. We guarantee no dulling or fading.'
@@ -1035,6 +1038,7 @@ function AppContent() {
 
                   {/* Hero Banner - Full-width auto-carousel */}
                   <NewHeroBanner 
+                    cmsData={cmsData}
                     banners={homepageData?.banners || []} 
                     onBannerClick={(banner) => {
                       if (banner.linkUrl) {
@@ -1086,7 +1090,7 @@ function AppContent() {
                   <CustomerReviews reviews={homepageData?.reviews || []} />
 
                   {/* Connect With Us */}
-                  <ConnectWithUs />
+                  <ConnectWithUs cmsData={cmsData} />
 
                   {/* FAQ */}
                   <FaqSection faqs={homepageData?.faqs || []} />

@@ -155,7 +155,13 @@ const cmsSchema = new mongoose.Schema({
     useLogo: { type: Boolean, default: false },
     brandName: { type: String, default: 'Satvastones' },
     seoTitle: String,
-    seoDescription: String
+    seoDescription: String,
+    seoH1: { type: String, default: 'SatvaStones — Premium Aesthetic Korean & Western Jewelry Online' },
+    shopPageTitle: String,
+    shopPageDescription: String,
+    connectPhone: { type: String, default: '+91-90167-03180' },
+    connectEmail: { type: String, default: 'support@satvastones.in' },
+    connectTagline: { type: String, default: 'Loved by customers across India. We always try to bring the best experience to customers when shopping at Satvastones.' }
   },
   coupons: [{
     code: String,
@@ -175,7 +181,11 @@ const cmsSchema = new mongoose.Schema({
       content: String
     },
     default: {}
-  }
+  },
+  faqs: [{
+    question: String,
+    answer: String
+  }]
 });
 
 const CMS = mongoose.model('CMS', cmsSchema);
@@ -421,7 +431,7 @@ app.get('/api/cms', async (req, res) => {
   try {
     let cms = await CMS.findOne().lean();
     if (!cms) {
-      return res.json({ message: 'initialized', hero: {}, categories: [], specialOffer: {}, settings: {}, coupons: [] });
+      return res.json({ message: 'initialized', hero: {}, categories: [], specialOffer: {}, settings: {}, coupons: [], homepageSeo: {}, collectionSeo: {}, faqs: [] });
     }
     res.json(cms);
   } catch (err) {
@@ -439,6 +449,9 @@ app.post('/api/cms', async (req, res) => {
     if (req.body.settings) updateData.settings = { ...(existing?.settings || {}), ...req.body.settings };
     if (req.body.categories) updateData.categories = req.body.categories;
     if (req.body.coupons !== undefined) updateData.coupons = req.body.coupons;
+    if (req.body.homepageSeo) updateData.homepageSeo = req.body.homepageSeo;
+    if (req.body.collectionSeo) updateData.collectionSeo = req.body.collectionSeo;
+    if (req.body.faqs !== undefined) updateData.faqs = req.body.faqs;
 
     const cms = await CMS.findOneAndUpdate(
       {},
