@@ -2,122 +2,530 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://satvastones.in/</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>1.0</priority>
     <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.9</priority>
-    <changefreq>monthly</changefreq>
+    <changefreq>daily</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/99-sale</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/earrings</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/necklaces</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/rings</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/bracelets</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/gifts</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/name-necklace</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/accessories</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/pendant</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/hampers</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shop/mothers-day</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/about</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/contact</loc>
-    <lastmod>2026-07-09</lastmod>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.6</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/blogs</loc>
-    <lastmod>2026-07-09</lastmod>
-    <priority>0.6</priority>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.7</priority>
+    <changefreq>weekly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/privacy</loc>
-    <lastmod>2026-07-09</lastmod>
-    <priority>0.6</priority>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.4</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/terms</loc>
-    <lastmod>2026-07-09</lastmod>
-    <priority>0.6</priority>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.4</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/returns</loc>
-    <lastmod>2026-07-09</lastmod>
-    <priority>0.6</priority>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.5</priority>
     <changefreq>monthly</changefreq>
   </url>
   <url>
     <loc>https://satvastones.in/shipping</loc>
-    <lastmod>2026-07-09</lastmod>
-    <priority>0.6</priority>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.5</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/refund</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.4</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/special-gift-hamper-for-mothers</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/customized-name-necklace-with-daisy-flower-18k-gold-plated-anti-tarnish-personalized-jewelry</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/circular-oxidised-jhumka-earrings-vintage-boho-fusion-silver-jewelry</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/sparkling-stars-partywear-earrings-aesthetic-korean-crystal-fringe-drop-earrings</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/lioness-roar-pendant-necklace-18k-gold-plated-luxury-statement-western-jewelry</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/serpenti-snake-wrap-watch-bracelet-luxury-crystal-gold-plated-statement-accessory</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/cute-golden-cat-and-daisy-flower-earrings-aesthetic-korean-matte-gold-drop-studs</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/kashmiri-chandbali-oxidised-jhumka-earrings-antique-silver-boho-fusion-chandelier-drops</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/lotus-motif-crescent-chandbali-earrings-antique-silver-oxidised-boho-drop-jhumkas</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/pastel-stone-double-drop-earrings-18k-gold-plated-minimalist-korean-aesthetic-jewelry</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/geometric-cutout-kada-bangle-18k-gold-plated-anti-tarnish-crystal-bracelet</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/dainty-crystal-flower-threader-earrings-18k-gold-plated-minimalist-korean-pull-through-studs</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/minimalist-interlocking-cc-pearl-stud-earrings-18k-gold-plated-luxury-aesthetic-studs</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/dainty-dolphin-crystal-pendant-necklace-18k-gold-plated-anti-tarnish-minimalist-jewelry</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/trending-2in1-clover-necklacefour-leaf-clover-heart-pendant-necklace-rose-gold-plated-anti-tarnish-lucky-crystal-jewelry</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/dainty-white-bow-cat-eye-stone-earrings-minimalist-korean-aesthetic-drop-studs</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/dainty-pave-crystal-bowknot-stud-earrings</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/angel-wings-mama-heart-pendant-necklace-18k-gold-plated-crystal-mothers-day-jewelry</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/adjustable-gold-princess-crown-ring-with-crystals</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/best-boho-statement-rings-for-women</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/best-protective-amulet-jewelry-for-women</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/adjustable-gold-open-heart-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/trendy-floral-aesthetic-jewelry-for-girls</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/trendy-chunky-crescent-hoops-for-women</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/best-thick-vintage-hoops-for-women</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/chunky-gold-square-hoop-earrings-for-women</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/minimalist-everyday-jewelry-choker</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/adjustable-gold-white-enamel-heart-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/gold-white-enamel-circular-motif-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/best-minimalist-everyday-couple-rings</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/gold-paperclip-chain-heart-charm-bracelet-for-womens</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/dainty-gold-beaded-chain-heart-bracelet-for-women</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/layered-gold-snake-and-beaded-chain-bracelet</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/best-chunky-vintage-jewelry-for-women</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/gold-crystal-teardrop-pink-stone-pendant-necklace</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/gold-crystal-sunburst-flower-pendant-necklace</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/tulip-bracelet-red-zircon-diamonds</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/trending-kashmiri-bangles-set</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/12-pair-of-earrings</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-textured-oval-four-leaf-clover-anti-tarnish-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-minimalist-interlocking-cuban-chain-anti-tarnish-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-quilted-snake-bypass-anti-tarnish-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-twin-scallop-sea-shell-anti-tarnish-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-embossed-vintage-floral-anti-tarnish-band-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-embracing-hands-hug-anti-tarnish-bypass-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-triple-layer-wave-anti-tarnish-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-textured-serpent-snake-anti-tarnish-open-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-watch-link-chain-anti-tarnish-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-smooth-teardrop-waterdroplet-anti-tarnish-open-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-coiled-slithering-snake-anti-tarnish-statement-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-interwoven-lattice-openwork-anti-tarnish-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-laurel-olive-leaf-anti-tarnish-wreath-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/korean-aesthetic-dainty-daisy-flower-stacked-anti-tarnish-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/18k-gold-plated-minimalist-interlocking-open-heart-pendant-necklace</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/premium-12-pair-korean-aesthetic-stud-dangle-earring-combo-set-with-velvet-box</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/18k-gold-plated-minimalist-geometric-hollow-square-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/18k-gold-plated-minimalist-open-hollow-heart-adjustable-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/stainless-steel-anti-tarnish-minimalist-interlocking-twin-heart-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/stainless-steel-anti-tarnish-minimalist-dainty-bow-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/stainless-steel-anti-tarnish-minimalist-dainty-crown-tiara-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/stainless-steel-anti-tarnish-minimalist-celestial-hollow-star-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/stainless-steel-anti-tarnish-minimalist-dual-mermaid-tail-adjustable-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/stainless-steel-anti-tarnish-minimalist-open-butterfly-adjustable-ring</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/matte-white-double-layer-floral-drop-statement-earrings</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/resin-flower-pendant-for-womens-and-girls</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/product/resin-pendant-for-womens</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+  <url>
+    <loc>https://satvastones.in/blog/best-jewelry-gifts-for-girlfriend-under-500</loc>
+    <lastmod>2026-06-20</lastmod>
+    <priority>0.7</priority>
     <changefreq>monthly</changefreq>
   </url>
 </urlset>

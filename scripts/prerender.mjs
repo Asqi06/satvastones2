@@ -2,58 +2,87 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { resolve, dirname } from 'path';
 
 const dist = resolve('dist');
+const API_URL = process.env.VITE_API_URL || 'https://satvastones2.onrender.com/api';
 
-const routes = [
+const STATIC_ROUTES = [
   { path: '/',            title: 'SatvaStones | Minimalist & Premium Aesthetic Jewelry',
-    desc: 'Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399.' },
-  { path: '/shop',        title: 'Shop Aesthetic Jewelry Online | Satvastones',
-    desc: 'Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available.' },
+    desc: 'Premium Korean & Western aesthetic jewelry. Anti-tarnish, waterproof, trend-forward designs. Free shipping over ₹399.',
+    priority: '1.0', changefreq: 'daily' },
+  { path: '/shop',        title: 'Shop Aesthetic Jewelry Online | Premium Korean & Western Collection | Satvastones',
+    desc: 'Shop 100+ aesthetic Korean & Western jewelry pieces. Anti-tarnish, waterproof, affordable. Free shipping available.',
+    priority: '0.9', changefreq: 'daily' },
   { path: '/shop/99-sale', title: 'Shop ₹99 Sale | Satvastones',
-    desc: 'Shop trendy aesthetic jewelry at just ₹99 each — Korean studs, Western hoops, stacking rings, and delicate chain necklaces. Anti-tarnish, waterproof. Free shipping over ₹399.' },
-  { path: '/shop/earrings', title: 'Shop Earrings | Satvastones',
-    desc: 'Explore 100+ aesthetic earrings for women — Korean minimalist studs, Western hoop earrings, drop earrings, and statement chandbalis. Anti-tarnish, hypoallergenic, waterproof.' },
-  { path: '/shop/necklaces', title: 'Shop Necklaces | Satvastones',
-    desc: 'Discover aesthetic necklaces for women — anti-tarnish gold-plated chains, Korean chokers, pendant necklaces, and layered styles. Waterproof, hypoallergenic. Free shipping over ₹399.' },
-  { path: '/shop/rings',   title: 'Shop Rings | Satvastones',
-    desc: 'Browse aesthetic rings for women — Korean stacking rings, gold-plated bands, statement cocktail rings, and minimalist designs. Waterproof, anti-tarnish, adjustable sizes.' },
-  { path: '/shop/bracelets', title: 'Shop Bracelets | Satvastones',
-    desc: 'Shop aesthetic bracelets and bangles — gold-plated chains, Korean beaded bracelets, tennis bracelets, and cuffs. Anti-tarnish, waterproof, everyday elegance.' },
-  { path: '/shop/gifts',  title: 'Shop Jewelry Gifts | Satvastones',
-    desc: 'Find the perfect jewelry gifts for her — curated gift-ready pieces including earrings, necklaces, rings, and personalized name necklaces. Beautifully packaged, shipped across India.' },
-  { path: '/shop/name-necklace', title: 'Shop Name Necklaces | Satvastones',
-    desc: 'Shop personalized name necklaces in gold and silver finishes — custom engraved, anti-tarnish, and waterproof. The perfect gift for her, crafted in Mumbai.' },
-  { path: '/shop/accessories', title: 'Shop Jewelry Accessories | Satvastones',
-    desc: 'Discover premium jewelry accessories — anklets, hair accessories, brooches, and jewelry organizers. Complete your aesthetic look with Satvastones.' },
-  { path: '/shop/pendant', title: 'Shop Pendants | Satvastones',
-    desc: 'Shop aesthetic pendants for women — gold-plated, anti-tarnish pendants in Korean and Western styles. Perfect for layering or gifting. Free shipping over ₹399.' },
-  { path: '/shop/hampers', title: 'Shop Gift Hampers | Satvastones',
-    desc: 'Shop luxury jewelry gift hampers — curated sets of Korean and Western aesthetic jewelry in elegant packaging. Perfect for birthdays, anniversaries, and festivals.' },
-  { path: '/shop/mothers-day', title: "Shop Mother's Day Jewelry | Satvastones",
-    desc: "Shop Mother's Day jewelry gifts — elegant earrings, personalized name necklaces, and curated gift sets mom will love. Anti-tarnish, waterproof, beautifully packaged." },
+    desc: 'Shop trendy aesthetic jewelry at just ₹99 each — Korean studs, Western hoops, stacking rings, and delicate chain necklaces. Anti-tarnish, waterproof. Free shipping over ₹399.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/earrings', title: 'Shop Earrings | Minimalist Korean & Western Hoops | Satvastones',
+    desc: 'Explore 100+ aesthetic earrings for women — Korean minimalist studs, Western hoop earrings, drop earrings, and statement chandbalis. Anti-tarnish, hypoallergenic, waterproof.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/necklaces', title: 'Shop Necklaces | Anti-Tarnish Gold Chains & Pendants | Satvastones',
+    desc: 'Discover aesthetic necklaces for women — anti-tarnish gold-plated chains, Korean chokers, pendant necklaces, and layered styles. Waterproof, hypoallergenic. Free shipping over ₹399.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/rings',   title: 'Shop Rings | Stackable & Minimalist Rings for Women | Satvastones',
+    desc: 'Browse aesthetic rings for women — Korean stacking rings, gold-plated bands, statement cocktail rings, and minimalist designs. Waterproof, anti-tarnish, adjustable sizes.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/bracelets', title: 'Shop Bracelets | Gold Chains, Bangles & Cuffs | Satvastones',
+    desc: 'Shop aesthetic bracelets and bangles — gold-plated chains, Korean beaded bracelets, tennis bracelets, and cuffs. Anti-tarnish, waterproof, everyday elegance.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/gifts',  title: 'Shop Jewelry Gifts for Her | Satvastones',
+    desc: 'Find the perfect jewelry gifts for her — curated gift-ready pieces including earrings, necklaces, rings, and personalized name necklaces. Beautifully packaged, shipped across India.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/name-necklace', title: 'Shop Name Necklaces | Personalized Gold & Silver | Satvastones',
+    desc: 'Shop personalized name necklaces in gold and silver finishes — custom engraved, anti-tarnish, and waterproof. The perfect gift for her, crafted in Mumbai.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/accessories', title: 'Shop Jewelry Accessories | Anklets, Brooches & More | Satvastones',
+    desc: 'Discover premium jewelry accessories — anklets, hair accessories, brooches, and jewelry organizers. Complete your aesthetic look with Satvastones.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/pendant', title: 'Shop Pendants | Gold-Plated & Anti-Tarnish | Satvastones',
+    desc: 'Shop aesthetic pendants for women — gold-plated, anti-tarnish pendants in Korean and Western styles. Perfect for layering or gifting. Free shipping over ₹399.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/hampers', title: 'Shop Gift Hampers | Luxury Jewelry Sets | Satvastones',
+    desc: 'Shop luxury jewelry gift hampers — curated sets of Korean and Western aesthetic jewelry in elegant packaging. Perfect for birthdays, anniversaries, and festivals.',
+    priority: '0.8', changefreq: 'weekly' },
+  { path: '/shop/mothers-day', title: "Shop Mother's Day Jewelry Gifts | Satvastones",
+    desc: "Shop Mother's Day jewelry gifts — elegant earrings, personalized name necklaces, and curated gift sets mom will love. Anti-tarnish, waterproof, beautifully packaged.",
+    priority: '0.8', changefreq: 'weekly' },
   { path: '/about',       title: 'About SatvaStones | Korean & Western Aesthetic Jewelry Studio',
-    desc: 'Discover the SatvaStones story — an Indian jewelry brand curating premium Korean aesthetic earrings, anti-tarnish gold necklaces, and Western minimalist accessories.' },
+    desc: 'Discover the SatvaStones story — an Indian jewelry brand curating premium Korean aesthetic earrings, anti-tarnish gold necklaces, and Western minimalist accessories.',
+    priority: '0.6', changefreq: 'monthly' },
   { path: '/contact',     title: 'Contact Satvastones | Customer Support',
-    desc: 'Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: support@satvastones.in' },
-  { path: '/blogs',       title: 'The Journal | Satvastones Blog',
-    desc: 'Explore style guides, jewelry care tips, and the latest trends in Korean and Western aesthetic jewelry on the Satvastones Journal.' },
+    desc: 'Have a question? Reach out to Satvastones customer support. We respond within 24 hours. Email: support@satvastones.in',
+    priority: '0.6', changefreq: 'monthly' },
+  { path: '/blogs',       title: 'The Journal | Satvastones Blog — Style Guides & Jewelry Care',
+    desc: 'Explore style guides, jewelry care tips, and the latest trends in Korean and Western aesthetic jewelry on the Satvastones Journal.',
+    priority: '0.7', changefreq: 'weekly' },
   { path: '/privacy',     title: 'Privacy Policy | Satvastones',
-    desc: 'Satvastones privacy policy — how we collect, use, and protect your personal data. Compliant with Indian IT Act 2000 and international standards.' },
+    desc: 'Satvastones privacy policy — how we collect, use, and protect your personal data. Compliant with Indian IT Act 2000 and international standards.',
+    priority: '0.4', changefreq: 'monthly' },
   { path: '/terms',       title: 'Terms & Conditions | Satvastones',
-    desc: 'Satvastones terms and conditions — order policies, payment terms, shipping, returns, and dispute resolution. Last updated 2025.' },
+    desc: 'Satvastones terms and conditions — order policies, payment terms, shipping, returns, and dispute resolution.',
+    priority: '0.4', changefreq: 'monthly' },
   { path: '/returns',     title: 'Returns & Refunds | Satvastones',
-    desc: 'Satvastones return and refund policy — due to hygiene and handcrafted nature, all jewelry sales are final. Damaged items can be reported within 48 hours.' },
-  { path: '/shipping',    title: 'Shipping Policy | Satvastones',
-    desc: 'Satvastones shipping policy — free shipping over ₹399, express delivery 3-7 business days. COD available. International shipping via India Post.' },
-  { path: '/cart',        title: 'Shopping Cart | Satvastones',
-    desc: 'Review your selected aesthetic jewelry pieces at Satvastones. Secure checkout with UPI, Card & COD available.', noindex: true },
-  { path: '/checkout',    title: 'Secure Checkout | Satvastones',
-    desc: 'Complete your order securely. We accept UPI, Cards, Net Banking & COD.', noindex: true },
-  { path: '/account',     title: 'My Account | Satvastones',
-    desc: 'Manage your orders, addresses, and preferences at Satvastones.', noindex: true },
+    desc: 'Satvastones return and refund policy — due to hygiene and handcrafted nature, all jewelry sales are final. Damaged items can be reported within 48 hours.',
+    priority: '0.5', changefreq: 'monthly' },
+  { path: '/shipping',    title: 'Shipping Policy | Satvastones — Free Shipping Over ₹399',
+    desc: 'Satvastones shipping policy — free shipping over ₹399, express delivery 3-7 business days. COD available. International shipping via India Post.',
+    priority: '0.5', changefreq: 'monthly' },
+  { path: '/refund',      title: 'Refund Policy | Satvastones',
+    desc: 'Satvastones refund policy — details on order cancellation, refunds, and store credit.',
+    priority: '0.4', changefreq: 'monthly' },
 ];
 
-function noscriptContent(route) {
-  const p = route.path;
+const NOINDEX_ROUTES = ['/cart', '/checkout', '/account', '/wishlist'];
+
+const CATEGORY_LABELS = {
+  '99-sale': '₹99 Sale', 'earrings': 'Earrings', 'necklaces': 'Necklaces',
+  'rings': 'Rings', 'bracelets': 'Bracelets', 'gifts': 'Gifts',
+  'name-necklace': 'Name Necklaces', 'accessories': 'Accessories',
+  'pendant': 'Pendants', 'hampers': 'Gift Hampers', 'mothers-day': "Mother's Day Gifts",
+  'korean': 'Korean Jewelry', 'western': 'Western Jewelry', 'traditional': 'Traditional Jewelry',
+  'fusion': 'Fusion Jewelry'
+};
+
+function noscriptContent(route, title, desc) {
+  const p = route;
   if (p === '/') {
     return `<header><h1>SatvaStones — Premium Aesthetic Korean & Western Jewelry Online</h1>
 <nav><a href="/">Home</a> | <a href="/shop">Shop All</a> | <a href="/shop/earrings">Earrings</a> | <a href="/shop/necklaces">Necklaces</a> | <a href="/shop/rings">Rings</a> | <a href="/shop/bracelets">Bracelets</a> | <a href="/shop/99-sale">₹99 Sale</a> | <a href="/about">About</a> | <a href="/contact">Contact</a></nav></header>
@@ -76,8 +105,7 @@ function noscriptContent(route) {
   }
   if (p.startsWith('/shop/')) {
     const cat = p.replace('/shop/', '');
-    const labels = { '99-sale': '₹99 Sale', 'earrings': 'Earrings', 'necklaces': 'Necklaces', 'rings': 'Rings', 'bracelets': 'Bracelets', 'gifts': 'Gifts', 'name-necklace': 'Name Necklaces', 'accessories': 'Accessories', 'pendant': 'Pendants', 'hampers': 'Gift Hampers', 'mothers-day': "Mother's Day Gifts" };
-    const label = labels[cat] || cat;
+    const label = CATEGORY_LABELS[cat] || cat.replace(/-/g, ' ');
     return `<header><h1>Shop ${label} — SatvaStones</h1>
 <nav><a href="/">Home</a> | <a href="/shop">Shop All</a> | <a href="/shop/earrings">Earrings</a> | <a href="/shop/necklaces">Necklaces</a> | <a href="/shop/rings">Rings</a> | <a href="/shop/bracelets">Bracelets</a> | <a href="/shop/99-sale">₹99 Sale</a></nav></header>
 <main><section><h2>Browse Our ${label} Collection</h2>
@@ -85,41 +113,18 @@ function noscriptContent(route) {
 <p>Shop online with secure payments via UPI, Credit/Debit Cards, Net Banking, and COD. All orders are dispatched within 24-48 hours from our studio in Vapi, Gujarat.</p></section></main>
 <footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }
-  if (p === '/shop') {
-    return `<header><h1>Shop All Jewelry — SatvaStones</h1>
-<nav><a href="/">Home</a> | <a href="/shop">Shop All</a> | <a href="/shop/earrings">Earrings</a> | <a href="/shop/necklaces">Necklaces</a> | <a href="/shop/rings">Rings</a> | <a href="/shop/bracelets">Bracelets</a> | <a href="/shop/99-sale">₹99 Sale</a></nav></header>
-<main><section><h2>Complete Aesthetic Jewelry Collection</h2>
-<p>Browse our complete collection of 100+ aesthetic Korean and Western jewelry pieces. From minimalist earrings to statement necklaces, each piece is handcrafted with anti-tarnish, waterproof materials. Free shipping over ₹399.</p>
-<p>Discover trending designs including Korean huggies, layered gold chains, stackable rings, and personalized name necklaces.</p></section></main>
-<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
-  }
-  if (p === '/about') {
-    return `<header><h1>About SatvaStones</h1>
-<nav><a href="/">Home</a> | <a href="/shop">Shop</a> | <a href="/about">About</a> | <a href="/contact">Contact</a></nav></header>
-<main><section><h2>Our Story</h2>
-<p>SatvaStones is an Indian jewelry brand based in Mumbai, curating premium Korean and Western aesthetic jewelry for the modern woman. Every piece is handpicked for quality, designed to be anti-tarnish and waterproof, ensuring lasting beauty.</p>
-<p>We believe jewelry is an extension of identity. Our collections blend Seoul minimalism with Parisian elegance, offering pieces that transition effortlessly from desk to dinner.</p></section></main>
-<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
-  }
-  if (p === '/contact') {
-    return `<header><h1>Contact SatvaStones</h1>
-<nav><a href="/">Home</a> | <a href="/shop">Shop</a> | <a href="/about">About</a> | <a href="/contact">Contact</a></nav></header>
-<main><section><h2>Get In Touch</h2>
-<p>Have a question about our anti-tarnish jewelry, sizing, orders, or returns? Email us at support@satvastones.in or use our contact form. We respond within 24 hours.</p>
-<p>Follow us on Instagram @satvastones for daily style inspiration and new arrivals.</p></section></main>
-<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
-  }
-  if (p === '/blogs') {
-    return `<header><h1>The Journal — SatvaStones Blog</h1>
-<nav><a href="/">Home</a> | <a href="/shop">Shop</a> | <a href="/blogs">Journal</a></nav></header>
-<main><section><h2>Style Guides & Jewelry Care</h2>
-<p>Explore expert style guides, jewelry care tips, Korean fashion trends, and how to style aesthetic pieces for every occasion. From anti-tarnish care routines to layering inspiration, the SatvaStones Journal is your guide to aesthetic living.</p></section></main>
-<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
-  }
-  return `<header><h1>${route.title}</h1>
+  if (p.startsWith('/product/')) {
+    return `<header><h1>${title} — SatvaStones</h1>
 <nav><a href="/">Home</a> | <a href="/shop">Shop</a></nav></header>
-<main><section><h2>${route.title}</h2>
-<p>${route.desc}</p></section></main>
+<main><section><h2>${title}</h2>
+<p>${desc}</p>
+<p>Shop ${title} at SatvaStones — premium anti-tarnish, waterproof aesthetic jewelry. Free shipping over ₹399.</p></section></main>
+<footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
+  }
+  return `<header><h1>${title}</h1>
+<nav><a href="/">Home</a> | <a href="/shop">Shop</a></nav></header>
+<main><section><h2>${title}</h2>
+<p>${desc}</p></section></main>
 <footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
 }
 
@@ -128,61 +133,48 @@ function routeToDir(p) {
   return resolve(dist, p.slice(1));
 }
 
-async function generateSitemap() {
-  const sitemapRoutes = routes.filter(r => !r.noindex);
+async function fetchWithTimeout(url, timeoutMs = 8000) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function generateSitemap(allRoutes) {
   const today = new Date().toISOString().split('T')[0];
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
   xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
-  for (const route of sitemapRoutes) {
-    const priority = route.path === '/' ? '1.0' : route.path.startsWith('/shop/') ? '0.8' : route.path === '/shop' ? '0.9' : '0.6';
-    const changefreq = route.path === '/' ? 'daily' : route.path.startsWith('/shop/') ? 'weekly' : 'monthly';
-    xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <lastmod>${today}</lastmod>\n    <priority>${priority}</priority>\n    <changefreq>${changefreq}</changefreq>\n  </url>\n`;
-  }
-
-  // Fetch products from API and add to sitemap
-  const apiUrl = process.env.VITE_API_URL || 'http://localhost:5000/api';
-  let productCount = 0;
-  try {
-    const res = await fetch(`${apiUrl}/products`);
-    if (res.ok) {
-      const products = await res.json();
-      productCount = products.length;
-      for (const product of products) {
-        const id = product._id || product.id;
-        const lastMod = product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : today;
-        xml += `  <url>\n    <loc>https://satvastones.in/product/${id}</loc>\n    <lastmod>${lastMod}</lastmod>\n    <priority>0.8</priority>\n    <changefreq>weekly</changefreq>\n  </url>\n`;
-      }
-      console.log(`✓ ${productCount} product URLs added to sitemap`);
-    }
-  } catch (err) {
-    console.log('⚠ Could not fetch products for sitemap (API not running)');
+  for (const route of allRoutes) {
+    xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <lastmod>${route.lastmod || today}</lastmod>\n    <priority>${route.priority}</priority>\n    <changefreq>${route.changefreq}</changefreq>\n  </url>\n`;
   }
 
   xml += '</urlset>';
-
-  // Write to dist/ (used by Vite build)
   writeFileSync(resolve(dist, 'sitemap.xml'), xml);
-  // Also write to public/ so it's served by Vercel at /sitemap.xml
   writeFileSync(resolve('public/sitemap.xml'), xml);
-  console.log(`✓ sitemap.xml written with ${sitemapRoutes.length + productCount} URLs (lastmod: ${today})`);
+  console.log(`✓ sitemap.xml written with ${allRoutes.length} URLs (lastmod: ${today})`);
 }
 
-async function main() {
+async function generatePrerenderedPages(allRoutes) {
   const src = readFileSync(resolve(dist, 'index.html'), 'utf-8');
+  let count = 0;
 
-  for (const route of routes) {
+  for (const route of allRoutes) {
     const dir = routeToDir(route.path);
     if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 
-    const canonical = route.noindex
-      ? ''
-      : `<link rel="canonical" href="https://satvastones.in${route.path}" />`;
-    const robots = route.noindex
+    const isNoindex = route.noindex || NOINDEX_ROUTES.some(ni => route.path.startsWith(ni));
+    const canonical = isNoindex ? '' : `<link rel="canonical" href="https://satvastones.in${route.path}" />`;
+    const robots = isNoindex
       ? `<meta name="robots" content="noindex, follow" />`
-      : `<meta name="robots" content="index, follow" />`;
+      : `<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />`;
     const ogUrl = `<meta property="og:url" content="https://satvastones.in${route.path}" />`;
-    const noscript = noscriptContent(route);
+
+    const noscript = noscriptContent(route.path, route.title, route.desc);
 
     let html = src
       .replace(/<title>.*?<\/title>/, `<title>${route.title}</title>`)
@@ -198,10 +190,85 @@ async function main() {
 
     const outPath = resolve(dir, 'index.html');
     writeFileSync(outPath, html);
-    console.log(`✓ ${route.path} → ${outPath}`);
+    count++;
   }
 
-  await generateSitemap();
+  console.log(`✓ ${count} prerendered pages generated`);
+}
+
+async function main() {
+  const allRoutes = [];
+
+  // 1. Add static routes
+  for (const r of STATIC_ROUTES) {
+    allRoutes.push({ ...r, lastmod: new Date().toISOString().split('T')[0] });
+  }
+
+  // 2. Fetch products from API and generate product pages + sitemap entries
+  let productCount = 0;
+  try {
+    const res = await fetchWithTimeout(`${API_URL}/products`);
+    if (res.ok) {
+      const products = await res.json();
+      productCount = products.length;
+      for (const product of products) {
+        const slug = product.slug || product._id || product.id;
+        const lastMod = product.updatedAt ? new Date(product.updatedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+        const price = product.price || 0;
+        const title = product.metaTitle || `${product.title} | Satvastones`;
+        const material = product.material || 'Premium';
+        const category = product.category?.toLowerCase() || 'jewelry';
+        const desc = product.metaDescription || `Buy ${product.title} at ₹${price}. ${product.isAntiTarnish ? 'Anti-tarnish, ' : ''}waterproof ${category}. Free shipping & COD. Shop authentic ${category} at Satvastones.`;
+
+        allRoutes.push({
+          path: `/product/${slug}`,
+          title,
+          desc,
+          priority: '0.8',
+          changefreq: 'weekly',
+          lastmod: lastMod,
+        });
+      }
+      console.log(`✓ ${productCount} product routes generated from API`);
+    }
+  } catch (err) {
+    console.log('⚠ Could not fetch products from API:', err.message);
+  }
+
+  // 3. Fetch blogs from API and generate blog pages + sitemap entries
+  let blogCount = 0;
+  try {
+    const res = await fetchWithTimeout(`${API_URL}/blogs/published`);
+    if (res.ok) {
+      const blogs = await res.json();
+      blogCount = blogs.length;
+      for (const blog of blogs) {
+        const lastMod = blog.updatedAt ? new Date(blog.updatedAt).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+        const title = blog.metaTitle || `${blog.title} | Satvastones Journal`;
+        const desc = blog.metaDescription || blog.excerpt || `Read ${blog.title} on Satvastones Journal. Style guides, jewelry care tips, and aesthetic trends.`;
+
+        allRoutes.push({
+          path: `/blog/${blog.slug}`,
+          title,
+          desc,
+          priority: '0.7',
+          changefreq: 'monthly',
+          lastmod: lastMod,
+        });
+      }
+      console.log(`✓ ${blogCount} blog routes generated from API`);
+    }
+  } catch (err) {
+    console.log('⚠ Could not fetch blogs from API:', err.message);
+  }
+
+  // 4. Generate all prerendered pages
+  await generatePrerenderedPages(allRoutes);
+
+  // 5. Generate dynamic sitemap
+  await generateSitemap(allRoutes);
+
+  console.log(`\n✅ Complete! ${allRoutes.length} total URLs generated (${STATIC_ROUTES.length} static + ${productCount} products + ${blogCount} blogs)`);
 }
 
 main();

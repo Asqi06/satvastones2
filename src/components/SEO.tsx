@@ -55,6 +55,8 @@ const SEO = ({
       <meta name="keywords" content={allKeywords} />
       <link rel="canonical" href={cleanCanonical} />
       <link rel="alternate" hrefLang="en-IN" href={cleanCanonical} />
+      <link rel="alternate" hrefLang="en" href={cleanCanonical} />
+      <link rel="alternate" hrefLang="x-default" href={cleanCanonical} />
       <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-snippet:-1, max-image-preview:large'} />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="theme-color" content="#0a0a0a" />
@@ -86,6 +88,13 @@ const SEO = ({
       <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="mobile-web-app-capable" content="yes" />
+      <meta name="referrer" content="strict-origin-when-cross-origin" />
+      <meta name="distribution" content="global" />
+      <meta name="rating" content="general" />
+      <meta name="target" content="all" />
+      <meta name="audience" content="all" />
+      <meta name="coverage" content="India" />
+      <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
     </Helmet>
   );
 };
