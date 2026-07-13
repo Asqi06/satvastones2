@@ -132,6 +132,7 @@ async function generateSitemap(allRoutes) {
   xml += '  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n';
 
   for (const route of allRoutes) {
+    if (route.noindex) continue;
     xml += `  <url>\n    <loc>https://satvastones.in${route.path}</loc>\n    <lastmod>${route.lastmod || today}</lastmod>\n`;
     if (route.image) {
       xml += `    <image:image>\n      <image:loc>${route.image}</image:loc>\n    </image:image>\n`;
