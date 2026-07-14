@@ -5,6 +5,12 @@ import { analytics } from '../utils/analytics';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
+function isSaleProduct(product: any): boolean {
+  if (product.isNinetyNine) return true;
+  if (product.oldPrice && product.oldPrice > product.price) return true;
+  return false;
+}
+
 export default function CheckoutPage({
   cart,
   currentUser,
@@ -47,8 +53,18 @@ export default function CheckoutPage({
     return acc + (price * (item.qty || 1));
   }, 0);
 
+  // Calculate subtotal of NON-sale items only (for coupon discount)
+  const nonSaleSubtotal = cart.reduce((acc, item) => {
+    const product = cmsData?.products?.find((p: any) => (p._id || p.id) === (item._id || item.id));
+    const price = typeof item.price === 'string' ? parseFloat(item.price.replace(/[^0-9.]/g, '')) : (item.price || 0);
+    if (!isSaleProduct(product) && !isSaleProduct(item)) {
+      return acc + (price * (item.qty || 1));
+    }
+    return acc;
+  }, 0);
+
   const shipping = calculateShipping(formData.pincode, subtotal, paymentMethod);
-  const discountAmount = activeCoupon ? Math.round((subtotal * activeCoupon.discount) / 100) : 0;
+  const discountAmount = activeCoupon ? Math.round((nonSaleSubtotal * activeCoupon.discount) / 100) : 0;
   const total = Math.round(subtotal + shipping - discountAmount);
 
   const applyCoupon = () => {
@@ -258,7 +274,7 @@ export default function CheckoutPage({
               {couponError && <p className="text-[9px] text-red-500 font-bold mb-2">{couponError}</p>}
               {activeCoupon && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-2 mb-3 flex justify-between items-center">
-                  <span className="text-[9px] text-green-700 font-bold">{activeCoupon.code} APPLIED (-{activeCoupon.discount}%)</span>
+                  <span className="text-[9px] text-green-700 font-bold">{activeCoupon.code} APPLIED (-{activeCoupon.discount}% on regular items)</span>
                   <button onClick={() => { setActiveCoupon(null); setCouponCode(''); }} className="text-green-700 font-bold text-xs">×</button>
                 </div>
               )}

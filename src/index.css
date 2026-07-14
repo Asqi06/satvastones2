@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Bodoni Moda", "Playfair Display", Georgia, serif;
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Bodoni Moda", "Playfair Display", Georgia, serif;
   --font-display: "Playfair Display", Georgia, serif;
   --font-heading: "Bodoni Moda", "Playfair Display", Georgia, serif;
   --font-logo: "Playfair Display", Georgia, serif;
   --font-accent: "Playfair Display", Georgia, serif;
+  --font-brand: "Playfair Display", Georgia, serif;
 
   /* Custom Earthy Palette */
   --color-stone-50: #F9F6F1;
@@ -181,10 +182,10 @@ body {
 }
 
 /* Global font overrides */
-body, html {
-  font-family: "Bodoni Moda", "Playfair Display", Georgia, serif;
+html, body {
+  font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Bodoni Moda", "Playfair Display", Georgia, serif;
+  font-family: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 }

@@ -120,7 +120,7 @@ export default function HomePage({ navigateTo }: { navigateTo: (view: string, da
                 <p className="mt-3 text-center text-[10px] font-semibold tracking-[0.2em] text-[#666]" style={{ fontFamily: "'Inter',sans-serif" }}>
                   {item.title}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
