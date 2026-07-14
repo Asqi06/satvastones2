@@ -1,10 +1,96 @@
 import React, { useState, useEffect } from 'react';
 import {
   Heart, Star, ChevronDown, ChevronUp, ChevronLeft, ChevronRight,
-  Truck, RefreshCcw, ShieldCheck, MessageCircle
+  Truck, RefreshCcw, ShieldCheck, MessageCircle, Share2, Instagram, Facebook, Twitter
 } from 'lucide-react';
 import { optimizeImage, getSrcSet, getPlaceholder } from '../utils/cloudinary';
 import { Link } from 'react-router-dom';
+
+const ShareButton = ({ product, productUrl }: { product: any; productUrl: string }) => {
+  const [showShareSheet, setShowShareSheet] = useState(false);
+
+  const shareText = `Check out ${product.title} at Satvastones - Rs. ${product.price}!`;
+  
+  const shareLinks = [
+    { 
+      name: 'WhatsApp', 
+      icon: MessageCircle, 
+      color: 'text-green-500 hover:bg-green-50',
+      url: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + productUrl)}` 
+    },
+    { 
+      name: 'Instagram', 
+      icon: Instagram, 
+      color: 'text-pink-500 hover:bg-pink-50',
+      url: `https://www.instagram.com/` 
+    },
+    { 
+      name: 'Facebook', 
+      icon: Facebook, 
+      color: 'text-blue-500 hover:bg-blue-50',
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productUrl)}` 
+    },
+    { 
+      name: 'Twitter/X', 
+      icon: Twitter, 
+      color: 'text-sky-500 hover:bg-sky-50',
+      url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(productUrl)}` 
+    },
+    { 
+      name: 'Copy Link', 
+      icon: Share2, 
+      color: 'text-gray-500 hover:bg-gray-50',
+      url: null,
+      onCopy: true
+    }
+  ];
+
+  const handleShare = (option: typeof shareLinks[0]) => {
+    if (option.onCopy) {
+      navigator.clipboard.writeText(productUrl);
+      alert('Link copied to clipboard!');
+    } else {
+      window.open(option.url, '_blank', 'noopener,noreferrer');
+    }
+    setShowShareSheet(false);
+  };
+
+  return (
+    <div className="relative">
+      <button onClick={() => setShowShareSheet(!showShareSheet)} className="flex items-center gap-2 w-full py-3 rounded-lg bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm font-bold transition-colors">
+        <Share2 className="h-4 w-4" />
+        <span>Share</span>
+      </button>
+
+      {showShareSheet && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setShowShareSheet(false)} />
+          <div className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-xl p-4 md:p-6 animate-slide-up">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-bold text-gray-900">Share this product</h3>
+              <button onClick={() => setShowShareSheet(false)} className="text-gray-400 hover:text-gray-600 p-1">
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {shareLinks.map((option) => (
+                <button 
+                  key={option.name} 
+                  onClick={() => handleShare(option)}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-xl border border-gray-100 ${option.color} transition-all`}
+                >
+                  <option.icon className="h-6 w-6" />
+                  <span className="text-[10px] font-medium text-gray-700">{option.name}</span>
+                </button>
+              ))}
+            </div>
+            <p className="text-center text-[10px] text-gray-400 mt-4">Product link: {productUrl}</p>
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 const AccordionItem = ({ title, children, defaultOpen = false }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) => {
   const [open, setOpen] = useState(defaultOpen);
@@ -170,6 +256,9 @@ export default function ProductPage({
               </div>
             )}
 
+            {/* Share Button */}
+            <ShareButton product={product} productUrl={window.location.href} />
+
             {product.category === 'NAME NECKLACE' && (
               <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
                 <label className="text-[10px] font-bold text-gray-700 mb-1.5 block">Custom Name</label>
@@ -312,7 +401,7 @@ export default function ProductPage({
           WRITE A REVIEW
         </button>
 
-        {showReviewForm && (
+{showReviewForm && (
           <form onSubmit={(e: any) => {
             e.preventDefault();
             const formData = new FormData(e.target);
@@ -328,7 +417,11 @@ export default function ProductPage({
             <button type="submit" className="w-full py-2.5 bg-[#f2707f] hover:bg-[#d4535f] text-white text-xs font-bold rounded-md transition-colors">Submit Review</button>
           </form>
         )}
-      </div>
+
+        {/* Share Button */}
+        <div className="mt-6 pt-6 border-t border-gray-100">
+          <ShareButton product={product} productUrl={window.location.href} />
+        </div>
 
       {allProducts.length > 1 && (
         <section className="border-t border-gray-100 bg-white py-10">
