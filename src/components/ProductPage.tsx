@@ -312,14 +312,18 @@ export default function ProductPage({
 
       <div className="max-w-4xl mx-auto px-4 py-4 space-y-2.5">
         <AccordionItem title="Description" defaultOpen={true}>
-          <div className="space-y-2">
-            <p className="text-xs text-gray-600">{product.description || 'No description available.'}</p>
-            {product.material && <p className="text-[10px] text-gray-400">Base Material: {product.material}</p>}
-            <p className="text-[10px] text-gray-400">Stone colour: transparent/ white stones</p>
-            <p className="text-[10px] text-gray-400">Plating: Gold</p>
-            <p className="text-[10px] text-gray-400">Will not lose colour easily</p>
-            <p className="text-[10px] text-gray-400 mt-2">Pro Tip: Avoid contact with water or chemical substances for long lasting shine</p>
-          </div>
+          {product.seoContent ? (
+            <div className="text-xs text-gray-600 prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: product.seoContent }} />
+          ) : (
+            <div className="space-y-2">
+              <p className="text-xs text-gray-600">{product.description || 'No description available.'}</p>
+              {product.material && <p className="text-[10px] text-gray-400">Base Material: {product.material}</p>}
+              <p className="text-[10px] text-gray-400">Stone colour: transparent/ white stones</p>
+              <p className="text-[10px] text-gray-400">Plating: Gold</p>
+              <p className="text-[10px] text-gray-400">Will not lose colour easily</p>
+              <p className="text-[10px] text-gray-400 mt-2">Pro Tip: Avoid contact with water or chemical substances for long lasting shine</p>
+            </div>
+          )}
         </AccordionItem>
         <AccordionItem title="Shipping & Returns">
           <div className="space-y-2">
