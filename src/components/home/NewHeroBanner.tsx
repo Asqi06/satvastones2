@@ -35,7 +35,7 @@ export default function NewHeroBanner({ cmsData, banners, onBannerClick }: {
   return (
     <section className="relative w-full overflow-hidden" style={{ background: '#f79da6' }} aria-label="Featured promotions">
       <h1 className="sr-only">{cmsData?.settings?.seoH1 || 'SatvaStones — Premium Aesthetic Korean & Western Jewelry Online'}</h1>
-      <div className="relative w-full lg:max-h-[420px]" style={{ paddingBottom: 'min(90vw, 45%)' }}>
+      <div className="relative w-full lg:max-h-[300px]" style={{ paddingBottom: 'min(80vw, 38%)' }}>
         {banners.map((banner, index) => (
           <div
             key={banner._id}

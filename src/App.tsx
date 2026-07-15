@@ -1112,10 +1112,16 @@ function AppContent() {
                     cmsData={cmsData}
                     banners={homepageData?.banners || []} 
                     onBannerClick={(banner) => {
-                      if (banner.linkUrl) {
-                        navigateTo('shop', { category: banner.linkUrl });
-                      } else if (banner.link) {
-                        navigateTo('shop', { category: banner.link });
+                      const url = banner.linkUrl || banner.link;
+                      if (!url) return;
+                      if (url.startsWith('http://') || url.startsWith('https://')) {
+                        window.open(url, '_blank', 'noopener,noreferrer');
+                      } else if (url.startsWith('/')) {
+                        navigate(url);
+                      } else if (['earrings','necklaces','rings','bracelets','pendant','accessories','gifts','hampers','korean','western','traditional','fusion','99-sale','name-necklace','mothers-day'].includes(url)) {
+                        navigateTo('shop', { category: url });
+                      } else {
+                        navigate(`/product/${url}`);
                       }
                     }}
                   />
