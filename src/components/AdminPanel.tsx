@@ -55,7 +55,7 @@ export default function AdminPanel({
   // Forms
   const [bannerForm, setBannerForm] = useState<any>({ title: '', image: '', link: '', sortOrder: 0, isActive: true });
   const [sectionForm, setSectionForm] = useState<any>({ title: '', sortOrder: 0, isActive: true, productIds: [], badge: 'Hot Selling', shopLink: '' });
-  const [trendForm, setTrendForm] = useState<any>({ title: '', image: '', sortOrder: 0, isActive: true, productIds: [] });
+  const [trendForm, setTrendForm] = useState<any>({ title: '', image: '', link: '', sortOrder: 0, isActive: true, productIds: [] });
   const [reviewForm, setReviewForm] = useState<any>({ name: '', rating: 5, title: '', comment: '', sortOrder: 0, isActive: true });
   const [faqForm, setFaqForm] = useState<any>({ question: '', answer: '', sortOrder: 0, isActive: true });
   const [saleForm, setSaleForm] = useState<any>({ title: '', subtitle: '', discountPercent: 0, productIds: [], isActive: true, bgColor: '#f2707f' });
@@ -156,7 +156,7 @@ export default function AdminPanel({
         setTrends(prev => isEdit ? prev.map(t => t._id === saved._id ? saved : t) : [saved, ...prev]);
         setShowTrendForm(false);
         setEditingTrend(null);
-        setTrendForm({ title: '', image: '', sortOrder: 0, isActive: true, productIds: [] });
+        setTrendForm({ title: '', image: '', link: '', sortOrder: 0, isActive: true, productIds: [] });
       }
     } catch (err) { console.error("Failed to save trend:", err); }
   };
@@ -1229,7 +1229,7 @@ export default function AdminPanel({
             <div className="p-8 space-y-8">
               <div className="flex justify-between items-center">
                 <h3 className="text-xs font-black uppercase tracking-[0.2em] text-stone-400">Shop By Trend (e.g., Office Girl, Dreamy Girl)</h3>
-                <button onClick={() => { setShowTrendForm(true); setEditingTrend(null); setTrendForm({ title: '', image: '', sortOrder: 0, isActive: true, productIds: [] }); }} className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800">
+                <button onClick={() => { setShowTrendForm(true); setEditingTrend(null); setTrendForm({ title: '', image: '', link: '', sortOrder: 0, isActive: true, productIds: [] }); }} className="bg-black text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-stone-800">
                   <Plus className="h-3 w-3" /> Add Trend
                 </button>
               </div>
@@ -1246,6 +1246,7 @@ export default function AdminPanel({
                     </div>
                     {trendForm.image && <img src={trendForm.image} alt="Preview" className="w-24 h-32 object-cover mt-2" />}
                   </div>
+                  <input type="text" placeholder="Link URL (e.g., /shop/korean, /product/slug, https://...)" value={trendForm.link} onChange={e => setTrendForm({...trendForm, link: e.target.value})} className="w-full border border-stone-200 p-3 text-sm" />
                   <div className="flex gap-4">
                     <input type="number" placeholder="Sort Order" value={trendForm.sortOrder} onChange={e => setTrendForm({...trendForm, sortOrder: parseInt(e.target.value) || 0})} className="w-32 border border-stone-200 p-3 text-sm" />
                     <label className="flex items-center gap-2"><input type="checkbox" checked={trendForm.isActive} onChange={e => setTrendForm({...trendForm, isActive: e.target.checked})} /> Active</label>

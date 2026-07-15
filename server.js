@@ -290,6 +290,7 @@ const HomepageSection = mongoose.model('HomepageSection', homepageSectionSchema)
 const trendSchema = new mongoose.Schema({
   title: { type: String, required: true },
   image: { type: String, required: true },
+  link: { type: String, default: '' },
   sortOrder: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },
   productIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],

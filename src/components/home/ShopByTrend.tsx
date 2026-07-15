@@ -7,6 +7,7 @@ interface Trend {
   _id: string;
   title: string;
   image: string;
+  link?: string;
   productIds?: any[];
 }
 
@@ -30,7 +31,7 @@ export default function ShopByTrend({
           {trends.map((trend) => (
             <Link
               key={trend._id}
-              to="/shop"
+              to={trend.link || '/shop'}
               className="group relative aspect-[3/4] overflow-hidden rounded-lg lg:rounded-xl bg-gray-100"
             >
               <img
