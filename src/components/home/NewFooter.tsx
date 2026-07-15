@@ -9,18 +9,18 @@ export default function NewFooter() {
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10 mb-6 sm:mb-8 lg:mb-10">
           {/* About */}
           <div className="col-span-2 md:col-span-2 lg:col-span-1">
-            <h4 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">About Satvastones</h4>
+            <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">About Satvastones</h2>
             <p className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 leading-relaxed">
               Satvastones is your go-to for all things accessories. From everyday basics to statement pieces, we bring you trendy, affordable styles that flex with every outfit and every plan.
             </p>
             <div className="flex gap-2 sm:gap-2.5 mt-2.5 sm:mt-3">
-              <a href="https://www.instagram.com/satvastonesjewelry" target="_blank" rel="noopener noreferrer" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+              <a href="https://www.instagram.com/satvastonesjewelry" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
                 <Instagram className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
               </a>
-              <a href="https://facebook.com/satvastones" target="_blank" rel="noopener noreferrer" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+              <a href="https://facebook.com/satvastones" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Facebook" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
                 <Facebook className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
               </a>
-              <a href="https://twitter.com/satvastones" target="_blank" rel="noopener noreferrer" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
+              <a href="https://twitter.com/satvastones" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Twitter" className="w-7 h-7 sm:w-8 sm:h-8 bg-white rounded-full flex items-center justify-center hover:bg-gray-100 transition-colors">
                 <Twitter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700" />
               </a>
             </div>
@@ -28,7 +28,7 @@ export default function NewFooter() {
           
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Quick Links</h4>
+            <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Quick Links</h2>
             <ul className="space-y-1 sm:space-y-1.5">
               <li><a href="/shop" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Shop All</a></li>
               <li><a href="/about" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">About Us</a></li>
@@ -38,7 +38,7 @@ export default function NewFooter() {
           
           {/* Store Policy */}
           <div>
-            <h4 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Store Policy</h4>
+            <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Store Policy</h2>
             <ul className="space-y-1 sm:space-y-1.5">
               <li><a href="/shipping" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Shipping Policy</a></li>
               <li><a href="/returns" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Return & Exchange</a></li>
@@ -50,7 +50,7 @@ export default function NewFooter() {
           
           {/* Newsletter */}
           <div className="col-span-2 md:col-span-2 lg:col-span-1">
-            <h4 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Sign Up to Newsletter</h4>
+            <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Sign Up to Newsletter</h2>
             <p className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 mb-2 sm:mb-3">
               Enter your email address to get latest updates on sales and offers.
             </p>

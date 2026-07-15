@@ -21,7 +21,7 @@ export default function ConnectWithUs({ cmsData }: { cmsData?: any }) {
               <Phone className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-[#d4535f]" />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-[11px] sm:text-xs lg:text-sm">Call Us</h4>
+              <h3 className="font-bold text-gray-900 text-[11px] sm:text-xs lg:text-sm">Call Us</h3>
               <p className="text-[9px] sm:text-[10px] lg:text-xs text-gray-500">Call now {phone}</p>
             </div>
           </div>
@@ -31,7 +31,7 @@ export default function ConnectWithUs({ cmsData }: { cmsData?: any }) {
               <MessageCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-[#d4535f]" />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-[11px] sm:text-xs lg:text-sm">Chat with Us</h4>
+              <h3 className="font-bold text-gray-900 text-[11px] sm:text-xs lg:text-sm">Chat with Us</h3>
               <p className="text-[9px] sm:text-[10px] lg:text-xs text-gray-500">Chat now with an expert</p>
             </div>
           </div>
@@ -41,7 +41,7 @@ export default function ConnectWithUs({ cmsData }: { cmsData?: any }) {
               <Mail className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-[#d4535f]" />
             </div>
             <div>
-              <h4 className="font-bold text-gray-900 text-[11px] sm:text-xs lg:text-sm">Email Us</h4>
+              <h3 className="font-bold text-gray-900 text-[11px] sm:text-xs lg:text-sm">Email Us</h3>
               <p className="text-[9px] sm:text-[10px] lg:text-xs text-gray-500">{email}</p>
             </div>
           </div>

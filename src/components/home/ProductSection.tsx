@@ -63,7 +63,7 @@ export default function ProductSection({
                   />
                 )}
                 {section.badge && (
-                  <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-[#D44638] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full uppercase tracking-wider">
+                  <span className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-[#b32d2d] text-white text-[7px] sm:text-[9px] font-bold px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded-full uppercase tracking-wider">
                     {section.badge}
                   </span>
                 )}
@@ -74,7 +74,7 @@ export default function ProductSection({
                   {product.title}
                 </h3>
                 <div className="flex items-center gap-1.5 mt-0.5 sm:mt-1 flex-wrap">
-                  <span className="text-xs sm:text-sm font-bold text-[#d4535f]">
+                  <span className="text-xs sm:text-sm font-bold text-[#c43a4a]">
                     Rs. {product.price.toFixed(2)}
                   </span>
                   {product.oldPrice && (

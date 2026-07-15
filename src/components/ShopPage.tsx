@@ -216,12 +216,12 @@ export default function ShopPage({
                 
                 {/* Badges */}
                 {product.isFeatured && (
-                  <span className="absolute top-1.5 left-1.5 bg-[#D44638] text-white text-[7px] sm:text-[8px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                  <span className="absolute top-1.5 left-1.5 bg-[#b32d2d] text-white text-[7px] sm:text-[8px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
                     Hot Selling
                   </span>
                 )}
                 {hasDiscount && !product.isFeatured && (
-                  <span className="absolute top-1.5 left-1.5 bg-[#D44638] text-white text-[7px] sm:text-[8px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
+                  <span className="absolute top-1.5 left-1.5 bg-[#b32d2d] text-white text-[7px] sm:text-[8px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">
                     Sale
                   </span>
                 )}
@@ -238,7 +238,7 @@ export default function ShopPage({
                   {product.title}
                 </h3>
                 <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                  <span className="text-xs sm:text-sm font-bold text-[#d4535f]">
+                  <span className="text-xs sm:text-sm font-bold text-[#c43a4a]">
                     Rs. {product.price}
                   </span>
                   {hasDiscount && (

@@ -48,10 +48,10 @@ export default function SaleSection({ sale, onProductClick }: { sale: SaleData; 
             return (
               <Link key={product._id} to={`/product/${product.slug || product._id}`} className="group">
                 <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
-                  <img src={product.image} alt={product.title} loading="lazy"
+                  <img src={optimizeImage(product.image, 400, 400)} alt={product.title} loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0" />
                   {product.images && product.images.length > 1 && (
-                    <img src={product.images[1]} alt={product.title} loading="lazy"
+                    <img src={optimizeImage(product.images[1], 400, 400)} alt={product.title} loading="lazy"
                       className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                   )}
                   {hasDiscount && (
@@ -63,7 +63,7 @@ export default function SaleSection({ sale, onProductClick }: { sale: SaleData; 
                 <div className="mt-1.5 px-0.5">
                   <h3 className="text-[11px] sm:text-xs font-medium text-gray-800 truncate">{product.title}</h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-xs sm:text-sm font-bold text-[#f2707f]">Rs. {product.price}</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#c43a4a]">Rs. {product.price}</span>
                     {hasDiscount && <span className="text-[10px] text-gray-400 line-through">Rs. {product.oldPrice}</span>}
                   </div>
                 </div>

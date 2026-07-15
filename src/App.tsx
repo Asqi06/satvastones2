@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { 
   Search, ShoppingBag, User, ArrowLeft, ArrowRight, ChevronRight, 
   Menu, X, Heart, Shield, Trash2, Home, LayoutGrid, Clock, ChevronDown
@@ -13,7 +13,7 @@ import ProductPage from './components/ProductPage';
 import ShopPage from './components/ShopPage';
 import CartPage from './components/CartPage';
 import CheckoutPage from './components/CheckoutPage';
-import AdminPanel from './components/AdminPanel';
+const AdminPanel = lazy(() => import('./components/AdminPanel'));
 import ContactPage from './components/ContactPage';
 import BlogsPage from './components/BlogsPage';
 import BlogDetailPage from './components/BlogDetailPage';
@@ -814,7 +814,7 @@ function AppContent() {
         </div>
       );
     }
-    return <AdminPanel cmsData={cmsData} onUpdateCMS={handleUpdateCMS} onUpdateProduct={handleUpdateProduct} onLogout={handleAdminLogout} />;
+    return <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-sm text-stone-500">Loading admin panel...</div>}><AdminPanel cmsData={cmsData} onUpdateCMS={handleUpdateCMS} onUpdateProduct={handleUpdateProduct} onLogout={handleAdminLogout} /></Suspense>;
   }
 
   const cartSubtotal = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
@@ -956,7 +956,7 @@ function AppContent() {
       </nav>
 
       {/* Announcement Bar - Pink scrolling marquee */}
-      <div className="w-full bg-[#d4535f] overflow-hidden py-2 sm:py-2.5">
+      <div className="w-full bg-[#b03a4a] overflow-hidden py-2 sm:py-2.5">
         <div className="announcement-scroll">
           {[...Array(2)].map((_, i) => {
             const rawText = cmsData?.settings?.announcementText || 'Free Shipping Above INR 599 | Free Gift On Order Above INR 699 | COD Available | Easy Return | Summer Sale Is Live - Upto 70% Off';
@@ -1235,7 +1235,7 @@ function AppContent() {
             <ShoppingBag className="w-5 h-5" />
             <span className="text-[9px] font-medium">Cart</span>
             {cartCount > 0 && (
-              <span className="absolute -top-0.5 right-1 bg-[#D44638] text-white text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-0.5 right-1 bg-[#b32d2d] text-white text-[7px] font-bold w-3.5 h-3.5 rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}
