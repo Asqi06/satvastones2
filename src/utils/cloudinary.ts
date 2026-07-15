@@ -125,10 +125,34 @@ export const getPlaceholder = (url: string): string => {
 };
 
 /**
- * Opens the Cloudinary Upload Widget.
- * Requires the script to be loaded in index.html.
+ * Loads the Cloudinary Upload Widget script dynamically.
  */
-export const openUploadWidget = (callback: (url: string) => void, config?: { cloudName?: string, uploadPreset?: string }, resourceType: 'image' | 'video' = 'image') => {
+const loadCloudinaryWidgetScript = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (typeof window.cloudinary !== 'undefined' && window.cloudinary.createUploadWidget) {
+      resolve();
+      return;
+    }
+    const existing = document.querySelector('script[src*="upload-widget.cloudinary.com"]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve());
+      existing.addEventListener('error', () => reject(new Error('Failed to load Cloudinary widget')));
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://upload-widget.cloudinary.com/global/all.js';
+    script.async = true;
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Failed to load Cloudinary widget'));
+    document.head.appendChild(script);
+  });
+};
+
+/**
+ * Opens the Cloudinary Upload Widget.
+ * Dynamically loads the widget script if not already present.
+ */
+export const openUploadWidget = async (callback: (url: string) => void, config?: { cloudName?: string, uploadPreset?: string }, resourceType: 'image' | 'video' = 'image') => {
   const cloudName = config?.cloudName || import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const uploadPreset = config?.uploadPreset || import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
@@ -138,6 +162,13 @@ export const openUploadWidget = (callback: (url: string) => void, config?: { clo
     if (!uploadPreset) missing.push("VITE_CLOUDINARY_UPLOAD_PRESET");
     
     alert(`Image Upload Error: Missing ${missing.join(" and ")}. \n\nPlease go to Admin -> Settings and enter your Cloudinary details there!`);
+    return;
+  }
+
+  try {
+    await loadCloudinaryWidgetScript();
+  } catch {
+    alert('Failed to load the Cloudinary Upload Widget. Please check your internet connection and try again.');
     return;
   }
 
