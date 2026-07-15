@@ -4,17 +4,35 @@ import { optimizeImage, getSrcSet } from '../utils/cloudinary';
 export default function HotDealsPage({ 
   products, 
   cmsData, 
+  sales,
   onSelectProduct 
 }: { 
   products: any[];
   cmsData?: any;
+  sales?: any[];
   onSelectProduct: (p: any) => void;
 }) {
   const ninetyNineSale = cmsData?.ninetyNineSale || {};
   const specialOffer = cmsData?.specialOffer || {};
 
-  const ninetyNineProducts = products.filter((p: any) => p.isNinetyNine);
-  const discountedProducts = products.filter((p: any) => p.oldPrice && p.oldPrice > p.price && !p.isNinetyNine);
+  const activeProductIds = new Set<string>();
+  if (sales && sales.length > 0) {
+    sales.forEach(sale => {
+      (sale.productIds || []).forEach((p: any) => {
+        const id = p._id || p;
+        activeProductIds.add(id);
+      });
+    });
+  }
+
+  const isInActiveSale = (p: any) => {
+    if (activeProductIds.size === 0) return true;
+    const pid = p._id || p.id;
+    return activeProductIds.has(pid);
+  };
+
+  const ninetyNineProducts = ninetyNineSale.isActive ? products.filter((p: any) => p.isNinetyNine && isInActiveSale(p)) : [];
+  const discountedProducts = specialOffer.isActive ? products.filter((p: any) => p.oldPrice && p.oldPrice > p.price && !p.isNinetyNine && isInActiveSale(p)) : [];
   const allSaleProducts = [...ninetyNineProducts, ...discountedProducts];
 
   return (

@@ -1188,6 +1188,7 @@ function AppContent() {
                   <HotDealsPage 
                     products={cmsData.products || []} 
                     cmsData={cmsData} 
+                    sales={homepageData?.sales || []}
                     onSelectProduct={(p) => navigateTo('product', p)} 
                   />
                 </>
