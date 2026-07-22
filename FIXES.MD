@@ -280,3 +280,35 @@
 - **Do NOT revert**: The video state, refs, handlers, and rendering must remain in ShopPage. Do not remove the conditional video/image rendering or the mobile play/pause overlay buttons.
 
 ---
+
+## Current commit — Admin panel redesign & unused component cleanup
+
+- **Problem**: AdminPanel.tsx was a monolithic 2618-line file with inconsistent styling, repetitive patterns, and an outdated visual design. Several components across the codebase were orphaned/unused.
+- **Changes**:
+
+### Admin panel redesign (`src/components/AdminPanel.tsx`)
+- Complete visual overhaul with modern design: rounded corners, card-based layouts, cleaner typography, better spacing
+- Reduced from 2618 lines to ~1450 lines by extracting repetitive CRUD patterns into reusable helpers (`Input`, `Select`, `Textarea`, `Toggle`, `Card`, `PageHeader`, `crudApi`, `renderCrudTab`)
+- Consistent form styling with `rounded-lg`, focus rings, and proper label hierarchy
+- Sidebar with smooth mobile overlay + desktop sticky positioning
+- Dashboard stat cards with icon backgrounds and badges
+- Product editor, order detail, and SKU label modals with better layouts
+- All existing functionality preserved (same API interface, callbacks, CRUD operations)
+- Critical FIXES.MD constraints maintained: lazy-loaded, Cloudinary dynamic script loading, trend link field, coupon management, etc.
+
+### Removed unused components
+- `src/components/home/Testimonials.tsx` — zero imports
+- `src/components/home/Newsletter.tsx` — zero imports
+- `src/components/home/NewHomePage.tsx` — only imported by `index.ts` (itself unused) and `sections/` subtree
+- `src/components/home/HomePage.tsx` — zero imports
+- `src/components/home/index.ts` — zero imports
+- Entire `src/components/home/sections/` directory — orphaned subtree (SectionRenderer → NewHomePage → none rendered in app)
+
+- **Files changed**: `src/components/AdminPanel.tsx` (rewrite), removed 5+ component files + entire `sections/` directory
+- **Do NOT revert**:
+  - The admin panel must remain as a single lazy-loaded component (App.tsx uses `React.lazy(() => import(...))`)
+  - Cloudinary upload must use dynamic script loading (not added to index.html)
+  - Trend `link` field must have its input in the form
+  - Removed components were confirmed unused via grep — do not restore unless explicitly needed
+
+---
