@@ -36,16 +36,23 @@ export default function CheckoutPage({
 
   // Auto-apply THANK10 welcome coupon for logged-in users
   useEffect(() => {
-    if (currentUser && !localStorage.getItem('welcome_bonus_used')) {
-      const coupons = cmsData?.coupons || [];
-      const thank10 = coupons.find((c: any) => c.code === 'THANK10' && c.isActive);
-      if (thank10) {
-        setActiveCoupon(thank10);
-        setCouponCode('THANK10');
-        localStorage.setItem('welcome_bonus_used', 'true');
-      }
-    }
-  }, [currentUser, cmsData]);
+    if (!currentUser || localStorage.getItem('welcome_bonus_used')) return;
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL}/coupons/validate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: 'THANK10', email: currentUser.email })
+        });
+        const data = await res.json();
+        if (data.valid) {
+          setActiveCoupon(data.coupon);
+          setCouponCode('THANK10');
+          localStorage.setItem('welcome_bonus_used', 'true');
+        }
+      } catch {}
+    })();
+  }, [currentUser]);
   const [showCodDialog, setShowCodDialog] = useState(false);
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
   const [formData, setFormData] = useState(() => {
@@ -80,11 +87,31 @@ export default function CheckoutPage({
   const discountAmount = activeCoupon ? Math.round((nonSaleSubtotal * activeCoupon.discount) / 100) : 0;
   const total = Math.round(subtotal + shipping - discountAmount);
 
-  const applyCoupon = () => {
-    const coupons = cmsData?.coupons || [];
-    const found = coupons.find((c: any) => c.code === couponCode.toUpperCase() && c.isActive);
-    if (found) { setActiveCoupon(found); setCouponError(''); }
-    else { setCouponError('Invalid or expired code'); setActiveCoupon(null); }
+  const applyCoupon = async () => {
+    const code = couponCode.toUpperCase();
+    if (!code) return;
+    setCouponError('');
+    if (!currentUser) {
+      setCouponError('Please login to use a coupon code');
+      return;
+    }
+    try {
+      const res = await fetch(`${API_URL}/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, email: currentUser.email })
+      });
+      const data = await res.json();
+      if (data.valid) {
+        setActiveCoupon(data.coupon);
+      } else {
+        setCouponError(data.error || 'Invalid or expired code');
+        setActiveCoupon(null);
+      }
+    } catch {
+      setCouponError('Failed to validate coupon');
+      setActiveCoupon(null);
+    }
   };
 
   const loadRazorpay = () => {

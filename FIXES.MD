@@ -245,3 +245,22 @@
   - The auto-apply must find the coupon by code `THANK10` and `isActive: true`
 
 ---
+
+## Commit `3dc88c5` — Coupon codes are per-user, one use only
+
+- **Problem**: A logged-in user could reuse the same coupon code on multiple orders. No per-user enforcement existed.
+- **Root cause**: `applyCoupon()` only checked if the coupon existed in CMS and was active — no query against existing orders to see if this email already used it. The server also had no duplicate check.
+- **Fix**:
+  1. **New API endpoint** `POST /api/coupons/validate` (`server.js`): accepts `{ code, email }`, checks coupon exists + is active, then queries `Order.findOne({ 'customer.email': email, couponCode: code })` — if found, returns `{ valid: false, error: 'You have already used this coupon code' }`
+  2. **Server-side enforcement** in `/api/verify-payment` (`server.js`): before saving any order (COD or prepaid), checks if same customer email already has an order with the same coupon code — rejects with `400` if duplicate
+  3. **Client-side validation** in `CheckoutPage.tsx` `applyCoupon()`: now calls the validate endpoint instead of doing a local CMS lookup. Also requires user to be logged in.
+  4. **THANK10 auto-apply** also calls the validate endpoint now (was doing local CMS lookup)
+- **Files changed**: `server.js`, `src/components/CheckoutPage.tsx`
+- **Key code** (server): `const existingOrder = await Order.findOne({ 'customer.email': email, couponCode: code.toUpperCase() });`
+- **Do NOT revert**:
+  - The `POST /api/coupons/validate` endpoint must exist and query `Order` for duplicate `customer.email + couponCode`
+  - The duplicate check in `/api/verify-payment` must run BEFORE saving any order (both COD and prepaid paths)
+  - `applyCoupon()` must call the API, not do local-only validation
+  - Both the auto-apply and manual apply must validate via API
+
+---

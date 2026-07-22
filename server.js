@@ -792,6 +792,30 @@ app.delete('/api/orders/:id', async (req, res) => {
   }
 });
 
+// --- Coupon Validation (per-user) ---
+app.post('/api/coupons/validate', async (req, res) => {
+  try {
+    const { code, email } = req.body;
+    if (!code) return res.json({ valid: false, error: 'Coupon code is required' });
+
+    const cms = await CMS.findOne();
+    const coupons = cms?.coupons || [];
+    const coupon = coupons.find((c: any) => c.code === code.toUpperCase() && c.isActive);
+
+    if (!coupon) return res.json({ valid: false, error: 'Invalid or expired coupon code' });
+
+    // Check if this user has already used this coupon
+    if (email) {
+      const existingOrder = await Order.findOne({ 'customer.email': email, couponCode: code.toUpperCase() });
+      if (existingOrder) return res.json({ valid: false, error: 'You have already used this coupon code' });
+    }
+
+    res.json({ valid: true, coupon: { code: coupon.code, discount: coupon.discount } });
+  } catch (err) {
+    res.status(500).json({ valid: false, error: err.message });
+  }
+});
+
 app.post('/api/create-order', async (req, res) => {
   const { amount } = req.body;
   const options = {
@@ -829,6 +853,17 @@ app.post('/api/verify-payment', async (req, res) => {
     if (!orderDetails || !orderDetails.customer || !orderDetails.customer.email) {
       console.error("Payment Verification Failed: Missing order details in request body");
       return res.status(400).json({ error: "Missing required order details" });
+    }
+
+    // Enforce per-user coupon usage: reject if coupon already used by this customer
+    if (orderDetails.couponCode) {
+      const existingOrder = await Order.findOne({
+        'customer.email': orderDetails.customer.email,
+        couponCode: orderDetails.couponCode
+      });
+      if (existingOrder) {
+        return res.status(400).json({ error: `Coupon ${orderDetails.couponCode} has already been used by this account` });
+      }
     }
     
     // Handle COD (Cash on Delivery)
