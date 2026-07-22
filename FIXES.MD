@@ -207,3 +207,41 @@
   - Old `exit_popup_shown` key is now unused
 
 ---
+
+## Commit `2152401` — Welcome bonus celebration, THANK10 auto-apply, fixed BUY NOW button
+
+### BUY NOW button always visible (cart page)
+- **Problem**: The BUY NOW / checkout button at the bottom of the cart page required scrolling down to see it, degrading mobile UX.
+- **Root cause**: The bottom bar used `sticky bottom-0` which didn't stay pinned in all scroll scenarios inside the flex layout.
+- **Fix**: Changed to `fixed bottom-0 left-0 right-0` so it always stays at the bottom of the viewport. Added `pb-28` padding to the scrollable content area so items don't get hidden behind the fixed bar.
+- **Files changed**: `src/components/CartPage.tsx`
+- **Key code**: `<div className="fixed bottom-0 left-0 right-0 bg-white border-t ...">`
+- **Do NOT revert**: The bottom bar must be `fixed`, not `sticky`. Content padding must be at least `pb-28`.
+
+### Welcome bonus celebration popup (after login)
+- **Problem**: After a non-logged-in user signs up/logs in (from the welcome popup or otherwise), there was no celebration or confirmation showing their welcome discount code.
+- **Fix**: Created `WelcomeBonusPopup.tsx`:
+  - Shows after successful login/signup if `localStorage.getItem('welcome_bonus_acknowledged')` is not set
+  - Celebration design with confetti dots, gradient header, PartyPopper icon
+  - Displays **THANK10** coupon code with copy-to-clipboard button
+  - "Start Shopping" button navigates to `/shop`
+  - Dismissal sets `welcome_bonus_acknowledged` flag so it only shows once
+- **Files changed**: `src/components/WelcomeBonusPopup.tsx` (new), `src/App.tsx` (state + render)
+- **Key code**: `{showWelcomeBonus && <WelcomeBonusPopup onClose={() => { setShowWelcomeBonus(false); localStorage.setItem('welcome_bonus_acknowledged', 'true'); }} />}`
+- **Do NOT revert**: 
+  - Must not show if `welcome_bonus_acknowledged` is in localStorage
+  - Must always show THANK10 code prominently with copy button
+  - Must have a CTA button to shop
+
+### THANK10 auto-apply in checkout
+- **Problem**: The user had to manually enter "THANK10" at checkout — no auto-apply for logged-in users.
+- **Root cause**: CheckoutPage only applied coupons when the user manually entered and clicked "Apply".
+- **Fix**: Added a `useEffect` in CheckoutPage that runs on mount — if `currentUser` exists and `welcome_bonus_used` flag is not set, auto-finds the THANK10 coupon in CMS data and applies it. Sets `welcome_bonus_used` flag so it only auto-applies once.
+- **Files changed**: `src/components/CheckoutPage.tsx`
+- **Key code**: `useEffect(() => { if (currentUser && !localStorage.getItem('welcome_bonus_used')) { const thank10 = coupons.find(c => c.code === 'THANK10' && c.isActive); if (thank10) { setActiveCoupon(thank10); setCouponCode('THANK10'); localStorage.setItem('welcome_bonus_used', 'true'); } } }, [currentUser, cmsData]);`
+- **Do NOT revert**: 
+  - The `welcome_bonus_used` localStorage check must run before auto-applying
+  - Must only auto-apply if `currentUser` is truthy
+  - The auto-apply must find the coupon by code `THANK10` and `isActive: true`
+
+---

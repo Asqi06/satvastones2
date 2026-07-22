@@ -33,6 +33,19 @@ export default function CheckoutPage({
   const [couponCode, setCouponCode] = useState('');
   const [activeCoupon, setActiveCoupon] = useState<any>(null);
   const [couponError, setCouponError] = useState('');
+
+  // Auto-apply THANK10 welcome coupon for logged-in users
+  useEffect(() => {
+    if (currentUser && !localStorage.getItem('welcome_bonus_used')) {
+      const coupons = cmsData?.coupons || [];
+      const thank10 = coupons.find((c: any) => c.code === 'THANK10' && c.isActive);
+      if (thank10) {
+        setActiveCoupon(thank10);
+        setCouponCode('THANK10');
+        localStorage.setItem('welcome_bonus_used', 'true');
+      }
+    }
+  }, [currentUser, cmsData]);
   const [showCodDialog, setShowCodDialog] = useState(false);
   const [step, setStep] = useState<'shipping' | 'payment'>('shipping');
   const [formData, setFormData] = useState(() => {

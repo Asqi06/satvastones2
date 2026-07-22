@@ -60,7 +60,7 @@ export default function CartPage({
         <button onClick={onContinueShopping} className="text-white"><X className="h-5 w-5" /></button>
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-24">
+      <div className="flex-1 overflow-y-auto pb-28">
         {/* Discount Notice */}
         <div className="bg-pink-50 px-4 py-2.5 text-center">
           <p className="text-[10px] font-bold text-[#d4535f]">Discount will applied at checkout</p>
@@ -170,7 +170,7 @@ export default function CartPage({
       </div>
 
       {/* Bottom Bar */}
-      <div className="sticky bottom-0 bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-between z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-between z-40">
         <div>
           <span className="text-lg font-bold text-gray-900">₹ {subtotal}</span>
         </div>
