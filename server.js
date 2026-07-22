@@ -111,6 +111,35 @@ async function deductStock(items) {
   }
 }
 
+// --- WhatsApp / n8n Webhook ---
+// Fires after order creation. n8n receives this and sends WhatsApp via WAHA API.
+async function sendOrderWebhook(order) {
+  const webhookUrl = process.env.N8N_WEBHOOK_URL;
+  if (!webhookUrl) return;
+  try {
+    await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        event: 'order.created',
+        orderNumber: order.orderNumber,
+        customer: order.customer,
+        amount: order.amount,
+        paymentMethod: order.paymentMethod,
+        items: (order.items || []).map(i => ({
+          title: i.title,
+          qty: i.qty,
+          price: i.price
+        })),
+        phone: order.customer?.phone,
+        createdAt: order.createdAt
+      })
+    });
+  } catch (err) {
+    console.error('n8n webhook error:', err.message);
+  }
+}
+
 const cmsSchema = new mongoose.Schema({
   hero: {
     title: String,
@@ -834,6 +863,7 @@ app.post('/api/verify-payment', async (req, res) => {
       }
 
       sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New COD Order Received!', `<p>New order #${order.orderNumber} received from ${order.customer.name} for ₹${order.amount}</p>`);
+      sendOrderWebhook(order);
       return res.json({ status: 'success', order });
     }
 
@@ -876,6 +906,7 @@ app.post('/api/verify-payment', async (req, res) => {
 
       sendEmail(process.env.ADMIN_EMAIL || 'anirudh@satvastones.com', 'New Order Received!', `<p>New order #${order.orderId} received from ${order.customer.name} for ₹${order.amount}</p>`);
   
+      sendOrderWebhook(order);
       res.json({ status: 'success', order });
     } else {
       console.error("Payment Verification Failed: Signature Mismatch");

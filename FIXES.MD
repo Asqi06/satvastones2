@@ -164,3 +164,23 @@
 - **Do NOT revert**: All category links must remain in footer. Grid must be `lg:grid-cols-5`.
 
 ---
+
+## Commit `2a95e88` — Added WhatsApp automation via WAHA + n8n
+
+- **Problem**: No automated WhatsApp notifications for orders. Only email was sent. Customer had no real-time order confirmation on WhatsApp.
+- **Root cause**: No webhook integration — server never notified any external service after order creation.
+- **Fix**: 
+  1. Added `sendOrderWebhook(order)` helper function in `server.js` that POSTs order data to an n8n webhook URL
+  2. Called it after both COD and prepaid order creation
+  3. Created `n8n-workflow-order-whatsapp.json` — n8n workflow template that receives webhook and sends WhatsApp via WAHA API to both customer and admin
+  4. Created `WHATSAPP-AUTOMATION.md` — setup guide for WAHA (Docker) and n8n
+  5. Added env vars: `N8N_WEBHOOK_URL`, `WAHA_API_URL`, `WAHA_API_KEY`, `WHATSAPP_ADMIN_NUMBER`
+- **Files changed**: `server.js`, `.env.example`, `n8n-workflow-order-whatsapp.json` (new), `WHATSAPP-AUTOMATION.md` (new)
+- **Key code**: `async function sendOrderWebhook(order) { ... await fetch(webhookUrl, { method: 'POST', ... }); }`
+- **Do NOT revert**: 
+  - The `sendOrderWebhook(order)` call must remain after both COD and prepaid order saves in `/api/verify-payment`
+  - The webhook function must not throw — errors are caught silently so order processing isn't blocked
+  - The webhook payload includes: `event`, `orderNumber`, `customer`, `amount`, `paymentMethod`, `items`, `phone`, `createdAt`
+  - The n8n workflow file must be kept in project root for reference
+
+---
