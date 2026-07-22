@@ -838,7 +838,7 @@ function AppContent() {
         onSelectProduct={(p) => navigateTo('product', p)} 
       />
 
-      <ExitIntentPopup />
+      <ExitIntentPopup currentUser={currentUser} />
 
       {/* Top Brand Bar - White background with brand name centered */}
       <div className="w-full bg-white border-b border-gray-100 z-[60]">

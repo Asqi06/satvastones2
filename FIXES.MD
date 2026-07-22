@@ -184,3 +184,26 @@
   - The n8n workflow file must be kept in project root for reference
 
 ---
+
+## Commit `d3acc88` — Welcome popup: 20% discount on login (on arrival)
+
+- **Problem**: The old ExitIntentPopup only showed on mouse leave (exit intent), offered only 10% with a generic coupon code (WELCOME10), and appeared even for logged-in users. The user wanted a popup on **arrival** offering **20% off on login**.
+- **Root cause**: Component used `mouseleave` + `beforeunload` events. Discount was a static coupon, not tied to login.
+- **Fix**: Rewrote `ExitIntentPopup.tsx`:
+  - Shows **5 seconds after page load** (not on exit intent)
+  - **Does not show** if user is already logged in (`currentUser` prop checked)
+  - Offers **20% OFF** with login CTA
+  - "Login & Claim 20% OFF" button navigates to `/account` (AuthPage)
+  - "Maybe later" dismiss button
+  - Dismissal stored in `localStorage` key `welcome_popup_shown` (different key from old exit popup)
+  - Passes `currentUser` from App.tsx as prop
+- **Files changed**: `src/components/ExitIntentPopup.tsx` (full rewrite), `src/App.tsx` (pass `currentUser` prop)
+- **Key code**: `<ExitIntentPopup currentUser={currentUser} />`
+- **Do NOT revert**: 
+  - Popup must check `currentUser` — if truthy, return null immediately
+  - Timer must be 5000ms (5 seconds)
+  - Navigate to `/account` on login button click
+  - localStorage key `welcome_popup_shown` must be respected
+  - Old `exit_popup_shown` key is now unused
+
+---
