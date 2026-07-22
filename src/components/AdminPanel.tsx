@@ -266,10 +266,10 @@ export default function AdminPanel({
   );
 
   const PageHeader = ({ title, action }: any) => (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 lg:mb-8">
       <div>
-        <h1 className="text-2xl font-bold text-stone-900">{title}</h1>
-        <p className="text-xs text-stone-400 mt-1 uppercase tracking-wider">Manage your website {activeTab} here</p>
+        <h1 className="text-xl lg:text-2xl font-bold text-stone-900">{title}</h1>
+        <p className="text-xs text-stone-400 mt-0.5 uppercase tracking-wider">Manage your website {activeTab} here</p>
       </div>
       {action}
     </div>
@@ -277,15 +277,15 @@ export default function AdminPanel({
 
   const renderSidebar = () => (
     <aside className={`
-      fixed inset-y-0 left-0 w-64 bg-stone-900 text-white flex flex-col z-50 transition-transform duration-300
+      fixed inset-y-0 left-0 w-64 bg-stone-900 text-white flex flex-col z-[70] transition-transform duration-300 ease-in-out
       ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      lg:relative lg:translate-x-0 lg:flex lg:h-screen
+      lg:sticky lg:top-0 lg:z-0 lg:translate-x-0 lg:h-screen lg:shrink-0
     `}>
-      <div className="p-6 border-b border-stone-800 flex items-center justify-between">
+      <div className="px-5 py-5 border-b border-stone-800 flex items-center justify-between shrink-0">
         <div>
-          <h2 className="text-lg font-bold tracking-tight">SATVA ADMIN</h2>
+          <h2 className="text-base font-bold tracking-tight lg:text-lg">SATVA ADMIN</h2>
           <div className="flex items-center gap-2 mt-1.5">
-            <span className={`w-2 h-2 rounded-full ${dbStatus === 'connected' ? 'bg-emerald-400' : 'bg-red-400'} animate-pulse`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${dbStatus === 'connected' ? 'bg-emerald-400' : 'bg-red-400'} animate-pulse`} />
             <span className="text-[10px] text-stone-500 uppercase tracking-widest">
               {dbStatus === 'connected' ? 'Live' : dbStatus === 'checking' ? 'Connecting...' : 'Offline'}
             </span>
@@ -296,12 +296,12 @@ export default function AdminPanel({
         </button>
       </div>
 
-      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 p-2.5 space-y-0.5 overflow-y-auto">
         {SIDEBAR_TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => { setActiveTab(tab.id); setIsSidebarOpen(false); }}
-            className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-xs font-semibold rounded-lg transition-all ${activeTab === tab.id ? 'bg-white/10 text-white' : 'text-stone-400 hover:text-white hover:bg-white/5'}`}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold rounded-lg transition-all ${activeTab === tab.id ? 'bg-white/10 text-white' : 'text-stone-400 hover:text-white hover:bg-white/5'}`}
           >
             <tab.icon className="h-4 w-4 shrink-0" />
             {tab.label}
@@ -309,8 +309,8 @@ export default function AdminPanel({
         ))}
       </nav>
 
-      <div className="p-4 border-t border-stone-800">
-        <button onClick={onLogout} className="w-full flex items-center gap-3 px-3.5 py-2.5 text-xs font-semibold text-red-400 hover:bg-red-950/30 rounded-lg transition-all">
+      <div className="p-3 border-t border-stone-800 shrink-0">
+        <button onClick={onLogout} className="w-full flex items-center gap-3 px-3 py-2.5 text-xs font-semibold text-red-400 hover:bg-red-950/30 rounded-lg transition-all">
           <LogOut className="h-4 w-4" /> Logout
         </button>
       </div>
@@ -410,8 +410,8 @@ export default function AdminPanel({
   };
 
   const renderContentTab = () => (
-    <div className="space-y-10">
-      <Card className="p-6 space-y-6">
+    <div className="space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2">
           <Type className="h-4 w-4" /> Hero Section
         </h3>
@@ -428,11 +428,11 @@ export default function AdminPanel({
         </div>
       </Card>
 
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2">
           <ImageIcon className="h-4 w-4" /> Category Tiles
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {(tempCMSData?.categories || []).map((cat: any, idx: number) => (
             <div key={idx} className="border border-stone-200 rounded-xl overflow-hidden bg-stone-50">
               <div className="aspect-square bg-stone-100 relative group">
@@ -457,7 +457,7 @@ export default function AdminPanel({
 
   const renderSpecialOffer = () => (
     <div className="space-y-6">
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2">
           <Zap className="h-4 w-4" /> Live Campaign Banner
         </h3>
@@ -488,7 +488,7 @@ export default function AdminPanel({
 
   const renderNinetyNineSale = () => (
     <div className="space-y-6">
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2">
           <Timer className="h-4 w-4" /> \u20B999 Flash Sale Campaign
         </h3>
@@ -511,7 +511,7 @@ export default function AdminPanel({
         </div>
       </Card>
 
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2">
           <Package className="h-4 w-4" /> \u20B999 Products ({(tempCMSData?.products || []).filter((p: any) => p.isNinetyNine).length || 0})
         </h3>
@@ -627,8 +627,8 @@ export default function AdminPanel({
   };
 
   const renderSettings = () => (
-    <div className="space-y-8">
-      <Card className="p-6 space-y-6">
+    <div className="space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2"><Zap className="h-4 w-4" /> Announcement Bar</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Input label="Announcement Text" placeholder="Use | to separate items" value={tempCMSData?.settings?.announcementText || ''} onChange={e => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, announcementText: e.target.value }})} className="col-span-full" />
@@ -639,7 +639,7 @@ export default function AdminPanel({
         </div>
       </Card>
 
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> GST & Billing</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Input label="Business Name" value={tempCMSData?.settings?.businessName || ''} onChange={e => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, businessName: e.target.value }})} />
@@ -649,7 +649,7 @@ export default function AdminPanel({
         </div>
       </Card>
 
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2"><UploadCloud className="h-4 w-4" /> Cloudinary</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Input label="Cloud Name" value={tempCMSData?.settings?.cloudinaryCloudName || ''} onChange={e => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, cloudinaryCloudName: e.target.value }})} />
@@ -657,7 +657,7 @@ export default function AdminPanel({
         </div>
       </Card>
 
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2"><ImageIcon className="h-4 w-4" /> Logo & SEO</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div className="space-y-4">
@@ -684,7 +684,7 @@ export default function AdminPanel({
         </div>
       </Card>
 
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2"><Phone className="h-4 w-4" /> Contact Info</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <Input label="Phone" value={tempCMSData?.settings?.connectPhone || ''} onChange={e => setTempCMSData({ ...tempCMSData, settings: { ...tempCMSData.settings, connectPhone: e.target.value }})} />
@@ -693,7 +693,7 @@ export default function AdminPanel({
         </div>
       </Card>
 
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2"><Search className="h-4 w-4" /> Category SEO</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {['necklaces', 'name-necklace', 'earrings', 'rings', 'bracelets', 'accessories', 'pendant', 'gifts', 'hampers', 'mothers-day'].map(slug => (
@@ -706,7 +706,7 @@ export default function AdminPanel({
         </div>
       </Card>
 
-      <Card className="p-6 space-y-6">
+      <Card className="p-5 sm:p-6 space-y-5">
         <h3 className="text-sm font-bold text-stone-700 flex items-center gap-2"><HelpCircle className="h-4 w-4" /> FAQ (JSON-LD)</h3>
         {(tempCMSData?.faqs || []).map((faq: any, idx: number) => (
           <div key={idx} className="border border-stone-100 rounded-xl p-4 space-y-3 relative">
@@ -800,7 +800,7 @@ export default function AdminPanel({
       </div>
 
       {(showForm || editing) && (
-        <Card className="p-6 border border-stone-200 space-y-5">
+        <Card className="p-5 sm:p-6 border border-stone-200 space-y-5">
           <h4 className="text-xs font-bold text-stone-500 uppercase tracking-wider">{editing ? 'Edit' : 'New'} {formTitle}</h4>
           {renderForm()}
           <div className="flex gap-3 pt-2">
@@ -1031,7 +1031,7 @@ export default function AdminPanel({
   );
 
   const renderCoupons = () => (
-    <Card className="p-6 space-y-6 max-w-2xl">
+    <Card className="p-5 sm:p-6 space-y-5 max-w-2xl">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-bold text-stone-900">Active Coupons</h2>
@@ -1086,8 +1086,8 @@ export default function AdminPanel({
 
       {showBlogForm && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4" onClick={(e) => { if (e.target === e.currentTarget) setShowBlogForm(false); }}>
-          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 shadow-2xl">
-            <div className="flex items-center justify-between mb-8">
+          <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl">
+            <div className="flex items-center justify-between mb-5">
               <h3 className="text-sm font-bold">{editingBlog ? 'Edit Post' : 'New Post'}</h3>
               <button onClick={() => setShowBlogForm(false)} className="text-stone-400 hover:text-stone-900"><X className="h-5 w-5" /></button>
             </div>
@@ -1155,11 +1155,11 @@ export default function AdminPanel({
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
         <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-          <div className="px-8 py-5 border-b border-stone-100 flex justify-between items-center bg-stone-50 shrink-0">
-            <h2 className="text-xl font-bold text-stone-900">{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
-            <button onClick={() => { setEditingProduct(null); setNewProduct(null); }} className="text-stone-400 hover:text-stone-900 p-1"><X className="h-6 w-6" /></button>
+          <div className="px-6 py-4 border-b border-stone-100 flex justify-between items-center bg-stone-50 shrink-0">
+            <h2 className="text-lg font-bold text-stone-900">{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
+            <button onClick={() => { setEditingProduct(null); setNewProduct(null); }} className="text-stone-400 hover:text-stone-900 p-1"><X className="h-5 w-5" /></button>
           </div>
-          <div className="p-8 overflow-y-auto flex-1 space-y-8 no-scrollbar">
+          <div className="p-6 overflow-y-auto flex-1 space-y-6 no-scrollbar">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <Input label="Product Title" value={p.title} onChange={e => setP({...p, title: e.target.value})} className="col-span-full" />
               <Input label="Price" type="number" value={p.price} onChange={e => setP({...p, price: Number(e.target.value)})} />
@@ -1296,9 +1296,9 @@ export default function AdminPanel({
               </div>
             </div>
           </div>
-          <div className="px-8 py-5 bg-stone-50 border-t border-stone-100 flex justify-end gap-4">
-            <button onClick={() => { setEditingProduct(null); setNewProduct(null); }} className="px-6 py-2.5 text-xs font-bold text-stone-500 hover:text-stone-900">Cancel</button>
-            <button onClick={() => editingProduct ? saveProduct(editingProduct) : addProduct(newProduct)} className="bg-stone-900 text-white px-8 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-black flex items-center gap-2"><Save className="h-4 w-4" /> Save</button>
+          <div className="px-6 py-4 bg-stone-50 border-t border-stone-100 flex justify-end gap-3">
+            <button onClick={() => { setEditingProduct(null); setNewProduct(null); }} className="px-5 py-2.5 text-xs font-bold text-stone-500 hover:text-stone-900">Cancel</button>
+            <button onClick={() => editingProduct ? saveProduct(editingProduct) : addProduct(newProduct)} className="bg-stone-900 text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-lg hover:bg-black flex items-center gap-2"><Save className="h-3.5 w-3.5" /> Save</button>
           </div>
         </div>
       </div>
@@ -1310,15 +1310,15 @@ export default function AdminPanel({
     return (
       <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[110] flex items-center justify-center p-4">
         <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-          <div className="px-8 py-5 border-b border-stone-100 flex items-center justify-between bg-stone-50">
+          <div className="px-6 py-4 border-b border-stone-100 flex items-center justify-between bg-stone-50">
             <div>
-              <h2 className="text-xl font-bold text-stone-900">Order Details</h2>
+              <h2 className="text-lg font-bold text-stone-900">Order Details</h2>
               <p className="text-xs text-stone-400 font-mono mt-0.5">#{selectedOrder._id}</p>
             </div>
-            <button onClick={() => setSelectedOrder(null)} className="text-stone-400 hover:text-stone-900 p-1"><X className="h-6 w-6" /></button>
+            <button onClick={() => setSelectedOrder(null)} className="text-stone-400 hover:text-stone-900 p-1"><X className="h-5 w-5" /></button>
           </div>
-          <div className="p-8 overflow-y-auto space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="p-6 overflow-y-auto space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-5">
                 <h3 className="text-xs font-bold text-stone-400 uppercase tracking-wider flex items-center gap-2"><Users className="h-4 w-4" /> Customer</h3>
                 <div className="space-y-3">
@@ -1414,22 +1414,22 @@ export default function AdminPanel({
   };
 
   return (
-    <div className="min-h-screen bg-stone-50 flex">
+    <div className="min-h-screen bg-stone-50 lg:flex">
       {/* Mobile header */}
-      <header className="lg:hidden bg-stone-900 text-white p-4 flex items-center justify-between sticky top-0 z-40">
-        <h2 className="font-bold text-lg tracking-tight">SATVA ADMIN</h2>
-        <button onClick={() => setIsSidebarOpen(true)} className="p-1"><Menu className="h-6 w-6" /></button>
+      <header className="lg:hidden bg-stone-900 text-white px-4 py-3 flex items-center justify-between sticky top-0 z-50 shadow-lg">
+        <h2 className="font-bold text-base tracking-tight">SATVA ADMIN</h2>
+        <button onClick={() => setIsSidebarOpen(true)} className="p-1.5 -mr-1.5"><Menu className="h-5 w-5" /></button>
       </header>
 
       {/* Overlay */}
-      {isSidebarOpen && <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" onClick={() => setIsSidebarOpen(false)} />}
+      {isSidebarOpen && <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden" onClick={() => setIsSidebarOpen(false)} />}
 
       {renderSidebar()}
 
-      <main className="flex-1 p-6 lg:p-10 overflow-y-auto min-h-screen">
+      <main className="flex-1 p-4 sm:p-6 lg:p-10 min-h-screen lg:overflow-y-auto pt-[60px] lg:pt-0">
         <PageHeader title={activeTab.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase())} />
 
-        <div className="space-y-6">
+        <div className="space-y-4 lg:space-y-6">
           {activeTab === 'dashboard' && renderDashboard()}
           {activeTab === 'content' && renderContentTab()}
           {activeTab === 'banners' && renderBanners()}

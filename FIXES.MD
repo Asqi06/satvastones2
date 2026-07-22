@@ -312,3 +312,26 @@
   - Removed components were confirmed unused via grep — do not restore unless explicitly needed
 
 ---
+
+## Admin Panel — Position & spacing fixes
+
+- **Problem**: Mobile layout had sticky header outside flex flow causing main content to be hidden behind it. Sidebar z-index was too low. Card padding was inconsistent throughout.
+- **Root cause**: The `<header>` was placed before the flex container on mobile, and `<main>` had no `pt-*` offset. Sidebar used `z-50` while overlay used `z-40`, but sidebar needed higher z. Cards used mixed `p-6`, `p-8`, `p-5` inconsistently.
+- **Changes made**:
+  - Parent container: changed from `flex` to `lg:flex` so mobile layout stacks vertically
+  - Main: added `pt-[60px] lg:pt-0` to offset sticky mobile header; changed `p-6 lg:p-10` → `p-4 sm:p-6 lg:p-10`; reduced `space-y-6` → `space-y-4 lg:space-y-6`
+  - Sidebar: changed from `fixed` + `lg:relative` to `sticky lg:top-0 lg:h-screen lg:shrink-0`; z-index increased to `z-[70]`; tighter paddings
+  - Mobile header: reduced padding, increased z-index to `z-50`, added shadow
+  - Overlay: z-index increased from `z-40` to `z-[60]`
+  - PageHeader: `mb-8` → `mb-5 lg:mb-8`, title `text-2xl` → `text-xl lg:text-2xl`
+  - Product editor modal: header `px-8 py-5` → `px-6 py-4`, body `p-8` → `p-6`, footer `px-8 py-5` → `px-6 py-4`
+  - Order detail modal: same tightening as product editor
+  - Blog form modal: `p-8` → `p-6`, `mb-8` → `mb-5`
+  - All content/settings/form cards: `p-6` → `p-5 sm:p-6`, `space-y-6` → `space-y-5` on mobile
+  - Content tab: `space-y-10` → `space-y-6`, category tile grid `gap-5` → `gap-4`, `grid-cols-1` → `grid-cols-2` on small screens
+  - Dashboard stat cards grid: `gap-4` kept (tight enough)
+  - Settings: `space-y-8` → `space-y-6`
+- **Files changed**: `src/components/AdminPanel.tsx`
+- **Do NOT revert**: The `pt-[60px] lg:pt-0` on main, the sidebar must stay `sticky`, z-index hierarchy must be: header(z-50) < overlay(z-[60]) < sidebar(z-[70])
+
+---
