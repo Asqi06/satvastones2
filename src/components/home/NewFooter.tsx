@@ -6,9 +6,9 @@ export default function NewFooter() {
   return (
     <footer className="bg-[#f79da6] pt-6 sm:pt-8 lg:pt-14 pb-4 sm:pb-5 lg:pb-6">
       <div className="mx-auto max-w-7xl px-3 sm:px-4 md:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10 mb-6 sm:mb-8 lg:mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 lg:gap-6 mb-6 sm:mb-8 lg:mb-10">
           {/* About */}
-          <div className="col-span-2 md:col-span-2 lg:col-span-1">
+          <div className="col-span-2 md:col-span-2 lg:col-span-2">
             <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">About Satvastones</h2>
             <p className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 leading-relaxed">
               Satvastones is your go-to for all things accessories. From everyday basics to statement pieces, we bring you trendy, affordable styles that flex with every outfit and every plan.
@@ -31,11 +31,28 @@ export default function NewFooter() {
             <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Quick Links</h2>
             <ul className="space-y-1 sm:space-y-1.5">
               <li><a href="/shop" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Shop All</a></li>
+              <li><a href="/hot-deals" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Hot Deals</a></li>
               <li><a href="/about" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">About Us</a></li>
+              <li><a href="/blogs" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Blog</a></li>
               <li><a href="/contact" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Contact</a></li>
             </ul>
           </div>
-          
+
+          {/* Categories */}
+          <div>
+            <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Categories</h2>
+            <ul className="space-y-1 sm:space-y-1.5">
+              <li><a href="/shop/earrings" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Earrings</a></li>
+              <li><a href="/shop/necklaces" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Necklaces</a></li>
+              <li><a href="/shop/rings" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Rings</a></li>
+              <li><a href="/shop/bracelets" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Bracelets</a></li>
+              <li><a href="/shop/accessories" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Accessories</a></li>
+              <li><a href="/shop/99-sale" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">₹99 Sale</a></li>
+              <li><a href="/shop/gifts" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Gifts</a></li>
+              <li><a href="/shop/hampers" className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 hover:text-[#d4535f] transition-colors">Hampers</a></li>
+            </ul>
+          </div>
+
           {/* Store Policy */}
           <div>
             <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Store Policy</h2>
@@ -49,7 +66,7 @@ export default function NewFooter() {
           </div>
           
           {/* Newsletter */}
-          <div className="col-span-2 md:col-span-2 lg:col-span-1">
+          <div className="col-span-2 md:col-span-2 lg:col-span-5">
             <h2 className="font-bold text-gray-900 mb-2 sm:mb-3 text-[11px] sm:text-xs lg:text-sm">Sign Up to Newsletter</h2>
             <p className="text-[10px] sm:text-[11px] lg:text-xs text-gray-600 mb-2 sm:mb-3">
               Enter your email address to get latest updates on sales and offers.

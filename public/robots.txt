@@ -32,5 +32,3 @@ Disallow: /_next/
 Disallow: /static/
 
 Sitemap: https://satvastones.in/sitemap.xml
-Sitemap: https://satvastones2.onrender.com/api/sitemap.xml
-Host: https://satvastones.in

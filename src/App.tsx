@@ -490,7 +490,7 @@ function AppContent() {
   const ShopRoute = () => {
     const { category } = useParams<{ category?: string }>();
     const location = useLocation();
-    const hasFacetParams = ['style', 'material', 'maxPrice', 'minPrice', 'sort', 'color'].some(p => new URLSearchParams(location.search).has(p));
+    const hasFacetParams = ['style', 'material', 'maxPrice', 'minPrice', 'sort', 'color', 'category', 'sub'].some(p => new URLSearchParams(location.search).has(p));
     const catLabel = category ? (CATEGORY_LABELS[category] || category) : null;
     const collectionSeo = category && cmsData?.collectionSeo?.[category];
     const title = category 
@@ -1162,6 +1162,47 @@ function AppContent() {
                       onProductClick={(p) => navigateTo('product', p)}
                     />
                   ))}
+
+                  {/* Featured Products */}
+                  {(cmsData?.products || []).filter((p: any) => p.isFeatured).length > 0 && (
+                    <section className="py-6 sm:py-8 lg:py-12 bg-white">
+                      <div className="mx-auto max-w-7xl px-3 sm:px-4 md:px-8">
+                        <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
+                          <div>
+                            <h2 className="font-heading text-lg sm:text-xl lg:text-3xl font-bold text-gray-900">Best Sellers</h2>
+                            <p className="text-[10px] sm:text-xs text-gray-500 mt-1">Our most loved pieces, handpicked for you</p>
+                          </div>
+                          <Link to="/shop" className="text-[10px] sm:text-xs font-bold text-[#d4535f] hover:text-[#c14050] uppercase tracking-wider">View All</Link>
+                        </div>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-4">
+                          {(cmsData?.products || []).filter((p: any) => p.isFeatured).slice(0, 8).map((product: any) => {
+                            const pid = product._id || product.id;
+                            return (
+                              <Link key={pid} to={`/product/${product.slug || pid}`} className="group">
+                                <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
+                                  <img src={optimizeImage(product.image, 400)} alt={product.title} loading="lazy"
+                                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0" />
+                                  {product.images?.[1] && (
+                                    <img src={optimizeImage(product.images[1], 400)} alt={product.title} loading="lazy"
+                                      className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                                  )}
+                                </div>
+                                <div className="mt-1.5 px-0.5">
+                                  <h3 className="text-[11px] sm:text-xs font-medium text-gray-800 truncate">{product.title}</h3>
+                                  <div className="flex items-center gap-1.5 mt-0.5">
+                                    <span className="text-xs sm:text-sm font-bold text-[#c43a4a]">Rs. {product.price}</span>
+                                    {product.oldPrice && product.oldPrice > product.price && (
+                                      <span className="text-[10px] text-gray-400 line-through">Rs. {product.oldPrice}</span>
+                                    )}
+                                  </div>
+                                </div>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </section>
+                  )}
 
                   {/* Customer Reviews */}
                   <CustomerReviews reviews={homepageData?.reviews || []} />

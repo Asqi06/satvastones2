@@ -325,6 +325,23 @@ export default function ProductPage({
             </div>
           )}
         </AccordionItem>
+        {(product.specifications?.length > 0 || product.material || product.weight || product.dimensions || product.sku) && (
+          <AccordionItem title="Specifications" defaultOpen={true}>
+            <table className="w-full text-xs text-gray-600">
+              <tbody>
+                {product.sku && <tr className="border-b border-gray-100"><td className="py-2 pr-4 font-medium text-gray-500 w-1/3">SKU</td><td className="py-2">{product.sku}</td></tr>}
+                {product.material && <tr className="border-b border-gray-100"><td className="py-2 pr-4 font-medium text-gray-500">Material</td><td className="py-2">{product.material}</td></tr>}
+                {product.weight && <tr className="border-b border-gray-100"><td className="py-2 pr-4 font-medium text-gray-500">Weight</td><td className="py-2">{product.weight}</td></tr>}
+                {product.dimensions && <tr className="border-b border-gray-100"><td className="py-2 pr-4 font-medium text-gray-500">Dimensions</td><td className="py-2">{product.dimensions}</td></tr>}
+                {product.isAntiTarnish && <tr className="border-b border-gray-100"><td className="py-2 pr-4 font-medium text-gray-500">Treatment</td><td className="py-2">Anti-tarnish, Waterproof</td></tr>}
+                {product.giftingOption && <tr className="border-b border-gray-100"><td className="py-2 pr-4 font-medium text-gray-500">Gift Ready</td><td className="py-2">Comes in gift packaging</td></tr>}
+                {product.specifications?.map((spec: any, i: number) => (
+                  <tr key={i} className="border-b border-gray-100"><td className="py-2 pr-4 font-medium text-gray-500">{spec.key}</td><td className="py-2">{spec.value}</td></tr>
+                ))}
+              </tbody>
+            </table>
+          </AccordionItem>
+        )}
         <AccordionItem title="Shipping & Returns">
           <div className="space-y-2">
             <p className="text-[10px] text-gray-500">Free shipping on prepaid/UPI orders above ₹399</p>
