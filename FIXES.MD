@@ -1,0 +1,166 @@
+# FIXES — Satvastones Project
+
+> **IMPORTANT**: Before making ANY changes, read this file first to avoid re-breaking previously fixed issues.
+> After any fix, append a new entry at the bottom of this file.
+
+---
+
+## Commit `65c8def` — `seoContent` not rendering on product page
+
+- **Problem**: `seoContent` was editable in admin and saved to DB but never rendered on the frontend product page.
+- **Root cause**: ProductPage.tsx description accordion always showed hardcoded boilerplate text, ignoring `product.seoContent`.
+- **Fix**: Added conditional rendering — if `product.seoContent` exists, render it via `dangerouslySetInnerHTML`; otherwise fall back to boilerplate.
+- **Files changed**: `src/components/ProductPage.tsx` (Description accordion)
+- **Key code**: `{product.seoContent ? (<div dangerouslySetInnerHTML={{ __html: product.seoContent }} />) : (<div className="space-y-2">...</div>)}`
+- **Do NOT revert**: The description accordion must check `product.seoContent` first.
+
+---
+
+## Commit `8188375` — ShareButton component removed `</div>` closing tag (build error)
+
+- **Problem**: Build failed with JSX parsing error — missing closing tag.
+- **Root cause**: The ShareButton commit (a440eeb/8188375) removed a `</div>` that closed the reviews container div, breaking the JSX tree.
+- **Fix**: Restored the missing `</div>` by putting it back after the review form.
+- **Files changed**: `src/components/ProductPage.tsx`
+- **Key code**: The `</div>` after the review form `</form>` must remain present. It closes the reviews container div.
+- **Do NOT revert**: The closing `</div>` after the review form section. Indentation: `{showReviewForm && (<form>...</form>)}` then `</div>`.
+
+---
+
+## Commit `dfdcf42` — PageSpeed performance & accessibility fixes
+
+### Image optimization
+- **Problem**: SaleSection images passed raw Cloudinary URLs without `optimizeImage()`, missing responsive srcset/sizes.
+- **Fix**: Apply `optimizeImage()` to all product images in SaleSection.tsx, ProductSection.tsx, ShopPage.tsx.
+- **Files changed**: `src/components/home/SaleSection.tsx`, `src/components/home/ProductSection.tsx`, `src/components/ShopPage.tsx`
+- **Do NOT revert**: Always use `optimizeImage(url, width)` and `getSrcSet()` for product images.
+
+### LCP — Hero banner fetchPriority
+- **Problem**: Hero banner image lacked `fetchpriority="high"`, delaying LCP.
+- **Fix**: Added `fetchPriority="high"` to the hero banner image in NewHeroBanner.tsx.
+- **Files changed**: `src/components/home/NewHeroBanner.tsx`
+- **Key code**: Image element must have `fetchPriority="high"`.
+
+### Color contrast (a11y)
+- **Problem**: Announcement bar used `bg-[#d4535f]` (too light) and cart badge used `bg-[#D44638]` — insufficient contrast against text.
+- **Fix**: Changed announcement bar to `bg-[#b03a4a]`, HOT SELLING badge to `bg-[#b32d2d]`, price text to `text-[#c43a4a]`, cart badge to `bg-[#b32d2d]`.
+- **Files changed**: `src/App.tsx`, `src/index.css`, `src/components/home/SaleSection.tsx`
+- **Do NOT revert**: Keep these darker shades for WCAG AA contrast compliance.
+
+### Social links aria-labels
+- **Problem**: Social media links (Instagram, Facebook, Twitter) in footer had no `aria-label`.
+- **Fix**: Added `aria-label="Follow us on [Platform]"` to each social link.
+- **Files changed**: `src/components/home/NewFooter.tsx`
+- **Do NOT revert**: Social links must have descriptive `aria-label`.
+
+### Heading order
+- **Problem**: Footer used `<h4>` for section titles (should be `<h2>`) and ConnectWithUs used `<h4>` (should be `<h3>`).
+- **Fix**: Changed footer `<h4>` to `<h2>`, ConnectWithUs `<h4>` to `<h3>`.
+- **Files changed**: `src/components/home/NewFooter.tsx`, `src/components/home/ConnectWithUs.tsx`
+- **Do NOT revert**: Heading hierarchy must be h1 → h2 → h3 (no skipping levels).
+
+### Lazy load AdminPanel
+- **Problem**: AdminPanel was eagerly imported, adding ~200KB to initial bundle.
+- **Fix**: Changed to dynamic `React.lazy()` import with `<Suspense>` fallback.
+- **Files changed**: `src/App.tsx` (import + render)
+- **Key code**: `const AdminPanel = lazy(() => import('./components/AdminPanel'))` + `<Suspense fallback={...}><AdminPanel ... /></Suspense>`
+- **Do NOT revert**: Admin panel must be lazy-loaded.
+
+---
+
+## Commit `b6b4f32` / `7e66b0f` — Missing `clsx` and `tailwind-merge` dependencies
+
+- **Problem**: Render deployment crashed on startup. `server.js` line 10 imports from `src/lib/utils.ts` which uses `clsx` and `tailwind-merge`.
+- **Root cause**: `clsx` and `tailwind-merge` were used in source code but never listed in `package.json` dependencies.
+- **Fix**: Installed both packages via npm.
+- **Files changed**: `package.json`, `package-lock.json`
+- **Do NOT revert**: Both `clsx` and `tailwind-merge` must remain in dependencies.
+
+---
+
+## Commit `65c46cd` — Cloudinary Upload Widget not loading
+
+- **Problem**: Clicking upload buttons in admin did nothing. No Cloudinary upload dialog appeared.
+- **Root cause**: The Cloudinary Upload Widget script (`https://upload-widget.cloudinary.com/global/all.js`) was never loaded in `index.html` or dynamically.
+- **Fix**: `openUploadWidget()` in `src/utils/cloudinary.ts` now dynamically creates a `<script>` tag and appends it to `<body>` on first call, then waits for `window.cloudinary` to be defined before opening the widget.
+- **Files changed**: `src/utils/cloudinary.ts`
+- **Key code**: `if (!window.cloudinary) { const script = document.createElement('script'); script.src = 'https://upload-widget.cloudinary.com/global/all.js'; script.onload = () => { cloudinary.openUploadWidget(...) }; ... }`
+- **Do NOT revert**: Upload widget must use dynamic script loading (don't add it to index.html — it's only needed in admin).
+
+---
+
+## Commit `742a446` / `8ce26d1` — Hero banner height & navigation
+
+### Height reduction
+- **Problem**: Hero banner was too tall (no max-height), causing excessive scrolling on desktop.
+- **Fix**: Added `lg:max-h-[300px]` and changed aspect-ratio padding from `min(90vw, 45%)` to `min(80vw, 38%)`.
+- **Files changed**: `src/components/home/NewHeroBanner.tsx`
+- **Do NOT revert**: Desktop banner max-height 300px, mobile padding 38%.
+
+### Banner click navigation
+- **Problem**: Banner `onClick` only handled category strings via `navigateTo('shop', { category })`. Full URLs, internal paths, and product slugs were not supported.
+- **Fix**: Updated click handler to detect URL type: external URLs open in new tab, `/` paths use `navigate()`, known categories use `navigateTo('shop', ...)`, everything else navigates to `/product/{slug}`.
+- **Files changed**: `src/App.tsx` (banner click handler in HomeRoute)
+- **Key code**: `if (url.startsWith('http')) { window.open(url, '_blank') } else if (url.startsWith('/')) { navigate(url) } else if ([...knownCategories].includes(url)) { navigateTo('shop', { category: url }) } else { navigate('/product/' + url) }`
+- **Do NOT revert**: Banner must support all four URL types.
+
+---
+
+## Commit `e0b033f` — Trend link destination always `/shop`
+
+- **Problem**: All trend cards in ShopByTrend section linked to hardcoded `/shop` regardless of what the trend represented.
+- **Root cause**: `ShopByTrend.tsx` used `<Link to="/shop">` — no way to set per-trend destination.
+- **Fix**: Added optional `link` field to Trend mongoose schema (`server.js`), admin form (`AdminPanel.tsx`), and component (`ShopByTrend.tsx` reads `trend.link` and falls back to `/shop`).
+- **Files changed**: `server.js`, `src/components/AdminPanel.tsx`, `src/components/home/ShopByTrend.tsx`
+- **Key code**: `<Link to={trend.link || '/shop'}>`
+- **Do NOT revert**: Trend link must come from `trend.link` field, not hardcoded. Admin form must have link input after image, before sort order.
+
+---
+
+## Commit `59e2bc8` — Hot Deals ignores deleted Sale Sections
+
+- **Problem**: Deleting a Sale Section from admin → products still appeared on Hot Deals page.
+- **Root cause**: HotDealsPage filtered products by DB-level flags (`isNinetyNine`, `oldPrice > price`) which never change when a Sale Section is deleted. It never checked which sale sections are active.
+- **Fix**: Passed `homepageData?.sales` (only active Sale Sections with populated products) to HotDealsPage. It builds a `Set` of product IDs from all active sales and filters to only those products. If no active sales exist, nothing shows.
+- **Files changed**: `src/App.tsx` (pass `sales` prop), `src/components/HotDealsPage.tsx` (accept `sales` prop, filter logic)
+- **Key code**: `const activeProductIds = new Set(...)` then `isInActiveSale = (p) => activeProductIds.size === 0 || activeProductIds.has(p._id)` then filter products to `isInActiveSale(p)`.
+- **Do NOT revert**: Hot Deals must check active Sale Sections. Remove the fallback `activeProductIds.size === 0` only after ensuring sales always exist.
+
+---
+
+## Commit `7749158` — SEO: Low Google indexing (7/61 pages)
+
+### robots.txt cleanup
+- **Problem**: robots.txt included `Sitemap: https://satvastones2.onrender.com/api/sitemap.xml` (Render backend URL — not the actual sitemap) and `Host:` directive (unsupported by Google).
+- **Fix**: Removed both lines.
+- **Files changed**: `public/robots.txt`
+- **Do NOT revert**: Only keep Sitemap pointing to `https://satvastones.in/sitemap.xml`.
+
+### Param URLs indexed instead of clean URLs
+- **Problem**: Google indexed `https://www.satvastones.in/shop?category=Necklace` instead of the clean canonical `https://satvastones.in/shop/necklaces`. The `hasFacetParams` check did not include `'category'` or `'sub'` params, so these URLs were not marked `noindex`.
+- **Fix**: Added `'category'` and `'sub'` to the `hasFacetParams` array in ShopRoute.
+- **Files changed**: `src/App.tsx` (line 493)
+- **Key code**: `const hasFacetParams = ['style', 'material', 'maxPrice', 'minPrice', 'sort', 'color', 'category', 'sub'].some(...)`
+- **Do NOT revert**: `'category'` and `'sub'` must always be in this array.
+
+### Product pages lack visible text content
+- **Problem**: Product pages had no visible specifications — no material, weight, dimensions, SKU visible to users or Googlebot. Google sees thin pages.
+- **Fix**: Added a Specifications accordion section after Description showing SKU, Material, Weight, Dimensions, Anti-tarnish badge, Gift packaging info, and `product.specifications[]` key/value pairs.
+- **Files changed**: `src/components/ProductPage.tsx`
+- **Key code**: `{(product.specifications?.length > 0 || product.material || ...) && (<AccordionItem title="Specifications"><table>...</table></AccordionItem>)}`
+- **Do NOT revert**: Specifications table must always render when product has spec data. Must be visible HTML, not just JSON-LD.
+
+### No direct links to products from homepage
+- **Problem**: Products were 3+ clicks from homepage (home → shop → category → product). Google's limited crawl budget for new sites meant most products were never discovered.
+- **Fix**: Added "Best Sellers" section on homepage showing up to 8 featured products with direct `<Link to="/product/{slug}">`.
+- **Files changed**: `src/App.tsx` (HomeRoute, after Sale Sections, before Customer Reviews)
+- **Key code**: `{(cmsData?.products || []).filter((p: any) => p.isFeatured).slice(0, 8).map(...)}`
+- **Do NOT revert**: Featured products section must remain on homepage. To add products, mark `isFeatured: true` in admin product form.
+
+### Footer lacks category links
+- **Problem**: Footer only had 3 generic links (Shop All, About Us, Contact). No category links meant Google had limited crawl paths to category pages.
+- **Fix**: Added 8 category links (Earrings, Necklaces, Rings, Bracelets, Accessories, ₹99 Sale, Gifts, Hampers) + Hot Deals + Blog links to footer. Changed grid from 4 to 5 columns to accommodate.
+- **Files changed**: `src/components/home/NewFooter.tsx`
+- **Do NOT revert**: All category links must remain in footer. Grid must be `lg:grid-cols-5`.
+
+---
