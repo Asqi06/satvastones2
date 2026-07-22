@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
+import { ChevronDown, SlidersHorizontal, X, Play, Pause } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { optimizeImage, getSrcSet } from '../utils/cloudinary';
 
@@ -43,6 +43,9 @@ export default function ShopPage({
   const [sortBy, setSortBy] = useState('Featured');
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+  const videoRefs = useRef<Record<string, HTMLVideoElement>>({});
+  const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
   const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -190,8 +193,35 @@ export default function ShopPage({
               onClick={() => onSelectProduct(product)}
             >
               {/* Image */}
-              <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
-                {/* Primary Image */}
+              <div
+                className="relative aspect-square overflow-hidden rounded-lg bg-gray-50"
+                onMouseEnter={() => {
+                  if (!isTouch && product.video && videoRefs.current[pid]) {
+                    const v = videoRefs.current[pid];
+                    v.currentTime = 0;
+                    v.play().catch(() => {});
+                    setActiveVideoId(pid);
+                  }
+                }}
+                onMouseLeave={() => {
+                  if (!isTouch && videoRefs.current[pid]) {
+                    videoRefs.current[pid].pause();
+                    setActiveVideoId(null);
+                  }
+                }}
+              >
+                {/* Video (desktop hover) */}
+                {product.video && activeVideoId === pid ? (
+                  <video
+                    ref={(el) => { if (el) videoRefs.current[pid] = el; }}
+                    src={product.video}
+                    muted
+                    loop
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : null}
+                {/* Primary Image — hide opacity when video is active */}
                 <img
                   src={optimizeImage(product.image, 480)}
                   srcSet={getSrcSet(product.image, [320, 480, 768])}
@@ -199,7 +229,7 @@ export default function ShopPage({
                   alt={product.title}
                   loading="lazy"
                   decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${product.video && activeVideoId === pid ? 'opacity-0' : 'group-hover:opacity-0'}`}
                 />
                 {/* Secondary Image on Hover */}
                 {product.images && product.images.length > 1 && (
@@ -210,10 +240,44 @@ export default function ShopPage({
                     alt={product.title}
                     loading="lazy"
                     decoding="async"
-                    className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                    className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${product.video && activeVideoId === pid ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'}`}
                   />
                 )}
-                
+
+                {/* Mobile play button */}
+                {isTouch && product.video && activeVideoId !== pid && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (videoRefs.current[pid]) {
+                        const v = videoRefs.current[pid];
+                        v.currentTime = 0;
+                        v.play().catch(() => {});
+                        setActiveVideoId(pid);
+                      }
+                    }}
+                    className="absolute inset-0 z-10 flex items-center justify-center bg-black/10"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-lg">
+                      <Play className="h-5 w-5 ml-0.5 text-stone-900" />
+                    </div>
+                  </button>
+                )}
+                {isTouch && product.video && activeVideoId === pid && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (videoRefs.current[pid]) {
+                        videoRefs.current[pid].pause();
+                        setActiveVideoId(null);
+                      }
+                    }}
+                    className="absolute top-2 right-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-black/50"
+                  >
+                    <Pause className="h-3.5 w-3.5 text-white" />
+                  </button>
+                )}
+
                 {/* Badges */}
                 {product.isFeatured && (
                   <span className="absolute top-1.5 left-1.5 bg-[#b32d2d] text-white text-[7px] sm:text-[8px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wider">

@@ -264,3 +264,19 @@
   - Both the auto-apply and manual apply must validate via API
 
 ---
+
+## Current commit — Shop page product videos not playing
+
+- **Problem**: Product videos on the `/shop` page (uploaded via admin) were not playing on hover (desktop) or tap (mobile).
+- **Root cause**: The `76a00b5` redesign commit rewrote `ShopPage.tsx` and removed the video playback code (state, refs, hover handlers, conditional `<video>` rendering, mobile play/pause overlays).
+- **Fix**: Restored video support in `ShopPage.tsx`:
+  1. Added `Play`/`Pause` icon imports from `lucide-react`
+  2. Added `activeVideoId` state, `videoRefs` ref, and `isTouch` detection
+  3. Added `onMouseEnter`/`onMouseLeave` handlers on the image container to play video on hover, pause on leave (desktop only)
+  4. Conditional rendering: when `product.video && activeVideoId === pid`, show `<video muted loop playsInline>`; primary and secondary images fade to `opacity-0`
+  5. Mobile overlay: play button (centered, white circle) on tap to start video; pause button (top-right, dark circle) to stop
+  6. Mobile buttons use `e.stopPropagation()` to prevent navigating on tap
+- **Files changed**: `src/components/ShopPage.tsx`
+- **Do NOT revert**: The video state, refs, handlers, and rendering must remain in ShopPage. Do not remove the conditional video/image rendering or the mobile play/pause overlay buttons.
+
+---
