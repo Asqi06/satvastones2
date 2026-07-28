@@ -800,7 +800,7 @@ app.post('/api/coupons/validate', async (req, res) => {
 
     const cms = await CMS.findOne();
     const coupons = cms?.coupons || [];
-    const coupon = coupons.find((c: any) => c.code === code.toUpperCase() && c.isActive);
+    const coupon = coupons.find((c) => c.code === code.toUpperCase() && c.isActive);
 
     if (!coupon) return res.json({ valid: false, error: 'Invalid or expired coupon code' });
 
