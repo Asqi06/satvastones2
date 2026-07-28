@@ -335,3 +335,26 @@
 - **Do NOT revert**: The `pt-[60px] lg:pt-0` on main, the sidebar must stay `sticky`, z-index hierarchy must be: header(z-50) < overlay(z-[60]) < sidebar(z-[70])
 
 ---
+
+## Fix — Google Search Console: Missing aggregateRating and review in Product schema
+
+### Problem
+Google Search Console reported 4 Product items missing `aggregateRating` and `review` fields in structured data. These warnings affect rich result eligibility and can reduce product visibility/indexing quality.
+
+### Root Cause
+In `src/components/JsonLd.tsx`, `getProductSchema()` wrapped both `aggregateRating` and `review` inside a conditional `...(product.reviews?.length > 0 ? {...} : {})` spread — meaning products with zero reviews had neither field at all in their JSON-LD. The same pattern existed in `src/app/products/[slug]/page.tsx` (Next.js product page) and `src/app/products/page.tsx` (shop listing ItemList), plus `getProductGroupSchema()` lacked them entirely.
+
+### Fix
+Changed all Product schema generation to **always** include `aggregateRating` (with `ratingValue: 0, reviewCount: 0` when no reviews exist) and `review` (as an empty array when no reviews exist), removing all conditional spreads that omitted these fields.
+
+#### Files changed:
+1. **`src/components/JsonLd.tsx`** — `getProductSchema()`: Removed conditional spread; `aggregateRating` and `review` are always present. Also added `aggregateRating` to `getProductGroupSchema()`.
+2. **`src/app/products/[slug]/page.tsx`** — `productJsonLd`: Removed conditional spreads; `aggregateRating` and `review` are always present.
+3. **`src/app/products/page.tsx`** — `itemListJsonLd`: Removed conditional spread for `aggregateRating`; always present in ItemListProduct items.
+
+### Do NOT revert
+- The `aggregateRating` and `review` fields must always be present in all Product/ProductGroup schema objects, even when there are zero reviews.
+- `aggregateRating` must include `ratingValue`, `reviewCount`, `bestRating`, and `worstRating` at all times.
+- `review` must be an array (empty `[]` when no reviews exist, populated when reviews exist).
+
+---

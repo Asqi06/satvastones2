@@ -254,31 +254,27 @@ export default async function ProductPage({ params }: Props) {
         }
       }
     },
-    ...(reviewCount > 0 && avgRating > 0 ? {
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": String(Math.round(avgRating * 10) / 10),
-        "reviewCount": String(reviewCount),
-        "bestRating": "5",
-        "worstRating": "1"
-      }
-    } : {}),
-    ...(product.reviews && product.reviews.length > 0 ? {
-      "review": product.reviews.slice(0, 5).map((r: any) => ({
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": String(r.rating),
-          "bestRating": "5"
-        },
-        "author": {
-          "@type": "Person",
-          "name": r.user?.name || "Verified Customer"
-        },
-        ...(r.title ? { "name": r.title } : {}),
-        ...(r.comment ? { "reviewBody": r.comment } : {})
-      }))
-    } : {})
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": reviewCount > 0 ? String(Math.round(avgRating * 10) / 10) : "0",
+      "reviewCount": String(reviewCount),
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": product.reviews && product.reviews.length > 0 ? product.reviews.slice(0, 5).map((r: any) => ({
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": String(r.rating),
+        "bestRating": "5"
+      },
+      "author": {
+        "@type": "Person",
+        "name": r.user?.name || "Verified Customer"
+      },
+      ...(r.title ? { "name": r.title } : {}),
+      ...(r.comment ? { "reviewBody": r.comment } : {})
+    })) : []
   };
 
   return (

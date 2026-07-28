@@ -112,28 +112,26 @@ export const getProductSchema = (product: any) => {
         } : {})
       }
     },
-    ...(product.reviews?.length > 0 ? {
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": product.rating || 5,
-        "reviewCount": product.reviews.length,
-        "bestRating": 5,
-        "worstRating": 1
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": product.rating || 0,
+      "reviewCount": product.reviews?.length || 0,
+      "bestRating": 5,
+      "worstRating": 1
+    },
+    "review": (product.reviews?.length || 0) > 0 ? product.reviews.slice(0, 5).map((r: any) => ({
+      "@type": "Review",
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": r.rating || 5,
+        "bestRating": 5
       },
-      "review": product.reviews.slice(0, 5).map((r: any) => ({
-        "@type": "Review",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": r.rating || 5,
-          "bestRating": 5
-        },
-        "author": {
-          "@type": "Person",
-          "name": r.name || "Verified Customer"
-        },
-        "reviewBody": r.comment || ""
-      }))
-    } : {})
+      "author": {
+        "@type": "Person",
+        "name": r.name || "Verified Customer"
+      },
+      "reviewBody": r.comment || ""
+    })) : []
   };
 
   return schema;
@@ -266,6 +264,26 @@ export const getProductGroupSchema = (product: any, variants: any[]) => ({
   "variesBy": [
     "https://schema.org/color"
   ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": product.rating || 0,
+    "reviewCount": product.reviews?.length || 0,
+    "bestRating": 5,
+    "worstRating": 1
+  },
+  "review": (product.reviews?.length || 0) > 0 ? product.reviews.slice(0, 5).map((r: any) => ({
+    "@type": "Review",
+    "reviewRating": {
+      "@type": "Rating",
+      "ratingValue": r.rating || 5,
+      "bestRating": 5
+    },
+    "author": {
+      "@type": "Person",
+      "name": r.name || "Verified Customer"
+    },
+    "reviewBody": r.comment || ""
+  })) : [],
   "hasVariant": variants.map((v: any, i: number) => ({
     "@type": "Product",
     "name": `${product.title} - ${v.color}`,

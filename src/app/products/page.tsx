@@ -58,14 +58,12 @@ export default async function ProductsPage() {
               ? "https://schema.org/InStock"
               : "https://schema.org/OutOfStock"
           },
-          ...(product._count?.reviews > 0 ? {
-            "aggregateRating": {
-              "@type": "AggregateRating",
-              "reviewCount": String(product._count.reviews),
-              "bestRating": "5",
-              "worstRating": "1"
-            }
-          } : {})
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "reviewCount": String(product._count?.reviews || 0),
+            "bestRating": "5",
+            "worstRating": "1"
+          }
         }
       }))
   };
