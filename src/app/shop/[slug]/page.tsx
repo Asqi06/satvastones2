@@ -69,7 +69,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   try {
     product = await prisma.product.findUnique({
       where: { slug },
-      select: { name: true, description: true, images: true, price: true, material: true, category: { select: { name: true } } },
+      select: { name: true, title: true, description: true, metaTitle: true, metaDescription: true, focusKeywords: true, images: true, price: true, material: true, category: { select: { name: true } } },
     });
   } catch (e) {
     product = MOCK_PRODUCTS.find(p => p.slug === slug);
@@ -79,22 +79,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const categoryName = product.category?.name || "";
   const material = product.material || "";
-  const titleParts = [product.name];
+  const titleParts = [product.name || product.title];
   if (material) titleParts.push(material);
   if (categoryName) titleParts.push(`${categoryName} for Women`);
   titleParts.push("SatvaStones");
-  const metaTitle = titleParts.join(" | ");
 
-  const desc = product.description.length > 200
-    ? product.description.substring(0, 197) + "..."
-    : product.description;
+  const metaTitle = product.metaTitle || titleParts.join(" | ");
+  const rawDesc = product.description || "";
+  const desc = product.metaDescription || (rawDesc.length > 200 ? rawDesc.substring(0, 197) + "..." : rawDesc);
+  const keywords = Array.isArray(product.focusKeywords) && product.focusKeywords.length > 0 ? product.focusKeywords : undefined;
 
   return {
     title: metaTitle,
     description: desc,
+    keywords,
     alternates: { canonical: `https://satvastones.in/shop/${slug}` },
     openGraph: {
-      images: product.images[0] ? [product.images[0]] : [],
+      title: metaTitle,
+      description: desc,
+      images: product.images && product.images[0] ? [product.images[0]] : [],
     },
   };
 }
