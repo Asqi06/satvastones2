@@ -1,11 +1,12 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
+  powerByHeader: false,
+  reactStrictMode: true,
   images: {
-    loader: "custom",
     loaderFile: "./src/lib/cloudinary-loader.ts",
+    unoptimized: false,
     remotePatterns: [
       {
         protocol: "https",

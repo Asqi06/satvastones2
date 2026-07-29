@@ -1,20 +1,24 @@
-import type { ImageLoader } from "next/image";
+interface CloudinaryLoaderProps {
+  src: string;
+  width: number;
+  quality?: number;
+}
 
-const cloudinaryLoader: ImageLoader = ({ src, width, quality }) => {
-  if (!src) return "";
-  if (!src.includes("cloudinary.com")) return src;
+export default function cloudinaryLoader({ src, width, quality }: CloudinaryLoaderProps): string {
+  if (src.startsWith("/") && !src.startsWith("//")) {
+    return src;
+  }
 
-  const parts = src.split("/upload/");
-  if (parts.length !== 2) return src;
+  if (src.includes("res.cloudinary.com")) {
+    const params = [
+      `w_${width}`,
+      "c_limit",
+      `q_${quality || "auto"}`,
+      "f_auto",
+    ].join(",");
 
-  const transforms = [
-    "f_auto",
-    "q_auto",
-    `w_${width}`,
-    "c_limit",
-  ].join(",");
+    return src.replace("/upload/", `/upload/${params}/`);
+  }
 
-  return `${parts[0]}/upload/${transforms}/${parts[1]}`;
-};
-
-export default cloudinaryLoader;
+  return src;
+}
