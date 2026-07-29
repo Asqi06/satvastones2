@@ -35,27 +35,30 @@ app.use((req, res, next) => {
 });
 
 // Reverse Proxy: Route public SEO-facing paths to the Next.js deployment
-const nextjsManagedPaths = [
-  '/',
-  '/shop',
-  '/shop/*',
-  '/products/*',
-  '/blog',
-  '/blog/*',
-  '/about',
-  '/contact',
-];
+// Only activates when NEXTJS_APP_PRODUCTION_URL is configured on Render
+if (process.env.NEXTJS_APP_PRODUCTION_URL) {
+  const nextjsManagedPaths = [
+    '/',
+    '/shop',
+    '/shop/*',
+    '/products/*',
+    '/blog',
+    '/blog/*',
+    '/about',
+    '/contact',
+  ];
 
-nextjsManagedPaths.forEach((route) => {
-  app.use(
-    route,
-    createProxyMiddleware({
-      target: process.env.NEXTJS_APP_PRODUCTION_URL,
-      changeOrigin: true,
-      logLevel: 'error',
-    })
-  );
-});
+  nextjsManagedPaths.forEach((route) => {
+    app.use(
+      route,
+      createProxyMiddleware({
+        target: process.env.NEXTJS_APP_PRODUCTION_URL,
+        changeOrigin: true,
+        logLevel: 'error',
+      })
+    );
+  });
+}
 
 // Serve Vite SPA static assets for non-proxied routes
 app.use(express.static(path.join(__dirname, 'dist')));
