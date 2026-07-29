@@ -153,13 +153,11 @@ export default async function ProductPage({ params }: Props) {
 
   if (!product) notFound();
 
-  const avgRating = product.reviews?.length > 0
-      ? product.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / product.reviews.length
+  const avgRating = reviewCount > 0
+      ? product.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviewCount
       : 0;
 
-  const reviewCount = product.reviews?.length || 0;
-
-  // Build BreadcrumbList JSON-LD
+  // Build BreadcrumbList JSON-LD (Updated to support Vite SPA category paths)
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -174,7 +172,7 @@ export default async function ProductPage({ params }: Props) {
         "@type": "ListItem",
         "position": 2,
         "name": product.category?.name || "Shop",
-        "item": `https://satvastones.in/products/${product.category?.slug || ""}`
+        "item": `https://satvastones.in/shop/${product.category?.slug || ""}`
       },
       {
         "@type": "ListItem",
@@ -185,8 +183,9 @@ export default async function ProductPage({ params }: Props) {
     ]
   };
 
-// Build JSON-LD structured data for Product schema
-  const productJsonLd = {
+
+  // Build JSON-LD structured data for Product schema
+  const productJsonLd: any = {
     "@context": "https://schema.org/",
     "@type": "Product",
     "name": product.name,
@@ -243,41 +242,39 @@ export default async function ProductPage({ params }: Props) {
         "returnPolicyCategory": "https://schema.org/MerchantReturnNotPermitted",
         "merchantReturnDays": 0,
         "returnMethod": "https://schema.org/ReturnByMail",
-        "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility",
-        "returnPolicySeasonalOverride": {
-          "@type": "MerchantReturnPolicySeasonalOverride",
-          "startDate": "2025-01-01",
-          "endDate": "2025-12-31",
-          "returnWindow": {
-            "@type": "QuantitativeValue",
-            "value": 0,
-            "unitCode": "DAY"
-          }
-        }
+        "returnFees": "https://schema.org/ReturnFeesCustomerResponsibility"
       }
-    },
-    "aggregateRating": {
+    }
+  };
+
+
+  // CRITICAL FIX: Only add rating metadata if reviews actually exist
+  if (reviewCount > 0) {
+    productJsonLd.aggregateRating = {
       "@type": "AggregateRating",
-      "ratingValue": reviewCount > 0 ? String(Math.round(avgRating * 10) / 10) : "0",
+      "ratingValue": String(Math.round(avgRating * 10) / 10),
       "reviewCount": String(reviewCount),
       "bestRating": "5",
       "worstRating": "1"
-    },
-    "review": product.reviews && product.reviews.length > 0 ? product.reviews.slice(0, 5).map((r: any) => ({
+    };
+
+
+    productJsonLd.review = product.reviews.slice(0, 5).map((r: any) => ({
       "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": r.user?.name || "Verified Buyer"
+      },
+      "datePublished": new Date(r.createdAt || new Date()).toISOString().split('T')[0],
+      "reviewBody": r.comment || "Beautiful jewelry item!",
       "reviewRating": {
         "@type": "Rating",
         "ratingValue": String(r.rating),
-        "bestRating": "5"
-      },
-      "author": {
-        "@type": "Person",
-        "name": r.user?.name || "Verified Customer"
-      },
-      ...(r.title ? { "name": r.title } : {}),
-      ...(r.comment ? { "reviewBody": r.comment } : {})
-    })) : []
-  };
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    }));
+  }
 
   return (
     <>
