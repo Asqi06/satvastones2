@@ -412,3 +412,19 @@ The JSON-LD was always including `aggregateRating` and `review` even when no rev
 - Breadcrumb category URL must use `/shop/` not `/products/`
 
 ---
+
+## Commit `be4338f` — Optimize next.config.ts and cloudinary-loader.ts for production
+
+### Problem
+1. `next.config.ts` had `loader: "custom"` alongside `loaderFile` — Next.js 15+ treats these as conflicting and can cause build validation errors
+2. `cloudinary-loader.ts` was using the Vite SPA style `buildUrl()` function instead of Next.js-compatible inline transformation injection
+3. Missing production optimizations: `powerByHeader: false` (prevents server sniffing), `reactStrictMode: true`, `unoptimized: false` (force compression globally)
+
+### Fix
+1. **next.config.ts**: Removed `loader: "custom"`, removed unused `path` import, added `powerByHeader: false`, `reactStrictMode: true`, `unoptimized: false`
+2. **cloudinary-loader.ts**: Complete rewrite with proper Cloudinary URL transformation format — injects `f_auto,q_auto,w_${width},c_limit` directly into the `/upload/` path segment
+
+### Do NOT revert
+- `loader` property must NOT coexist with `loaderFile` — keep only `loaderFile`
+- Cloudinary loader must inject transforms into the URL path, not use external URL building
+- `f_auto` ensures WebP/AVIF delivery based on browser capability
