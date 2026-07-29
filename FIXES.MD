@@ -475,7 +475,7 @@ The Express server.js does not route public SEO paths to Next.js. The Vite SPA t
 
 ---
 
-## PageSpeed & Lighthouse Performance Optimization Fixes
+## Commit `23516ea` — PageSpeed & Lighthouse Performance Optimization Fixes
 
 ### Problem
 Lighthouse audit reported several critical performance bottlenecks on `satvastones.in`:
