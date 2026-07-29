@@ -9,6 +9,11 @@ import { OAuth2Client } from 'google-auth-library';
 import compression from 'compression';
 import { slugify, ensureUniqueSlug } from './src/lib/utils.ts';
 import { createProxyMiddleware } from 'http-proxy-middleware';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -29,11 +34,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// Reverse Proxy: Route public SEO-facing paths to the Next.js deployment
+// Reverse Proxy: Route SEO-critical public paths to the Next.js deployment
 // Only activates when NEXTJS_APP_PRODUCTION_URL is configured on Render
 if (process.env.NEXTJS_APP_PRODUCTION_URL) {
   const nextjsManagedPaths = [
-    '/',
     '/shop',
     '/shop/*',
     '/products/*',
@@ -54,6 +58,12 @@ if (process.env.NEXTJS_APP_PRODUCTION_URL) {
     );
   });
 }
+
+// Serve Vite SPA directly for all other routes (fast, no network round-trip)
+app.use(express.static(path.join(__dirname, 'dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/satvastones';
