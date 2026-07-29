@@ -61,9 +61,6 @@ if (process.env.NEXTJS_APP_PRODUCTION_URL) {
 
 // Serve Vite SPA directly for all other routes (fast, no network round-trip)
 app.use(express.static(path.join(__dirname, 'dist')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/satvastones';
