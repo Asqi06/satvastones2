@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import clientPromise from "@/lib/mongodb";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -19,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   let categoryPages: MetadataRoute.Sitemap = [];
   let productPages: MetadataRoute.Sitemap = [];
+  let blogPages: MetadataRoute.Sitemap = [];
 
   try {
     // 2. Dynamic Categories (Pointing to Vite SPA /shop/[slug] routes)
@@ -46,5 +48,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     console.error("DB unavailable for sitemap generation, using static only", e);
   }
 
-  return [...staticPages, ...categoryPages, ...productPages];
+  try {
+    // 4. Dynamic Blog Posts (MongoDB via native driver)
+    const client = await clientPromise;
+    const db = client.db();
+    const blogs = await db
+      .collection("blogs")
+      .find({ isPublished: true })
+      .project({ slug: 1, updatedAt: 1, createdAt: 1 })
+      .toArray();
+
+    blogPages = blogs.map((b) => ({
+      url: `${baseUrl}/blog/${b.slug}`,
+      lastModified: new Date(b.updatedAt || b.createdAt || new Date()),
+    }));
+  } catch (e) {
+    console.error("MongoDB unavailable for blog sitemap, using static only", e);
+  }
+
+  return [...staticPages, ...categoryPages, ...productPages, ...blogPages];
 }
