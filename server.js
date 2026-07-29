@@ -9,11 +9,6 @@ import { OAuth2Client } from 'google-auth-library';
 import compression from 'compression';
 import { slugify, ensureUniqueSlug } from './src/lib/utils.ts';
 import { createProxyMiddleware } from 'http-proxy-middleware';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -59,14 +54,6 @@ if (process.env.NEXTJS_APP_PRODUCTION_URL) {
     );
   });
 }
-
-// Serve Vite SPA static assets for non-proxied routes
-app.use(express.static(path.join(__dirname, 'dist')));
-
-// SPA Fallback: Serve index.html for all remaining frontend routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/satvastones';
