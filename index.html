@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- SEO meta tags are managed dynamically by SEO component via react-helmet-async -->
     <!-- ===== CRITICAL PRECONNECTS (ordered by impact) ===== -->
-    <!-- API server — removed from preconnect (unused for LCP path) -->
+    <!-- API server origin for product & CMS data (saves ~310ms connection delay) -->
+    <link rel="preconnect" href="https://satvastones2.onrender.com" crossorigin />
+    <link rel="dns-prefetch" href="https://satvastones2.onrender.com" />
 
     <!-- Cloudinary CDN — with crossorigin for CORS-aware connections -->
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
@@ -21,11 +23,10 @@
     <link rel="dns-prefetch" href="https://upload-widget.cloudinary.com" />
     <link rel="dns-prefetch" href="https://checkout.razorpay.com" />
 
-    <!-- ===== GOOGLE FONTS — Non-blocking async load ===== -->
-    <!-- Playfair Display (display/brand), Bodoni Moda (body/heading), Montserrat (UI/body) -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap" as="style" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&display=swap" /></noscript>
+    <!-- ===== GOOGLE FONTS — Optimized non-blocking async load ===== -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" as="style" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" /></noscript>
 
     <!-- ===== LCP HERO IMAGE PRELOAD ===== -->
     <link rel="preload" as="image" href="https://res.cloudinary.com/dqguetjwm/image/upload/f_auto,q_auto:eco,c_fill,g_auto:face,w_768,h_432/v1774677415442/hvwy5hpwxxpiuna1m0kw.png" imagesrcset="https://res.cloudinary.com/dqguetjwm/image/upload/f_auto,q_auto:eco,c_fill,g_auto:face,w_360,h_203/v1774677415442/hvwy5hpwxxpiuna1m0kw.png 360w, https://res.cloudinary.com/dqguetjwm/image/upload/f_auto,q_auto:eco,c_fill,g_auto:face,w_480,h_270/v1774677415442/hvwy5hpwxxpiuna1m0kw.png 480w, https://res.cloudinary.com/dqguetjwm/image/upload/f_auto,q_auto:eco,c_fill,g_auto:face,w_768,h_432/v1774677415442/hvwy5hpwxxpiuna1m0kw.png 768w, https://res.cloudinary.com/dqguetjwm/image/upload/f_auto,q_auto:eco,c_fill,g_auto:face,w_1024,h_576/v1774677415442/hvwy5hpwxxpiuna1m0kw.png 1024w, https://res.cloudinary.com/dqguetjwm/image/upload/f_auto,q_auto:eco,c_fill,g_auto:face,w_1600,h_900/v1774677415442/hvwy5hpwxxpiuna1m0kw.png 1600w" imagesizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px" fetchpriority="high" crossorigin />

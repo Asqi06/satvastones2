@@ -39,7 +39,7 @@ export default function ProductSection({
         </h2>
         
         <div className="flex gap-2.5 sm:gap-3 lg:gap-5 overflow-x-auto no-scrollbar pb-2">
-          {section.productIds.map((product) => (
+          {section.productIds.map((product, idx) => (
             <Link
               key={product._id}
               to={`/product/${product.slug || product._id}`}
@@ -52,7 +52,8 @@ export default function ProductSection({
                   sizes="(max-width: 640px) 45vw, (max-width: 1024px) 48vw, 288px"
                   alt={product.title}
                   className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0"
-                  loading="lazy"
+                  loading={idx < 4 ? "eager" : "lazy"}
+                  fetchPriority={idx === 0 ? "high" : "auto"}
                 />
                 {(product as any).images && (product as any).images.length > 1 && (
                   <img

@@ -43,12 +43,13 @@ export default function SaleSection({ sale, onProductClick }: { sale: SaleData; 
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-4">
-          {sale.productIds.map((product) => {
+          {sale.productIds.map((product, idx) => {
             const hasDiscount = product.oldPrice && product.oldPrice > product.price;
             return (
               <Link key={product._id} to={`/product/${product.slug || product._id}`} className="group">
                 <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
-                  <img src={optimizeImage(product.image, 400, 400)} alt={product.title} loading="lazy"
+                  <img src={optimizeImage(product.image, 400, 400)} alt={product.title}
+                    loading={idx < 4 ? "eager" : "lazy"} fetchPriority={idx === 0 ? "high" : "auto"}
                     className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0" />
                   {product.images && product.images.length > 1 && (
                     <img src={optimizeImage(product.images[1], 400, 400)} alt={product.title} loading="lazy"

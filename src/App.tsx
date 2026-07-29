@@ -1178,12 +1178,13 @@ function AppContent() {
                           <Link to="/shop" className="text-[10px] sm:text-xs font-bold text-[#d4535f] hover:text-[#c14050] uppercase tracking-wider">View All</Link>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-4">
-                          {(cmsData?.products || []).filter((p: any) => p.isFeatured).slice(0, 8).map((product: any) => {
+                          {(cmsData?.products || []).filter((p: any) => p.isFeatured).slice(0, 8).map((product: any, idx: number) => {
                             const pid = product._id || product.id;
                             return (
                               <Link key={pid} to={`/product/${product.slug || pid}`} className="group">
                                 <div className="relative aspect-square overflow-hidden rounded-lg bg-gray-50">
-                                  <img src={optimizeImage(product.image, 400)} alt={product.title} loading="lazy"
+                                  <img src={optimizeImage(product.image, 400)} alt={product.title}
+                                    loading={idx < 4 ? "eager" : "lazy"} fetchPriority={idx === 0 ? "high" : "auto"}
                                     className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-0" />
                                   {product.images?.[1] && (
                                     <img src={optimizeImage(product.images[1], 400)} alt={product.title} loading="lazy"
@@ -1218,7 +1219,6 @@ function AppContent() {
 
                 </>
               } />
-
               <Route path="/shop" element={<ShopRoute />} />
               <Route path="/shop/:category" element={<ShopRoute />} />
               <Route path="/hot-deals" element={

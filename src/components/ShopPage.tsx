@@ -183,7 +183,7 @@ export default function ShopPage({
 
       {/* Product Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3 lg:gap-4 px-3 sm:px-4 lg:px-6 pb-20">
-        {filteredProducts.map(product => {
+        {filteredProducts.map((product, idx) => {
           const pid = product._id || product.id;
           const hasDiscount = product.oldPrice && product.oldPrice > product.price;
           return (
@@ -227,7 +227,8 @@ export default function ShopPage({
                   srcSet={getSrcSet(product.image, [320, 480, 768])}
                   sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   alt={product.title}
-                  loading="lazy"
+                  loading={idx < 4 ? "eager" : "lazy"}
+                  fetchPriority={idx === 0 ? "high" : "auto"}
                   decoding="async"
                   className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${product.video && activeVideoId === pid ? 'opacity-0' : 'group-hover:opacity-0'}`}
                 />

@@ -472,3 +472,42 @@ The Express server.js does not route public SEO paths to Next.js. The Vite SPA t
 - `NEXTJS_APP_PRODUCTION_URL` environment variable must be set on Render for the proxy target
 - The `app.get('*')` SPA fallback must come AFTER the proxy middleware so proxied requests are intercepted first
 - The static file serving for `dist/` must remain as the fallback layer after proxy middleware
+
+---
+
+## PageSpeed & Lighthouse Performance Optimization Fixes
+
+### Problem
+Lighthouse audit reported several critical performance bottlenecks on `satvastones.in`:
+1. **LCP Image Load Delay (3.37s delay)**: Product images in viewport had `loading="lazy"` attribute, delaying image discovery and render.
+2. **Missing Preconnect to API origin**: Backend API requests to `satvastones2.onrender.com` suffered ~310ms latency during connection setup.
+3. **Render-blocking Google Fonts (3.38s font download)**: Excessively bloated Google Fonts URL requested 36 font weight/style variants across 3 families.
+
+### Root Cause
+1. All product grid components (`ProductSection`, `SaleSection`, `ShopPage`, `App.tsx` Best Sellers, `NewCategoryShowcase`) unconditionally used `loading="lazy"`.
+2. `index.html` lacked preconnect hints for the Render backend API `https://satvastones2.onrender.com`.
+3. Google Fonts link loaded unused weights (300-900 bold/italic variants), delaying initial CSS and font downloads.
+
+### Fixes Applied
+1. **API Server Preconnect**: Added `<link rel="preconnect" href="https://satvastones2.onrender.com" crossorigin />` and `<link rel="dns-prefetch" href="https://satvastones2.onrender.com" />` to `index.html`.
+2. **LCP & Above-The-Fold Image Optimization**:
+   - `src/components/home/ProductSection.tsx`: Updated product image loop to use `loading={idx < 4 ? "eager" : "lazy"}` and `fetchPriority={idx === 0 ? "high" : "auto"}`.
+   - `src/components/home/SaleSection.tsx`: Updated top products to use `loading={idx < 4 ? "eager" : "lazy"}` and `fetchPriority={idx === 0 ? "high" : "auto"}`.
+   - `src/components/ShopPage.tsx`: Updated category grid products to use `loading={idx < 4 ? "eager" : "lazy"}` and `fetchPriority={idx === 0 ? "high" : "auto"}`.
+   - `src/App.tsx`: Updated Best Sellers section to use `loading={idx < 4 ? "eager" : "lazy"}` and `fetchPriority={idx === 0 ? "high" : "auto"}`.
+   - `src/components/home/NewCategoryShowcase.tsx`: Updated initial category thumbnails to use `loading={index < 6 ? "eager" : "lazy"}`.
+3. **Streamlined Google Fonts Request**: Updated `index.html` Google Fonts parameters to fetch only essential weights (`400`, `500`, `600`, `700`) with `display=swap`.
+
+### Files Changed
+- `index.html`
+- `src/components/home/ProductSection.tsx`
+- `src/components/home/SaleSection.tsx`
+- `src/components/ShopPage.tsx`
+- `src/App.tsx`
+- `src/components/home/NewCategoryShowcase.tsx`
+- `FIXES.MD`
+
+### Do NOT Revert
+- Above-the-fold images (`idx < 4`) MUST use `loading="eager"` and `fetchPriority="high"` for index 0 to prevent LCP image delay.
+- `index.html` MUST keep preconnect to `https://satvastones2.onrender.com`.
+- Keep the optimized Google Fonts URL parameters to prevent render-blocking font downloads.

@@ -100,7 +100,7 @@ export default function NewCategoryShowcase({ categories, onCategoryClick }: {
                     sizes="(max-width: 640px) 96px, (max-width: 1024px) 128px, 208px"
                     alt={cat.title}
                     className="w-full h-full object-cover"
-                    loading="lazy"
+                    loading={index < 6 ? "eager" : "lazy"}
                   />
                 </div>
                 <p className="text-center text-[10px] sm:text-xs lg:text-sm font-medium text-gray-800 mt-1.5 sm:mt-2 lg:mt-2.5">
