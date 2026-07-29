@@ -92,7 +92,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: metaTitle,
     description: desc,
-    alternates: { canonical: `https://satvastones.in/products/${slug}` },
+    alternates: { canonical: `https://satvastones.in/shop/${slug}` },
     openGraph: {
       images: product.images[0] ? [product.images[0]] : [],
     },
@@ -103,6 +103,7 @@ export default async function ProductPage({ params }: Props) {
   const { slug } = await params;
   let product: any = null;
   let relatedProducts: any[] = [];
+  let reviewCount = 0;
 
   try {
     product = await prisma.product.findUnique({
@@ -119,36 +120,37 @@ export default async function ProductPage({ params }: Props) {
     });
 
     if (product) {
-        relatedProducts = await prisma.product.findMany({
+      reviewCount = product._count?.reviews || 0;
+      relatedProducts = await prisma.product.findMany({
         where: {
-            categoryId: product.categoryId,
-            id: { not: product.id },
-            isActive: true,
+          categoryId: product.categoryId,
+          id: { not: product.id },
+          isActive: true,
         },
         take: 4,
         select: {
-            id: true,
-            name: true,
-            slug: true,
-            price: true,
-            comparePrice: true,
-            images: true,
-            material: true,
-            style: true,
-            stock: true,
-            category: { select: { name: true, slug: true } },
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          comparePrice: true,
+          images: true,
+          material: true,
+          style: true,
+          stock: true,
+          category: { select: { name: true, slug: true } },
         },
-        });
+      });
     }
 
   } catch (e) {
     console.log("DB not ready, fetching mock");
   }
 
-  // Fallback to MOCK
   if (!product) {
-      product = MOCK_PRODUCTS.find((p) => p.slug === slug);
-      relatedProducts = MOCK_PRODUCTS.filter(p => p.slug !== slug).slice(0, 4);
+    product = MOCK_PRODUCTS.find((p) => p.slug === slug);
+    relatedProducts = MOCK_PRODUCTS.filter(p => p.slug !== slug).slice(0, 4);
+    if (product) reviewCount = product.reviews?.length || 0;
   }
 
   if (!product) notFound();
@@ -157,7 +159,6 @@ export default async function ProductPage({ params }: Props) {
       ? product.reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviewCount
       : 0;
 
-  // Build BreadcrumbList JSON-LD (Updated to support Vite SPA category paths)
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -178,13 +179,11 @@ export default async function ProductPage({ params }: Props) {
         "@type": "ListItem",
         "position": 3,
         "name": product.name,
-        "item": `https://satvastones.in/products/${product.slug}`
+        "item": `https://satvastones.in/shop/${product.slug}`
       }
     ]
   };
 
-
-  // Build JSON-LD structured data for Product schema
   const productJsonLd: any = {
     "@context": "https://schema.org/",
     "@type": "Product",
@@ -202,7 +201,7 @@ export default async function ProductPage({ params }: Props) {
     "color": product.style || "Natural",
     "offers": {
       "@type": "Offer",
-      "url": `https://satvastones.in/products/${product.slug}`,
+      "url": `https://satvastones.in/shop/${product.slug}`,
       "priceCurrency": "INR",
       "price": String(product.price),
       "availability": product.stock > 0
@@ -247,8 +246,6 @@ export default async function ProductPage({ params }: Props) {
     }
   };
 
-
-  // CRITICAL FIX: Only add rating metadata if reviews actually exist
   if (reviewCount > 0) {
     productJsonLd.aggregateRating = {
       "@type": "AggregateRating",
@@ -257,7 +254,6 @@ export default async function ProductPage({ params }: Props) {
       "bestRating": "5",
       "worstRating": "1"
     };
-
 
     productJsonLd.review = product.reviews.slice(0, 5).map((r: any) => ({
       "@type": "Review",

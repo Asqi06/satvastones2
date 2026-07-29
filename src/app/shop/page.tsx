@@ -6,10 +6,10 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Shop Premium Anti-Tarnish Jewellery Online | SatvaStones",
   description: "Explore India's premier collection of waterproof, anti-tarnish Korean huggies, layered western necklaces, stackable rings, and luxury bracelets.",
-  alternates: { canonical: "https://satvastones.in/products" },
+  alternates: { canonical: "https://satvastones.in/shop" },
 };
 
-export default async function ProductsPage() {
+export default async function ShopPage() {
   let categories: any[] = [];
   let products: any[] = [];
 
@@ -39,7 +39,6 @@ export default async function ProductsPage() {
     console.error("PostgreSQL database unavailable during product compilation", e);
   }
 
-  // Map optimized list items for strict structural validation compliance
   const itemListJsonLd = {
     "@context": "https://schema.org/",
     "@type": "ItemList",
@@ -51,7 +50,7 @@ export default async function ProductsPage() {
         "item": {
           "@type": "Product",
           "name": product.name,
-          "url": `https://satvastones.in/products/${product.slug}`,
+          "url": `https://satvastones.in/shop/${product.slug}`,
           "image": product.images?.[0] ? `https://satvastones.in${product.images[0]}` : "",
           "offers": {
             "@type": "Offer",
@@ -64,7 +63,6 @@ export default async function ProductsPage() {
         }
       };
 
-      // FIX: Only inject aggregate rating profile keys if real review items exist
       const totalReviews = product._count?.reviews || 0;
       if (totalReviews > 0) {
         itemSchema.item.aggregateRating = {

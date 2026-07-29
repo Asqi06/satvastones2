@@ -425,6 +425,50 @@ The JSON-LD was always including `aggregateRating` and `review` even when no rev
 2. **cloudinary-loader.ts**: Complete rewrite with proper Cloudinary URL transformation format — injects `f_auto,q_auto,w_${width},c_limit` directly into the `/upload/` path segment
 
 ### Do NOT revert
-- `loader` property must NOT coexist with `loaderFile` — keep only `loaderFile`
+- `loader` property must NOT coexist with `loaderFile` �?" keep only `loaderFile`
 - Cloudinary loader must inject transforms into the URL path, not use external URL building
 - `f_auto` ensures WebP/AVIF delivery based on browser capability
+
+---
+
+## Route cutover: Vite SPA `/shop/*` to Next.js for Google SSR crawlability
+
+### Problem
+Googlebot was seeing the Vite SPA serving `/shop/*` category and `/products/*` product pages client-side. The browser address bar showed `satvastones.in/shop/pendant` but the Vite SPA processes all routing at `/shop/*` client-side, meaning Googlebot cannot read the clean SSR HTML or execute the optimized schema metadata written for Next.js. No traffic was reaching the Next.js app.
+
+### Root cause
+The Express server.js does not route public SEO paths to Next.js. The Vite SPA takes all frontend traffic and serves the static `dist/index.html` with client-side routing, bypassing Next.js entirely for all page views.
+
+### Fix
+1. **Moved Next.js routes**: Relocated all Next.js product-related routes from `src/app/products/` to `src/app/shop/` to match the Vite SPA URL structure:
+   - `src/app/products/page.tsx` → `src/app/shop/page.tsx`
+   - `src/app/products/[slug]/page.tsx` → `src/app/shop/[slug]/page.tsx`
+   - `src/app/products/ProductsClient.tsx` → `src/app/shop/ProductsClient.tsx`
+   - `src/app/products/[slug]/ProductDetailClient.tsx` → `src/app/shop/[slug]/ProductDetailClient.tsx`
+
+2. **Updated all public URL references** from `/products/` to `/shop/` across:
+   - `src/components/product/ProductCard.tsx` — product detail links
+   - `src/components/home/FeaturedProducts.tsx` — product links
+   - `src/components/home/CollectionGallery.tsx` — product links
+   - `src/app/wishlist/page.tsx` — product links in cart
+   - `src/app/cart/page.tsx` — product links in cart
+   - `src/app/sitemap.ts` — category and product sitemap URLs
+   - `src/app/shop/page.tsx` — canonical URL and ItemList schema URLs
+   - `src/app/shop/[slug]/page.tsx` — canonical URL, OG image URL, and breadcrumb/product schema URLs
+
+3. **Added `http-proxy-middleware`** to `package.json` dependencies (`^3.0.3`).
+
+4. **Added Express reverse proxy to server.js**:
+   - Added imports for `http-proxy-middleware`, `path`, and `fileURLToPath`
+   - Added `nextjsManagedPaths` array covering `/`, `/shop`, `/shop/*`, `/products/*`, `/blog`, `/blog/*`, `/about`, `/contact`
+   - Added `createProxyMiddleware` for each path targeting `process.env.NEXTJS_APP_PRODUCTION_URL`
+   - Added `express.static` for the Vite SPA `dist/` folder as fallback layer
+   - Added `app.get('*')` SPA fallback to serve `dist/index.html`
+
+5. **Deleted old `src/app/products/` directory** (all files moved to `shop/`)
+
+### Do NOT revert
+- The proxy paths must match both `/shop/*` (Vite SPA category URLs) and `/products/*` (product detail URLs)
+- `NEXTJS_APP_PRODUCTION_URL` environment variable must be set on Render for the proxy target
+- The `app.get('*')` SPA fallback must come AFTER the proxy middleware so proxied requests are intercepted first
+- The static file serving for `dist/` must remain as the fallback layer after proxy middleware

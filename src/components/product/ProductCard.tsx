@@ -59,7 +59,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className="group flex flex-col h-full animate-luxury-fade relative pb-6 border-b border-luxury-brown/5 lg:border-none">
-      <Link href={`/products/${product.slug}`} className="block relative aspect-[4/5] bg-white overflow-hidden mb-8 border border-luxury-brown/5 group-hover:border-luxury-gold transition-colors duration-500 shadow-sm">
+      <Link href={`/shop/${product.slug}`} className="block relative aspect-[4/5] bg-white overflow-hidden mb-8 border border-luxury-brown/5 group-hover:border-luxury-gold transition-colors duration-500 shadow-sm">
         {product.images[0] ? (
           <Image
             src={product.images[0]}

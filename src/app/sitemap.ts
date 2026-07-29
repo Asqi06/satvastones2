@@ -8,7 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // 1. Static Pages
   const staticPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date() },
-    { url: `${baseUrl}/products`, lastModified: new Date() },
+    { url: `${baseUrl}/shop`, lastModified: new Date() },
     { url: `${baseUrl}/about`, lastModified: new Date() },
     { url: `${baseUrl}/contact`, lastModified: new Date() },
     { url: `${baseUrl}/blogs`, lastModified: new Date() },
@@ -41,7 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     productPages = products.map((p) => ({
-      url: `${baseUrl}/products/${p.slug}`,
+      url: `${baseUrl}/shop/${p.slug}`,
       lastModified: new Date(p.updatedAt),
     }));
   } catch (e) {

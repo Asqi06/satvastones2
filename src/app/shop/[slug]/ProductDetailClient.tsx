@@ -53,7 +53,7 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
         <div className="flex items-center gap-3 label-sm text-[var(--luxury-brown)]/50">
           <Link href="/" className="hover:text-[var(--luxury-brown)] transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3" />
-          <Link href="/products" className="hover:text-[var(--luxury-brown)] transition-colors">Curations</Link>
+          <Link href="/shop" className="hover:text-[var(--luxury-brown)] transition-colors">Curations</Link>
           <ChevronRight className="w-3 h-3" />
           <span className="text-[var(--luxury-brown)] font-bold truncate">{product.name}</span>
         </div>
@@ -117,11 +117,11 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
               {/* Price */}
               <div className="flex items-center gap-6 mb-8 py-6 border-y border-[var(--luxury-border)]">
                 <span className="text-3xl lg:text-4xl font-serif text-[var(--luxury-brown)]">
-                  ₹{product.price.toLocaleString()}
+                  {`₹${product.price.toLocaleString()}`}
                 </span>
                 {product.comparePrice && (
                   <span className="text-xl text-[var(--luxury-brown)]/40 line-through">
-                    ₹{product.comparePrice.toLocaleString()}
+                    {`₹${product.comparePrice.toLocaleString()}`}
                   </span>
                 )}
                 <span className="ml-auto label-sm text-[var(--luxury-brown)]/50 text-right w-32 border-l border-[var(--luxury-border)] pl-6">

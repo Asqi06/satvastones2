@@ -77,7 +77,7 @@ export default function FeaturedProducts({ products }: BestSellersProps) {
             return (
               <Link
                 key={product.id}
-                href={`/products/${product.slug}`}
+                href={`/shop/${product.slug}`}
                 className="group flex flex-col items-center text-center animate-fade-in"
                 style={{ animationDelay: `${index * 150}ms` }}
               >

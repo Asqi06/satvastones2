@@ -8,6 +8,12 @@ import { sendEmail, emailTemplates, generateInvoice } from './emailService.js';
 import { OAuth2Client } from 'google-auth-library';
 import compression from 'compression';
 import { slugify, ensureUniqueSlug } from './src/lib/utils.ts';
+import { createProxyMiddleware } from 'http-proxy-middleware';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -28,9 +34,35 @@ app.use((req, res, next) => {
   next();
 });
 
-// Root Health Check (For Cron-jobs and Render keep-alive)
-app.get('/', (req, res) => {
-  res.json({ status: 'active', message: 'Satvastones API is running beautifully.' });
+// Reverse Proxy: Route public SEO-facing paths to the Next.js deployment
+const nextjsManagedPaths = [
+  '/',
+  '/shop',
+  '/shop/*',
+  '/products/*',
+  '/blog',
+  '/blog/*',
+  '/about',
+  '/contact',
+];
+
+nextjsManagedPaths.forEach((route) => {
+  app.use(
+    route,
+    createProxyMiddleware({
+      target: process.env.NEXTJS_APP_PRODUCTION_URL,
+      changeOrigin: true,
+      logLevel: 'error',
+    })
+  );
+});
+
+// Serve Vite SPA static assets for non-proxied routes
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// SPA Fallback: Serve index.html for all remaining frontend routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // MongoDB Connection

@@ -98,7 +98,7 @@ export default function CollectionGallery({ products }: CollectionGalleryProps) 
             return (
               <Link
                 key={product.id}
-                href={`/products/${product.slug}`}
+                href={`/shop/${product.slug}`}
                 className="group flex flex-col items-center animate-fade-in"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
