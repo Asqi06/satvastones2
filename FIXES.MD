@@ -511,3 +511,26 @@ Lighthouse audit reported several critical performance bottlenecks on `satvaston
 - Above-the-fold images (`idx < 4`) MUST use `loading="eager"` and `fetchPriority="high"` for index 0 to prevent LCP image delay.
 - `index.html` MUST keep preconnect to `https://satvastones2.onrender.com`.
 - Keep the optimized Google Fonts URL parameters to prevent render-blocking font downloads.
+
+---
+
+## Commit `442ce5c` — Admin SEO Metadata Propagation to Next.js SSR
+
+### Problem
+When custom Meta Titles, Meta Descriptions, and Focus Keywords were saved in the Admin Panel for a product, the Next.js SSR page (`src/app/shop/[slug]/page.tsx`) was not using `product.metaTitle`, `product.metaDescription`, or `product.focusKeywords` in `generateMetadata()`. Instead, it was falling back to generic auto-generated titles and descriptions.
+
+### Root Cause
+`generateMetadata()` in `src/app/shop/[slug]/page.tsx` did not select `metaTitle`, `metaDescription`, or `focusKeywords` from Prisma/mock DB, so Googlebot only received default boilerplate titles.
+
+### Fix Applied
+1. Updated `prisma.product.findUnique` inside `generateMetadata()` to select `metaTitle`, `metaDescription`, and `focusKeywords`.
+2. Passed `product.metaTitle` as `<title>` and OpenGraph title.
+3. Passed `product.metaDescription` as `<meta name="description">` and OpenGraph description.
+4. Passed `product.focusKeywords` as `<meta name="keywords">`.
+
+### Files Changed
+- `src/app/shop/[slug]/page.tsx`
+- `FIXES.MD`
+
+### Do NOT Revert
+- `generateMetadata()` MUST check `product.metaTitle` and `product.metaDescription` first so Admin Panel SEO edits directly populate Googlebot's SSR head tags.
