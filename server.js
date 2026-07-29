@@ -38,6 +38,7 @@ app.use((req, res, next) => {
 // Only activates when NEXTJS_APP_PRODUCTION_URL is configured on Render
 if (process.env.NEXTJS_APP_PRODUCTION_URL) {
   const nextjsManagedPaths = [
+    '/',
     '/shop',
     '/shop/*',
     '/products/*',

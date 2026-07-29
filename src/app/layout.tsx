@@ -99,6 +99,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${montserrat.variable}`}>
       <head>
+        <link rel="preload" as="image" href="https://www.satvastones.in/og-image.jpg" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
