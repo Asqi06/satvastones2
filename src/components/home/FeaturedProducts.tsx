@@ -88,6 +88,7 @@ export default function FeaturedProducts({ products }: BestSellersProps) {
                       src={product.images[0]}
                       alt={product.name}
                       fill
+                      priority
                       className="object-cover transition-transform duration-[2000ms] ease-out group-hover:scale-105"
                     />
                   ) : (

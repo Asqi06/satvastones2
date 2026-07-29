@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- SEO meta tags are managed dynamically by SEO component via react-helmet-async -->
     <!-- ===== CRITICAL PRECONNECTS (ordered by impact) ===== -->
-    <!-- API server — saves ~320ms LCP delay (highest priority) -->
-    <link rel="preconnect" href="https://satvastones2.onrender.com" />
-    <link rel="dns-prefetch" href="https://satvastones2.onrender.com" />
+    <!-- API server — removed from preconnect (unused for LCP path) -->
 
     <!-- Cloudinary CDN — with crossorigin for CORS-aware connections -->
     <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />

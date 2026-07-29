@@ -59,6 +59,7 @@ export default function HeroBanner() {
           fill
           className="object-cover object-center lg:object-right-top transition-transform duration-[8000ms] scale-[1.05] motion-safe:scale-100"
           priority
+          fetchPriority="high"
         />
         {/* Soft elegant gradient from left to ensure text legibility */}
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--luxury-cream)] via-[var(--luxury-cream)]/70 to-transparent lg:w-[60%] w-full bg-[var(--luxury-cream)]/30 lg:bg-transparent"></div>
