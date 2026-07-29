@@ -358,3 +358,29 @@ Changed all Product schema generation to **always** include `aggregateRating` (w
 - `review` must be an array (empty `[]` when no reviews exist, populated when reviews exist).
 
 ---
+
+## Fix — Optimized sitemap.ts for modern SEO standards
+
+### Problem
+The sitemap.ts used deprecated `priority` and `changeFrequency` tags (which Google officially ignores) and passed raw `Date` objects from MongoDB without proper W3C datetime formatting.
+
+### Fix
+1. Removed all `priority` and `changeFrequency` properties from sitemap entries (Google ignores these)
+2. Wrapped all `lastModified` values in `new Date()` for proper W3C datetime format (YYYY-MM-DDTHH:mm:ss.sssZ)
+3. Updated category URLs from `/products/${cat.slug}` to `/shop/${cat.slug}` to match actual live site routing
+4. Updated product URLs from `/products/${p.slug}` to `/product/${p.slug}` to match actual live site routing
+5. Added `image` field to product select query and included `images` array in sitemap entries for Google Images indexing
+6. Removed unused `category` select from products query (was fetched but never used in sitemap)
+7. Added `hot-deals` and `refund` routes to static pages (matching existing sitemap.xml)
+
+### Files changed
+- `src/app/sitemap.ts` — optimized sitemap generation
+- `sitemap-optimized.xml` — sample output showing optimized XML format
+
+### Do NOT revert
+- `priority` and `changeFrequency` must remain removed (Google ignores them)
+- All `lastModified` values must be wrapped in `new Date()` for proper W3C format
+- Category URLs must use `/shop/${slug}` (not `/products/${slug}`)
+- Product URLs must use `/product/${slug}` (not `/products/${slug}`)
+
+---

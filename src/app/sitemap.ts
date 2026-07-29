@@ -3,17 +3,18 @@ import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://satvastones.in";
+  const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl, priority: 1.0, changeFrequency: "daily" },
-    { url: `${baseUrl}/products`, priority: 0.9, changeFrequency: "daily" },
-    { url: `${baseUrl}/about`, priority: 0.8, changeFrequency: "monthly" },
-    { url: `${baseUrl}/contact`, priority: 0.6, changeFrequency: "monthly" },
-    { url: `${baseUrl}/blogs`, priority: 0.7, changeFrequency: "weekly" },
-    { url: `${baseUrl}/terms`, priority: 0.4, changeFrequency: "monthly" },
-    { url: `${baseUrl}/privacy`, priority: 0.4, changeFrequency: "monthly" },
-    { url: `${baseUrl}/shipping`, priority: 0.5, changeFrequency: "monthly" },
-    { url: `${baseUrl}/returns`, priority: 0.5, changeFrequency: "monthly" },
+    { url: baseUrl, lastModified: now },
+    { url: `${baseUrl}/shop`, lastModified: now },
+    { url: `${baseUrl}/about`, lastModified: now },
+    { url: `${baseUrl}/contact`, lastModified: now },
+    { url: `${baseUrl}/blogs`, lastModified: now },
+    { url: `${baseUrl}/terms`, lastModified: now },
+    { url: `${baseUrl}/privacy`, lastModified: now },
+    { url: `${baseUrl}/shipping`, lastModified: now },
+    { url: `${baseUrl}/returns`, lastModified: now },
   ];
 
   let categoryPages: MetadataRoute.Sitemap = [];
@@ -26,10 +27,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
     categoryPages = categories.map((cat) => ({
-      url: `${baseUrl}/products/${cat.slug}`,
-      priority: 0.8,
-      changeFrequency: "weekly" as const,
-      lastModified: cat.updatedAt,
+      url: `${baseUrl}/shop/${cat.slug}`,
+      lastModified: new Date(cat.updatedAt),
     }));
 
     const products = await prisma.product.findMany({
@@ -37,18 +36,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       select: {
         slug: true,
         updatedAt: true,
-        category: { select: { slug: true } },
+        image: true,
       },
     });
 
     productPages = products.map((p) => ({
-      url: `${baseUrl}/products/${p.slug}`,
-      priority: 0.8,
-      changeFrequency: "weekly" as const,
-      lastModified: p.updatedAt,
+      url: `${baseUrl}/product/${p.slug}`,
+      lastModified: new Date(p.updatedAt),
+      images: [`https://satvastones.in${p.image}`],
     }));
   } catch (e) {
-    console.log("DB unavailable for sitemap generation, using static only");
+    console.error("DB unavailable for sitemap generation, using static only", e);
   }
 
   return [...staticPages, ...categoryPages, ...productPages];
