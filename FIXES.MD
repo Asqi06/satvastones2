@@ -336,26 +336,27 @@
 
 ---
 
-## Fix — Google Search Console: Missing aggregateRating and review in Product schema
+## Fix — Google Search Console: Missing aggregateRating and review in Product schema (CORRECTED)
 
 ### Problem
-Google Search Console reported 4 Product items missing `aggregateRating` and `review` fields in structured data. These warnings affect rich result eligibility and can reduce product visibility/indexing quality.
+Google Search Console reported 4 Product items missing `aggregateRating` and `review` fields. These were conditionally included only when reviews.existed, meaning products with zero reviews had no structured data for these fields.
 
 ### Root Cause
 In `src/components/JsonLd.tsx`, `getProductSchema()` wrapped both `aggregateRating` and `review` inside a conditional `...(product.reviews?.length > 0 ? {...} : {})` spread — meaning products with zero reviews had neither field at all in their JSON-LD. The same pattern existed in `src/app/products/[slug]/page.tsx` (Next.js product page) and `src/app/products/page.tsx` (shop listing ItemList), plus `getProductGroupSchema()` lacked them entirely.
 
 ### Fix
-Changed all Product schema generation to **always** include `aggregateRating` (with `ratingValue: 0, reviewCount: 0` when no reviews exist) and `review` (as an empty array when no reviews exist), removing all conditional spreads that omitted these fields.
+Changed all Product schema generation to conditionally include `aggregateRating` and `review` ONLY when reviews exist. Google strictly rejects `aggregateRating` with `ratingValue: 0` and `reviewCount: 0` — this would be worse than omitting the field entirely.
 
 #### Files changed:
-1. **`src/components/JsonLd.tsx`** — `getProductSchema()`: Removed conditional spread; `aggregateRating` and `review` are always present. Also added `aggregateRating` to `getProductGroupSchema()`.
-2. **`src/app/products/[slug]/page.tsx`** — `productJsonLd`: Removed conditional spreads; `aggregateRating` and `review` are always present.
-3. **`src/app/products/page.tsx`** — `itemListJsonLd`: Removed conditional spread for `aggregateRating`; always present in ItemListProduct items.
+1. **`src/components/JsonLd.tsx`** — `getProductSchema()`: `aggregateRating` and `review` are now conditional on `product.reviews?.length > 0`
+2. **`src/app/products/[slug]/page.tsx`** — `productJsonLd`: Same conditional pattern; `aggregateRating` and `review` only added when `reviewCount > 0`; breadcrumb category URL fixed from `/products/` to `/shop/`
+3. **`src/app/products/page.tsx`** — `itemListJsonLd`: `aggregateRating` made conditional on `product._count?.reviews > 0`
+4. **`src/components/JsonLd.tsx`** — `getProductGroupSchema()`: Added conditional `aggregateRating` field
 
 ### Do NOT revert
-- The `aggregateRating` and `review` fields must always be present in all Product/ProductGroup schema objects, even when there are zero reviews.
-- `aggregateRating` must include `ratingValue`, `reviewCount`, `bestRating`, and `worstRating` at all times.
-- `review` must be an array (empty `[]` when no reviews exist, populated when reviews exist).
+- The `aggregateRating` and `review` fields must ONLY be present when the product actually has reviews
+- `aggregateRating` with `ratingValue: 0` and `reviewCount: 0` will be REJECTED by Google — always omit when no reviews exist
+- `review` array should be omitted entirely when there are no reviews
 
 ---
 
@@ -381,6 +382,33 @@ The sitemap.ts used deprecated `priority` and `changeFrequency` tags (which Goog
 - `priority` and `changeFrequency` must remain removed (Google ignores them)
 - All `lastModified` values must be wrapped in `new Date()` for proper W3C format
 - Category URLs must use `/shop/${slug}` (not `/products/${slug}`)
-- Product URLs must use `/product/${slug}` (not `/products/${slug}`)
+- Product URLs must use `/products/${slug}` (Next.js route, not `/product/`)
+
+---
+
+## Commit `fe0d1ff` — CRITICAL: Next.js product page JSON-LD schema fixes
+
+### Problem
+The Next.js product page at `src/app/products/[slug]/page.tsx` had three critical Google schema violations:
+1. `aggregateRating` with 0 reviews would be rejected by Google (must be completely omitted)
+2. `review` structure was incomplete (missing `datePublished` and `reviewRating.worstRating`)
+3. Breadcrumb category URL pointed to `/products/` instead of `/shop/` (Vite SPA route)
+
+### Root Cause
+The JSON-LD was always including `aggregateRating` and `review` even when no reviews existed, and the breadcrumb used the wrong URL path.
+
+### Fix
+1. Made `aggregateRating` and `review` completely conditional on `reviewCount > 0` — omitted entirely when no reviews exist
+2. Added `datePublished` to each review item using ISO date format
+3. Added `reviewRating.worstRating: "1"` to each review item
+4. Fixed breadcrumb category URL from `/products/${slug}` to `/shop/${slug}`
+5. Typed `productJsonLd` as `any` to allow conditional property addition
+
+### Files changed
+- `src/app/products/[slug]/page.tsx`
+
+### Do NOT revert
+- `aggregateRating` and `review` must be completely omitted (not zeroed) when no reviews exist
+- Breadcrumb category URL must use `/shop/` not `/products/`
 
 ---
