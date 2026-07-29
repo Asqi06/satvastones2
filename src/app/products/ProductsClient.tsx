@@ -16,8 +16,7 @@ interface Product {
   material: string | null;
   style: string;
   stock: number;
-  category: { name: string; slug: string };
-  _count?: { reviews: number };
+  category?: { name: string; slug: string };
 }
 
 interface Category {
@@ -26,11 +25,11 @@ interface Category {
   slug: string;
 }
 
-export default function ProductsPageClient({ categories }: { categories: Category[] }) {
+export default function ProductsPageClient({ categories, initialProducts }: { categories: Category[]; initialProducts: Product[] }) {
   const searchParams = useSearchParams();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({ page: 1, pages: 1, total: initialProducts.length });
 
   useEffect(() => {
     const fetchProducts = async () => {
