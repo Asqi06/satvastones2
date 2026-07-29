@@ -185,20 +185,22 @@ export default async function ProductPage({ params }: Props) {
     ]
   };
 
-  // Build JSON-LD structured data for Product schema
+// Build JSON-LD structured data for Product schema
   const productJsonLd = {
     "@context": "https://schema.org/",
     "@type": "Product",
     "name": product.name,
     "description": product.description,
-    "image": product.images?.[0]
-      ? `https://satvastones.in${product.images[0]}`
-      : undefined,
+    "image": (product.images ?? [product.image ?? ""]).map(
+      (img: string) => (img.startsWith("http") ? img : `https://satvastones.in${img}`)
+    ),
     "sku": product.sku || product.slug,
     "brand": {
       "@type": "Brand",
       "name": "Satva Stones"
     },
+    "material": product.material || "Premium Alloy",
+    "color": product.style || "Natural",
     "offers": {
       "@type": "Offer",
       "url": `https://satvastones.in/products/${product.slug}`,
