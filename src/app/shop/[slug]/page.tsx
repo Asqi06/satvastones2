@@ -165,6 +165,7 @@ export default async function ProductPage({ params }: Props) {
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
+    "@id": `https://satvastones.in/shop/${product.slug}#breadcrumb`,
     "itemListElement": [
       {
         "@type": "ListItem",
@@ -190,12 +191,14 @@ export default async function ProductPage({ params }: Props) {
   const productJsonLd: any = {
     "@context": "https://schema.org/",
     "@type": "Product",
+    "@id": `https://satvastones.in/shop/${product.slug}#product`,
     "name": product.name,
     "description": product.description,
     "image": (product.images ?? [product.image ?? ""]).map(
       (img: string) => (img.startsWith("http") ? img : `https://satvastones.in${img}`)
     ),
     "sku": product.sku || product.slug,
+    "mpn": product.sku || product.slug,
     "brand": {
       "@type": "Brand",
       "name": "Satva Stones"
@@ -204,9 +207,11 @@ export default async function ProductPage({ params }: Props) {
     "color": product.style || "Natural",
     "offers": {
       "@type": "Offer",
+      "@id": `https://satvastones.in/shop/${product.slug}#offer`,
       "url": `https://satvastones.in/shop/${product.slug}`,
       "priceCurrency": "INR",
       "price": String(product.price),
+      "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       "availability": product.stock > 0
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",

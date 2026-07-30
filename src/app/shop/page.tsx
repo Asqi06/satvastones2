@@ -42,6 +42,7 @@ export default async function ShopPage() {
   const itemListJsonLd = {
     "@context": "https://schema.org/",
     "@type": "ItemList",
+    "@id": "https://satvastones.in/shop#itemlist",
     "name": "SatvaStones Curated Jewellery Collection",
     "itemListElement": products.slice(0, 20).map((product, index) => {
       const itemSchema: any = {
@@ -56,6 +57,7 @@ export default async function ShopPage() {
             "@type": "Offer",
             "priceCurrency": "INR",
             "price": String(product.price),
+            "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
             "availability": product.stock > 0
               ? "https://schema.org/InStock"
               : "https://schema.org/OutOfStock"

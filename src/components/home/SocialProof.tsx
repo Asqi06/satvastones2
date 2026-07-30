@@ -55,21 +55,30 @@ const reviewSchema = {
   "@type": "Product",
   "name": "Satvastones Jewelry",
   "url": "https://satvastones.in",
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "4.8",
-    "reviewCount": "10",
-    "bestRating": "5",
-    "worstRating": "1"
-  },
-  "review": [...featuredReviews, ...allReviews].map(r => ({
-    "@type": "Review",
-    "reviewRating": { "@type": "Rating", "ratingValue": r.rating, "bestRating": "5" },
-    "author": { "@type": "Person", "name": r.name },
-    "datePublished": r.date,
-    "reviewBody": r.text,
-    "itemReviewed": { "@type": "Product", "name": r.productName }
-  }))
+  "review": [...featuredReviews, ...allReviews].map(r => {
+    // Convert relative dates to ISO 8601 (approximate)
+    let isoDate: string;
+    if (r.date.includes('day')) {
+      const days = parseInt(r.date) || 1;
+      isoDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    } else if (r.date.includes('week')) {
+      const weeks = parseInt(r.date) || 1;
+      isoDate = new Date(Date.now() - weeks * 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    } else if (r.date.includes('month')) {
+      const months = parseInt(r.date) || 1;
+      isoDate = new Date(Date.now() - months * 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    } else {
+      isoDate = new Date().toISOString().split('T')[0];
+    }
+    return {
+      "@type": "Review",
+      "reviewRating": { "@type": "Rating", "ratingValue": r.rating, "bestRating": "5" },
+      "author": { "@type": "Person", "name": r.name },
+      "datePublished": isoDate,
+      "reviewBody": r.text,
+      "itemReviewed": { "@type": "Product", "name": r.productName }
+    };
+  })
 };
 
 export default function SocialProof() {

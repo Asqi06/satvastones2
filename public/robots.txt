@@ -32,3 +32,4 @@ Disallow: /_next/
 Disallow: /static/
 
 Sitemap: https://satvastones.in/sitemap.xml
+Sitemap: https://satvastones.in/api/sitemap.xml

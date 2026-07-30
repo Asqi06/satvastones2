@@ -163,6 +163,20 @@ async function generatePrerenderedPages(allRoutes) {
       : `<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large" />`;
     const ogUrl = `<meta property="og:url" content="https://satvastones.in${route.path}" />`;
 
+    // Determine og:type based on route path
+    let ogType = 'website';
+    if (route.path.startsWith('/product/')) ogType = 'product';
+    else if (route.path.startsWith('/blog/')) ogType = 'article';
+    const ogTypeTag = `<meta property="og:type" content="${ogType}" />`;
+
+    // Per-page og:image and twitter:image
+    const ogImageTag = route.image
+      ? `<meta property="og:image" content="${route.image.startsWith('http') ? route.image : 'https://satvastones.in' + route.image}" />`
+      : '<meta property="og:image" content="https://satvastones.in/og-image.jpg" />';
+    const twitterImageTag = route.image
+      ? `<meta name="twitter:image" content="${route.image.startsWith('http') ? route.image : 'https://satvastones.in' + route.image}" />`
+      : '<meta name="twitter:image" content="https://satvastones.in/og-image.jpg" />';
+
     const noscript = noscriptContent(route.path, route.title, route.desc);
 
     let html = src
@@ -173,8 +187,11 @@ async function generatePrerenderedPages(allRoutes) {
       .replace(/<meta property="og:title"[^>]*\/>/, `<meta property="og:title" content="${route.title}" />`)
       .replace(/<meta property="og:description"[^>]*\/>/, `<meta property="og:description" content="${route.desc}" />`)
       .replace(/<meta property="og:url"[^>]*\/>/, ogUrl)
+      .replace(/<meta property="og:type"[^>]*\/>/, ogTypeTag)
+      .replace(/<meta property="og:image"[^>]*\/>/, ogImageTag)
       .replace(/<meta name="twitter:title"[^>]*\/>/, `<meta name="twitter:title" content="${route.title}" />`)
       .replace(/<meta name="twitter:description"[^>]*\/>/, `<meta name="twitter:description" content="${route.desc}" />`)
+      .replace(/<meta name="twitter:image"[^>]*\/>/, twitterImageTag)
       .replace(/<noscript>[\s\S]*?<\/noscript>/, `<noscript>${noscript}</noscript>`);
 
     const outPath = resolve(dir, 'index.html');

@@ -31,6 +31,7 @@ app.use((req, res, next) => {
     'Content-Security-Policy',
     "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.cloudinary.com https://*.razorpay.com https://checkout.razorpay.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://*.cloudinary.com https://*.razorpay.com https://api.razorpay.com; frame-src https://*.razorpay.com https://checkout.razorpay.com;"
   );
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   next();
 });
 
@@ -59,8 +60,35 @@ if (process.env.NEXTJS_APP_PRODUCTION_URL) {
   });
 }
 
-// Serve Vite SPA directly for all other routes (fast, no network round-trip)
-app.use(express.static(path.join(__dirname, 'dist')));
+// www -> non-www 301 redirect (prevents duplicate content)
+app.use((req, res, next) => {
+  if (req.hostname === 'www.satvastones.in') {
+    return res.redirect(301, 'https://satvastones.in' + req.originalUrl);
+  }
+  next();
+});
+
+// Trailing slash -> non-trailing 301 redirect (prevents duplicate content)
+app.use((req, res, next) => {
+  if (req.path.length > 1 && req.path.endsWith('/')) {
+    const query = req.url.slice(req.path.length);
+    return res.redirect(301, req.path.slice(0, -1) + query);
+  }
+  next();
+});
+
+// Static assets with long-term caching for hashed files
+app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets'), {
+  maxAge: '1y',
+  immutable: true,
+  etag: true
+}));
+
+// Other static files with shorter cache
+app.use(express.static(path.join(__dirname, 'dist'), {
+  maxAge: '1h',
+  etag: true
+}));
 
 // SPA Fallback: serve index.html for all non-API, non-proxied routes
 app.get('*', (req, res) => {
@@ -524,7 +552,7 @@ app.post('/api/cms', async (req, res) => {
     const cms = await CMS.findOneAndUpdate(
       {},
       { $set: updateData },
-      { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: false }
+      { returnDocument: 'after', upsert: true, setDefaultsOnInsert: true, runValidators: false }
     ).lean();
     res.json(cms);
   } catch (err) {
@@ -624,7 +652,7 @@ app.put('/api/products/:id', async (req, res) => {
         }
       }
     }
-    const product = await Product.findByIdAndUpdate(req.params.id, data, { new: true });
+    const product = await Product.findByIdAndUpdate(req.params.id, data, { returnDocument: 'after' });
     if (!product) return res.status(404).json({ error: 'Product not found' });
     res.json(product);
   } catch (err) {
@@ -714,7 +742,7 @@ app.put('/api/blogs/:id', async (req, res) => {
     if (updates.isPublished && !updates.publishedAt) {
       updates.publishedAt = new Date();
     }
-    const blog = await Blog.findByIdAndUpdate(req.params.id, updates, { new: true });
+    const blog = await Blog.findByIdAndUpdate(req.params.id, updates, { returnDocument: 'after' });
     if (!blog) return res.status(404).json({ error: 'Blog not found' });
     res.json(blog);
   } catch (err) {
@@ -1092,7 +1120,7 @@ app.post('/api/cart/sync', async (req, res) => {
     await Cart.findOneAndUpdate(
       { email },
       { items, lastUpdated: new Date(), reminderSent: false },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
     res.json({ success: true });
   } catch (err) {
@@ -1127,7 +1155,7 @@ app.post('/api/banners', async (req, res) => {
 
 app.put('/api/banners/:id', async (req, res) => {
   try {
-    const banner = await Banner.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const banner = await Banner.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (!banner) return res.status(404).json({ error: 'Banner not found' });
     res.json(banner);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -1165,7 +1193,7 @@ app.post('/api/homepage-sections', async (req, res) => {
 
 app.put('/api/homepage-sections/:id', async (req, res) => {
   try {
-    const section = await HomepageSection.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const section = await HomepageSection.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (!section) return res.status(404).json({ error: 'Section not found' });
     res.json(section);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -1203,7 +1231,7 @@ app.post('/api/trends', async (req, res) => {
 
 app.put('/api/trends/:id', async (req, res) => {
   try {
-    const trend = await Trend.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const trend = await Trend.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (!trend) return res.status(404).json({ error: 'Trend not found' });
     res.json(trend);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -1241,7 +1269,7 @@ app.post('/api/customer-reviews', async (req, res) => {
 
 app.put('/api/customer-reviews/:id', async (req, res) => {
   try {
-    const review = await CustomerReview.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const review = await CustomerReview.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (!review) return res.status(404).json({ error: 'Review not found' });
     res.json(review);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -1279,7 +1307,7 @@ app.post('/api/faqs', async (req, res) => {
 
 app.put('/api/faqs/:id', async (req, res) => {
   try {
-    const faq = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const faq = await Faq.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (!faq) return res.status(404).json({ error: 'FAQ not found' });
     res.json(faq);
   } catch (err) { res.status(500).json({ error: err.message }); }
@@ -1317,7 +1345,7 @@ app.post('/api/sales', async (req, res) => {
 
 app.put('/api/sales/:id', async (req, res) => {
   try {
-    const sale = await Sale.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const sale = await Sale.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after' });
     if (!sale) return res.status(404).json({ error: 'Sale not found' });
     res.json(sale);
   } catch (err) { res.status(500).json({ error: err.message }); }

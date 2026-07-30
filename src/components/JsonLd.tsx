@@ -112,26 +112,29 @@ export const getProductSchema = (product: any) => {
         } : {})
       }
     },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": product.rating || 0,
-      "reviewCount": product.reviews?.length || 0,
-      "bestRating": 5,
-      "worstRating": 1
-    },
-    "review": (product.reviews?.length || 0) > 0 ? product.reviews.slice(0, 5).map((r: any) => ({
-      "@type": "Review",
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": r.rating || 5,
-        "bestRating": 5
+    ...((product.reviews?.length || 0) > 0 ? {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": product.rating || 4.5,
+        "reviewCount": product.reviews.length,
+        "bestRating": 5,
+        "worstRating": 1
       },
-      "author": {
-        "@type": "Person",
-        "name": r.name || "Verified Customer"
-      },
-      "reviewBody": r.comment || ""
-    })) : []
+      "review": product.reviews.slice(0, 5).map((r: any) => ({
+        "@type": "Review",
+        "datePublished": r.date ? new Date(r.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": r.rating || 5,
+          "bestRating": 5
+        },
+        "author": {
+          "@type": "Person",
+          "name": r.name || "Verified Customer"
+        },
+        "reviewBody": r.comment || ""
+      }))
+    } : {})
   };
 
   return schema;
@@ -264,26 +267,29 @@ export const getProductGroupSchema = (product: any, variants: any[]) => ({
   "variesBy": [
     "https://schema.org/color"
   ],
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": product.rating || 0,
-    "reviewCount": product.reviews?.length || 0,
-    "bestRating": 5,
-    "worstRating": 1
-  },
-  "review": (product.reviews?.length || 0) > 0 ? product.reviews.slice(0, 5).map((r: any) => ({
-    "@type": "Review",
-    "reviewRating": {
-      "@type": "Rating",
-      "ratingValue": r.rating || 5,
-      "bestRating": 5
+  ...((product.reviews?.length || 0) > 0 ? {
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": product.rating || 4.5,
+      "reviewCount": product.reviews.length,
+      "bestRating": 5,
+      "worstRating": 1
     },
-    "author": {
-      "@type": "Person",
-      "name": r.name || "Verified Customer"
-    },
-    "reviewBody": r.comment || ""
-  })) : [],
+    "review": product.reviews.slice(0, 5).map((r: any) => ({
+      "@type": "Review",
+      "datePublished": r.date ? new Date(r.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": r.rating || 5,
+        "bestRating": 5
+      },
+      "author": {
+        "@type": "Person",
+        "name": r.name || "Verified Customer"
+      },
+      "reviewBody": r.comment || ""
+    }))
+  } : {}),
   "hasVariant": variants.map((v: any, i: number) => ({
     "@type": "Product",
     "name": `${product.title} - ${v.color}`,
@@ -293,6 +299,7 @@ export const getProductGroupSchema = (product: any, variants: any[]) => ({
       "@type": "Offer",
       "priceCurrency": "INR",
       "price": product.price,
+      "priceValidUntil": new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       "availability": "https://schema.org/InStock",
       "url": `https://satvastones.in/product/${product.slug || product._id || product.id}`
     }

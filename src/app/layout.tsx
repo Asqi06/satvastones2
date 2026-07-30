@@ -70,23 +70,50 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
+  "@id": "https://satvastones.in/#organization",
   "name": "Satvastones",
   "url": "https://satvastones.in",
-  "description": "Luxury Korean and Western Jewellery",
-  "brand": {
-    "@type": "Brand",
-    "name": "Satvastones"
-  }
+  "logo": "https://satvastones.in/logo.png",
+  "description": "Premium aesthetic Korean and Western jewelry brand. Anti-tarnish, waterproof, trend-forward designs.",
+  "foundingDate": "2026",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Vapi, Gujarat",
+    "addressLocality": "Vapi",
+    "addressRegion": "Gujarat",
+    "postalCode": "396191",
+    "addressCountry": "IN"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+91-9016703180",
+    "contactType": "customer service",
+    "email": "support@satvastones.in",
+    "availableLanguage": ["English", "Hindi"]
+  },
+  "sameAs": [
+    "https://facebook.com/satvastones",
+    "https://instagram.com/satvastones",
+    "https://twitter.com/satvastones",
+    "https://pinterest.com/satvastones",
+    "https://tiktok.com/@satvastones"
+  ]
 };
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
+  "@id": "https://satvastones.in/#website",
   "name": "Satvastones",
   "url": "https://satvastones.in",
+  "description": "Aesthetic Korean & Western Jewelry Store - Anti-tarnish, Waterproof Jewelry Online in India",
+  "inLanguage": "en-IN",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://satvastones.in/products?q={search_term_string}",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://satvastones.in/shop?q={search_term_string}"
+    },
     "query-input": "required name=search_term_string"
   }
 };
