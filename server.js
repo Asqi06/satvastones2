@@ -38,7 +38,6 @@ app.use((req, res, next) => {
 // Only activates when NEXTJS_APP_PRODUCTION_URL is configured on Render
 if (process.env.NEXTJS_APP_PRODUCTION_URL) {
   const nextjsManagedPaths = [
-    '/',
     '/shop',
     '/shop/*',
     '/products/*',
@@ -62,6 +61,15 @@ if (process.env.NEXTJS_APP_PRODUCTION_URL) {
 
 // Serve Vite SPA directly for all other routes (fast, no network round-trip)
 app.use(express.static(path.join(__dirname, 'dist')));
+
+// SPA Fallback: serve index.html for all non-API, non-proxied routes
+app.get('*', (req, res) => {
+  // Skip API routes - let them 404 properly if not matched
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/satvastones';
