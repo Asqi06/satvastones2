@@ -534,3 +534,35 @@ When custom Meta Titles, Meta Descriptions, and Focus Keywords were saved in the
 
 ### Do NOT Revert
 - `generateMetadata()` MUST check `product.metaTitle` and `product.metaDescription` first so Admin Panel SEO edits directly populate Googlebot's SSR head tags.
+
+---
+
+## Fix — `ENOENT: no such file or directory, stat '/opt/render/project/src/dist/index.html'`
+
+### Problem
+Every page load on the live Render deployment returned an ENOENT error because `dist/index.html` did not exist on the server. The app appeared live (MongoDB connected, port bound) but served nothing to visitors.
+
+### Root Cause
+`dist/` is listed in `.gitignore` (line 11) so the built Vite SPA was never committed to Git. Render only ran `node server.js` directly (no build step), so there was never a `dist/` folder on the deployment instance. `server.js` line 71 calls `res.sendFile(path.join(__dirname, 'dist', 'index.html'))` for the SPA fallback, which threw ENOENT.
+
+### Fix
+Created `render.yaml` at project root with:
+```yaml
+services:
+  - type: web
+    name: satvastones2
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+```
+This instructs Render to run `npm run build` (= `vite build && node scripts/prerender.mjs`) before starting the server, so `dist/` is always present on the deployment instance.
+
+### Files Changed
+- `render.yaml` (new)
+
+### Do NOT Revert
+- `render.yaml` must define `buildCommand: npm install && npm run build` — without this, Render will not build the Vite SPA and `dist/index.html` will be missing, breaking all page loads.
+- Do NOT remove `dist/` from `.gitignore` as an alternative fix — building on Render is the correct approach.
