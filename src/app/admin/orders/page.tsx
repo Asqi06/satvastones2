@@ -41,7 +41,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
   let totalCount = 0;
   let totalRevenue = 0;
   let pendingCount = 0;
-  let statusCounts: Record<string, number> = {};
+  const statusCounts: Record<string, number> = {};
 
   try {
     const [ordersResult, counts, revenue, pending] = await Promise.all([

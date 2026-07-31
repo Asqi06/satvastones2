@@ -3,11 +3,11 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const trend = await prisma.trend.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       include: {
         products: {
           include: { product: { select: { id: true, name: true, price: true, images: true } } },
@@ -34,8 +34,8 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const body = await request.json();
     const { title, image, sortOrder, isActive, productIds } = body;
@@ -43,13 +43,13 @@ export async function PUT(
     // If productIds provided, replace all trend products
     if (productIds !== undefined) {
       await prisma.trendProduct.deleteMany({
-        where: { trendId: params.id },
+        where: { trendId: id },
       });
 
       if (productIds.length > 0) {
         await prisma.trendProduct.createMany({
           data: productIds.map((productId: string, index: number) => ({
-            trendId: params.id,
+            trendId: id,
             productId,
             sortOrder: index,
           })),
@@ -58,7 +58,7 @@ export async function PUT(
     }
 
     const trend = await prisma.trend.update({
-      where: { id: params.id },
+      where: { id: id },
       data: {
         ...(title !== undefined && { title }),
         ...(image !== undefined && { image }),
@@ -84,11 +84,11 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     await prisma.trend.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return NextResponse.json({ message: "Trend deleted" });

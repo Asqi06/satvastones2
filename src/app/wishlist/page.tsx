@@ -13,6 +13,7 @@ export default function WishlistPage() {
   const moveToCart = (item: (typeof items)[0]) => {
     addItemToCart({
       productId: item.productId,
+      slug: item.slug,
       name: item.name,
       price: item.price,
       image: item.image,
@@ -68,7 +69,7 @@ export default function WishlistPage() {
                 </div>
 
                 <div className="space-y-4">
-                  <Link href={`/shop/${item.productId}`}>
+                  <Link href={`/product/${item.slug ?? item.productId}`}>
                     <h3 className="text-luxury-brown text-sm font-serif group-hover:text-luxury-gold transition-colors line-clamp-1">
                       {item.name}
                     </h3>

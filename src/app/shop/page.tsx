@@ -15,7 +15,6 @@ export default async function ShopPage() {
 
   try {
     categories = await prisma.category.findMany({
-      where: { isActive: true },
       select: { id: true, name: true, slug: true },
       orderBy: { name: "asc" },
     });
@@ -51,7 +50,7 @@ export default async function ShopPage() {
         "item": {
           "@type": "Product",
           "name": product.name,
-          "url": `https://satvastones.in/shop/${product.slug}`,
+          "url": `https://satvastones.in/product/${product.slug}`,
           "image": product.images?.[0] ? `https://satvastones.in${product.images[0]}` : "",
           "offers": {
             "@type": "Offer",

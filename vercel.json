@@ -32,11 +32,5 @@
         }
       ]
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/((?!api/|assets/|robots.txt|sitemap.xml|llms.txt|favicon.ico|apple-touch-icon.png|.*\\..*).*)",
-      "destination": "/index.html"
-    }
   ]
 }

@@ -3,11 +3,11 @@ import prisma from "@/lib/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const section = await prisma.homepageSection.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       include: {
         products: {
           orderBy: { sortOrder: "asc" },
@@ -34,15 +34,15 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const body = await request.json();
     const { title, sortOrder, isActive, productIds } = body;
 
     const section = await prisma.$transaction(async (tx) => {
       const updated = await tx.homepageSection.update({
-        where: { id: params.id },
+        where: { id: id },
         data: {
           ...(title !== undefined && { title }),
           ...(sortOrder !== undefined && { sortOrder }),
@@ -52,14 +52,14 @@ export async function PUT(
 
       if (productIds !== undefined) {
         await tx.homepageSectionProduct.deleteMany({
-          where: { sectionId: params.id },
+          where: { sectionId: id },
         });
 
         if (productIds.length > 0) {
           await tx.homepageSectionProduct.createMany({
             data: productIds.map(
               (item: { productId: string; sortOrder?: number; badge?: string }) => ({
-                sectionId: params.id,
+                sectionId: id,
                 productId: item.productId,
                 sortOrder: item.sortOrder ?? 0,
                 badge: item.badge ?? null,
@@ -70,7 +70,7 @@ export async function PUT(
       }
 
       return tx.homepageSection.findUnique({
-        where: { id: params.id },
+        where: { id: id },
         include: {
           products: {
             orderBy: { sortOrder: "asc" },
@@ -91,11 +91,11 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
-) {
+  { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const existing = await prisma.homepageSection.findUnique({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     if (!existing) {
@@ -106,7 +106,7 @@ export async function DELETE(
     }
 
     await prisma.homepageSection.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return NextResponse.json({ message: "Homepage section deleted" });

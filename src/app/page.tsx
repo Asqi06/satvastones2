@@ -68,6 +68,16 @@ export default async function HomePage() {
   let allProducts: any[] = [];
   let bestSellers: any[] = [];
   let newCollectionProducts: any[] = [];
+  let categories: { id: string; name: string; slug: string; description?: string | null; image?: string | null }[] = [];
+
+  try {
+    categories = await prisma.category.findMany({
+      select: { id: true, name: true, slug: true, description: true, image: true },
+      orderBy: { sortOrder: "asc" },
+    });
+  } catch (e) {
+    console.log("DB not ready for categories", e);
+  }
 
   try {
     allProducts = await prisma.product.findMany({
@@ -139,7 +149,7 @@ export default async function HomePage() {
       </section>
 
       {/* Category Showcase - Traditional Indian Jewellery Style */}
-      <CategoryShowcase />
+      <CategoryShowcase categories={categories} />
 
       {/* Social Proof - Reviews, Ratings & Trust */}
       <SocialProof />

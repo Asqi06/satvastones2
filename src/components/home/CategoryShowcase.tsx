@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Shield, Award, Truck, RotateCcw, Lock, MessageSquare, Gem, Crown, Heart, Star, Factory, Search, ChevronRight, ChevronDown } from "lucide-react";
 
-const categories = [
+const curatedCategories = [
   {
     id: "gold",
     label: "Gold Jewellery",
@@ -115,9 +115,38 @@ const categories = [
   },
 ];
 
-export default function CategoryShowcase() {
+export default function CategoryShowcase({
+  categories = [],
+}: {
+  categories?: { id: string; name: string; slug: string; description?: string | null; image?: string | null }[];
+}) {
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+
+  const displayCategories =
+    categories.length > 0
+      ? categories.map((cat) => ({
+          id: cat.id,
+          label: cat.name,
+          slug: cat.slug,
+          image: cat.image || "/gold-jewellery-category.jpg",
+          shortDesc:
+            cat.description ||
+            `Shop premium ${cat.name.toLowerCase()} at SatvaStones — anti-tarnish, waterproof, handcrafted.`,
+          longDesc:
+            cat.description ||
+            `Explore our curated ${cat.name.toLowerCase()} collection at SatvaStones. Every piece is handcrafted, anti-tarnish, and waterproof for effortless daily wear.`,
+          trustPoints: [
+            "Anti-Tarnish & Waterproof",
+            "Handcrafted in India",
+            "Lifetime Exchange",
+            "Free Shipping Above ₹1,999",
+          ],
+          subcategories: ["View Collection"],
+          startingPrice: "₹499",
+          cta: `Shop ${cat.name}`,
+        }))
+      : curatedCategories;
 
   return (
     <section className="bg-white py-16 lg:py-24" aria-labelledby="categories-heading">
@@ -168,7 +197,7 @@ export default function CategoryShowcase() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {categories.map((cat, index) => (
+          {displayCategories.map((cat, index) => (
             <CategoryCard
               key={cat.id}
               category={cat}
@@ -179,12 +208,12 @@ export default function CategoryShowcase() {
         </div>
 
         <div className="text-center mt-12 lg:mt-16">
-          <Link to="/shop" className="inline-flex items-center gap-3 px-8 py-4 bg-[#241A14] text-white text-sm font-medium uppercase tracking-wider hover:bg-[#1a1612] transition-colors rounded-lg">
+          <Link href="/shop" className="inline-flex items-center gap-3 px-8 py-4 bg-[#241A14] text-white text-sm font-medium uppercase tracking-wider hover:bg-[#1a1612] transition-colors rounded-lg">
             View All Categories & Collections
             <ChevronRight className="w-5 h-5" />
           </Link>
           <p className="mt-4 text-sm text-[#241A14]/50">
-            Or browse by <Link to="/shop?metal=GOLD"  className="underline hover:text-[#C5A059]">Metal</Link> • <Link to="/shop?category=bridal" className="underline hover:text-[#C5A059]">Occasion</Link> • <Link to="/shop?style=traditional" className="underline hover:text-[#C5A059]">Style</Link> • <Link to="/shop?price=under-10000" className="underline hover:text-[#C5A059]">Budget</Link>
+            Or browse by <Link href="/shop?metal=GOLD"  className="underline hover:text-[#C5A059]">Metal</Link> • <Link href="/shop?category=bridal" className="underline hover:text-[#C5A059]">Occasion</Link> • <Link href="/shop?style=traditional" className="underline hover:text-[#C5A059]">Style</Link> • <Link href="/shop?price=under-10000" className="underline hover:text-[#C5A059]">Budget</Link>
           </p>
         </div>
       </div>
@@ -193,7 +222,7 @@ export default function CategoryShowcase() {
 }
 
 function CategoryCard({ category, isExpanded, onToggleExpand }: {
-  category: typeof categories[0];
+  category: typeof curatedCategories[0];
   isExpanded: boolean;
   onToggleExpand: () => void;
 }) {
@@ -252,7 +281,7 @@ function CategoryCard({ category, isExpanded, onToggleExpand }: {
         </div>
 
         <Link
-          to={`/shop/${category.slug}`}
+          href={`/shop/${category.slug}`}
           className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-[#241A14] text-white text-sm font-medium uppercase tracking-wider hover:bg-[#1a1612] transition-colors rounded-lg group"
         >
           {category.cta} <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -282,7 +311,7 @@ function CategoryCard({ category, isExpanded, onToggleExpand }: {
                   <h4 className="font-serif text-lg lg:text-xl text-[#241A14] mb-4">Sub-Collections Available</h4>
                   <div className="flex flex-wrap gap-2">
                     {category.subcategories.map((sub) => (
-                      <Link key={sub} to={`/shop?category=${category.slug}&sub=${sub.toLowerCase()}`}
+                      <Link key={sub} href={`/shop?category=${category.slug}&sub=${sub.toLowerCase()}`}
                         className="px-4 py-2 bg-white border border-[#E8E2D9] text-sm text-[#241A14]/70 hover:border-[#C5A059] hover:text-[#C5A059] hover:bg-[#FFFEFB] transition-colors rounded-lg">{sub}</Link>
                     ))}
                   </div>
@@ -299,7 +328,7 @@ function CategoryCard({ category, isExpanded, onToggleExpand }: {
                   </div>
                 </div>
                 <div className="border-t border-[#E8E2D9] pt-6 flex flex-col sm:flex-row gap-3">
-                  <Link to={`/shop/${category.slug}`} className="flex-1 text-center px-6 py-3.5 bg-[#241A14] text-white text-sm font-medium uppercase tracking-wider hover:bg-[#1a1612] transition-colors rounded-lg">Browse All {category.label}</Link>
+                  <Link href={`/shop/${category.slug}`} className="flex-1 text-center px-6 py-3.5 bg-[#241A14] text-white text-sm font-medium uppercase tracking-wider hover:bg-[#1a1612] transition-colors rounded-lg">Browse All {category.label}</Link>
                   <a href="tel:+919876543210" className="flex-1 text-center px-6 py-3.5 border-2 border-[#241A14] text-[#241A14] text-sm font-medium uppercase tracking-wider hover:bg-[#241A14] hover:text-white transition-colors rounded-lg flex items-center justify-center gap-2"><MessageSquare className="w-4 h-4" /> Consult Expert</a>
                 </div>
               </div>

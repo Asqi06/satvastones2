@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { SessionProvider } from "next-auth/react";
+import { prisma } from "@/lib/prisma";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
@@ -118,11 +119,22 @@ const websiteJsonLd = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  let categories: { id: string; name: string; slug: string }[] = [];
+
+  try {
+    categories = await prisma.category.findMany({
+      select: { id: true, name: true, slug: true },
+      orderBy: { sortOrder: "asc" },
+    });
+  } catch (e) {
+    console.log("DB not ready, Header will use curated categories", e);
+  }
+
   return (
     <html lang="en" className={`${cormorant.variable} ${montserrat.variable}`}>
       <head>
@@ -138,7 +150,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col antialiased bg-white text-gray-900">
         <SessionProvider>
-          <Header />
+          <Header categories={categories} />
           <main className="flex-1">{children}</main>
           <Footer />
         </SessionProvider>

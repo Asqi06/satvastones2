@@ -41,7 +41,7 @@ export default function CartPage() {
           {items.map((item) => (
             <div key={item.productId} className="flex gap-6 lg:gap-8 bg-white border border-[var(--luxury-border)] p-4 shadow-sm group">
               <div className="relative w-32 xl:w-40 aspect-[4/5] bg-[var(--luxury-accent)] shrink-0 overflow-hidden">
-                <Link href={`/shop/${item.productId}`}>
+                <Link href={`/product/${item.slug ?? item.productId}`}>
                    <Image src={item.image} alt={item.name} fill className="object-cover group-hover:scale-105 transition-transform duration-[2000ms]" />
                 </Link>
               </div>
@@ -49,7 +49,7 @@ export default function CartPage() {
               <div className="flex-1 flex flex-col py-2 pr-4 justify-between">
                 <div>
                   <div className="flex justify-between items-start gap-4">
-                    <Link href={`/shop/${item.productId}`} className="label-md font-bold text-[var(--luxury-brown)] hover:text-[var(--luxury-gold)] transition-colors line-clamp-2 pr-4">
+                    <Link href={`/product/${item.slug ?? item.productId}`} className="label-md font-bold text-[var(--luxury-brown)] hover:text-[var(--luxury-gold)] transition-colors line-clamp-2 pr-4">
                       {item.name}
                     </Link>
                     <button

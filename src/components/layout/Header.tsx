@@ -1,18 +1,20 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Search, ShoppingBag, Heart, User, Menu, X, Phone, Mail, MapPin, Shield, Truck, RotateCcw, Award, Star, Lock, MessageSquare, ChevronDown, ChevronRight } from "lucide-react";
 
 interface HeaderProps {
-  cartCount: number;
-  wishlistCount: number;
-  currentUser: any;
-  onLogout: () => void;
+  cartCount?: number;
+  wishlistCount?: number;
+  currentUser?: any;
+  onLogout?: () => void;
+  categories?: { id: string; name: string; slug: string }[];
 }
 
-export default function Header({ cartCount, wishlistCount, currentUser, onLogout }: HeaderProps) {
-  const navigate = useNavigate();
+export default function Header({ cartCount = 0, wishlistCount = 0, currentUser = null, onLogout = () => {}, categories = [] }: HeaderProps) {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,7 +32,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(searchQuery)}`);
+      router.push(`/shop?search=${encodeURIComponent(searchQuery)}`);
       setSearchOpen(false);
     }
   };
@@ -55,7 +57,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
     { label: "Grievance Redressal", href: "/grievance", icon: MessageSquare },
   ];
 
-  const navCategories = [
+  const curatedNavCategories = [
     { label: "Gold Jewellery", href: "/shop/gold", sub: ["Rings", "Earrings", "Necklaces", "Bangles", "Chains", "Pendants", "Mangalsutras"] },
     { label: "Diamond Jewellery", href: "/shop/diamond", sub: ["Rings", "Earrings", "Necklaces", "Bracelets", "Pendants", "Nose Pins"] },
     { label: "Silver Jewellery", href: "/shop/silver", sub: ["Rings", "Earrings", "Necklaces", "Anklets", "Toe Rings", "Pooja Items"] },
@@ -63,6 +65,15 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
     { label: "Bridal Jewellery", href: "/shop/bridal", sub: ["Necklace Sets", "Maang Tikka", "Nath", "Waist Belt", "Armlet", "Bridal Bangles"] },
     { label: "Men's Jewellery", href: "/shop/mens", sub: ["Rings", "Chains", "Bracelets", "Kadas", "Cufflinks", "Tie Pins"] },
   ];
+
+  const navCategories =
+    categories.length > 0
+      ? categories.map((cat) => ({
+          label: cat.name,
+          href: `/shop/${cat.slug}`,
+          sub: ["View Collection"],
+        }))
+      : curatedNavCategories;
 
   const popularSearches = ["Gold Rings", "Diamond Necklaces", "Bridal Sets", "Silver Bangles", "Gemstone Rings", "Mangalsutra", "Daily Wear", "Men's Kada"];
 
@@ -139,7 +150,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
           <div className="container-premium px-4">
             <div className="flex flex-wrap items-center justify-center gap-6 text-[11px] font-medium uppercase tracking-wider text-[#241A14]/70">
               {policyLinks.map((policy) => (
-                <Link key={policy.label} to={policy.href} className="flex items-center gap-1.5 hover:text-[#C5A059] transition-colors group">
+                <Link key={policy.label} href={policy.href} className="flex items-center gap-1.5 hover:text-[#C5A059] transition-colors group">
                   <policy.icon className="w-3.5 h-3.5 text-[#C5A059]/80 group-hover:text-[#C5A059] transition-colors" />
                   <span>{policy.label}</span>
                 </Link>
@@ -159,7 +170,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
             
-            <Link to="/" className="flex flex-col items-start mr-4 lg:mr-6" aria-label="Satvastones Home">
+            <Link href="/" className="flex flex-col items-start mr-4 lg:mr-6" aria-label="Satvastones Home">
               <span className="text-lg lg:text-xl font-serif text-[#241A14] tracking-[0.15em] uppercase font-semibold leading-tight">
                 SATVASTONES
               </span>
@@ -194,12 +205,12 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
               <Search className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
             </button>
 
-            <Link to="/wishlist" className="p-2 text-[#241A14]/70 hover:text-[#C5A059] transition-colors relative hidden sm:block" aria-label="Wishlist">
+            <Link href="/wishlist" className="p-2 text-[#241A14]/70 hover:text-[#C5A059] transition-colors relative hidden sm:block" aria-label="Wishlist">
               <Heart className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
               {wishlistCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#C5A059] text-white text-[9px] font-bold rounded-full flex items-center justify-center">{wishlistCount > 9 ? '9+' : wishlistCount}</span>}
             </Link>
 
-            <Link to="/cart" className="p-2 text-[#241A14]/70 hover:text-[#C5A059] transition-colors relative" aria-label="Shopping bag">
+            <Link href="/cart" className="p-2 text-[#241A14]/70 hover:text-[#C5A059] transition-colors relative" aria-label="Shopping bag">
               <ShoppingBag className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#241A14] text-white text-[10px] font-bold rounded-full flex items-center justify-center">{cartCount > 9 ? '9+' : cartCount}</span>
@@ -224,12 +235,12 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
                       <p className="text-[11px] text-[#241A14]/40">Sign in to access your account</p>
                     </div>
                   )}
-                  <Link to="/account" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><User className="w-4 h-4" /> My Profile</Link>
-                  <Link to="/account/orders" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><ShoppingBag className="w-4 h-4" /> My Orders</Link>
-                  <Link to="/wishlist" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><Heart className="w-4 h-4" /> Wishlist ({wishlistCount})</Link>
-                  <Link to="/account/addresses" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><MapPin className="w-4 h-4" /> Addresses</Link>
+                  <Link href="/account" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><User className="w-4 h-4" /> My Profile</Link>
+                  <Link href="/account/orders" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><ShoppingBag className="w-4 h-4" /> My Orders</Link>
+                  <Link href="/wishlist" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><Heart className="w-4 h-4" /> Wishlist ({wishlistCount})</Link>
+                  <Link href="/account/addresses" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><MapPin className="w-4 h-4" /> Addresses</Link>
                   {isAdmin && (
-                    <Link to="/aniadmin" className="px-4 py-2.5 text-sm text-[#C5A059] hover:bg-[#FFFEFB] flex items-center gap-2 transition-colors"><Award className="w-4 h-4" /> Admin Dashboard</Link>
+                    <Link href="/aniadmin" className="px-4 py-2.5 text-sm text-[#C5A059] hover:bg-[#FFFEFB] flex items-center gap-2 transition-colors"><Award className="w-4 h-4" /> Admin Dashboard</Link>
                   )}
                   <hr className="my-2 border-[#E8E2D9]" />
                   <button onClick={onLogout} className="w-full px-4 py-2.5 text-sm text-red-700 hover:bg-red-50 text-left flex items-center gap-2 transition-colors"><MessageSquare className="w-4 h-4" /> Sign Out</button>
@@ -243,7 +254,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
           <div className="container-premium px-4 py-3 overflow-x-auto">
             <nav className="flex gap-3 whitespace-nowrap pb-2" role="navigation" aria-label="Categories">
               {navCategories.map((cat) => (
-                <Link key={cat.label} to={cat.href} className="px-4 py-2 bg-[#FAF9F6] text-[#241A14]/80 hover:text-[#C5A059] text-[11px] font-medium uppercase tracking-wider rounded-full border border-[#E8E2D9] whitespace-nowrap transition-colors">
+                <Link key={cat.label} href={cat.href} className="px-4 py-2 bg-[#FAF9F6] text-[#241A14]/80 hover:text-[#C5A059] text-[11px] font-medium uppercase tracking-wider rounded-full border border-[#E8E2D9] whitespace-nowrap transition-colors">
                   {cat.label}
                 </Link>
               ))}
@@ -277,7 +288,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
               <div className="mt-6 flex flex-wrap gap-3">
                 <span className="text-[11px] font-medium uppercase tracking-wider text-[#241A14]/50">Popular searches:</span>
                 {popularSearches.map((term) => (
-                  <Link key={term} to={`/shop?search=${encodeURIComponent(term)}`} className="px-4 py-2 bg-white border border-[#E8E2D9] text-[12px] text-[#241A14]/70 hover:border-[#C5A059] hover:text-[#C5A059] rounded-full transition-all" onClick={() => setSearchOpen(false)}>{term}</Link>
+                  <Link key={term} href={`/shop?search=${encodeURIComponent(term)}`} className="px-4 py-2 bg-white border border-[#E8E2D9] text-[12px] text-[#241A14]/70 hover:border-[#C5A059] hover:text-[#C5A059] rounded-full transition-all" onClick={() => setSearchOpen(false)}>{term}</Link>
                 ))}
               </div>
             </form>
@@ -289,7 +300,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[200] bg-white animate-fade-in flex flex-col">
           <div className="flex items-center justify-between p-4 lg:p-6 border-b border-[#E8E2D9]">
-            <Link to="/" onClick={() => setMobileMenuOpen(false)} className="font-serif tracking-[0.15em] text-[#241A14] text-xl lg:text-2xl">SATVASTONES</Link>
+            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="font-serif tracking-[0.15em] text-[#241A14] text-xl lg:text-2xl">SATVASTONES</Link>
             <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-[#241A14]/70 hover:text-[#241A14] transition-colors"><X className="w-7 h-7 lg:w-8 lg:h-8" /></button>
           </div>
           
@@ -319,7 +330,7 @@ export default function Header({ cartCount, wishlistCount, currentUser, onLogout
               <h3 className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]/50 mb-4">Policies & Support</h3>
               <div className="grid grid-cols-2 gap-3">
                 {policyLinks.map((policy) => (
-                  <Link key={policy.label} to={policy.href} className="flex items-center gap-2 p-3 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9] hover:border-[#C5A059]/50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                  <Link key={policy.label} href={policy.href} className="flex items-center gap-2 p-3 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9] hover:border-[#C5A059]/50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
                     <policy.icon className="w-4 h-4 text-[#C5A059]" />
                     <span className="text-[11px] font-medium text-[#241A14] leading-tight">{policy.label}</span>
                   </Link>
@@ -373,7 +384,7 @@ function MegaMenu({ category, index }: { category: { label: string; href: string
           <div className="p-6 lg:p-8">
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
               {category.sub.map((sub, si) => (
-                <Link key={sub} to={`${category.href}?sub=${sub.toLowerCase()}`} className="group flex flex-col gap-2 p-4 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9] hover:border-[#C5A059]/50 hover:bg-white transition-all duration-300">
+                <Link key={sub} href={`${category.href}?sub=${sub.toLowerCase()}`} className="group flex flex-col gap-2 p-4 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9] hover:border-[#C5A059]/50 hover:bg-white transition-all duration-300">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-[#241A14]">{sub}</span>
                   <span className="text-[10px] text-[#241A14]/50 group-hover:text-[#C5A059] transition-colors">View Collection →</span>
                 </Link>
@@ -421,7 +432,7 @@ function MobileCategoryMenu({ category, onClose }: { category: { label: string; 
       {isOpen && (
         <div className="px-4 py-4 space-y-2 bg-white animate-slide-down">
           {category.sub.map((sub) => (
-            <Link key={sub} to={`${category.href}?sub=${sub.toLowerCase()}`} className="flex items-center justify-between px-3 py-2.5 text-[12px] text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] rounded-lg transition-colors" onClick={onClose}>
+            <Link key={sub} href={`${category.href}?sub=${sub.toLowerCase()}`} className="flex items-center justify-between px-3 py-2.5 text-[12px] text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] rounded-lg transition-colors" onClick={onClose}>
               <span>{sub}</span>
               <ChevronRight className="w-4 h-4 text-[#C5A059]/70" />
             </Link>

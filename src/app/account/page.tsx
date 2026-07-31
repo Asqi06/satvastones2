@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { auth } from "@/lib/auth";
-import { User, Package, MapPin, LogOut, ChevronRight } from "lucide-react";
+import { User, Package, MapPin, LogOut, ChevronRight, Gift } from "lucide-react";
 import { signOut } from "@/lib/auth";
 import type { Metadata } from "next";
 
@@ -110,16 +110,24 @@ export default async function AccountPage() {
                 <p className="text-white font-medium">Addresses</p>
                 <p className="text-gray-500 text-sm mt-1">Manage saved</p>
               </Link>
-              <Link
-                href="/wishlist"
-                className="bg-[#0f0f0f] border border-[#2a2a2a] rounded-xl p-6 hover:border-[#C9A96E]/30 transition-colors text-center"
-              >
-                <svg className="w-8 h-8 text-[#C9A96E] mx-auto mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                <p className="text-white font-medium">Wishlist</p>
-                <p className="text-gray-500 text-sm mt-1">Saved items</p>
-              </Link>
+               <Link
+                 href="/wishlist"
+                 className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-[#2a2a2a] hover:text-white transition-colors"
+               >
+                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                 </svg>
+                 <span className="text-sm">Wishlist</span>
+                 <ChevronRight className="w-4 h-4 ml-auto" />
+               </Link>
+               <Link
+                 href="/account/referral"
+                 className="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:bg-[#2a2a2a] hover:text-white transition-colors"
+               >
+                 <Gift className="w-5 h-5" />
+                 <span className="text-sm">Refer & Earn</span>
+                 <ChevronRight className="w-4 h-4 ml-auto" />
+               </Link>
             </div>
           </div>
         </div>

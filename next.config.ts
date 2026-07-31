@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   trailingSlash: false,
-  powerByHeader: false,
   reactStrictMode: true,
+  poweredByHeader: false,
   images: {
     loaderFile: "./src/lib/cloudinary-loader.ts",
     unoptimized: false,
@@ -39,7 +39,12 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/quiz",
-        destination: "/products",
+        destination: "/shop",
+        permanent: true,
+      },
+      {
+        source: "/products",
+        destination: "/shop",
         permanent: true,
       },
     ];

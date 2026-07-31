@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Star, Quote, ThumbsUp, MessageSquare, Shield, Award, Truck, RotateCcw, CheckCircle, Verified, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { Star, Quote, ThumbsUp, MessageSquare, Shield, Award, Truck, RotateCcw, CheckCircle, Verified, ChevronLeft, ChevronRight, ExternalLink, Lock, type LucideIcon } from "lucide-react";
 
 interface Review {
   id: string;
@@ -139,7 +139,7 @@ export default function SocialProof() {
         <div className="mt-12 lg:mt-16 p-8 bg-white border border-[#E8E2D9] rounded-xl text-center">
           <h3 className="font-serif text-xl lg:text-2xl text-[#241A14] mb-3 italic">Have You Shopped With Us?</h3>
           <p className="text-sm lg:text-base text-[#241A14]/60 mb-6 max-w-lg mx-auto">Your honest review helps other buyers. Verified purchasers get a <span className="font-semibold text-[#C5A059]">₹500 discount</span> on their next order.</p>
-          <Link to="/account/reviews" className="inline-flex items-center gap-2 px-8 py-4 bg-[#241A14] text-white text-sm font-medium uppercase tracking-wider hover:bg-[#1a1612] transition-colors rounded-lg">
+          <Link href="/account/reviews" className="inline-flex items-center gap-2 px-8 py-4 bg-[#241A14] text-white text-sm font-medium uppercase tracking-wider hover:bg-[#1a1612] transition-colors rounded-lg">
             <Star className="w-5 h-5" /> Write a Review
           </Link>
         </div>
@@ -201,7 +201,7 @@ function FeaturedReviewsSection({ reviews }: { reviews: Review[] }) {
             <ThumbsUp className="w-4 h-4" /> Helpful ({review.helpfulCount})
           </button>
           <span className="text-xs text-[#241A14]/30">•</span>
-          <Link to={`/shop?q=${encodeURIComponent(review.productName)}`} className="text-xs text-[#C5A059] hover:underline flex items-center gap-1">View Product <ExternalLink className="w-3 h-3" /></Link>
+          <Link href={`/shop?q=${encodeURIComponent(review.productName)}`} className="text-xs text-[#C5A059] hover:underline flex items-center gap-1">View Product <ExternalLink className="w-3 h-3" /></Link>
         </div>
       </div>
 
@@ -270,7 +270,7 @@ function ReviewCard({ review }: { review: Review }) {
 }
 
 function WhyTrustSection() {
-  const trustReasons = [
+  const trustReasons: { icon: LucideIcon; title: string; desc: string; detail: string }[] = [
     { icon: Award, title: "100% BIS Hallmarked Gold & Silver", desc: "Every gold and silver piece is BIS hallmarked with HUID (Hallmark Unique Identifier) laser-engraved. You can verify the hallmark on the BIS portal by entering the 6-digit HUID code. Our hallmarking partner is a BIS-recognised A&HA centre.", detail: "22K (916) / 18K (750) / 14K (585) gold • 925 (92.5%) sterling silver" },
     { icon: Shield, title: "Lifetime Exchange at Full Value", desc: "Exchange any jewellery at its current metal value (gold/silver/platinum) for the entire lifetime of the product. Unlike industry-standard 6-12 month exchange policies, ours has no expiry date.", detail: "No depreciation • No time limit • Free pickup available" },
     { icon: Truck, title: "Free Insured Shipping on ₹1,999+", desc: "All orders above ₹1,999 qualify for free insured shipping through our partnered logistics carriers (Delhivery, Shiprocket, India Post Registered). Every shipment is insured for the full invoice value against theft, loss, or damage during transit.", detail: "Pan India coverage • Shipment tracking • Signature on delivery" },

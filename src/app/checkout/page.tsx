@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { useCartStore } from "@/hooks/useCart";
 import { formatPrice } from "@/lib/utils";
 import { MapPin, ShoppingBag, Lock, ArrowLeft, ChevronRight, Check } from "lucide-react";
+import PaymentSecurityBadges from "./PaymentSecurityBadges";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -399,6 +400,7 @@ export default function CheckoutPage() {
                   <span className="text-luxury-brown font-serif text-xl">Final Valuation</span>
                   <span className="text-3xl font-serif text-luxury-gold">{formatPrice(total)}</span>
                 </div>
+                <p className="text-[10px] text-luxury-brown/50 mt-2">Inclusive of all taxes</p>
               </div>
 
               <button
@@ -414,11 +416,7 @@ export default function CheckoutPage() {
                 )}
               </button>
 
-              <div className="mt-8 flex items-center justify-center gap-6 opacity-30">
-                <p className="text-[8px] tracking-[0.3em] uppercase font-bold text-luxury-brown">Razorpay Secured</p>
-                <div className="w-1 h-1 bg-luxury-brown rounded-full"></div>
-                <p className="text-[8px] tracking-[0.3em] uppercase font-bold text-luxury-brown">Identity Protected</p>
-              </div>
+              <PaymentSecurityBadges />
             </div>
           </div>
         </div>

@@ -33,6 +33,7 @@ export default function FeaturedProducts({ products }: BestSellersProps) {
     } else {
       addItemToWishlist({
         productId: product.id,
+        slug: product.slug,
         name: product.name,
         price: product.price,
         image: product.images[0] || "",
@@ -45,6 +46,7 @@ export default function FeaturedProducts({ products }: BestSellersProps) {
     e.stopPropagation();
     addItemToCart({
       productId: product.id,
+      slug: product.slug,
       name: product.name,
       price: product.price,
       image: product.images[0] || "",
@@ -77,7 +79,7 @@ export default function FeaturedProducts({ products }: BestSellersProps) {
             return (
               <Link
                 key={product.id}
-                href={`/shop/${product.slug}`}
+                href={`/product/${product.slug}`}
                 className="group flex flex-col items-center text-center animate-fade-in"
                 style={{ animationDelay: `${index * 150}ms` }}
               >

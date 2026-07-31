@@ -23,7 +23,7 @@ export default async function AnalyticsPage() {
   const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
 
-  let stats = {
+  const stats = {
     totalRevenue: 0,
     totalOrders: 0,
     averageOrderValue: 0,
