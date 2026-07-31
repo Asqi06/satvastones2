@@ -30,6 +30,13 @@ Disallow: /wishlist
 Disallow: /wishlist/
 Disallow: /_next/
 Disallow: /static/
+Disallow: /shop?*sale*
+Disallow: /shop?*category*
+Disallow: /shop?*search*
+Disallow: /shop?*page*
+Disallow: /product?*variant*
+Disallow: /product?*color*
+Disallow: /product?*size*
 
 Sitemap: https://satvastones.in/sitemap.xml
 Sitemap: https://satvastones.in/api/sitemap.xml
