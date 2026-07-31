@@ -597,3 +597,50 @@ Render deployment crashed on startup because `render.yaml` had `startCommand: no
 - `tsx` must be in `dependencies` (not `devDependencies`) so it's available at runtime on Render
 - `NEXTJS_APP_PRODUCTION_URL` must be set on Render for the reverse proxy to activate
 - `tsconfig.tsbuildinfo` must remain in `.gitignore` (large, auto-generated, not needed in Git)
+
+---
+
+## Fix — Prerendered pages missing critical SEO metadata (title, description, canonical, OG tags)
+
+### Problem
+Google Search Console showed prerendered pages were missing critical SEO tags: no `<title>`, no `<meta name="description">`, no canonical links, no `og:title`, `og:description`, `og:image`, `og:url`, and no `robots` meta tag. The Vite SPA's `index.html` lacked placeholder tags that `prerender.mjs` uses to inject per-page SEO metadata at build time.
+
+### Root Cause
+The `prerender.mjs` script works by reading `dist/index.html` and replacing specific placeholder patterns with route-specific values (title, description, canonical, OG tags, etc.). However, the base `index.html` was missing several critical placeholder tags:
+- `<title>` — completely absent
+- `<meta name="description">` — absent  
+- `<!-- Canonical -->` comment placeholder — absent
+- `<meta property="og:title">`, `og:description`, `og:url`, `og:image` — absent (only `og:type`, `og:image:width`, `og:image:height` existed)
+- `<meta name="robots">` — absent
+
+Since the regex replacements only work on existing patterns, all these tags were missing from the 90+ prerendered HTML files served to Googlebot.
+
+### Fix
+Added all missing SEO placeholder tags to `index.html` `<head>` section:
+1. `<title>` — default homepage title
+2. `<meta name="description">` — default homepage description
+3. `<meta name="robots">` — default index/follow directive
+4. `<!-- Canonical -->` — placeholder comment for canonical link injection
+5. `<meta property="og:title">` — default OG title
+6. `<meta property="og:description">` — default OG description
+7. `<meta property="og:url">` — default OG URL
+8. `<meta property="og:image">` — default OG image
+9. `<meta property="og:type">` — default OG type (website)
+
+Removed duplicate `og:type` that existed at end of head.
+
+### Files Changed
+- `index.html` — added 9 SEO placeholder tags in head (lines 8-22), removed duplicate `og:type`
+
+### Verification
+Rebuilt with `npm run build` — all 90 prerendered pages (23 static + 66 products + 1 blog) now contain:
+- Route-specific `<title>`, `<meta name="description">`, `<link rel="canonical">`
+- Route-specific OG tags (`og:title`, `og:description`, `og:url`, `og:image`, `og:type`)
+- Route-specific Twitter Card tags
+- Rich `noscript` content per page type (homepage, category, product, blog)
+- `og:type` correctly set to `product` for `/product/*` routes, `article` for `/blog/*`, `website` otherwise
+
+### Do NOT Revert
+- All 9 placeholder tags in `index.html` head must remain for prerender to inject per-page SEO
+- `<!-- Canonical -->` comment placeholder must remain exactly as-is for regex replacement
+- `og:type` must only appear once (at line 22 in current version)
