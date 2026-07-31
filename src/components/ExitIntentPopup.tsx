@@ -26,7 +26,7 @@ export default function ExitIntentPopup({ currentUser }: { currentUser?: any }) 
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={() => setDismissed(true)}>
       <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden relative" onClick={(e) => e.stopPropagation()}>
         {/* Close */}
-        <button onClick={() => setDismissed(true)} className="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-white/80 flex items-center justify-center hover:bg-gray-100">
+        <button onClick={() => setDismissed(true)} className="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-white/80 flex items-center justify-center hover:bg-gray-100" aria-label="Close">
           <X className="h-4 w-4 text-gray-600" />
         </button>
 
