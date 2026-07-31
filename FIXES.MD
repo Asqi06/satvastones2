@@ -678,3 +678,57 @@ Plain render functions that are CALLED (`renderSidebar()`, `renderDashboard()`, 
 - The 7 helper components MUST stay at module scope — never define components inside the `AdminPanel` body
 - `PageHeader` usage must pass `tab={activeTab}`
 - If adding new form components to the admin panel, define them at module scope or as plain functions called with `()`
+
+---
+
+## Fix - SEO infrastructure files and sitemap fallback hardening
+
+### Problem
+SEO support files were inconsistent and fragile:
+- `public/robots.txt` advertised both `/sitemap.xml` and `/api/sitemap.xml`, reintroducing a previously fixed duplicate sitemap signal.
+- `robots.txt` blocked `/_next/` and `/static/`, which can prevent Google from rendering SSR pages and assets correctly.
+- `public/llms.txt` contained mojibake text and weak AI/crawler guidance.
+- `scripts/prerender.mjs` rewrote `public/sitemap.xml` with only static URLs whenever the API fetch failed during build, dropping product and blog URLs from the live sitemap.
+- `src/app/sitemap.ts` used `new Date()` for static pages, falsely marking unchanged pages as updated on every build.
+- `vercel.json` had a catch-all rewrite that did not explicitly protect SEO files and static assets.
+
+### Root Cause
+The project has both Vite prerendering and partial Next.js SEO routes. The Vite prerender script is the source that writes the shipped `public/sitemap.xml`, but it had no fallback when product/blog API calls failed. Separate crawl files drifted over time and reintroduced old sitemap and robots mistakes.
+
+### Fix
+1. Cleaned `public/robots.txt` to advertise only `https://satvastones.in/sitemap.xml`, allow public assets, and block private/duplicate query URLs.
+2. Rewrote `public/llms.txt` with clean ASCII, canonical category URLs, brand facts, and AI crawler guidance.
+3. Updated `scripts/prerender.mjs` to preserve existing `/product/*` and `/blog/*` sitemap entries when API fetches fail, preventing accidental sitemap shrinkage.
+4. Added stable static `lastmod` handling in `scripts/prerender.mjs` instead of updating every static page to the build date.
+5. Updated `src/app/sitemap.ts` to avoid false static `lastModified` values and include product image URLs.
+6. Updated `vercel.json` with cache headers for assets/SEO files and a safer SPA rewrite that excludes files like `robots.txt`, `sitemap.xml`, and `llms.txt`.
+7. Updated `vite.config.ts` with production build settings (`cssCodeSplit`, no sourcemaps, smaller inline asset threshold, module preload polyfill disabled).
+8. Removed `/product/*` from the Express Next.js proxy capture because the active Vite storefront and public sitemap use `/product/{slug}`, while the current Next app has no `/product/*` route.
+9. Updated `/api/robots.txt` in `server.js` to point to the canonical public sitemap.
+
+### Files Changed
+- `public/robots.txt`
+- `public/llms.txt`
+- `public/sitemap.xml`
+- `scripts/prerender.mjs`
+- `src/app/sitemap.ts`
+- `vercel.json`
+- `vite.config.ts`
+- `server.js`
+- `FIXES.MD`
+
+### Verification
+- `node --check server.js` passes
+- `node --check scripts/prerender.mjs` passes
+- `npm run build` passes
+- During sandbox build with API fetch failures, prerender preserved 66 product routes and 1 blog route from the existing sitemap and generated 90 prerendered pages.
+
+### Commit hash
+- Pending: working tree is not committed yet.
+
+### Do NOT Revert
+- `public/robots.txt` must keep only `Sitemap: https://satvastones.in/sitemap.xml`; do not re-add `/api/sitemap.xml`.
+- Do not disallow `/_next/`, `/static/`, or public asset folders in robots.txt.
+- `scripts/prerender.mjs` must preserve existing dynamic sitemap URLs when API fetches fail.
+- Do not let a failed API fetch overwrite `public/sitemap.xml` with static-only URLs.
+- Do not proxy `/product/*` to Next.js until a matching Next route exists.

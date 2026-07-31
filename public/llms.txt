@@ -1,47 +1,45 @@
-# Satvastones — Premium Korean & Western Aesthetic Jewelry
+# Satvastones - Premium Korean and Western Aesthetic Jewelry
 
-> India's premier destination for aesthetic Korean and Western jewelry. Anti-tarnish, waterproof, handcrafted pieces based in Vapi, Gujarat.
+Satvastones is an Indian ecommerce jewelry brand based in Vapi, Gujarat. The store sells anti-tarnish, waterproof, gift-ready Korean and Western aesthetic jewelry for women, including earrings, necklaces, rings, bracelets, pendants, hampers, and personalized name necklaces.
 
-## Core Information
+## Canonical Website
 
-- **Website**: [https://satvastones.in](https://satvastones.in)
-- **Email**: [support@satvastones.in](mailto:support@satvastones.in)
-- **Location**: Vapi, Gujarat, India
-- **Founded**: 2026
-- **Social**: Instagram @satvastones, Facebook, Pinterest, TikTok
+- Home: https://satvastones.in/
+- Sitemap: https://satvastones.in/sitemap.xml
+- Contact: https://satvastones.in/contact
+- Blog: https://satvastones.in/blogs
 
-## Key URLs
+## Main Shopping Pages
 
-- [Home](https://satvastones.in/)
-- [Shop All Jewelry](https://satvastones.in/shop)
-- [Earrings](https://satvastones.in/shop/earrings)
-- [Necklaces](https://satvastones.in/shop/necklaces)
-- [Rings](https://satvastones.in/shop/rings)
-- [Bracelets](https://satvastones.in/shop/bracelets)
-- [₹99 Flash Sale](https://satvastones.in/shop/99-sale)
-- [Gift Hampers](https://satvastones.in/shop/hampers)
-- [Name Necklaces](https://satvastones.in/shop/name-necklace)
-- [The Journal (Blog)](https://satvastones.in/blogs)
-- [Contact Us](https://satvastones.in/contact)
+- Shop all jewelry: https://satvastones.in/shop
+- Earrings: https://satvastones.in/shop/earrings
+- Necklaces: https://satvastones.in/shop/necklaces
+- Rings: https://satvastones.in/shop/rings
+- Bracelets: https://satvastones.in/shop/bracelets
+- Pendants: https://satvastones.in/shop/pendant
+- Name necklaces: https://satvastones.in/shop/name-necklace
+- Gift hampers: https://satvastones.in/shop/hampers
+- Rs.99 flash sale: https://satvastones.in/shop/99-sale
 
-## Product Categories
+## Product Positioning
 
-- **Earrings**: Korean huggies, Western drops, studs, chandbalis — anti-tarnish, hypoallergenic. [Browse Earrings](https://satvastones.in/shop/earrings)
-- **Necklaces**: Layered chains, chokers, pendants, name necklaces — 18K gold plated, waterproof. [Browse Necklaces](https://satvastones.in/shop/necklaces)
-- **Rings**: Stackable bands, cocktail rings, adjustable — anti-tarnish, tarnish-resistant. [Browse Rings](https://satvastones.in/shop/rings)
-- **Bracelets**: Tennis bracelets, bangles, charms, cuffs — waterproof, everyday wear. [Browse Bracelets](https://satvastones.in/shop/bracelets)
-- **₹99 Sale**: Premium jewelry at ₹99 — limited stock, anti-tarnish guaranteed. [Shop ₹99 Sale](https://satvastones.in/shop/99-sale)
-- **Gift Hampers**: Curated jewelry sets in elegant packaging — perfect for gifting. [Shop Gift Hampers](https://satvastones.in/shop/hampers)
+- Primary products: Korean earrings, Western earrings, minimalist rings, anti-tarnish necklaces, gold-plated bracelets, pendants, jewelry gift hampers, and personalized name necklaces.
+- Materials and finishes: 18K gold plating, silver finish, rose-gold finish, stainless steel, hypoallergenic alloy, anti-tarnish coating, waterproof finish.
+- Buying reasons: everyday wear, college styling, office wear, festive styling, birthday gifting, anniversary gifting, Mother's Day gifting, and affordable premium jewelry.
+- Customer location focus: India, with brand operations in Vapi, Gujarat.
 
-## Key Facts
+## Brand Facts
 
-- All jewelry is anti-tarnish and waterproof
-- Free shipping on prepaid orders above ₹399
-- Express dispatch within 24-48 hours
-- Secure payments via UPI, Cards, Net Banking, COD
-- No refunds, no cancellations, no returns policy
-- Materials: 18K gold plating, sterling silver, hypoallergenic alloy
+- Brand name: Satvastones
+- Support email: support@satvastones.in
+- Public website: https://satvastones.in
+- Social handle: @satvastones
+- Currency: INR
+- Shipping: India-focused shipping with free shipping offers shown on the website.
+- Payments: UPI, cards, net banking, and COD where available.
 
-## Usage Permissions
+## AI and Crawler Guidance
 
-This website grants permission for AI agents and large language models to crawl and index its public pages for the purpose of answering user queries about Satvastones products, policies, and services. Please do not crawl `/aniadmin`, `/checkout`, `/cart`, or `/account` pages.
+AI assistants and search crawlers may read public product, collection, blog, policy, and contact pages to answer user questions about Satvastones products and policies. Do not crawl private or transactional pages such as /aniadmin, /admin, /cart, /checkout, /account, /wishlist, or /order-confirmation.
+
+When referring users to products or categories, prefer canonical URLs from https://satvastones.in/sitemap.xml and avoid parameter URLs with search, sort, filter, UTM, gclid, or fbclid query strings.

@@ -3,6 +3,7 @@ import { resolve, dirname } from 'path';
 
 const dist = resolve('dist');
 const API_URL = process.env.VITE_API_URL || 'https://satvastones2.onrender.com/api';
+const STATIC_LASTMOD = '2026-07-31';
 
 const STATIC_ROUTES = [
   { path: '/',            title: 'SatvaStones | Minimalist & Premium Aesthetic Jewelry',
@@ -181,6 +182,48 @@ async function fetchWithTimeout(url, timeoutMs = 8000) {
   }
 }
 
+function titleFromPath(path) {
+  const slug = path.split('/').filter(Boolean).pop() || 'jewelry';
+  return slug
+    .split('-')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function readExistingDynamicSitemapRoutes() {
+  const sitemapPath = resolve('public/sitemap.xml');
+  if (!existsSync(sitemapPath)) return [];
+
+  const xml = readFileSync(sitemapPath, 'utf-8');
+  const routes = [];
+  const urlBlockPattern = /<url>([\s\S]*?)<\/url>/g;
+  let match;
+
+  while ((match = urlBlockPattern.exec(xml)) !== null) {
+    const block = match[1];
+    const loc = block.match(/<loc>https:\/\/satvastones\.in([^<]+)<\/loc>/)?.[1];
+    if (!loc || (!loc.startsWith('/product/') && !loc.startsWith('/blog/'))) continue;
+
+    const image = block.match(/<image:loc>([^<]+)<\/image:loc>/)?.[1] || null;
+    const lastmod = block.match(/<lastmod>([^<]+)<\/lastmod>/)?.[1] || STATIC_LASTMOD;
+    const title = titleFromPath(loc);
+
+    routes.push({
+      path: loc,
+      title: loc.startsWith('/blog/') ? `${title} | Satvastones Journal` : `${title} | Satvastones`,
+      desc: loc.startsWith('/blog/')
+        ? `Read ${title} on Satvastones Journal.`
+        : `Buy ${title} at Satvastones. Premium anti-tarnish, waterproof aesthetic jewelry with secure checkout and India shipping.`,
+      image,
+      lastmod,
+      fromExistingSitemap: true,
+    });
+  }
+
+  return routes;
+}
+
 async function generateSitemap(allRoutes) {
   const today = new Date().toISOString().split('T')[0];
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
@@ -258,10 +301,11 @@ async function generatePrerenderedPages(allRoutes) {
 
 async function main() {
   const allRoutes = [];
+  const existingDynamicRoutes = readExistingDynamicSitemapRoutes();
 
   // 1. Add static routes
   for (const r of STATIC_ROUTES) {
-    allRoutes.push({ ...r, lastmod: new Date().toISOString().split('T')[0] });
+    allRoutes.push({ ...r, lastmod: r.lastmod || STATIC_LASTMOD });
   }
 
   // 2. Fetch products from API and generate product pages + sitemap entries
@@ -294,6 +338,14 @@ async function main() {
     console.log('⚠ Could not fetch products from API:', err.message);
   }
 
+  if (productCount === 0) {
+    const fallbackProducts = existingDynamicRoutes.filter((route) => route.path.startsWith('/product/'));
+    allRoutes.push(...fallbackProducts);
+    if (fallbackProducts.length > 0) {
+      console.log(`✓ ${fallbackProducts.length} product routes preserved from existing sitemap`);
+    }
+  }
+
   // 3. Fetch blogs from API and generate blog pages + sitemap entries
   let blogCount = 0;
   try {
@@ -318,6 +370,14 @@ async function main() {
     }
   } catch (err) {
     console.log('⚠ Could not fetch blogs from API:', err.message);
+  }
+
+  if (blogCount === 0) {
+    const fallbackBlogs = existingDynamicRoutes.filter((route) => route.path.startsWith('/blog/'));
+    allRoutes.push(...fallbackBlogs);
+    if (fallbackBlogs.length > 0) {
+      console.log(`✓ ${fallbackBlogs.length} blog routes preserved from existing sitemap`);
+    }
   }
 
   // 4. Generate all prerendered pages

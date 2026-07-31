@@ -2,20 +2,37 @@ import { prisma } from "@/lib/prisma";
 import clientPromise from "@/lib/mongodb";
 import type { MetadataRoute } from "next";
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://satvastones.in";
+const baseUrl = "https://satvastones.in";
 
-  // 1. Static Pages
+function toAbsoluteImageUrl(image: string) {
+  if (!image) return "";
+  return image.startsWith("http") ? image : `${baseUrl}${image}`;
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl, lastModified: new Date() },
-    { url: `${baseUrl}/shop`, lastModified: new Date() },
-    { url: `${baseUrl}/about`, lastModified: new Date() },
-    { url: `${baseUrl}/contact`, lastModified: new Date() },
-    { url: `${baseUrl}/blogs`, lastModified: new Date() },
-    { url: `${baseUrl}/terms`, lastModified: new Date() },
-    { url: `${baseUrl}/privacy`, lastModified: new Date() },
-    { url: `${baseUrl}/shipping`, lastModified: new Date() },
-    { url: `${baseUrl}/returns`, lastModified: new Date() },
+    { url: baseUrl },
+    { url: `${baseUrl}/shop` },
+    { url: `${baseUrl}/shop/99-sale` },
+    { url: `${baseUrl}/shop/earrings` },
+    { url: `${baseUrl}/shop/necklaces` },
+    { url: `${baseUrl}/shop/rings` },
+    { url: `${baseUrl}/shop/bracelets` },
+    { url: `${baseUrl}/shop/gifts` },
+    { url: `${baseUrl}/shop/name-necklace` },
+    { url: `${baseUrl}/shop/accessories` },
+    { url: `${baseUrl}/shop/pendant` },
+    { url: `${baseUrl}/shop/hampers` },
+    { url: `${baseUrl}/shop/mothers-day` },
+    { url: `${baseUrl}/about` },
+    { url: `${baseUrl}/contact` },
+    { url: `${baseUrl}/blogs` },
+    { url: `${baseUrl}/terms` },
+    { url: `${baseUrl}/privacy` },
+    { url: `${baseUrl}/shipping` },
+    { url: `${baseUrl}/returns` },
+    { url: `${baseUrl}/refund` },
+    { url: `${baseUrl}/hot-deals` },
   ];
 
   let categoryPages: MetadataRoute.Sitemap = [];
@@ -23,7 +40,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let blogPages: MetadataRoute.Sitemap = [];
 
   try {
-    // 2. Dynamic Categories (Pointing to Vite SPA /shop/[slug] routes)
     const categories = await prisma.category.findMany({
       where: { isActive: true },
       select: { slug: true, updatedAt: true },
@@ -34,22 +50,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(cat.updatedAt),
     }));
 
-    // 3. Dynamic Products (Next.js Pages)
     const products = await prisma.product.findMany({
       where: { isActive: true },
-      select: { slug: true, updatedAt: true },
+      select: { slug: true, updatedAt: true, images: true, image: true },
     });
 
     productPages = products.map((p) => ({
       url: `${baseUrl}/shop/${p.slug}`,
       lastModified: new Date(p.updatedAt),
+      images: [...(p.images || []), p.image].filter(Boolean).map(toAbsoluteImageUrl),
     }));
   } catch (e) {
     console.error("DB unavailable for sitemap generation, using static only", e);
   }
 
   try {
-    // 4. Dynamic Blog Posts (MongoDB via native driver)
     const client = await clientPromise;
     const db = client.db();
     const blogs = await db

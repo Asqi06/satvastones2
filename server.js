@@ -18,6 +18,53 @@ const __dirname = path.dirname(__filename);
 dotenv.config();
 
 const app = express();
+
+// Reverse Proxy: send SEO-critical storefront pages to the Next.js deployment
+// before Vite's static fallback can serve dist/index.html.
+const nextjsAppUrl = process.env.NEXTJS_APP_PRODUCTION_URL?.trim();
+const nextjsProxy = nextjsAppUrl
+  ? createProxyMiddleware({
+      target: nextjsAppUrl,
+      changeOrigin: true,
+      xfwd: true,
+      logLevel: 'warn',
+    })
+  : null;
+
+const nextjsSEOPathPatterns = [
+  /^\/$/,
+  /^\/shop(?:\/.*)?$/,
+  /^\/products(?:\/.*)?$/,
+  /^\/blog(?:\/.*)?$/,
+  /^\/blogs(?:\/.*)?$/,
+  /^\/about$/,
+  /^\/contact$/,
+];
+
+app.use((req, res, next) => {
+  if (!nextjsProxy || !['GET', 'HEAD'].includes(req.method)) {
+    return next();
+  }
+
+  if (
+    req.path.startsWith('/api/') ||
+    req.path.startsWith('/assets/') ||
+    req.path === '/favicon.ico' ||
+    req.path === '/robots.txt' ||
+    req.path === '/sitemap.xml' ||
+    req.path === '/llms.txt' ||
+    /\.[a-z0-9]{2,8}$/i.test(req.path)
+  ) {
+    return next();
+  }
+
+  if (nextjsSEOPathPatterns.some((pattern) => pattern.test(req.path))) {
+    return nextjsProxy(req, res, next);
+  }
+
+  return next();
+});
+
 app.use(compression());
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
@@ -34,31 +81,6 @@ app.use((req, res, next) => {
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
   next();
 });
-
-// Reverse Proxy: Route SEO-critical public paths to the Next.js deployment
-// Only activates when NEXTJS_APP_PRODUCTION_URL is configured on Render
-if (process.env.NEXTJS_APP_PRODUCTION_URL) {
-  const nextjsManagedPaths = [
-    '/shop',
-    '/shop/*',
-    '/products/*',
-    '/blog',
-    '/blog/*',
-    '/about',
-    '/contact',
-  ];
-
-  nextjsManagedPaths.forEach((route) => {
-    app.use(
-      route,
-      createProxyMiddleware({
-        target: process.env.NEXTJS_APP_PRODUCTION_URL,
-        changeOrigin: true,
-        logLevel: 'error',
-      })
-    );
-  });
-}
 
 // www -> non-www 301 redirect (prevents duplicate content)
 app.use((req, res, next) => {
@@ -464,7 +486,7 @@ Allow: /
 Disallow: /aniadmin
 Disallow: /api/
 
-Sitemap: https://satvastones.in/api/sitemap.xml
+Sitemap: https://satvastones.in/sitemap.xml
 `);
 });
 
