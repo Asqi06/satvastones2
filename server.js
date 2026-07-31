@@ -77,6 +77,28 @@ app.use((req, res, next) => {
   next();
 });
 
+// Legacy ObjectId product URLs -> 301 to slug-based URLs
+app.get('/product/:id', async (req, res, next) => {
+  const id = req.params.id;
+  // Check if it's a MongoDB ObjectId (24 hex chars)
+  if (/^[a-f\d]{24}$/i.test(id)) {
+    try {
+      const product = await Product.findById(id).select('slug');
+      if (product?.slug) {
+        return res.redirect(301, `/shop/${product.slug}`);
+      }
+    } catch (e) {
+      // fall through to 404
+    }
+  }
+  next();
+});
+
+// Legacy /qanda -> 301 to FAQs
+app.get('/qanda', (req, res) => {
+  res.redirect(301, '/faqs');
+});
+
 // Static assets with long-term caching for hashed files
 app.use('/assets', express.static(path.join(__dirname, 'dist', 'assets'), {
   maxAge: '1y',
