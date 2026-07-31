@@ -89,11 +89,65 @@ function noscriptContent(route, title, desc) {
   if (p.startsWith('/shop/')) {
     const cat = p.replace('/shop/', '');
     const label = CATEGORY_LABELS[cat] || cat.replace(/-/g, ' ');
+    
+    // Category-specific rich content for better indexing
+    const categoryContent = {
+      'earrings': { 
+        h2: 'Explore 100+ Aesthetic Earrings for Women', 
+        p: 'Discover our curated collection of anti-tarnish, waterproof earrings — from Korean minimalist studs and huggie hoops to oxidised silver jhumkas and Western drop earrings. Each pair is crafted with hypoallergenic 18K gold plating and designed for daily wear without tarnishing. Whether you prefer dainty crystal studs for office wear or statement chandbalis for festive occasions, our earring collection blends Korean minimalism with Western elegance at prices starting ₹79.' 
+      },
+      'necklaces': { 
+        h2: 'Discover Anti-Tarnish Gold Plated Necklaces & Pendants', 
+        p: 'Elevate your everyday look with our anti-tarnish necklace collection — featuring Korean aesthetic chokers, layered gold chains, personalized name necklaces, and delicate pendant necklaces in 18K gold plating. Each piece is waterproof, hypoallergenic, and built to survive daily wear without fading. From minimalist heart pendants to custom engraved name necklaces, find the perfect chain length and style for layering or solo wear.' 
+      },
+      'rings': { 
+        h2: 'Stackable & Minimalist Rings for Daily Wear', 
+        p: 'Build your perfect ring stack with our anti-tarnish, waterproof ring collection — featuring Korean stacking rings, adjustable gold bands, crystal cocktail rings, and minimalist chhalla bands. Every ring is crafted with 18K gold plating on hypoallergenic brass, ensuring your finish stays brilliant through sweat, water, and daily wear. Mix and match gold, silver, and rose gold tones for a personalized stack that transitions from desk to dinner.' 
+      },
+      'bracelets': { 
+        h2: 'Gold Chains, Bangles & Cuffs for Everyday Elegance', 
+        p: 'Complete your look with anti-tarnish bracelets and bangles — from gold-plated paperclip chains and beaded heart bracelets to Kashmiri bangle sets and crystal kada bangles. Each piece features 18K gold plating on waterproof, hypoallergenic metals that withstand daily wear, showers, and workouts. Stack multiple chains or wear a single statement cuff — versatile designs made for the modern Indian woman.' 
+      },
+      'gifts': { 
+        h2: 'Curated Jewellery Gifts for Her — Beautifully Packaged', 
+        p: 'Find the perfect jewellery gift for her — curated gift hampers, personalized name necklaces, and ready-to-gift sets for birthdays, anniversaries, and Mother\'s Day. Each gift combines anti-tarnish, waterproof jewellery with aesthetic packaging, eliminating the last-minute scramble. From ₹99 stud earrings to luxury gold-plated hamper sets, every gift is beautifully boxed and ships free over ₹399 with COD available across India.' 
+      },
+      'pendant': { 
+        h2: 'Gold-Plated Pendants for Layering & Gifting', 
+        p: 'Shop aesthetic pendants in 18K gold plating — from minimalist heart and star pendants to resin flower and crystal drop designs. Each pendant is anti-tarnish, waterproof, and comes with an adjustable chain for versatile layering. Perfect for gifting or building your own layered necklace look with Korean and Western aesthetic styles.' 
+      },
+      'hampers': { 
+        h2: 'Luxury Jewellery Gift Hampers — Curated Sets', 
+        p: 'Elevate your gifting with luxury jewellery hampers — curated sets of Korean and Western aesthetic earrings, necklaces, rings, and bracelets in elegant magnetic-close boxes. Each hamper combines complementary pieces for a complete look, beautifully packaged with tissue paper and a handwritten note card option. Ideal for birthdays, anniversaries, festivals, and corporate gifting with free shipping and COD across India.' 
+      },
+      'mothers-day': { 
+        h2: 'Mother\'s Day Jewellery Gifts She\'ll Love', 
+        p: 'Celebrate Mom with anti-tarnish, waterproof jewellery gifts — elegant earrings, personalized name necklaces, and curated gift hampers designed for the woman who does it all. Each piece is crafted with 18K gold plating on hypoallergenic metals, ensuring her gift stays brilliant through daily wear. Beautifully packaged with free shipping over ₹399 and COD available across India.' 
+      },
+      '99-sale': { 
+        h2: 'Premium Jewellery at Just ₹99 Each', 
+        p: 'Flash sale alert — grab aesthetic Korean and Western jewellery at just ₹99 per piece! Our ₹99 sale includes hypoallergenic stud earrings, stackable rings, delicate chain necklaces, and charm bracelets — all anti-tarnish, waterproof, and crafted with 18K gold plating on hypoallergenic metals. Limited stock, free shipping over ₹399, COD available. New drops every week.' 
+      },
+      'name-necklace': { 
+        h2: 'Personalized Name Necklaces in Gold & Silver', 
+        p: 'Create a one-of-a-kind gift with our custom engraved name necklaces — available in 18K gold plating, rose gold, and sterling silver finishes. Each necklace is anti-tarnish, waterproof, and handcrafted in our Mumbai studio with precise laser engraving. Choose your chain length, font style, and finish for a truly personal gift she\'ll wear every day. Free shipping over ₹399, COD available across India.' 
+      },
+      'accessories': { 
+        h2: 'Jewellery Accessories — Anklets, Brooches & Organizers', 
+        p: 'Complete your aesthetic with premium jewellery accessories — gold-plated anklets for summer styling, vintage-inspired brooches for jacket lapels, and velvet jewellery organizers for tangle-free storage. Each accessory features anti-tarnish 18K gold plating and waterproof construction, designed to complement your Satvastones collection.' 
+      }
+    };
+    
+    const catContent = categoryContent[cat] || { 
+      h2: `Browse Our ${label} Collection`, 
+      p: `Explore our curated collection of ${label.toLowerCase()} at SatvaStones — premium Korean and Western aesthetic jewelry. Each piece is anti-tarnish, waterproof, and designed for the modern woman. Free shipping over ₹399 with easy returns.` 
+    };
+    
     return `<header><h1>Shop ${label} — SatvaStones</h1>
 <nav><a href="/">Home</a> | <a href="/shop">Shop All</a> | <a href="/shop/earrings">Earrings</a> | <a href="/shop/necklaces">Necklaces</a> | <a href="/shop/rings">Rings</a> | <a href="/shop/bracelets">Bracelets</a> | <a href="/shop/99-sale">₹99 Sale</a></nav></header>
-<main><section><h2>Browse Our ${label} Collection</h2>
-<p>Explore our curated collection of ${label.toLowerCase()} at SatvaStones — premium Korean and Western aesthetic jewelry. Each piece is anti-tarnish, waterproof, and designed for the modern woman. Free shipping over ₹399 with easy returns.</p>
-<p>Shop online with secure payments via UPI, Credit/Debit Cards, Net Banking, and COD. All orders are dispatched within 24-48 hours from our studio in Vapi, Gujarat.</p></section></main>
+<main><section><h2>${catContent.h2}</h2>
+<p>${catContent.p}</p>
+<p>All pieces feature <strong>anti-tarnish 18K gold plating</strong> on hypoallergenic metals, are <strong>100% waterproof</strong>, and ship free over ₹399 with COD available across India.</p></section></main>
 <footer><p>© 2026 SATVASTONES. All rights reserved.</p></footer>`;
   }
   if (p.startsWith('/product/')) {
