@@ -35,6 +35,58 @@ const SIDEBAR_TABS = [
 const CATEGORIES = ['necklaces', 'name necklace', 'earrings', 'rings', 'bracelets', 'pendant', 'gifts', 'hampers', 'accessories', "mother's day"];
 const ORDER_STATUSES = ['Confirmed', 'Packed', 'In Transit', 'Out for Delivery', 'Delivered', 'Cancelled'];
 
+// NOTE: These helpers MUST stay at module scope (outside AdminPanel).
+// Defining them inside the component would give them new identities on every
+// render, causing React to unmount/remount all inputs and lose focus on each keystroke.
+const Input = ({ label, ...props }: any) => (
+  <div className="space-y-1.5">
+    {label && <label className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">{label}</label>}
+    <input {...props} className={`w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all ${props.className || ''}`} />
+  </div>
+);
+
+const Select = ({ label, options, ...props }: any) => (
+  <div className="space-y-1.5">
+    {label && <label className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">{label}</label>}
+    <select {...props} className="w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all bg-white">
+      {options.map((o: string) => <option key={o} value={o}>{o}</option>)}
+    </select>
+  </div>
+);
+
+const Textarea = ({ label, ...props }: any) => (
+  <div className="space-y-1.5">
+    {label && <label className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">{label}</label>}
+    <textarea {...props} className={`w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all resize-none ${props.className || ''}`} />
+  </div>
+);
+
+const Toggle = ({ checked, onChange, label }: any) => (
+  <label className="relative inline-flex items-center gap-3 cursor-pointer">
+    <input type="checkbox" checked={checked} onChange={onChange} className="sr-only peer" />
+    <div className="w-10 h-5.5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-[18px] after:w-[18px] after:transition-all peer-checked:bg-stone-900" />
+    {label && <span className="text-xs font-semibold text-stone-700">{label}</span>}
+  </label>
+);
+
+const Card = ({ children, className = '' }: any) => (
+  <div className={`bg-white rounded-xl border border-stone-100 shadow-sm ${className}`}>{children}</div>
+);
+
+const Badge = ({ children, color = 'stone' }: any) => (
+  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-${color}-100 text-${color}-700`}>{children}</span>
+);
+
+const PageHeader = ({ title, action, tab }: any) => (
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 lg:mb-8">
+    <div>
+      <h1 className="text-xl lg:text-2xl font-bold text-stone-900">{title}</h1>
+      <p className="text-xs text-stone-400 mt-0.5 uppercase tracking-wider">Manage your website {tab} here</p>
+    </div>
+    {action}
+  </div>
+);
+
 export default function AdminPanel({
   cmsData,
   onUpdateCMS,
@@ -224,56 +276,6 @@ export default function AdminPanel({
     try { await fetch(`${API_URL}/blogs/${id}`, { method: 'DELETE' }); setBlogs(prev => prev.filter(b => b._id !== id)); }
     catch (err) { console.error("Failed to delete blog:", err); }
   };
-
-  // Input helper
-  const Input = ({ label, ...props }: any) => (
-    <div className="space-y-1.5">
-      {label && <label className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">{label}</label>}
-      <input {...props} className={`w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all ${props.className || ''}`} />
-    </div>
-  );
-
-  const Select = ({ label, options, ...props }: any) => (
-    <div className="space-y-1.5">
-      {label && <label className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">{label}</label>}
-      <select {...props} className="w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all bg-white">
-        {options.map((o: string) => <option key={o} value={o}>{o}</option>)}
-      </select>
-    </div>
-  );
-
-  const Textarea = ({ label, ...props }: any) => (
-    <div className="space-y-1.5">
-      {label && <label className="text-[11px] font-semibold text-stone-500 uppercase tracking-wider">{label}</label>}
-      <textarea {...props} className={`w-full border border-stone-200 rounded-lg px-3.5 py-2.5 text-sm focus:border-stone-900 focus:ring-1 focus:ring-stone-900 outline-none transition-all resize-none ${props.className || ''}`} />
-    </div>
-  );
-
-  const Toggle = ({ checked, onChange, label }: any) => (
-    <label className="relative inline-flex items-center gap-3 cursor-pointer">
-      <input type="checkbox" checked={checked} onChange={onChange} className="sr-only peer" />
-      <div className="w-10 h-5.5 bg-stone-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:border-stone-300 after:border after:rounded-full after:h-[18px] after:w-[18px] after:transition-all peer-checked:bg-stone-900" />
-      {label && <span className="text-xs font-semibold text-stone-700">{label}</span>}
-    </label>
-  );
-
-  const Card = ({ children, className = '' }: any) => (
-    <div className={`bg-white rounded-xl border border-stone-100 shadow-sm ${className}`}>{children}</div>
-  );
-
-  const Badge = ({ children, color = 'stone' }: any) => (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-${color}-100 text-${color}-700`}>{children}</span>
-  );
-
-  const PageHeader = ({ title, action }: any) => (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 lg:mb-8">
-      <div>
-        <h1 className="text-xl lg:text-2xl font-bold text-stone-900">{title}</h1>
-        <p className="text-xs text-stone-400 mt-0.5 uppercase tracking-wider">Manage your website {activeTab} here</p>
-      </div>
-      {action}
-    </div>
-  );
 
   const renderSidebar = () => (
     <aside className={`
@@ -1427,7 +1429,7 @@ export default function AdminPanel({
       {renderSidebar()}
 
       <main className="flex-1 p-4 sm:p-6 lg:p-10 min-h-screen lg:overflow-y-auto pt-[60px] lg:pt-0">
-        <PageHeader title={activeTab.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase())} />
+        <PageHeader title={activeTab.replace('-', ' ').replace(/\b\w/g, c => c.toUpperCase())} tab={activeTab} />
 
         <div className="space-y-4 lg:space-y-6">
           {activeTab === 'dashboard' && renderDashboard()}

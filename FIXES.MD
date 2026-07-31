@@ -644,3 +644,37 @@ Rebuilt with `npm run build` — all 90 prerendered pages (23 static + 66 produc
 - All 9 placeholder tags in `index.html` head must remain for prerender to inject per-page SEO
 - `<!-- Canonical -->` comment placeholder must remain exactly as-is for regex replacement
 - `og:type` must only appear once (at line 22 in current version)
+
+---
+
+## Fix — Admin panel inputs lose focus after every keystroke (must click again per letter)
+
+### Problem
+In the admin panel, clicking into any form input (text field, textarea, select) and typing ONE letter caused the input to lose focus — the user had to click back into the field to type each subsequent letter. Every keystroke required a re-click, making the admin panel nearly unusable.
+
+### Root Cause
+`src/components/AdminPanel.tsx` defined helper components **inside** the `AdminPanel` component body:
+- `Input`, `Select`, `Textarea`, `Toggle`, `Card`, `Badge`, `PageHeader` (lines 228-276)
+
+These were used in JSX as `<Input />`, `<Textarea />`, `<Card />`, etc. Every keystroke calls `setTempCMSData`/`setBannerForm`/`setP` etc. → `AdminPanel` re-renders → each helper function is **recreated with a new identity** → React sees a *different component type* than the previous render → **unmounts and remounts the entire input subtree** → the DOM node is destroyed → focus is lost. Clicking re-focuses, typing one letter re-triggers the cycle.
+
+This is the classic "component defined inside another component" React bug.
+
+### Fix
+Hoisted all 7 helper components (`Input`, `Select`, `Textarea`, `Toggle`, `Card`, `Badge`, `PageHeader`) to **module scope** (outside `AdminPanel`, before `export default function AdminPanel`). Their identity is now stable across renders, so React reuses the same DOM nodes and focus is preserved while typing.
+
+`PageHeader` previously read `activeTab` from the component closure — changed to accept a `tab` prop (`<PageHeader title={...} tab={activeTab} />`).
+
+Plain render functions that are CALLED (`renderSidebar()`, `renderDashboard()`, `renderCrudTab(...)`) were left as-is — they return JSX inline and do NOT cause remounting.
+
+### Files Changed
+- `src/components/AdminPanel.tsx` — moved 7 helper components from component body to module scope (lines 41-87); `PageHeader` now takes a `tab` prop; usage at `<PageHeader ... tab={activeTab} />`
+
+### Verification
+- `npx vite build` succeeds (`chunk-admin-Cd0iRf5w.js` generated)
+- `tsc --noEmit` shows NO new errors from AdminPanel.tsx (all reported errors are pre-existing missing module/type issues across the project, unrelated to this change)
+
+### Do NOT Revert
+- The 7 helper components MUST stay at module scope — never define components inside the `AdminPanel` body
+- `PageHeader` usage must pass `tab={activeTab}`
+- If adding new form components to the admin panel, define them at module scope or as plain functions called with `()`
