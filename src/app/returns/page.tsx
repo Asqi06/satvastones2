@@ -1,9 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Return & Damage Policy | SatvaStones — No-Return Jewelry Policy",
-  description: "SatvaStones does not accept returns or refunds unless the item arrives damaged. Contact support within 48 hours for damaged item replacement on Korean aesthetic jewelry, earrings, and necklaces.",
-  keywords: ["SatvaStones return policy", "jewelry return policy", "no return jewelry India", "damaged item replacement", "anti-tarnish jewelry policy"],
+  title: "Return & Exchange Policy | Satvastones",
+  description: "Read Satvastones' return and exchange policy for damaged or defective jewellery orders — unboxing video required within 48 hours of delivery.",
   alternates: { canonical: "https://satvastones.in/returns" },
 };
 
@@ -18,7 +17,12 @@ export default function ReturnsPage() {
         </div>
 
         <div className="space-y-20 text-luxury-brown/60 font-light leading-relaxed tracking-wide animate-luxury-fade luxury-delay-200">
-          <section className="space-y-8">
+        {/* Intro Copy */}
+        <p className="text-luxury-brown/70 text-base lg:text-lg leading-relaxed max-w-3xl">
+          At Satvastones, we stand behind the quality of our anti tarnish, waterproof jewellery. If your order arrives damaged, defective, or different from what you ordered, our return and exchange policy below explains exactly how to raise a claim within 48 hours of delivery.
+        </p>
+
+        <section className="space-y-8">
             <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">No Returns or Refunds</h2>
             <p>
               SatvaStones does not accept returns, refunds, or cancellations once an order has been placed and confirmed. All sales are final. This policy applies to all products in our collection including Korean aesthetic earrings, gold-plated necklaces, anti-tarnish rings, designer bracelets, and ₹99 Sale items.

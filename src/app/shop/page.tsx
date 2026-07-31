@@ -4,8 +4,8 @@ import ProductsPageClient from "./ProductsClient";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Shop Premium Anti-Tarnish Jewellery Online | SatvaStones",
-  description: "Explore India's premier collection of waterproof, anti-tarnish Korean huggies, layered western necklaces, stackable rings, and luxury bracelets.",
+  title: "Anti Tarnish Gold Plated Rings for Women Online | Satvastones",
+  description: "Shop adjustable anti tarnish rings — Korean aesthetic, stackable, gold & silver plated designs starting ₹49. Waterproof, sweatproof, daily-wear jewellery.",
   alternates: { canonical: "https://satvastones.in/shop" },
 };
 

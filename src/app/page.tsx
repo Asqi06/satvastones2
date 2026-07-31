@@ -8,16 +8,16 @@ import { prisma } from "@/lib/prisma";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Satvastones | BIS Hallmarked Gold, Diamond & Gemstone Jewellery Online India",
-  description: "Buy 100% BIS Hallmarked gold, diamond & gemstone jewellery online. Lifetime exchange, free shipping ₹1999+, 30-day returns, COD available. Certified jewellers since 2010. Shop rings, necklaces, bridal sets, silver & men's jewellery.",
+  title: "Satvastones – Anti Tarnish Korean Aesthetic Jewellery Online India",
+  description: "Shop anti tarnish, waterproof fashion jewellery online — Korean aesthetic earrings, necklaces, rings & bracelets. Free shipping ₹399+. COD across India.",
   alternates: { canonical: "https://satvastones.in" },
   openGraph: {
     type: "website",
     locale: "en_IN",
     siteName: "Satvastones",
     url: "https://satvastones.in",
-    title: "Satvastones | Certified Jewellery Online India",
-    description: "BIS Hallmarked • Lifetime Exchange • Free Shipping • 30-Day Returns",
+    title: "Satvastones – Anti Tarnish Korean Aesthetic Jewellery Online India",
+    description: "Shop anti tarnish, waterproof fashion jewellery online — Korean aesthetic earrings, necklaces, rings & bracelets. Free shipping ₹399+. COD across India.",
   },
 };
 
@@ -128,6 +128,15 @@ export default async function HomePage() {
     <main className="bg-white relative">
       {/* Hero Banner */}
       <NewArrivalsSlider />
+
+      {/* Hero Intro Copy */}
+      <section className="py-16 lg:py-20 bg-white">
+        <div className="container-premium max-w-3xl mx-auto px-4 text-center">
+          <p className="text-luxury-brown/70 text-base lg:text-lg leading-relaxed max-w-3xl mx-auto">
+            Satvastones is an online jewellery store in India for anti tarnish, waterproof fashion jewellery you can wear every single day. From Korean aesthetic earrings and 18K gold plated necklaces to stackable rings and bracelets, every piece is built to survive sweat, water, and daily wear without fading. Shop the latest Korean jewellery drop, browse ₹99 rings, or pick a ready-made gift hamper — with free shipping above ₹399 and Cash on Delivery available pan-India.
+          </p>
+        </div>
+      </section>
 
       {/* Category Showcase - Traditional Indian Jewellery Style */}
       <CategoryShowcase />

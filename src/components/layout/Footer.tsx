@@ -22,6 +22,10 @@ export default function Footer() {
             <p className="text-white/60 label-md leading-[2] tracking-widest uppercase italic max-w-sm">
               Handcrafting timeless artifacts that bridge the gap between contemporary Western minimalism and heritage Korean aesthetics.
             </p>
+
+            <p className="text-white/50 label-sm leading-relaxed max-w-xs">
+              Satvastones is an Indian online jewellery brand for anti tarnish, waterproof fashion jewellery — earrings, necklaces, rings, bracelets, and gift hampers designed for daily wear. We blend Korean aesthetic and minimalist gold plated styles at prices that stay affordable, with free shipping above ₹399 and Cash on Delivery available across India.
+            </p>
             
             <div className="flex gap-8 mt-6">
               {[Globe, Share2].map((Icon, i) => (
