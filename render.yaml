@@ -3,7 +3,9 @@ services:
     name: satvastones2
     runtime: node
     buildCommand: npm install && npm run build
-    startCommand: node server.js
+    startCommand: npx tsx server.js
     envVars:
       - key: NODE_VERSION
         value: 20
+      - key: NEXTJS_APP_PRODUCTION_URL
+        value: https://satvastones2.onrender.com

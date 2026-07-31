@@ -566,3 +566,34 @@ This instructs Render to run `npm run build` (= `vite build && node scripts/prer
 ### Do NOT Revert
 - `render.yaml` must define `buildCommand: npm install && npm run build` — without this, Render will not build the Vite SPA and `dist/index.html` will be missing, breaking all page loads.
 - Do NOT remove `dist/` from `.gitignore` as an alternative fix — building on Render is the correct approach.
+
+---
+
+## Fix — Render deployment crash: `node server.js` cannot execute TypeScript imports
+
+### Problem
+Render deployment crashed on startup because `render.yaml` had `startCommand: node server.js`, but `server.js` contains TypeScript imports (`from './src/lib/utils.ts'`) that Node.js cannot resolve natively. The app appeared live (MongoDB connected, port bound) but all requests failed with module resolution errors.
+
+### Root Cause
+1. `server.js` imports from `./src/lib/utils.ts` (a TypeScript file) — Node.js v20 does not support bare `.ts` imports without a TypeScript loader like `tsx`.
+2. `tsx` was in `devDependencies` — available during the build phase but stripped at runtime on Render (production install only keeps `dependencies`).
+3. `NEXTJS_APP_PRODUCTION_URL` env var was missing from `render.yaml` — the Express reverse proxy to Next.js could not activate.
+
+### Fix
+1. **render.yaml**: Changed `startCommand` from `node server.js` to `npx tsx server.js` so TypeScript imports are compiled on the fly at runtime.
+2. **package.json**: Moved `tsx` from `devDependencies` to `dependencies` so it's installed at runtime on Render.
+3. **render.yaml**: Added `NEXTJS_APP_PRODUCTION_URL` env var (`https://satvastones2.onrender.com`) so the Express reverse proxy routes SEO-critical paths to the Next.js deployment.
+4. **.env.example**: Added `NEXTJS_APP_PRODUCTION_URL` with documentation and example value.
+5. **.gitignore**: Added `tsconfig.tsbuildinfo` and `*.tsbuildinfo` to prevent committing large TypeScript build artifacts.
+
+### Files Changed
+- `render.yaml` — `startCommand` → `npx tsx server.js`, added `NEXTJS_APP_PRODUCTION_URL` env var
+- `package.json` — moved `tsx` from `devDependencies` → `dependencies`
+- `.env.example` — added `NEXTJS_APP_PRODUCTION_URL`
+- `.gitignore` — added `tsconfig.tsbuildinfo`, `*.tsbuildinfo`
+
+### Do NOT Revert
+- `startCommand` must use `npx tsx server.js` (not `node server.js`) because server.js has TypeScript imports
+- `tsx` must be in `dependencies` (not `devDependencies`) so it's available at runtime on Render
+- `NEXTJS_APP_PRODUCTION_URL` must be set on Render for the reverse proxy to activate
+- `tsconfig.tsbuildinfo` must remain in `.gitignore` (large, auto-generated, not needed in Git)
