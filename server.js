@@ -90,15 +90,6 @@ app.use(express.static(path.join(__dirname, 'dist'), {
   etag: true
 }));
 
-// SPA Fallback: serve index.html for all non-API, non-proxied routes
-app.get('*', (req, res) => {
-  // Skip API routes - let them 404 properly if not matched
-  if (req.path.startsWith('/api/')) {
-    return res.status(404).json({ error: 'API endpoint not found' });
-  }
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/satvastones';
 mongoose.connect(MONGODB_URI)
@@ -1548,6 +1539,15 @@ setInterval(async () => {
     console.error('[WATCHDOG ERROR]:', err);
   }
 }, 60 * 60 * 1000);
+
+// SPA Fallback: serve index.html for all non-API, non-proxied routes
+app.get('*', (req, res) => {
+  // Skip API routes - let them 404 properly if not matched
+  if (req.path.startsWith('/api/')) {
+    return res.status(404).json({ error: 'API endpoint not found' });
+  }
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
