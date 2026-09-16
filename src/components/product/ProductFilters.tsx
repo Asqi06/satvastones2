@@ -62,7 +62,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
             <select
               value={currentStyle}
               onChange={(e) => updateFilter("style", e.target.value)}
-              className="appearance-none bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 pr-10 text-sm text-white focus:outline-none focus:border-[#C9A96E] cursor-pointer"
+              className="appearance-none bg-[var(--white)] border border-[var(--line)] px-4 py-2.5 pr-10 text-[12px] text-[var(--ink)] focus:outline-none focus:border-[var(--olive)] cursor-pointer"
             >
               <option value="">All Styles</option>
               {PRODUCT_STYLES.map((s) => (
@@ -71,7 +71,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none" />
           </div>
 
           {/* Category Filter */}
@@ -79,7 +79,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
             <select
               value={currentCategory}
               onChange={(e) => updateFilter("category", e.target.value)}
-              className="appearance-none bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 pr-10 text-sm text-white focus:outline-none focus:border-[#C9A96E] cursor-pointer"
+              className="appearance-none bg-[var(--white)] border border-[var(--line)] px-4 py-2.5 pr-10 text-[12px] text-[var(--ink)] focus:outline-none focus:border-[var(--olive)] cursor-pointer"
             >
               <option value="">All Categories</option>
               {categories.map((c) => (
@@ -88,7 +88,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none" />
           </div>
 
           {/* Material Filter */}
@@ -96,7 +96,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
             <select
               value={currentMaterial}
               onChange={(e) => updateFilter("material", e.target.value)}
-              className="appearance-none bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 pr-10 text-sm text-white focus:outline-none focus:border-[#C9A96E] cursor-pointer"
+              className="appearance-none bg-[var(--white)] border border-[var(--line)] px-4 py-2.5 pr-10 text-[12px] text-[var(--ink)] focus:outline-none focus:border-[var(--olive)] cursor-pointer"
             >
               <option value="">All Materials</option>
               {MATERIALS.map((m) => (
@@ -105,7 +105,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none" />
           </div>
 
           {/* Price Filter */}
@@ -127,7 +127,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 params.delete("page");
                 router.push(`${pathname}?${params.toString()}`);
               }}
-              className="appearance-none bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 pr-10 text-sm text-white focus:outline-none focus:border-[#C9A96E] cursor-pointer"
+              className="appearance-none bg-[var(--white)] border border-[var(--line)] px-4 py-2.5 pr-10 text-[12px] text-[var(--ink)] focus:outline-none focus:border-[var(--olive)] cursor-pointer"
             >
               <option value="">All Prices</option>
               {PRICE_RANGES.map((r) => (
@@ -136,15 +136,15 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 </option>
               ))}
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none" />
           </div>
 
           {activeFilters > 0 && (
             <button
               onClick={clearFilters}
-              className="flex items-center gap-1 text-sm text-red-400 hover:text-red-300"
+              className="flex items-center gap-1.5 text-[12px] text-[var(--muted)] hover:text-[var(--ink)] underline underline-offset-4"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
               Clear ({activeFilters})
             </button>
           )}
@@ -155,7 +155,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
           <select
             value={currentSort}
             onChange={(e) => updateFilter("sort", e.target.value)}
-            className="appearance-none bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 pr-10 text-sm text-white focus:outline-none focus:border-[#C9A96E] cursor-pointer"
+            className="appearance-none bg-[var(--white)] border border-[var(--line)] px-4 py-2.5 pr-10 text-[12px] text-[var(--ink)] focus:outline-none focus:border-[var(--olive)] cursor-pointer"
           >
             {sortOptions.map((s) => (
               <option key={s.value} value={s.value}>
@@ -163,7 +163,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
               </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none" />
         </div>
       </div>
 
@@ -171,12 +171,12 @@ export default function ProductFilters({ categories }: { categories: Category[] 
       <div className="lg:hidden flex items-center justify-between">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg text-sm text-white"
+          className="flex items-center gap-2 px-4 py-2.5 bg-[var(--white)] border border-[var(--line)] text-[12px] text-[var(--ink)]"
         >
           <SlidersHorizontal className="w-4 h-4" />
           Filters
           {activeFilters > 0 && (
-            <span className="w-5 h-5 bg-[#C9A96E] text-black text-xs font-bold rounded-full flex items-center justify-center">
+            <span className="w-5 h-5 bg-[var(--olive)] text-[var(--white)] text-[11px] font-semibold rounded-full flex items-center justify-center">
               {activeFilters}
             </span>
           )}
@@ -186,7 +186,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
           <select
             value={currentSort}
             onChange={(e) => updateFilter("sort", e.target.value)}
-            className="appearance-none bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-4 py-2.5 pr-10 text-sm text-white focus:outline-none"
+            className="appearance-none bg-[var(--white)] border border-[var(--line)] px-4 py-2.5 pr-10 text-[12px] text-[var(--ink)] focus:outline-none focus:border-[var(--olive)]"
           >
             {sortOptions.map((s) => (
               <option key={s.value} value={s.value}>
@@ -194,19 +194,19 @@ export default function ProductFilters({ categories }: { categories: Category[] 
               </option>
             ))}
           </select>
-          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
+          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--muted)] pointer-events-none" />
         </div>
       </div>
 
       {/* Mobile Filter Panel */}
       {isOpen && (
-        <div className="lg:hidden mt-4 bg-[#1a1a1a] rounded-xl p-6 border border-[#2a2a2a] space-y-4">
+        <div className="lg:hidden mt-4 bg-[var(--white)] p-6 border border-[var(--line)] space-y-5">
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Style</label>
+            <label className="block text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] mb-2.5">Style</label>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => updateFilter("style", "")}
-                className={`px-3 py-1.5 rounded-lg text-sm ${!currentStyle ? "bg-[#C9A96E] text-black" : "bg-[#0f0f0f] text-gray-400 border border-[#2a2a2a]"}`}
+                className={`px-3.5 py-1.5 rounded-full text-[12px] border transition-colors ${!currentStyle ? "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]" : "bg-transparent text-[var(--muted)] border-[var(--line)]"}`}
               >
                 All
               </button>
@@ -214,7 +214,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 <button
                   key={s.value}
                   onClick={() => updateFilter("style", s.value)}
-                  className={`px-3 py-1.5 rounded-lg text-sm ${currentStyle === s.value ? "bg-[#C9A96E] text-black" : "bg-[#0f0f0f] text-gray-400 border border-[#2a2a2a]"}`}
+                  className={`px-3.5 py-1.5 rounded-full text-[12px] border transition-colors ${currentStyle === s.value ? "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]" : "bg-transparent text-[var(--muted)] border-[var(--line)]"}`}
                 >
                   {s.label}
                 </button>
@@ -223,11 +223,11 @@ export default function ProductFilters({ categories }: { categories: Category[] 
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Category</label>
+            <label className="block text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] mb-2.5">Category</label>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => updateFilter("category", "")}
-                className={`px-3 py-1.5 rounded-lg text-sm ${!currentCategory ? "bg-[#C9A96E] text-black" : "bg-[#0f0f0f] text-gray-400 border border-[#2a2a2a]"}`}
+                className={`px-3.5 py-1.5 rounded-full text-[12px] border transition-colors ${!currentCategory ? "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]" : "bg-transparent text-[var(--muted)] border-[var(--line)]"}`}
               >
                 All
               </button>
@@ -235,7 +235,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 <button
                   key={c.slug}
                   onClick={() => updateFilter("category", c.slug)}
-                  className={`px-3 py-1.5 rounded-lg text-sm ${currentCategory === c.slug ? "bg-[#C9A96E] text-black" : "bg-[#0f0f0f] text-gray-400 border border-[#2a2a2a]"}`}
+                  className={`px-3.5 py-1.5 rounded-full text-[12px] border transition-colors ${currentCategory === c.slug ? "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]" : "bg-transparent text-[var(--muted)] border-[var(--line)]"}`}
                 >
                   {c.name}
                 </button>
@@ -244,11 +244,11 @@ export default function ProductFilters({ categories }: { categories: Category[] 
           </div>
 
           <div>
-            <label className="block text-sm text-gray-400 mb-2">Material</label>
+            <label className="block text-[10px] uppercase tracking-[0.14em] text-[var(--muted)] mb-2.5">Material</label>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => updateFilter("material", "")}
-                className={`px-3 py-1.5 rounded-lg text-sm ${!currentMaterial ? "bg-[#C9A96E] text-black" : "bg-[#0f0f0f] text-gray-400 border border-[#2a2a2a]"}`}
+                className={`px-3.5 py-1.5 rounded-full text-[12px] border transition-colors ${!currentMaterial ? "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]" : "bg-transparent text-[var(--muted)] border-[var(--line)]"}`}
               >
                 All
               </button>
@@ -256,7 +256,7 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 <button
                   key={m}
                   onClick={() => updateFilter("material", m)}
-                  className={`px-3 py-1.5 rounded-lg text-sm ${currentMaterial === m ? "bg-[#C9A96E] text-black" : "bg-[#0f0f0f] text-gray-400 border border-[#2a2a2a]"}`}
+                  className={`px-3.5 py-1.5 rounded-full text-[12px] border transition-colors ${currentMaterial === m ? "bg-[var(--ink)] text-[var(--paper)] border-[var(--ink)]" : "bg-transparent text-[var(--muted)] border-[var(--line)]"}`}
                 >
                   {m}
                 </button>
@@ -270,9 +270,9 @@ export default function ProductFilters({ categories }: { categories: Category[] 
                 clearFilters();
                 setIsOpen(false);
               }}
-              className="w-full py-2.5 text-sm text-red-400 border border-red-400/30 rounded-lg hover:bg-red-400/10"
+              className="w-full py-2.5 text-[12px] text-[var(--muted)] border border-[var(--line)] hover:text-[var(--ink)] hover:border-[var(--ink)] transition-colors"
             >
-              Clear All Filters
+              Clear all filters
             </button>
           )}
         </div>

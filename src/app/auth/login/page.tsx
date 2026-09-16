@@ -44,16 +44,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-luxury-cream flex flex-col pt-32 pb-20 px-4 items-center">
+    <div className="min-h-screen bg-[var(--paper)] text-[var(--ink)]">
+      <div className="editorial-container py-10 lg:py-14 flex flex-col items-center">
       <div className="w-full max-w-sm animate-luxury-fade">
-        <Link href="/" className="inline-flex items-center gap-2 text-luxury-brown/30 hover:text-luxury-brown mb-16 transition-colors group">
+        <Link href="/" className="inline-flex items-center gap-2 text-[var(--muted)] hover:text-[var(--ink)] mb-16 transition-colors group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span className="text-[10px] tracking-widest uppercase font-bold">Return to Gallery</span>
         </Link>
 
         <div className="mb-16">
-          <h1 className="text-4xl lg:text-6xl font-serif text-luxury-brown mb-4">Member Access</h1>
-          <p className="text-luxury-brown/30 text-[10px] tracking-[0.4em] uppercase font-bold">Enter your credentials below</p>
+          <h1 className="text-4xl lg:text-6xl font-serif font-normal tracking-[-0.03em] text-[var(--ink)] mb-4">Member Access</h1>
+          <p className="eyebrow text-[var(--muted)]">Enter your credentials below</p>
         </div>
 
         <div className="space-y-12">
@@ -66,36 +67,36 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-6">
               <div className="group">
-                <label className="block text-[9px] font-bold text-luxury-brown/30 mb-3 tracking-[0.2em] uppercase group-focus-within:text-luxury-gold transition-colors">Identity</label>
+                <label className="block text-[9px] font-bold text-[var(--muted)] mb-3 tracking-[0.2em] uppercase group-focus-within:text-[var(--olive)] transition-colors">Identity</label>
                 <div className="relative">
-                  <Mail className="absolute left-0 top-1/2 -translate-y-1/2 text-luxury-brown/10 w-4 h-4 group-focus-within:text-luxury-gold transition-colors" />
+                  <Mail className="absolute left-0 top-1/2 -translate-y-1/2 text-[var(--muted)] w-4 h-4 group-focus-within:text-[var(--olive)] transition-colors" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     placeholder="EMAIL ADDRESS"
-                    className="w-full pl-8 pr-4 py-4 bg-transparent border-b border-luxury-brown/10 text-luxury-brown placeholder-luxury-brown/5 focus:outline-none focus:border-luxury-gold transition-all text-xs tracking-widest"
+                    className="w-full pl-8 pr-4 py-4 bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] text-sm placeholder:text-[var(--muted)] focus:border-[var(--olive)] focus:outline-none transition-all text-xs tracking-widest"
                   />
                 </div>
               </div>
 
               <div className="group">
-                <label className="block text-[9px] font-bold text-luxury-brown/30 mb-3 tracking-[0.2em] uppercase group-focus-within:text-luxury-gold transition-colors">Access Key</label>
+                <label className="block text-[9px] font-bold text-[var(--muted)] mb-3 tracking-[0.2em] uppercase group-focus-within:text-[var(--olive)] transition-colors">Access Key</label>
                 <div className="relative">
-                  <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-luxury-brown/10 w-4 h-4 group-focus-within:text-luxury-gold transition-colors" />
+                  <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-[var(--muted)] w-4 h-4 group-focus-within:text-[var(--olive)] transition-colors" />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     placeholder="PASSWORD"
-                    className="w-full pl-8 pr-12 py-4 bg-transparent border-b border-luxury-brown/10 text-luxury-brown placeholder-luxury-brown/5 focus:outline-none focus:border-luxury-gold transition-all text-xs tracking-widest"
+                    className="w-full pl-8 pr-12 py-4 bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] text-sm placeholder:text-[var(--muted)] focus:border-[var(--olive)] focus:outline-none transition-all text-xs tracking-widest"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 text-luxury-brown/20 hover:text-luxury-brown"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)]"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -104,7 +105,7 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center justify-between">
-              <Link href="/auth/forgot-password" className="text-[10px] text-luxury-brown/30 hover:text-luxury-gold tracking-widest uppercase font-bold transition-colors">
+              <Link href="/auth/forgot-password" className="text-link text-[var(--olive)]">
                 Lost Access Key?
               </Link>
             </div>
@@ -112,20 +113,20 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-16 bg-luxury-brown text-white text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-luxury-gold transition-all duration-500 disabled:opacity-50"
+              className="button w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Verifying..." : "Authorize Entry"}
             </button>
           </form>
 
           <div className="relative py-4 flex items-center justify-center">
-            <div className="absolute inset-x-0 h-px bg-luxury-brown/5"></div>
-            <span className="relative z-10 px-6 bg-luxury-cream text-[9px] tracking-[0.5em] text-luxury-brown/20 uppercase font-bold">Universal Entry</span>
+            <div className="absolute inset-x-0 h-px bg-[var(--line)]"></div>
+            <span className="relative z-10 px-6 bg-[var(--paper)] text-[9px] tracking-[0.5em] text-[var(--muted)] uppercase font-bold">Universal Entry</span>
           </div>
 
           <button
             onClick={handleGoogleLogin}
-            className="w-full h-16 border border-luxury-brown/10 text-luxury-brown text-[10px] font-bold tracking-[0.4em] uppercase hover:bg-luxury-brown hover:text-white transition-all duration-500 flex items-center justify-center gap-4"
+            className="w-full min-h-[52px] border border-[var(--line)] bg-[var(--white)] text-[var(--ink)] text-[11px] font-medium tracking-[0.035em] uppercase hover:border-[var(--olive)] transition-all duration-500 flex items-center justify-center gap-4"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
@@ -138,11 +139,12 @@ export default function LoginPage() {
         </div>
 
         <p className="text-center mt-20 text-[10px] tracking-[0.2em] font-bold uppercase">
-          <span className="text-luxury-brown/30">New to the archive?</span>{" "}
-          <Link href="/auth/register" className="text-luxury-gold hover:text-luxury-brown transition-colors">
+          <span className="text-[var(--muted)]">New to the archive?</span>{" "}
+          <Link href="/auth/register" className="text-link text-[var(--olive)]">
             Initiate Membership
           </Link>
         </p>
+      </div>
       </div>
     </div>
   );

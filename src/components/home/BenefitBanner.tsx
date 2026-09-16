@@ -1,41 +1,31 @@
-"use client";
+import { Sparkles, Droplets, Truck, ShieldCheck, Wallet } from "lucide-react";
 
-import { Diamond, ShieldCheck, Gift, Truck, Zap } from "lucide-react";
+const BENEFITS = [
+  { label: "Anti-Tarnish", sub: "Keeps its shine", Icon: Sparkles },
+  { label: "Waterproof", sub: "Shower & swim ready", Icon: Droplets },
+  { label: "Free Shipping", sub: "On orders ₹399+", Icon: Truck },
+  { label: "Skin-Safe", sub: "Nickel-free & hypoallergenic", Icon: ShieldCheck },
+  { label: "COD Available", sub: "Pay on delivery", Icon: Wallet },
+];
 
 export default function BenefitBanner() {
-  const BENEFITS = [
-    { label: "COMPLIMENTARY TRANSIT ABOVE ₹1999", icon: Truck },
-    { label: "ARTISANAL HANDCRAFTED", icon: Diamond },
-    { label: "BOUTIQUE LUXURY PACKAGING", icon: Gift },
-    { label: "EXCLUSIVE HERITAGE OFFERS", icon: Zap },
-    { label: "AUTHENTIC PRECIOUS GEMSTONES", icon: ShieldCheck },
-  ];
-
   return (
-    <div className="bg-[var(--luxury-accent)] py-6 border-b border-[var(--luxury-border)] overflow-hidden w-full relative group">
-      <div className="flex animate-benefits pause-on-hover px-4">
-        {/* Sequence A */}
-        <div className="flex items-center gap-16 lg:gap-24 whitespace-nowrap pl-16 lg:pl-24">
-          {BENEFITS.map((benefit, i) => (
-            <div key={i} className="flex items-center gap-4 text-[var(--luxury-brown)] transition-all hover:text-[var(--luxury-gold)] shrink-0 group/item cursor-default">
-              <benefit.icon className="w-4 h-4 text-[var(--luxury-gold)] opacity-80 group-hover/item:scale-110 transition-transform" strokeWidth={1.5} />
-              <span className="label-sm italic">{benefit.label}</span>
-              <span className="text-[var(--luxury-gold)]/30 ml-8 lg:ml-20">✦</span>
-            </div>
+    <section className="bg-canvas-2 border-b border-line" aria-label="Why shop with SatvaStones">
+      <div className="container-premium">
+        <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 py-4 lg:py-5 divide-line">
+          {BENEFITS.map(({ label, sub, Icon }) => (
+            <li key={label} className="flex items-center gap-3 px-1">
+              <span className="w-9 h-9 rounded-full bg-surface border border-line flex items-center justify-center flex-shrink-0">
+                <Icon className="w-4 h-4 text-metal" strokeWidth={1.75} />
+              </span>
+              <span className="leading-tight">
+                <span className="block text-[11px] font-semibold uppercase tracking-wider text-ink">{label}</span>
+                <span className="block text-[11px] text-ink-mute">{sub}</span>
+              </span>
+            </li>
           ))}
-        </div>
-        
-        {/* Sequence B (Loop) */}
-        <div className="flex items-center gap-16 lg:gap-24 whitespace-nowrap pl-16 lg:pl-24">
-          {BENEFITS.map((benefit, i) => (
-            <div key={i + 10} className="flex items-center gap-4 text-[var(--luxury-brown)] transition-all hover:text-[var(--luxury-gold)] shrink-0 group/item cursor-default">
-              <benefit.icon className="w-4 h-4 text-[var(--luxury-gold)] opacity-80 group-hover/item:scale-110 transition-transform" strokeWidth={1.5} />
-              <span className="label-sm italic">{benefit.label}</span>
-              <span className="text-[var(--luxury-gold)]/30 ml-8 lg:ml-20">✦</span>
-            </div>
-          ))}
-        </div>
+        </ul>
       </div>
-    </div>
+    </section>
   );
 }

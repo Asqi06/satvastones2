@@ -16,9 +16,10 @@ export default async function AdminCustomersPage({
     role: "CUSTOMER" as const,
     ...(search
       ? {
+          // NOTE: `mode: "insensitive"` is not supported on MongoDB — contains is case-sensitive.
           OR: [
-            { name: { contains: search, mode: "insensitive" as const } },
-            { email: { contains: search, mode: "insensitive" as const } },
+            { name: { contains: search } },
+            { email: { contains: search } },
           ],
         }
       : {}),
@@ -27,7 +28,8 @@ export default async function AdminCustomersPage({
   let customers: any[] = [];
   let totalCount = 0;
   try {
-    [customers, totalCount] = await prisma.$transaction([
+    // NOTE: prisma.$transaction([...]) batch form is not supported on MongoDB.
+    [customers, totalCount] = await Promise.all([
       prisma.user.findMany({
         where,
         include: {

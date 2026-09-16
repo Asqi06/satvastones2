@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function GET(
   request: Request,
@@ -34,6 +35,9 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     const body = await request.json();
@@ -62,13 +66,12 @@ export async function PUT(
         await tx.saleProduct.deleteMany({ where: { saleId: id } });
 
         if (productIds.length > 0) {
-          await tx.saleProduct.createMany({
-            data: productIds.map((productId: string, index: number) => ({
-              saleId: id,
-              productId,
-              sortOrder: index,
-            })),
-          });
+          // NOTE: createMany is not supported on MongoDB — insert one by one.
+          for (const [index, productId] of (productIds as string[]).entries()) {
+            await tx.saleProduct.create({
+              data: { saleId: id, productId, sortOrder: index },
+            });
+          }
         }
       }
 
@@ -98,6 +101,9 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { id } = await params;
 

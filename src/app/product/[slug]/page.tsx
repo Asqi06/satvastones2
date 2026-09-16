@@ -10,14 +10,14 @@ interface Props {
 const MOCK_PRODUCTS = [
   {
     id: "mock1",
-    name: "Korean Minimalist Gold Ring",
+    name: "Korean Minimalist Ring",
     slug: "korean-minimalist-gold-ring",
-    price: 4999,
-    comparePrice: 6999,
+    price: 599,
+    comparePrice: 899,
     images: ["/gold_ring_minimalist_1774634383905.png"],
-    material: "18K Gold",
+    material: "Gold Plated",
     style: "KOREAN",
-    description: "A minimalist gold ring that captures the essence of modern Seoul street style. Perfect for stacking or wearing strictly solo.",
+    description: "A minimalist 18K gold-plated ring that captures modern Seoul street style. Anti-tarnish and waterproof — stack it or wear it solo, all day, every day.",
     stock: 10,
     reviews: [],
     sku: "MOCK1",
@@ -29,14 +29,14 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock2",
-    name: "Abstract Seoul Earrings",
+    name: "Seoul Twist Hoop Earrings",
     slug: "abstract-seoul-earrings",
-    price: 3499,
+    price: 499,
     comparePrice: null,
     images: ["/korean_earrings_premium_1774634324348.png"],
-    material: "Silver",
+    material: "Silver Plated",
     style: "KOREAN",
-    description: "Architectural lines meet classic elegance with these abstract earrings. Handcrafted for the sophisticated woman.",
+    description: "Architectural twisted hoops in a lightweight silver-plated finish. Anti-tarnish, waterproof, and skin-safe for effortless everyday wear.",
     stock: 15,
     reviews: [],
     sku: "MOCK2",
@@ -48,14 +48,14 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock3",
-    name: "Elite Western Necklace",
+    name: "Layered Chain Necklace",
     slug: "elite-western-necklace",
-    price: 12999,
-    comparePrice: 15999,
+    price: 799,
+    comparePrice: 1199,
     images: ["/western_necklace_premium_1774634354735.png"],
-    material: "Gold",
+    material: "Gold Plated",
     style: "WESTERN",
-    description: "An elite statement piece featuring traditional western motifs seamlessly blended into a modern silhouette.",
+    description: "A delicate 18K gold-plated layered chain that dresses up any outfit. Anti-tarnish and waterproof — keeps its shine through showers and workouts.",
     stock: 5,
     reviews: [],
     sku: "MOCK3",
@@ -67,14 +67,14 @@ const MOCK_PRODUCTS = [
   },
   {
     id: "mock4",
-    name: "Emerald Horizon Bracelet",
+    name: "Rose Gold Cuff Bracelet",
     slug: "emerald-horizon-bracelet",
-    price: 8999,
-    comparePrice: 10999,
+    price: 699,
+    comparePrice: 999,
     images: ["/emerald_bracelet_hero_1774677499386.png"],
-    material: "Emerald",
+    material: "Rose Gold Plated",
     style: "WESTERN",
-    description: "Breathtaking emerald stones set in a delicate horizon arrangement. The ultimate luxury artifact.",
+    description: "A sleek rose gold-plated cuff with a soft modern silhouette. Anti-tarnish, waterproof, and nickel-free for sensitive skin.",
     stock: 2,
     reviews: [],
     sku: "MOCK4",
@@ -173,9 +173,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords,
     alternates: { canonical: `https://satvastones.in/product/${slug}` },
     openGraph: {
+      type: "website",
+      url: `https://satvastones.in/product/${slug}`,
       title: metaTitle,
       description: desc,
-      images: product.images && product.images[0] ? [product.images[0]] : [],
+      ...(product.images && product.images[0] ? { images: [product.images[0]] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metaTitle,
+      description: desc,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }
@@ -314,6 +331,38 @@ export default async function ProductPage({ params }: Props) {
     }));
   }
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": `${productUrl}#faq`,
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: `Is ${product.name} anti-tarnish and waterproof?`,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: `Yes. ${product.name} in ${product.material || "premium plated"} finish is anti-tarnish, waterproof and skin-safe for everyday wear. Avoid perfumes and store dry for lasting shine.`,
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How long is delivery and is COD available?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Dispatch within 24-48 hours with estimated delivery in 3-5 business days across India. COD is available and prepaid orders over ₹399 ship free with live tracking.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What if my jewellery arrives damaged?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Email support@satvastones.in within 48 hours of delivery with photos and your Order ID for a free replacement. All sales are final except verified damage claims.",
+        },
+      },
+    ],
+  };
+
   return (
     <>
       <script
@@ -323,6 +372,10 @@ export default async function ProductPage({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
       <ProductDetail
         product={product}

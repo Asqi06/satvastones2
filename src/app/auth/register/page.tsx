@@ -7,7 +7,7 @@ import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from "lucide-react";
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-luxury-cream pt-32" />}>
+    <Suspense fallback={<div className="min-h-screen bg-[var(--paper)]" />}>
       <RegisterForm />
     </Suspense>
   );
@@ -63,16 +63,17 @@ function RegisterForm() {
   };
 
   return (
-    <div className="min-h-screen bg-luxury-cream flex flex-col pt-32 pb-20 px-4 items-center">
+    <div className="min-h-screen bg-[var(--paper)] text-[var(--ink)]">
+      <div className="editorial-container py-10 lg:py-14 flex flex-col items-center">
       <div className="w-full max-w-sm animate-luxury-fade">
-        <Link href="/" className="inline-flex items-center gap-2 text-luxury-brown/30 hover:text-luxury-brown mb-16 transition-colors group">
+        <Link href="/" className="inline-flex items-center gap-2 text-[var(--muted)] hover:text-[var(--ink)] mb-16 transition-colors group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           <span className="text-[10px] tracking-widest uppercase font-bold">Return to Gallery</span>
         </Link>
 
         <div className="mb-16">
-          <h1 className="text-4xl lg:text-6xl font-serif text-luxury-brown mb-4">Membership</h1>
-          <p className="text-luxury-brown/30 text-[10px] tracking-[0.4em] uppercase font-bold">Initialize your archival access</p>
+          <h1 className="text-4xl lg:text-6xl font-serif font-normal tracking-[-0.03em] text-[var(--ink)] mb-4">Membership</h1>
+          <p className="eyebrow text-[var(--muted)]">Initialize your archival access</p>
         </div>
 
         <div className="space-y-12">
@@ -85,51 +86,51 @@ function RegisterForm() {
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="space-y-6">
               <div className="group">
-                <label className="block text-[9px] font-bold text-luxury-brown/30 mb-3 tracking-[0.2em] uppercase group-focus-within:text-luxury-gold transition-colors">Full Designation</label>
+                <label className="block text-[9px] font-bold text-[var(--muted)] mb-3 tracking-[0.2em] uppercase group-focus-within:text-[var(--olive)] transition-colors">Full Designation</label>
                 <div className="relative">
-                  <User className="absolute left-0 top-1/2 -translate-y-1/2 text-luxury-brown/10 w-4 h-4 group-focus-within:text-luxury-gold transition-colors" />
+                  <User className="absolute left-0 top-1/2 -translate-y-1/2 text-[var(--muted)] w-4 h-4 group-focus-within:text-[var(--olive)] transition-colors" />
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
                     placeholder="FULL NAME"
-                    className="w-full pl-8 pr-4 py-4 bg-transparent border-b border-luxury-brown/10 text-luxury-brown placeholder-luxury-brown/5 focus:outline-none focus:border-luxury-gold transition-all text-xs tracking-widest uppercase"
+                    className="w-full pl-8 pr-4 py-4 bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] text-sm placeholder:text-[var(--muted)] focus:border-[var(--olive)] focus:outline-none transition-all text-xs tracking-widest uppercase"
                   />
                 </div>
               </div>
 
               <div className="group">
-                <label className="block text-[9px] font-bold text-luxury-brown/30 mb-3 tracking-[0.2em] uppercase group-focus-within:text-luxury-gold transition-colors">Digital ID</label>
+                <label className="block text-[9px] font-bold text-[var(--muted)] mb-3 tracking-[0.2em] uppercase group-focus-within:text-[var(--olive)] transition-colors">Digital ID</label>
                 <div className="relative">
-                  <Mail className="absolute left-0 top-1/2 -translate-y-1/2 text-luxury-brown/10 w-4 h-4 group-focus-within:text-luxury-gold transition-colors" />
+                  <Mail className="absolute left-0 top-1/2 -translate-y-1/2 text-[var(--muted)] w-4 h-4 group-focus-within:text-[var(--olive)] transition-colors" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     placeholder="EMAIL ADDRESS"
-                    className="w-full pl-8 pr-4 py-4 bg-transparent border-b border-luxury-brown/10 text-luxury-brown placeholder-luxury-brown/5 focus:outline-none focus:border-luxury-gold transition-all text-xs tracking-widest uppercase"
+                    className="w-full pl-8 pr-4 py-4 bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] text-sm placeholder:text-[var(--muted)] focus:border-[var(--olive)] focus:outline-none transition-all text-xs tracking-widest uppercase"
                   />
                 </div>
               </div>
 
               <div className="group">
-                <label className="block text-[9px] font-bold text-luxury-brown/30 mb-3 tracking-[0.2em] uppercase group-focus-within:text-luxury-gold transition-colors">Encrypted Key</label>
+                <label className="block text-[9px] font-bold text-[var(--muted)] mb-3 tracking-[0.2em] uppercase group-focus-within:text-[var(--olive)] transition-colors">Encrypted Key</label>
                 <div className="relative">
-                  <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-luxury-brown/10 w-4 h-4 group-focus-within:text-luxury-gold transition-colors" />
+                  <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-[var(--muted)] w-4 h-4 group-focus-within:text-[var(--olive)] transition-colors" />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     placeholder="CREATE PASSWORD"
-                    className="w-full pl-8 pr-12 py-4 bg-transparent border-b border-luxury-brown/10 text-luxury-brown placeholder-luxury-brown/5 focus:outline-none focus:border-luxury-gold transition-all text-xs tracking-widest"
+                    className="w-full pl-8 pr-12 py-4 bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] text-sm placeholder:text-[var(--muted)] focus:border-[var(--olive)] focus:outline-none transition-all text-xs tracking-widest"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 text-luxury-brown/20 hover:text-luxury-brown"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 text-[var(--muted)] hover:text-[var(--ink)]"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -137,16 +138,16 @@ function RegisterForm() {
               </div>
 
               <div className="group">
-                <label className="block text-[9px] font-bold text-luxury-brown/30 mb-3 tracking-[0.2em] uppercase group-focus-within:text-luxury-gold transition-colors">Verification</label>
+                <label className="block text-[9px] font-bold text-[var(--muted)] mb-3 tracking-[0.2em] uppercase group-focus-within:text-[var(--olive)] transition-colors">Verification</label>
                 <div className="relative">
-                  <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-luxury-brown/10 w-4 h-4 group-focus-within:text-luxury-gold transition-colors" />
+                  <Lock className="absolute left-0 top-1/2 -translate-y-1/2 text-[var(--muted)] w-4 h-4 group-focus-within:text-[var(--olive)] transition-colors" />
                   <input
                     type={showPassword ? "text" : "password"}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     placeholder="CONFIRM PASSWORD"
-                    className="w-full pl-8 pr-4 py-4 bg-transparent border-b border-luxury-brown/10 text-luxury-brown placeholder-luxury-brown/5 focus:outline-none focus:border-luxury-gold transition-all text-xs tracking-widest"
+                    className="w-full pl-8 pr-4 py-4 bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] text-sm placeholder:text-[var(--muted)] focus:border-[var(--olive)] focus:outline-none transition-all text-xs tracking-widest"
                   />
                 </div>
               </div>
@@ -155,24 +156,25 @@ function RegisterForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-16 bg-luxury-brown text-white text-[11px] font-bold tracking-[0.4em] uppercase hover:bg-luxury-gold transition-all duration-500 disabled:opacity-50"
+              className="button w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Authenticating..." : "Commence Membership"}
             </button>
           </form>
 
-          <p className="text-center text-[8px] tracking-[0.3em] text-luxury-brown/20 uppercase font-bold leading-relaxed">
+          <p className="text-center text-[8px] tracking-[0.3em] text-[var(--muted)] uppercase font-bold leading-relaxed">
             By initiating membership, you agree to our<br />
-            <Link href="/terms" className="text-luxury-brown/40 hover:text-luxury-gold transition-colors underline">Usage Protocol</Link> and <Link href="/privacy" className="text-luxury-brown/40 hover:text-luxury-gold transition-colors underline">Data Ethics</Link>.
+            <Link href="/terms" className="underline underline-offset-4 hover:text-[var(--olive)] transition-colors">Usage Protocol</Link> and <Link href="/privacy" className="underline underline-offset-4 hover:text-[var(--olive)] transition-colors">Data Ethics</Link>.
           </p>
         </div>
 
         <p className="text-center mt-20 text-[10px] tracking-[0.2em] font-bold uppercase">
-          <span className="text-luxury-brown/30">Existing member?</span>{" "}
-          <Link href="/auth/login" className="text-luxury-gold hover:text-luxury-brown transition-colors">
+          <span className="text-[var(--muted)]">Existing member?</span>{" "}
+          <Link href="/auth/login" className="text-link text-[var(--olive)]">
             Authorize Entry
           </Link>
         </p>
+      </div>
       </div>
     </div>
   );

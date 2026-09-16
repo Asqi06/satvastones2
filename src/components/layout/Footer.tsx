@@ -1,107 +1,181 @@
+"use client";
+
 import Link from "next/link";
-import { Globe, Share2, Mail, MapPin } from "lucide-react";
+import { Instagram, Facebook } from "lucide-react";
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-[var(--luxury-brown)] pt-24 lg:pt-36 pb-12 w-full text-white overflow-hidden">
-      <div className="container-premium px-8 lg:px-16">
-        {/* Main Footer Grid */}
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 mb-24 lg:mb-32">
-          
-          {/* Brand Col */}
-          <div className="w-full lg:w-[40%] flex flex-col items-start gap-8">
-            <Link href="/" className="mb-2 lg:mb-4 block group">
-              <span className="font-serif text-[2.5rem] tracking-[0.2em] uppercase font-light text-white group-hover:text-[var(--luxury-gold)] transition-colors">
-                SATVASTONES
-              </span>
-              <span className="block label-md text-[var(--luxury-gold)] italic mt-2 opacity-80 animate-fade-in">
-                Boutique Artifacts
-              </span>
-            </Link>
-            
-            <p className="text-white/60 label-md leading-[2] tracking-widest uppercase italic max-w-sm">
-              Handcrafting timeless artifacts that bridge the gap between contemporary Western minimalism and heritage Korean aesthetics.
-            </p>
-
-            <p className="text-white/50 label-sm leading-relaxed max-w-xs">
-              Satvastones is an Indian online jewellery brand for anti tarnish, waterproof fashion jewellery — earrings, necklaces, rings, bracelets, and gift hampers designed for daily wear. We blend Korean aesthetic and minimalist gold plated styles at prices that stay affordable, with free shipping above ₹399 and Cash on Delivery available across India.
-            </p>
-            
-            <div className="flex gap-8 mt-6">
-              {[Globe, Share2].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center text-white/50 hover:border-[var(--luxury-gold)] hover:text-[var(--luxury-gold)] transition-all ease-in-out duration-300">
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Links Cols */}
-          <div className="w-full lg:w-[60%] grid grid-cols-1 sm:grid-cols-3 gap-12 lg:gap-16 pt-4">
-            {/* Quick Links */}
-            <div>
-              <h3 className="label-sm text-[var(--luxury-gold)] mb-8 italic">Archives</h3>
-              <ul className="space-y-6">
-                <li><Link href="/products" className="label-md text-white/50 hover:text-white transition-colors">All Collections</Link></li>
-                <li><Link href="/products?style=KOREAN" className="label-md text-white/50 hover:text-white transition-colors">Seoul Minimal</Link></li>
-                <li><Link href="/products?style=WESTERN" className="label-md text-white/50 hover:text-white transition-colors">Parisian Chic</Link></li>
-              </ul>
-            </div>
-
-            {/* Navigation */}
-            <div>
-              <h3 className="label-sm text-[var(--luxury-gold)] mb-8 italic">Navigation</h3>
-              <ul className="space-y-6">
-                <li><Link href="/account" className="label-md text-white/50 hover:text-white transition-colors">Account Console</Link></li>
-                <li><Link href="/shipping" className="label-md text-white/50 hover:text-white transition-colors">Transit Policy</Link></li>
-                <li><Link href="/about" className="label-md text-white/50 hover:text-white transition-colors">Our Story</Link></li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div>
-              <h3 className="label-sm text-[var(--luxury-gold)] mb-8 italic">Contact Info</h3>
-              <ul className="space-y-8">
-                <li className="flex items-start gap-4 group cursor-default">
-                  <MapPin className="w-[18px] h-[18px] text-[var(--luxury-gold)] group-hover:text-white transition-colors flex-shrink-0 mt-0.5" />
-                  <span className="label-md text-white/50 leading-relaxed italic group-hover:text-white transition-colors">
-                    Mumbai Headquarters,<br />Bharat 400001
-                  </span>
-                </li>
-                <li className="flex items-center gap-4 group cursor-default">
-                  <Mail className="w-[18px] h-[18px] text-[var(--luxury-gold)] group-hover:text-white transition-colors flex-shrink-0" />
-                  <span className="label-md text-white/50 italic underline underline-offset-8 decoration-white/10 truncate group-hover:text-white group-hover:decoration-[var(--luxury-gold)] transition-all">
-                    curation@satvastones.com
-                  </span>
-                </li>
-              </ul>
-            </div>
+    <footer className="editorial-container pt-14 pb-6 border-t border-[var(--line)]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-x-10 gap-y-10 items-start pb-12">
+        {/* Brand Column */}
+        <div className="flex flex-col items-start sm:col-span-2 lg:col-span-1">
+          <Link
+            href="/"
+            className="brand font-serif text-[48px] lg:text-[56px] leading-none tracking-[-0.03em] whitespace-nowrap text-[var(--ink)] select-none"
+            aria-label="SatvaStones home"
+          >
+            satvastones<sup className="font-sans text-[10px] font-normal ml-1 align-super tracking-normal">®</sup>
+          </Link>
+          <p className="text-[11px] text-[var(--muted)] leading-[1.8] mt-4 max-w-[280px]">
+            A little gold. A little every day.<br />
+            Thoughtfully crafted anti-tarnish &amp; waterproof jewellery, for a life well-worn.
+          </p>
+          <div className="flex items-center gap-3 mt-5">
+            <a
+              href="https://instagram.com/satvastones"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Instagram"
+              className="w-8 h-8 rounded-full border border-[var(--line)] flex items-center justify-center text-[var(--ink)] hover:text-[var(--olive)] hover:border-[var(--olive)] transition-colors"
+            >
+              <Instagram className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://facebook.com/satvastones"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow us on Facebook"
+              className="w-8 h-8 rounded-full border border-[var(--line)] flex items-center justify-center text-[var(--ink)] hover:text-[var(--olive)] hover:border-[var(--olive)] transition-colors"
+            >
+              <Facebook className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-10 border-t border-white/10">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-8 text-center lg:text-left">
-            <p className="label-sm text-white/30 italic">
-              &copy; {new Date().getFullYear()} SATVASTONES. All works archived. Designed for the Enlightened.
-            </p>
-            
-            <div className="flex items-center gap-8">
-              <Link href="/privacy" className="label-md text-white/40 hover:text-white transition-colors italic underline underline-offset-[6px]">
-                Privacy Rights
+        {/* Column 1: Find Your Thing (Categories) */}
+        <div>
+          <h3 className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[var(--ink)] mb-5">
+            FIND YOUR THING
+          </h3>
+          <ul className="space-y-3 text-[11px] text-[var(--muted)]">
+            <li>
+              <Link href="/shop" className="hover:text-[var(--ink)] transition-colors block">
+                All jewellery
               </Link>
-              <Link href="/terms" className="label-md text-white/40 hover:text-white transition-colors italic underline underline-offset-[6px]">
-                Terms of Protocol
+            </li>
+            <li>
+              <Link href="/shop/earrings" className="hover:text-[var(--ink)] transition-colors block">
+                Earrings
               </Link>
-            </div>
-            
-             <div className="flex items-center gap-3 grayscale opacity-30 hover:opacity-100 transition-opacity duration-[2000ms]">
-               {[...Array(5)].map((_, i) => (
-                <div key={i} className="w-10 h-6 bg-white/20 rounded-sm"></div>
-              ))}
-            </div>
+            </li>
+            <li>
+              <Link href="/shop/necklaces" className="hover:text-[var(--ink)] transition-colors block">
+                Necklaces &amp; Chains
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop/rings" className="hover:text-[var(--ink)] transition-colors block">
+                Rings &amp; little things
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop/bracelets" className="hover:text-[var(--ink)] transition-colors block">
+                Bracelets &amp; Cuffs
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop?sort=best-selling" className="hover:text-[var(--ink)] transition-colors block">
+                Hot Deals &amp; Bestsellers
+              </Link>
+            </li>
+            <li>
+              <Link href="/shop?sort=newest" className="hover:text-[var(--ink)] transition-colors block">
+                New arrivals
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Column 2: A Little Help */}
+        <div>
+          <h3 className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[var(--ink)] mb-5">
+            A LITTLE HELP
+          </h3>
+          <ul className="space-y-3 text-[11px] text-[var(--muted)]">
+            <li>
+              <Link href="/#care" className="hover:text-[var(--ink)] transition-colors block">
+                Jewellery care guide
+              </Link>
+            </li>
+            <li>
+              <Link href="/shipping" className="hover:text-[var(--ink)] transition-colors block">
+                Shipping &amp; packaging
+              </Link>
+            </li>
+            <li>
+              <Link href="/returns" className="hover:text-[var(--ink)] transition-colors block">
+                Returns &amp; exchanges
+              </Link>
+            </li>
+            <li>
+              <Link href="/wishlist" className="hover:text-[var(--ink)] transition-colors block">
+                Your saved pieces
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" className="hover:text-[var(--ink)] transition-colors block">
+                The SatvaStones story
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" className="hover:text-[var(--ink)] transition-colors block">
+                Contact customer care
+              </Link>
+            </li>
+            <li>
+              <Link href="/blog" className="hover:text-[var(--ink)] transition-colors block">
+                Style journal
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        {/* Column 3: From India With Love */}
+        <div className="sm:col-span-2 lg:col-span-1">
+          <h3 className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[var(--ink)] mb-5">
+            FROM INDIA, WITH LOVE
+          </h3>
+          <p className="text-[11px] text-[var(--muted)] mb-2.5">
+            Small details. Everyday joy.
+          </p>
+          <p className="text-[11px] text-[var(--muted)] mb-2.5">
+            Prices in Indian Rupees (₹).
+          </p>
+          <p className="text-[11px] text-[var(--muted)] mb-3">
+            Anti-tarnish jewellery. Real personality.
+          </p>
+          <div className="text-[11px] text-[var(--muted)] pt-3 border-t border-[var(--line)]">
+            <p className="font-medium text-[var(--ink)] mb-1">SatvaStones Studio</p>
+            <p>Vapi, Gujarat 396191</p>
+            <a href="mailto:support@satvastones.in" className="hover:text-[var(--ink)] transition-colors block mt-1">
+              support@satvastones.in
+            </a>
+            <a href="tel:+919016703180" className="hover:text-[var(--ink)] transition-colors block">
+              +91 90167 03180
+            </a>
           </div>
         </div>
+      </div>
+
+      {/* Footer Bottom Bar */}
+      <div className="pt-6 border-t border-[var(--line)] grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] items-center gap-x-6 gap-y-2 text-center text-[9px] text-[var(--muted)]">
+        <span className="md:text-left">
+          © {currentYear} SatvaStones Studio. A concept storefront, made with intention.
+        </span>
+        <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] font-semibold text-[#5e6256]">
+          <span>UPI</span>
+          <span>·</span>
+          <span>VISA</span>
+          <span>·</span>
+          <span>Mastercard</span>
+          <span>·</span>
+          <span>RuPay</span>
+          <span>·</span>
+          <span>COD</span>
+        </div>
+        <span className="md:text-right">India / INR ₹</span>
       </div>
     </footer>
   );

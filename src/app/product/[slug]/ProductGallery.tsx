@@ -9,7 +9,7 @@ export default function ProductGallery({ product }: { product: ProductDetailProd
   const images = product.images || [];
 
   return (
-    <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-6 sticky top-[140px]">
+    <div className="w-full lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4 lg:sticky lg:top-28 self-start">
       {/* Thumbnails */}
       {images.length > 1 && (
         <div className="flex lg:flex-col gap-4 overflow-x-auto lg:overflow-visible no-scrollbar w-full lg:w-24 shrink-0">
@@ -17,9 +17,9 @@ export default function ProductGallery({ product }: { product: ProductDetailProd
             <button
               key={i}
               onClick={() => setActiveImage(i)}
-              className={`relative w-24 lg:w-full aspect-[4/5] border transition-all ${
+              className={`relative w-20 lg:w-full aspect-[4/5] border transition-all overflow-hidden ${
                 i === activeImage
-                  ? "border-[var(--luxury-brown)]"
+                  ? "border-[var(--ink)]"
                   : "border-transparent opacity-60 hover:opacity-100"
               }`}
             >
@@ -30,7 +30,7 @@ export default function ProductGallery({ product }: { product: ProductDetailProd
       )}
 
       {/* Main Image */}
-      <div className="relative w-full aspect-[4/5] bg-white border border-[var(--luxury-border)] animate-fade-in origin-top">
+      <div className="relative w-full aspect-[4/5] bg-[#e7e1d7] overflow-hidden">
         {images[activeImage] ? (
           <Image
             src={images[activeImage]}
@@ -40,8 +40,8 @@ export default function ProductGallery({ product }: { product: ProductDetailProd
             priority
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-[var(--luxury-border)] font-serif text-8xl">
-            SV
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#e7e1d7] via-[#f6f3ec] to-[#e9ddd1]">
+            <span className="font-serif text-5xl tracking-[0.2em] text-[var(--olive)]/25">Satva</span>
           </div>
         )}
       </div>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#39251e">
+  <meta name="description" content="SatvaStones — an Indian jewelry brand concept. Explore everyday rings, earrings, necklaces and little gifts with a lot of feeling.">
+  <title>SatvaStones — A little extra, every day.</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-action="back-top">Skip to content</a>
+  <div class="announcement">A little Indian soul. A little everyday gold. <span>✦</span> Storefront preview · sample catalog</div>
+  <header class="site-header">
+    <a class="wordmark" href="#/" aria-label="SatvaStones home">satva<span>stones</span><sup>✳</sup></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#/shop" data-nav="shop">The collection</a>
+      <a href="#/shop?category=Gift%20hampers">Little gifts</a>
+      <a href="#/about" data-nav="about">Our world</a>
+    </nav>
+    <nav class="utility-nav" aria-label="Your shopping">
+      <a href="#/account" aria-label="Account details"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 21v-3a7 7 0 0 1 14 0v3"/></svg><span class="utility-label">You</span></a>
+      <a href="#/wishlist" aria-label="Wishlist"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21 3 12C-3 5 7-2 12 6c5-8 15-1 9 6Z"/></svg><span id="wish-count" class="count">0</span></a>
+      <button type="button" data-action="open-cart" aria-label="Open shopping bag"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l2 14H3ZM8 8V6a4 4 0 0 1 8 0v2"/></svg><span id="cart-count" class="count">0</span></button>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer class="site-footer">
+    <div class="footer-top"><div><p class="eyebrow">Stay a little golden.</p><h2>Your everyday.<br>With a little <em>extra.</em></h2></div><a class="round-link" href="#/shop" aria-label="Explore the collection">↗</a></div>
+    <div class="footer-links"><a class="wordmark" href="#/">satva<span>stones</span><sup>✳</sup></a><nav aria-label="Footer navigation"><a href="#/shop">Shop</a><a href="#/about">About us</a><a href="#/account">My account</a><a href="#/wishlist">Wishlist</a></nav><p>Indian soul. Global mood.<br><span>satvastones.in</span></p></div>
+    <div class="fine-print"><span>© <span id="year"></span> SatvaStones</span><span>Design preview · illustrated sample products · no live purchases</span><a href="#main" data-action="back-top">Back to top ↑</a></div>
+  </footer>
+  <dialog id="cart-dialog" aria-labelledby="cart-title">
+    <div class="drawer-header"><div><p class="eyebrow">Good taste, in a bag</p><h2 id="cart-title">Your little treasures</h2></div><button class="icon-button" type="button" data-action="close-cart" aria-label="Close shopping bag" autofocus>×</button></div>
+    <div id="cart-content"></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <noscript><div class="empty-state"><h1>A little JavaScript, please.</h1><p>Enable JavaScript to explore this interactive storefront preview.</p></div></noscript>
+</body>
+</html>

@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
-import { Gift, Share2, Copy, Check, Users, ExternalLink } from "lucide-react";
+import { Gift, Users, ExternalLink } from "lucide-react";
 import Link from "next/link";
+import AccountSidebar from "@/components/account/AccountSidebar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,6 +9,8 @@ export const metadata: Metadata = {
   description: "Refer friends and earn ₹500 per successful referral. Your friends get 10% off their first order.",
   robots: { index: false, follow: false },
 };
+
+export const dynamic = "force-dynamic";
 
 async function getReferralData(email: string) {
   try {
@@ -24,71 +27,75 @@ export default async function ReferralPage() {
   const referralData = session?.user?.email ? await getReferralData(session.user.email) : null;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center gap-4 mb-8">
-        <Link href="/account" className="text-gray-400 hover:text-white transition-colors">
-          My Account
-        </Link>
-        <span className="text-gray-600">/</span>
-        <span className="text-white">Refer & Earn</span>
-      </div>
+    <div className="bg-[var(--paper)] text-[var(--ink)]">
+      <div className="editorial-container py-10 lg:py-14">
+        <div className="eyebrow">Give a little, get a little</div>
+        <h1 className="font-serif font-normal tracking-[-0.03em] leading-[1.02] text-[clamp(42px,4.3vw,63px)] mt-3 mb-8">
+          Refer <em className="text-[var(--olive)]">&amp; earn.</em>
+        </h1>
 
-      <div className="bg-[#1a1a1a] rounded-xl p-8 border border-[#2a2a2a]">
-        <div className="flex items-center gap-3 mb-6">
-          <Gift className="w-6 h-6 text-[#C9A96E]" />
-          <h1 className="text-2xl lg:text-3xl font-serif text-white">Refer &amp; Earn</h1>
-        </div>
-
-        {session ? (
-          referralData ? (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-[#0f0f0f] p-4 rounded-lg text-center border border-[#2a2a2a]">
-                  <div className="text-2xl font-bold text-[#C9A96E]">{referralData.referredCount}</div>
-                  <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Friends Referred</p>
-                </div>
-                <div className="bg-[#0f0f0f] p-4 rounded-lg text-center border border-[#2a2a2a]">
-                  <div className="text-2xl font-bold text-[#C9A96E]">₹{referralData.referralCommissions?.toLocaleString() || 0}</div>
-                  <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">Lifetime Rewards</p>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-400">
-                Your referral code: <span className="font-bold text-[#C9A96E]">{referralData.referralCode}</span>
-              </p>
-
-              <div className="p-4 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg">
-                <h3 className="text-sm font-bold text-white mb-3">How it works</h3>
-                <ul className="space-y-2 text-[11px] text-gray-400">
-                  <li className="flex items-start gap-2">
-                    <Users className="w-3 h-3 text-[#C9A96E] mt-0.5 flex-shrink-0" />
-                    <span>Your friend gets 10% off their first order.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <Gift className="w-3 h-3 text-[#C9A96E] mt-0.5 flex-shrink-0" />
-                    <span>You earn ₹500 for every successful referral.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <ExternalLink className="w-3 h-3 text-[#C9A96E] mt-0.5 flex-shrink-0" />
-                    <span>Rewards credited after their order ships.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          ) : (
-            <p className="text-gray-400">Unable to load referral data. Please try again later.</p>
-          )
-        ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-400 mb-4">Sign in to access your referral program</p>
-            <Link
-              href="/auth/login"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#C9A96E] text-black font-bold rounded-lg hover:bg-[#C9A96E]/90 transition-all"
-            >
-              Sign In
-            </Link>
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+          <div className="lg:col-span-1">
+            <AccountSidebar userName={session?.user?.name} userEmail={session?.user?.email} />
           </div>
-        )}
+
+          <div className="lg:col-span-3">
+            <div className="bg-[var(--white)] border border-[var(--line)] p-6 lg:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <Gift className="w-6 h-6 text-[var(--olive)]" />
+                <h2 className="font-serif text-[28px] font-normal">How it works</h2>
+              </div>
+
+              {session ? (
+                referralData ? (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-[var(--paper)] p-5 text-center border border-[var(--line)]">
+                        <div className="font-serif text-[32px] text-[var(--olive)]">{referralData.referredCount}</div>
+                        <p className="text-[10px] text-[var(--muted)] mt-1 uppercase tracking-[0.14em]">Friends referred</p>
+                      </div>
+                      <div className="bg-[var(--paper)] p-5 text-center border border-[var(--line)]">
+                        <div className="font-serif text-[32px] text-[var(--olive)]">₹{referralData.referralCommissions?.toLocaleString() || 0}</div>
+                        <p className="text-[10px] text-[var(--muted)] mt-1 uppercase tracking-[0.14em]">Lifetime rewards</p>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-[var(--muted)]">
+                      Your referral code: <span className="font-semibold text-[var(--olive)]">{referralData.referralCode}</span>
+                    </p>
+
+                    <div className="p-5 bg-[var(--paper)] border border-[var(--line)]">
+                      <ul className="space-y-3 text-[13px] text-[var(--muted)]">
+                        <li className="flex items-start gap-2.5">
+                          <Users className="w-4 h-4 text-[var(--olive)] mt-0.5 flex-shrink-0" />
+                          <span>Your friend gets 10% off their first order.</span>
+                        </li>
+                        <li className="flex items-start gap-2.5">
+                          <Gift className="w-4 h-4 text-[var(--olive)] mt-0.5 flex-shrink-0" />
+                          <span>You earn ₹500 for every successful referral.</span>
+                        </li>
+                        <li className="flex items-start gap-2.5">
+                          <ExternalLink className="w-4 h-4 text-[var(--olive)] mt-0.5 flex-shrink-0" />
+                          <span>Rewards credited after their order ships.</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-[var(--muted)] text-sm">Unable to load referral data. Please try again later.</p>
+                )
+              ) : (
+                <div className="text-center py-10">
+                  <p className="text-[var(--muted)] mb-5">Sign in to access your referral program</p>
+                  <Link href="/auth/login" className="button inline-flex">
+                    Sign in
+                    <svg className="w-[19px] h-[19px]"><use href="#i-arrow" /></svg>
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

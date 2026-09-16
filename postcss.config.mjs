@@ -1,7 +1,10 @@
-// Tailwind v4 with @tailwindcss/vite handles CSS processing via the Vite plugin.
-// PostCSS config is intentionally empty to avoid conflicts.
+// Tailwind CSS v4 is processed through PostCSS in Next.js.
+// The old @tailwindcss/vite plugin was removed with the Vite stack; without
+// this plugin Tailwind emits no utility classes and the site renders unstyled.
 const config = {
-  plugins: {},
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
 };
 
 export default config;

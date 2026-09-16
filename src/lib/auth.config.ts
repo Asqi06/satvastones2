@@ -1,6 +1,10 @@
 import type { NextAuthConfig } from "next-auth";
 
 export const authConfig: NextAuthConfig = {
+  // Auth.js v5 rejects requests unless the host is trusted. Without this,
+  // every sign-in fails with UntrustedHost behind a proxy (Render/Vercel)
+  // or on any port other than the one baked into NEXTAUTH_URL.
+  trustHost: true,
   pages: {
     signIn: "/auth/login",
   },

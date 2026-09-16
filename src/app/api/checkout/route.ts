@@ -19,13 +19,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
+    const isCod = body.paymentMethod === "COD" || body.paymentMethod === "cod";
     const orderNumber = generateOrderNumber();
+    let razorpayOrderId: string | null = null;
+    let paymentId: string | null = null;
 
-    const razorpayOrder = await getRazorpay().orders.create({
-      amount: Math.round(finalAmount * 100),
-      currency: "INR",
-      receipt: orderNumber,
-    });
+    if (isCod) {
+      paymentId = `COD-${orderNumber}`;
+    } else {
+      const razorpayOrder = await getRazorpay().orders.create({
+        amount: Math.round(finalAmount * 100),
+        currency: "INR",
+        receipt: orderNumber,
+      });
+      razorpayOrderId = razorpayOrder.id;
+      paymentId = razorpayOrder.id;
+    }
 
     const order = await prisma.order.create({
       data: {
@@ -36,9 +45,10 @@ export async function POST(request: Request) {
         shippingAmount,
         finalAmount,
         shippingAddressId: shippingAddressId || null,
-        paymentMethod: "razorpay",
-        paymentId: razorpayOrder.id,
+        paymentMethod: isCod ? "COD" : "razorpay",
+        paymentId: paymentId || orderNumber,
         paymentStatus: "PENDING",
+        status: isCod ? "CONFIRMED" : "PENDING",
         couponId: couponId || null,
         couponCode: couponCode || null,
         items: {
@@ -62,7 +72,8 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       orderId: order.id,
-      razorpayOrderId: razorpayOrder.id,
+      razorpayOrderId,
+      isCod,
     });
   } catch (error) {
     console.error("Checkout error:", error);

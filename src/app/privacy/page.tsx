@@ -9,17 +9,17 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <div className="bg-luxury-cream pt-40 pb-32 min-h-screen">
-      <div className="container-premium max-w-4xl">
-        <div className="mb-24 animate-luxury-fade">
-          <p className="text-luxury-gold text-[10px] tracking-[0.5em] uppercase font-bold mb-6">Confidentiality</p>
-          <h1 className="text-5xl lg:text-8xl font-serif text-luxury-brown mb-12">Privacy Policy</h1>
-          <div className="h-px w-24 bg-luxury-gold"></div>
+    <div className="bg-[var(--paper)] text-[var(--ink)] min-h-screen">
+      <div className="editorial-container max-w-4xl py-10 lg:py-14">
+        <div className="mb-10 lg:mb-14">
+          <p className="eyebrow text-[var(--muted)] mb-6">Confidentiality</p>
+          <h1 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-5xl lg:text-7xl mb-8">Privacy <em className="text-[var(--olive)]">Policy</em></h1>
+          <div className="h-px w-24 bg-[var(--olive)]"></div>
         </div>
 
-        <div className="space-y-20 text-luxury-brown/60 font-light leading-relaxed tracking-wide animate-luxury-fade luxury-delay-200">
+        <div className="space-y-12 text-[var(--muted)] font-light leading-relaxed tracking-wide">
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Identity Curation</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Identity Curation</h2>
             <p>
               We collect and process personal identity data strictly to facilitate your acquisitions. This includes your name, email address, phone number, and physical delivery coordinates — information essential for processing your orders of Korean aesthetic jewelry, anti-tarnish earrings, and gold-plated necklaces.
             </p>
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Temporal Preservation</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Temporal Preservation</h2>
             <p>
               Your data is archived on encrypted repositories and is only accessible by authorized archival personnel. We employ industry-standard SSL encryption, firewalls, and access control protocols to prevent unauthorized access, disclosure, or modification of your personal information.
             </p>
@@ -42,7 +42,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Digital Footprints</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Digital Footprints</h2>
             <p>
               We use refined tracking technologies including cookies and pixel tags to enhance your browsing experience and personalize your collection discovery. These technologies help us understand which aesthetic jewelry categories — whether earrings, necklaces, rings, or bracelets — resonate most with our community.
             </p>
@@ -52,9 +52,9 @@ export default function PrivacyPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Right to Erasure</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Right to Erasure</h2>
             <p>
-              You retain the absolute right to have your data permanently purged from our archives at any moment by contacting our data curator at curation@satvastones.com. Upon verification of your identity, we will delete your account, order history, and all associated personal data within 30 business days, in accordance with the Information Technology Act, 2000 and India's digital personal data protection framework.
+              You retain the absolute right to have your data permanently purged from our archives at any moment by contacting our data curator at support@satvastones.in. Upon verification of your identity, we will delete your account, order history, and all associated personal data within 30 business days, in accordance with the Information Technology Act, 2000 and India's digital personal data protection framework.
             </p>
             <p>
               You also have the right to request a portable copy of your data, correct any inaccuracies in your profile, or restrict processing of your information for specific purposes. To exercise any of these rights, simply reach out to our support team with your request and we will respond within the statutory timeframe.
@@ -62,7 +62,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Policy Refresh Protocol</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Policy Refresh Protocol</h2>
             <p>
               This privacy charter may be updated periodically to reflect changes in our data practices, legal obligations, or platform capabilities. We encourage you to review this page regularly. Material changes will be communicated via email or a prominent notice on the SatvaStones website prior to taking effect.
             </p>

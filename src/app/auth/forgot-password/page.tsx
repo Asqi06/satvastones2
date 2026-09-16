@@ -37,19 +37,19 @@ export default function ForgotPasswordPage() {
 
   if (sent) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--paper)] text-[var(--ink)] px-4 py-10 lg:py-14">
         <div className="w-full max-w-md text-center">
-          <div className="bg-[#1a1a1a] rounded-2xl p-8 border border-[#2a2a2a]">
-            <div className="w-16 h-16 bg-[#C9A96E]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Mail className="w-8 h-8 text-[#C9A96E]" />
+          <div className="bg-[var(--white)] border border-[var(--line)] p-8">
+            <div className="w-16 h-16 bg-[var(--olive)]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Mail className="w-8 h-8 text-[var(--olive)]" />
             </div>
-            <h2 className="text-2xl font-serif text-white mb-3">Check Your Email</h2>
-            <p className="text-gray-400 mb-6">
-              We&apos;ve sent a password reset link to <span className="text-white">{email}</span>
+            <h2 className="text-2xl font-serif font-normal tracking-[-0.03em] text-[var(--ink)] mb-3">Check Your Email</h2>
+            <p className="text-[var(--muted)] mb-6">
+              We&apos;ve sent a password reset link to <span className="text-[var(--ink)]">{email}</span>
             </p>
             <Link
               href="/auth/login"
-              className="inline-flex items-center gap-2 text-[#C9A96E] hover:underline"
+              className="text-link text-[var(--olive)]"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Sign In
@@ -61,40 +61,40 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0f0f0f] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[var(--paper)] text-[var(--ink)] px-4 py-10 lg:py-14">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/" className="text-3xl font-serif text-[#C9A96E] tracking-wider">
+          <Link href="/" className="text-3xl font-serif font-normal tracking-[-0.03em] text-[var(--olive)]">
             SATVASTONES
           </Link>
-          <p className="text-gray-400 mt-2">Reset your password</p>
+          <p className="eyebrow text-[var(--muted)] mt-2">Reset your password</p>
         </div>
 
-        <div className="bg-[#1a1a1a] rounded-2xl p-8 border border-[#2a2a2a]">
-          <p className="text-gray-400 text-sm mb-6">
+        <div className="bg-[var(--white)] border border-[var(--line)] p-8">
+          <p className="text-[var(--muted)] text-sm mb-6">
             Enter your email address and we&apos;ll send you a link to reset your password.
           </p>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-lg mb-6 text-sm">
+            <div className="bg-red-500/10 border border-red-500/20 text-red-800 px-4 py-3 mb-6 text-sm">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-[var(--ink)] mb-2">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--muted)] w-5 h-5" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder="you@example.com"
-                  className="w-full pl-10 pr-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-[#C9A96E] transition-colors"
+                  className="w-full pl-10 pr-4 py-3 bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] text-sm placeholder:text-[var(--muted)] focus:border-[var(--olive)] focus:outline-none transition-colors"
                 />
               </div>
             </div>
@@ -102,15 +102,15 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-[#C9A96E] text-black font-semibold rounded-lg hover:bg-[#b8955d] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="button w-full disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Sending..." : "Send Reset Link"}
             </button>
           </form>
         </div>
 
-        <p className="text-center text-gray-400 mt-6 text-sm">
-          <Link href="/auth/login" className="text-[#C9A96E] hover:underline font-medium flex items-center justify-center gap-2">
+        <p className="text-center text-[var(--muted)] mt-6 text-sm">
+          <Link href="/auth/login" className="text-link text-[var(--olive)] font-medium">
             <ArrowLeft className="w-4 h-4" />
             Back to Sign In
           </Link>

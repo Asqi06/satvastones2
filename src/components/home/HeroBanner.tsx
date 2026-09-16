@@ -11,14 +11,14 @@ const SLIDES = [
     title: "Timeless Artifacts",
     subtitle: "New Collection",
     description: "Discover handcrafted gems designed for the modern woman.",
-    link: "/products",
+    link: "/shop",
   },
   {
     image: "/korean_earrings_premium_1774634324348.png",
     title: "Seoul Minimalism",
     subtitle: "Signature Selection",
     description: "Bridging architectural lines and contemporary elegance.",
-    link: "/products?style=KOREAN",
+    link: "/shop?style=KOREAN",
   },
 ];
 
@@ -89,7 +89,7 @@ export default function HeroBanner() {
               Examine Piece
             </Link>
             <Link 
-              href="/products" 
+              href="/shop" 
               className="px-8 py-4 lg:px-12 lg:py-5 bg-transparent border border-[var(--luxury-brown)] text-[var(--luxury-brown)] label-sm hover:bg-[var(--luxury-brown)] hover:text-white transition-all ease-in-out duration-300"
             >
               Shop Curations

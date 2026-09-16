@@ -2,11 +2,15 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/sendgrid";
 import { ORDER_STATUS_LABELS } from "@/lib/constants";
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     const { status } = await request.json();

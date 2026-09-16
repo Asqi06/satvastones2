@@ -1,38 +1,76 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { config as loadEnv } from "dotenv";
 
+// Prisma 7 does not load .env automatically. Match Next.js precedence:
+// .env first, then .env.local overrides it.
+const rootDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+loadEnv({ path: path.join(rootDir, ".env"), quiet: true });
+loadEnv({ path: path.join(rootDir, ".env.local"), override: true, quiet: true });
+
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is not set. Add it to .env or .env.local before seeding.");
+}
+
+// MongoDB Atlas needs no driver adapter — plain client is enough.
 const prisma = new PrismaClient();
 
-async function main() {
-  // Create admin user
-  const adminPassword = await bcrypt.hash("admin123", 12);
-  const admin = await prisma.user.upsert({
-    where: { email: "admin@satvastones.com" },
-    update: {},
-    create: {
-      name: "Admin",
-      email: "admin@satvastones.com",
-      password: adminPassword,
-      role: "ADMIN",
+function genReferralCode(prefix: string) {
+  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+  return `${prefix}${rand}`;
+}
+
+async function upsertUserWithReferral(
+  email: string,
+  data: { name: string; password: string; role: "ADMIN" | "CUSTOMER" }
+) {
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) {
+    if (!existing.referralCode) {
+      const code = genReferralCode(existing.role === "ADMIN" ? "ADM" : "USR");
+      const updated = await prisma.user.update({
+        where: { email },
+        data: { referralCode: code },
+      });
+      console.log(`Updated referralCode for ${email}: ${code}`);
+      return updated;
+    }
+    console.log(`User exists: ${email} (referralCode: ${existing.referralCode})`);
+    return existing;
+  }
+  const code = genReferralCode(data.role === "ADMIN" ? "ADM" : "USR");
+  const created = await prisma.user.create({
+    data: {
+      name: data.name,
+      email,
+      password: data.password,
+      role: data.role,
       emailVerified: new Date(),
+      referralCode: code,
     },
   });
-  console.log("Admin created:", admin.email);
+  console.log(`User created: ${email} (referralCode: ${code})`);
+  return created;
+}
+
+async function main() {
+  // Create admin user (MongoDB unique on referralCode is NOT sparse — two nulls would collide)
+  const adminPassword = await bcrypt.hash("admin123", 12);
+  await upsertUserWithReferral("admin@satvastones.com", {
+    name: "Admin",
+    password: adminPassword,
+    role: "ADMIN",
+  });
 
   // Create demo customer
   const customerPassword = await bcrypt.hash("customer123", 12);
-  const customer = await prisma.user.upsert({
-    where: { email: "customer@example.com" },
-    update: {},
-    create: {
-      name: "Demo Customer",
-      email: "customer@example.com",
-      password: customerPassword,
-      role: "CUSTOMER",
-      emailVerified: new Date(),
-    },
+  await upsertUserWithReferral("customer@example.com", {
+    name: "Demo Customer",
+    password: customerPassword,
+    role: "CUSTOMER",
   });
-  console.log("Customer created:", customer.email);
 
   // Create categories
   const categories = [
@@ -55,7 +93,17 @@ async function main() {
   }
   console.log("Categories created");
 
-  // Create sample products
+  // Fix existing MongoDB unique-sparse gap: optional @unique `sku` with multiple nulls collides.
+  // Prisma's `where: { sku: null }` does not match MongoDB nulls reliably — filter in JS instead.
+  const allProductsForFix = await prisma.product.findMany({ select: { id: true, slug: true, sku: true } });
+  const nullSkuProducts = allProductsForFix.filter((p) => p.sku === null);
+  for (const p of nullSkuProducts) {
+    const sku = `SKU-${p.slug.toUpperCase().replace(/[^A-Z0-9]/g, "-").slice(0, 24)}-${p.id.slice(-4).toUpperCase()}`;
+    await prisma.product.update({ where: { id: p.id }, data: { sku } });
+    console.log(`Fixed null sku for ${p.slug} -> ${sku}`);
+  }
+
+  // Create sample products — every product gets a unique sku (MongoDB @unique on optional field would collide on multiple nulls)
   const koreanCat = await prisma.category.findUnique({ where: { slug: "korean-jewellery" } });
   const westernCat = await prisma.category.findUnique({ where: { slug: "western-jewellery" } });
   const earringsCat = await prisma.category.findUnique({ where: { slug: "earrings" } });
@@ -64,7 +112,8 @@ async function main() {
     {
       name: "Korean Pearl Drop Earrings",
       slug: "korean-pearl-drop-earrings",
-      description: "Elegant Korean-style pearl drop earrings with gold-plated hooks. Perfect for both casual and formal occasions. Features genuine freshwater pearls.",
+      sku: "SKU-KOREAN-PEARL-DROP-001",
+      description: "Elegant Korean-style pearl drop earrings with gold-plated hooks. Perfect for both casual and formal occasions. Features genuine freshwater pearls. Anti-tarnish and waterproof — safe for showers, workouts, and everyday wear.",
       price: 1299,
       comparePrice: 1999,
       material: "Gold Plated",
@@ -77,7 +126,8 @@ async function main() {
     {
       name: "Minimalist Gold Chain Necklace",
       slug: "minimalist-gold-chain-necklace",
-      description: "Delicate Korean-inspired gold chain necklace. Ultra-thin design perfect for layering. 18K gold plated over sterling silver.",
+      sku: "SKU-MINIMALIST-CHAIN-002",
+      description: "Delicate Korean-inspired gold chain necklace. Ultra-thin design perfect for layering. 18K gold plated over a durable base — anti-tarnish, waterproof, and skin-safe for daily wear.",
       price: 2499,
       material: "18K Gold Plated",
       style: "KOREAN" as const,
@@ -89,10 +139,11 @@ async function main() {
     {
       name: "Crystal Butterfly Earrings",
       slug: "crystal-butterfly-earrings",
-      description: "Stunning Western-style crystal butterfly earrings. Sparkling Austrian crystals set in rose gold. Perfect for special occasions.",
+      sku: "SKU-CRYSTAL-BUTTERFLY-003",
+      description: "Stunning Western-style crystal butterfly earrings. Sparkling crystals set in rose gold-plated metal. Anti-tarnish, waterproof, and nickel-free for all-day sparkle.",
       price: 1899,
       comparePrice: 2499,
-      material: "Rose Gold",
+      material: "Rose Gold Plated",
       style: "WESTERN" as const,
       stock: 30,
       isFeatured: true,
@@ -102,9 +153,10 @@ async function main() {
     {
       name: "Korean Twisted Hoop Earrings",
       slug: "korean-twisted-hoop-earrings",
-      description: "Trendy Korean-style twisted hoop earrings. Lightweight and comfortable for everyday wear. Sterling silver with rhodium plating.",
+      sku: "SKU-TWISTED-HOOP-004",
+      description: "Trendy Korean-style twisted hoop earrings. Lightweight and comfortable for everyday wear. Hypoallergenic stainless steel — anti-tarnish, waterproof, and sweatproof.",
       price: 899,
-      material: "Sterling Silver",
+      material: "Stainless Steel",
       style: "KOREAN" as const,
       stock: 50,
       isFeatured: false,
@@ -114,7 +166,8 @@ async function main() {
     {
       name: "Vintage Western Locket",
       slug: "vintage-western-locket",
-      description: "Beautiful vintage-inspired Western locket pendant. Holds two small photos inside. Antique gold finish with intricate filigree work.",
+      sku: "SKU-VINTAGE-LOCKET-005",
+      description: "Beautiful vintage-inspired Western locket pendant. Holds two small photos inside. Antique gold finish with intricate filigree work. Anti-tarnish coating keeps it bright through everyday wear.",
       price: 3499,
       comparePrice: 4499,
       material: "Brass",
@@ -127,7 +180,8 @@ async function main() {
     {
       name: "Korean Dainty Ring Set",
       slug: "korean-dainty-ring-set",
-      description: "Set of 5 Korean-style dainty stackable rings. Mix and match to create your own look. Gold plated with adjustable sizing.",
+      sku: "SKU-DAINTY-RING-SET-006",
+      description: "Set of 5 Korean-style dainty stackable rings. Mix and match to create your own look. Gold plated with adjustable sizing. Anti-tarnish, waterproof, and skin-safe for daily stacking.",
       price: 799,
       material: "Gold Plated",
       style: "KOREAN" as const,

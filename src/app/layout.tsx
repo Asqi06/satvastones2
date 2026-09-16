@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import ScrollReveal from "@/components/ScrollReveal";
 import { SessionProvider } from "next-auth/react";
 import { prisma } from "@/lib/prisma";
 
@@ -43,8 +44,13 @@ export const metadata: Metadata = {
     canonical: "https://satvastones.in",
   },
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     type: "website",
@@ -52,20 +58,18 @@ export const metadata: Metadata = {
     siteName: "SatvaStones",
     title: "SatvaStones | Korean & Aesthetic Jewellery India",
     description: "Shop premium Korean and aesthetic jewellery online in India. Tarnish-free, waterproof pieces.",
-    images: [
-      {
-        url: "https://www.satvastones.in/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "SatvaStones - Korean & Aesthetic Jewellery",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
+    site: "@satvastones",
+    creator: "@satvastones",
     title: "SatvaStones | Korean & Aesthetic Jewellery India",
     description: "Shop premium Korean and aesthetic jewellery online in India. Tarnish-free, waterproof pieces.",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f6f3ec",
 };
 
 const organizationJsonLd = {
@@ -113,7 +117,7 @@ const websiteJsonLd = {
     "@type": "SearchAction",
     "target": {
       "@type": "EntryPoint",
-      "urlTemplate": "https://satvastones.in/shop?q={search_term_string}"
+      "urlTemplate": "https://satvastones.in/shop?search={search_term_string}"
     },
     "query-input": "required name=search_term_string"
   }
@@ -138,7 +142,12 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${cormorant.variable} ${montserrat.variable}`}>
       <head>
-        <link rel="preload" as="image" href="https://www.satvastones.in/og-image.jpg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Instrument+Serif:ital@0;1&display=swap"
+          rel="stylesheet"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
@@ -148,8 +157,9 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
       </head>
-      <body className="min-h-full flex flex-col antialiased bg-white text-gray-900">
+      <body className="min-h-full flex flex-col antialiased bg-[var(--paper)] text-[var(--ink)]">
         <SessionProvider>
+          <ScrollReveal />
           <Header categories={categories} />
           <main className="flex-1">{children}</main>
           <Footer />

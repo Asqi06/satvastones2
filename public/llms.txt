@@ -1,45 +1,52 @@
-# Satvastones - Premium Korean and Western Aesthetic Jewelry
+# Satvastones - Korean & Anti-Tarnish Jewellery Online in India
 
-Satvastones is an Indian ecommerce jewelry brand based in Vapi, Gujarat. The store sells anti-tarnish, waterproof, gift-ready Korean and Western aesthetic jewelry for women, including earrings, necklaces, rings, bracelets, pendants, hampers, and personalized name necklaces.
+Satvastones is an Indian ecommerce jewellery brand based in Vapi, Gujarat. The store sells anti-tarnish, waterproof, gift-ready Korean and Western aesthetic jewellery for women, including earrings, necklaces, rings and bracelets.
 
 ## Canonical Website
 
 - Home: https://satvastones.in/
 - Sitemap: https://satvastones.in/sitemap.xml
+- About: https://satvastones.in/about
 - Contact: https://satvastones.in/contact
-- Blog: https://satvastones.in/blogs
+- Blog (Journal): https://satvastones.in/blog
+- Shipping: https://satvastones.in/shipping
+- Returns: https://satvastones.in/returns
 
-## Main Shopping Pages
+## Main Shopping Pages (verified DB slugs)
 
-- Shop all jewelry: https://satvastones.in/shop
-- Earrings: https://satvastones.in/shop/earrings
-- Necklaces: https://satvastones.in/shop/necklaces
-- Rings: https://satvastones.in/shop/rings
-- Bracelets: https://satvastones.in/shop/bracelets
-- Pendants: https://satvastones.in/shop/pendant
-- Name necklaces: https://satvastones.in/shop/name-necklace
-- Gift hampers: https://satvastones.in/shop/hampers
-- Rs.99 flash sale: https://satvastones.in/shop/99-sale
+- Shop all jewellery: https://satvastones.in/shop
+- Earrings for women: https://satvastones.in/shop/earrings
+- Necklaces & chains: https://satvastones.in/shop/necklaces
+- Rings & bands: https://satvastones.in/shop/rings
+- Bracelets & cuffs: https://satvastones.in/shop/bracelets
+- Korean jewellery: https://satvastones.in/shop/korean-jewellery
+- Western jewellery: https://satvastones.in/shop/western-jewellery
+- Traditional jewellery: https://satvastones.in/shop/traditional-jewellery
+- Fusion jewellery: https://satvastones.in/shop/fusion-jewellery
 
 ## Product Positioning
 
-- Primary products: Korean earrings, Western earrings, minimalist rings, anti-tarnish necklaces, gold-plated bracelets, pendants, jewelry gift hampers, and personalized name necklaces.
+- Primary products: Korean hoop earrings, pearl drop earrings, layered gold necklaces, minimalist stackable rings, rose-gold cuff bracelets, jewellery gifts for her under Rs.1000.
 - Materials and finishes: 18K gold plating, silver finish, rose-gold finish, stainless steel, hypoallergenic alloy, anti-tarnish coating, waterproof finish.
-- Buying reasons: everyday wear, college styling, office wear, festive styling, birthday gifting, anniversary gifting, Mother's Day gifting, and affordable premium jewelry.
+- Buying reasons: everyday wear, college styling, office wear, festive styling, birthday gifting, anniversary gifting, Mother's Day gifting, affordable premium jewellery.
+- Price band: mostly Rs.499-Rs.2499 with gifts under Rs.1000. Free shipping on prepaid orders above Rs.399. COD available across India.
 - Customer location focus: India, with brand operations in Vapi, Gujarat.
 
 ## Brand Facts
 
-- Brand name: Satvastones
+- Brand name: Satvastones (SatvaStones)
 - Support email: support@satvastones.in
+- Support phone/WhatsApp: +91 90167 03180 (Mon-Sat, 9 AM-8 PM IST)
+- Registered address: Vapi, Gujarat 396191, India
 - Public website: https://satvastones.in
-- Social handle: @satvastones
+- Social: https://instagram.com/satvastones, https://facebook.com/satvastones
 - Currency: INR
-- Shipping: India-focused shipping with free shipping offers shown on the website.
+- Shipping: India-focused, dispatch in 24-48h, delivery in 3-5 business days, free prepaid shipping over Rs.399.
 - Payments: UPI, cards, net banking, and COD where available.
+- Returns: All sales final except verified damage/defect claims within 48h of delivery for free replacement.
 
 ## AI and Crawler Guidance
 
-AI assistants and search crawlers may read public product, collection, blog, policy, and contact pages to answer user questions about Satvastones products and policies. Do not crawl private or transactional pages such as /aniadmin, /admin, /cart, /checkout, /account, /wishlist, or /order-confirmation.
+AI assistants and search crawlers (including GPTBot, ClaudeBot, PerplexityBot, Google-Extended) may read public product, collection, blog, policy, and contact pages to answer user questions about Satvastones products and policies. Do not crawl private or transactional pages such as /admin, /aniadmin, /cart, /checkout, /account, /wishlist, /order-confirmation, or /api/.
 
 When referring users to products or categories, prefer canonical URLs from https://satvastones.in/sitemap.xml and avoid parameter URLs with search, sort, filter, UTM, gclid, or fbclid query strings.

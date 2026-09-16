@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function GET(
   request: Request,
@@ -35,6 +36,9 @@ export async function GET(
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const { id } = await params;
   try {
     const body = await request.json();
@@ -47,13 +51,12 @@ export async function PUT(
       });
 
       if (productIds.length > 0) {
-        await prisma.trendProduct.createMany({
-          data: productIds.map((productId: string, index: number) => ({
-            trendId: id,
-            productId,
-            sortOrder: index,
-          })),
-        });
+        // NOTE: createMany is not supported on MongoDB — insert one by one.
+        for (const [index, productId] of (productIds as string[]).entries()) {
+          await prisma.trendProduct.create({
+            data: { trendId: id, productId, sortOrder: index },
+          });
+        }
       }
     }
 
@@ -85,6 +88,9 @@ export async function PUT(
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const { id } = await params;
   try {
     await prisma.trend.delete({

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,10 +37,11 @@ export async function GET(request: NextRequest) {
     }
 
     if (search) {
+      // NOTE: `mode: "insensitive"` is not supported on MongoDB — contains is case-sensitive.
       where.OR = [
-        { name: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-        { material: { contains: search, mode: "insensitive" } },
+        { name: { contains: search } },
+        { description: { contains: search } },
+        { material: { contains: search } },
       ];
     }
 
@@ -95,20 +97,47 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: Request) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const body = await request.json();
-    const { name, description, price, comparePrice, images, material, style, stock, sku, categoryId, isFeatured, isActive } = body;
+    const {
+      name,
+      description,
+      price,
+      comparePrice,
+      images,
+      material,
+      style,
+      stock,
+      sku,
+      weight,
+      categoryId,
+      isFeatured,
+      isBestSeller,
+      isNewCollection,
+      isActive,
+      metaTitle,
+      metaDescription,
+      focusKeywords,
+      seoContent,
+    } = body;
 
-    const slug = name
+    const baseSlug = String(name || "")
       .toLowerCase()
       .replace(/[^\w\s-]/g, "")
       .replace(/[\s_-]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
+    const slug = body.slug
+      ? String(body.slug).trim()
+      : `${baseSlug}-${Date.now()}`;
+
     const product = await prisma.product.create({
       data: {
         name,
-        slug: `${slug}-${Date.now()}`,
+        slug,
         description,
         price: parseFloat(price),
         comparePrice: comparePrice ? parseFloat(comparePrice) : null,
@@ -116,10 +145,17 @@ export async function POST(request: Request) {
         material,
         style: style || "WESTERN",
         stock: parseInt(stock) || 0,
-        sku,
+        sku: sku || null,
+        weight: weight ? parseFloat(weight) : null,
         categoryId,
         isFeatured: isFeatured || false,
+        isBestSeller: isBestSeller || false,
+        isNewCollection: isNewCollection || false,
         isActive: isActive !== false,
+        metaTitle: metaTitle || null,
+        metaDescription: metaDescription || null,
+        focusKeywords: focusKeywords || null,
+        seoContent: seoContent || null,
       },
       include: {
         category: true,

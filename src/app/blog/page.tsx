@@ -23,7 +23,7 @@ export default async function BlogIndexPage() {
   try {
     blogs = await prisma.blog.findMany({
       where: { isPublished: true },
-      orderBy: [{ publishedAt: { sort: "desc", nulls: "last" } }, { createdAt: "desc" }],
+      orderBy: [{ publishedAt: "desc" }, { createdAt: "desc" }],
       select: { slug: true, title: true, excerpt: true, image: true, author: true, publishedAt: true },
     });
   } catch (e) {
@@ -32,29 +32,49 @@ export default async function BlogIndexPage() {
 
   const listJsonLd = {
     "@context": "https://schema.org",
-    "@type": "ItemList",
-    itemListElement: blogs.map((b, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
+    "@type": "Blog",
+    "@id": "https://satvastones.in/blog#blog",
+    name: "SatvaStones Journal — Jewellery Stories, Trends & Care Guides",
+    description:
+      "Jewellery trends, Korean styling guides, anti-tarnish care tips and gifting stories from SatvaStones.",
+    url: "https://satvastones.in/blog",
+    blogPost: blogs.map((b) => ({
+      "@type": "BlogPosting",
+      headline: b.title,
+      description: b.excerpt || undefined,
+      image: b.image || undefined,
       url: `https://satvastones.in/blog/${b.slug}`,
+      datePublished: b.publishedAt ? new Date(b.publishedAt).toISOString() : undefined,
+      author: {
+        "@type": "Person",
+        name: b.author || "SatvaStones",
+      },
+      publisher: {
+        "@type": "Organization",
+        name: "SatvaStones",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://satvastones.in/logo.png",
+        },
+      },
     })),
   };
 
   return (
-    <div className="bg-[var(--luxury-cream)] min-h-screen pt-[120px] lg:pt-[140px] pb-24">
+    <div className="bg-[var(--paper)] text-[var(--ink)] min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(listJsonLd) }}
       />
 
-      <div className="container-premium max-w-5xl mx-auto px-4">
+      <div className="editorial-container max-w-5xl py-10 lg:py-14">
         <header className="mb-12 text-center">
-          <p className="label-sm text-[var(--luxury-gold)] mb-3">Stories & Guides</p>
-          <h1 className="heading-section text-[var(--luxury-brown)]">SatvaStones Journal</h1>
+          <p className="eyebrow text-[var(--olive)] mb-3">Stories & Guides</p>
+          <h1 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-4xl lg:text-6xl">SatvaStones Journal</h1>
         </header>
 
         {blogs.length === 0 ? (
-          <p className="text-center text-[var(--luxury-brown)]/60">
+          <p className="text-center text-[var(--muted)]">
             New stories are being written. Please visit again soon.
           </p>
         ) : (
@@ -63,7 +83,7 @@ export default async function BlogIndexPage() {
               <Link
                 key={b.slug}
                 href={`/blog/${b.slug}`}
-                className="group bg-white border border-[var(--luxury-border)] shadow-sm hover:shadow-md transition-shadow"
+                className="group bg-[var(--white)] border border-[var(--line)] transition-colors hover:border-[var(--olive)]"
               >
                 <article>
                   {b.image && (
@@ -78,7 +98,7 @@ export default async function BlogIndexPage() {
                     </div>
                   )}
                   <div className="p-6">
-                    <p className="label-sm text-[var(--luxury-gold)] mb-2">
+                    <p className="eyebrow text-[var(--olive)] mb-2">
                       {b.publishedAt
                         ? new Date(b.publishedAt).toLocaleDateString("en-IN", {
                             year: "numeric",
@@ -87,11 +107,11 @@ export default async function BlogIndexPage() {
                           })
                         : b.author || "SatvaStones Journal"}
                     </p>
-                    <h2 className="heading-card text-[var(--luxury-brown)] mb-2 leading-snug group-hover:text-[var(--luxury-gold)] transition-colors">
+                    <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-xl mb-2 leading-snug group-hover:text-[var(--olive)] transition-colors">
                       {b.title}
                     </h2>
                     {b.excerpt && (
-                      <p className="text-sm text-[var(--luxury-brown)]/60 leading-relaxed line-clamp-3">
+                      <p className="text-sm text-[var(--muted)] leading-relaxed line-clamp-3">
                         {b.excerpt}
                       </p>
                     )}

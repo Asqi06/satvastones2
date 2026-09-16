@@ -1,444 +1,550 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, ShoppingBag, Heart, User, Menu, X, Phone, Mail, MapPin, Shield, Truck, RotateCcw, Award, Star, Lock, MessageSquare, ChevronDown, ChevronRight } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { useCartStore } from "@/hooks/useCart";
+import { useWishlistStore } from "@/hooks/useWishlist";
 
 interface HeaderProps {
-  cartCount?: number;
-  wishlistCount?: number;
-  currentUser?: any;
-  onLogout?: () => void;
   categories?: { id: string; name: string; slug: string }[];
 }
 
-export default function Header({ cartCount = 0, wishlistCount = 0, currentUser = null, onLogout = () => {}, categories = [] }: HeaderProps) {
+export default function Header({ categories = [] }: HeaderProps) {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const { data: session } = useSession();
+  const currentUser = session?.user ?? null;
+  const isAdmin = (session?.user as { role?: string } | undefined)?.role === "ADMIN";
+
+  const cartItems = useCartStore((s) => s.items);
+  const updateQuantity = useCartStore((s) => s.updateQuantity);
+  const removeItem = useCartStore((s) => s.removeItem);
+  const wishlistItems = useWishlistStore((s) => s.items);
+
+  const cartCount = mounted ? cartItems.reduce((sum, i) => sum + i.quantity, 0) : 0;
+  const wishlistCount = mounted ? wishlistItems.length : 0;
+
+  const subtotal = mounted
+    ? cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    : 0;
+  const freeShippingThreshold = 399;
+  const remainingForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
+  const shipping = subtotal === 0 || subtotal >= freeShippingThreshold ? 0 : 79;
+  const shippingProgress = Math.min(100, (subtotal / freeShippingThreshold) * 100);
 
   useEffect(() => {
+    setMounted(true);
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      setIsScrolled(window.scrollY > 12);
     };
-    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
+  // Handle open cart drawer event from anywhere in the app
+  useEffect(() => {
+    const handleOpenCart = () => setCartDrawerOpen(true);
+    const handleShowToast = (e: CustomEvent<{ message: string }>) => {
+      setToastMessage(e.detail.message);
+      setTimeout(() => setToastMessage(null), 3500);
+    };
+
+    window.addEventListener("open-cart-drawer", handleOpenCart);
+    window.addEventListener("show-toast" as any, handleShowToast as any);
+    return () => {
+      window.removeEventListener("open-cart-drawer", handleOpenCart);
+      window.removeEventListener("show-toast" as any, handleShowToast as any);
+    };
+  }, []);
+
+  // Lock body scroll when cart drawer or mobile menu is open
+  useEffect(() => {
+    if (cartDrawerOpen || mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [cartDrawerOpen, mobileMenuOpen]);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/shop?search=${encodeURIComponent(searchQuery)}`);
+      router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
+      setSearchQuery("");
     }
   };
 
-  const isAdmin = false;
-
-  const trustBadges = [
-    { icon: Award, label: "BIS Hallmark\nCertified", desc: "100% Hallmarked\nJewellery" },
-    { icon: Shield, label: "Lifetime\nExchange", desc: "Exchange Anytime\nat Full Value" },
-    { icon: Truck, label: "Free Shipping\n₹1,999+", desc: "Insured Delivery\nPan India" },
-    { icon: RotateCcw, label: "30 Days\nReturn", desc: "Hassle-Free\nReturns Policy" },
-    { icon: Lock, label: "Secure\nPayment", desc: "100% Safe &\nEncrypted" },
-    { icon: MessageSquare, label: "24/7\nSupport", desc: "Call/WhatsApp\n+91-90167-03180" },
-  ];
-
-  const policyLinks = [
-    { label: "Shipping Policy", href: "/shipping", icon: Truck },
-    { label: "Return & Exchange", href: "/returns", icon: RotateCcw },
-    { label: "Warranty & Repair", href: "/warranty", icon: Shield },
-    { label: "Cash on Delivery", href: "/cod", icon: Lock },
-    { label: "Quality Certificate", href: "/certifications", icon: Award },
-    { label: "Grievance Redressal", href: "/grievance", icon: MessageSquare },
-  ];
-
-  const curatedNavCategories = [
-    { label: "Gold Jewellery", href: "/shop/gold", sub: ["Rings", "Earrings", "Necklaces", "Bangles", "Chains", "Pendants", "Mangalsutras"] },
-    { label: "Diamond Jewellery", href: "/shop/diamond", sub: ["Rings", "Earrings", "Necklaces", "Bracelets", "Pendants", "Nose Pins"] },
-    { label: "Silver Jewellery", href: "/shop/silver", sub: ["Rings", "Earrings", "Necklaces", "Anklets", "Toe Rings", "Pooja Items"] },
-    { label: "Gemstone Jewellery", href: "/shop/gemstone", sub: ["Ruby", "Emerald", "Sapphire", "Pearl", "Coral", "Yellow Sapphire"] },
-    { label: "Bridal Jewellery", href: "/shop/bridal", sub: ["Necklace Sets", "Maang Tikka", "Nath", "Waist Belt", "Armlet", "Bridal Bangles"] },
-    { label: "Men's Jewellery", href: "/shop/mens", sub: ["Rings", "Chains", "Bracelets", "Kadas", "Cufflinks", "Tie Pins"] },
-  ];
-
-  const navCategories =
-    categories.length > 0
-      ? categories.map((cat) => ({
-          label: cat.name,
-          href: `/shop/${cat.slug}`,
-          sub: ["View Collection"],
-        }))
-      : curatedNavCategories;
-
-  const popularSearches = ["Gold Rings", "Diamond Necklaces", "Bridal Sets", "Silver Bangles", "Gemstone Rings", "Mangalsutra", "Daily Wear", "Men's Kada"];
+  const money = (value: number) => `₹${value.toLocaleString("en-IN")}`;
 
   return (
     <>
-      {/* TOP TRUST BAR */}
-      <div className="bg-[#1a1612] text-white relative z-[101]">
-        <div className="container-premium px-4 py-3 border-b border-white/10 hidden md:flex">
-          <div className="flex flex-wrap items-center justify-between gap-4 text-[11px] font-medium uppercase tracking-wider">
-            <div className="flex items-center gap-6 text-white/70">
-              <span className="flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-[#C5A059]" />
-                <a href="tel:+919876543210" className="hover:text-[#C5A059] transition-colors">+91 98765 43210</a>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-[#C5A059]" />
-                <a href="mailto:curation@satvastones.com" className="hover:text-[#C5A059] transition-colors">curation@satvastones.com</a>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5 text-[#C5A059]" />
-                <span>Mumbai HQ • Delhi • Bangalore • Chennai • Kolkata</span>
-              </span>
-            </div>
-            <div className="flex items-center gap-4 text-white/60">
-              <span className="flex items-center gap-1"><Award className="w-3.5 h-3.5" /> BIS Hallmark</span>
-              <span className="flex items-center gap-1"><Shield className="w-3.5 h-3.5" /> Lifetime Exchange</span>
-              <span className="flex items-center gap-1"><Truck className="w-3.5 h-3.5" /> Free Shipping ₹1999+</span>
-              <span className="flex items-center gap-1"><RotateCcw className="w-3.5 h-3.5" /> 30 Days Return</span>
-              <span className="flex items-center gap-1"><Lock className="w-3.5 h-3.5" /> 100% Secure</span>
-            </div>
-          </div>
-        </div>
+      {/* SVG Icon Definitions matching Dōri */}
+      <svg xmlns="http://www.w3.org/2000/svg" style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></symbol>
+        <symbol id="i-bag" viewBox="0 0 24 24"><path d="M5 7h14l1 14H4L5 7Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M8 8V6a4 4 0 0 1 8 0v2" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="7.2" fill="none" stroke="currentColor" strokeWidth="1.5" /><path d="m16 16 5 5" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24"><path d="M20.3 4.9a5.2 5.2 0 0 0-7.3 0L12 6l-1.1-1.1a5.2 5.2 0 0 0-7.3 7.4L12 21l8.3-8.7a5.2 5.2 0 0 0 0-7.4Z" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></symbol>
+        <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 7h18M3 16h18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /></symbol>
+        <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" /><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" /></symbol>
+      </svg>
 
-        <div className="container-premium px-4 py-2 border-b border-white/10 md:hidden">
-          <div className="flex items-center justify-between gap-2 text-[10px] font-medium uppercase tracking-wider overflow-x-auto">
-            <div className="flex items-center gap-2 text-white/70 whitespace-nowrap">
-              <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-[#C5A059]" /><a href="tel:+919876543210" className="hover:text-[#C5A059]">+91 98765 43210</a></span>
-              <span className="flex items-center gap-1"><Mail className="w-3 h-3 text-[#C5A059]" /><a href="mailto:curation@satvastones.com" className="hover:text-[#C5A059]">curation@satvastones.com</a></span>
-            </div>
-            <div className="flex items-center gap-2 text-white/60 whitespace-nowrap">
-              <span className="flex items-center gap-1"><Award className="w-3 h-3" /> BIS</span>
-              <span className="flex items-center gap-1"><Shield className="w-3 h-3" /> Exchange</span>
-              <span className="flex items-center gap-1"><Truck className="w-3 h-3" /> Free Ship</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-[#C5A059] text-[#1a1612] py-2 overflow-hidden">
-          <div className="flex animate-marquee pause-on-hover">
-            <div className="flex items-center gap-8 whitespace-nowrap pl-8 text-sm font-semibold tracking-wide">
-              <span>✦ 100% BIS HALLMARKED JEWELLERY • EVERY PIECE CERTIFIED ✦</span>
-              <span>✦ LIFETIME EXCHANGE GUARANTEE • EXCHANGE AT FULL VALUE ANYTIME ✦</span>
-              <span>✦ FREE INSURED SHIPPING ON ORDERS ABOVE ₹1,999 • PAN INDIA ✦</span>
-              <span>✦ 30-DAY HASSLE-FREE RETURNS • NO QUESTIONS ASKED ✦</span>
-              <span>✦ COD AVAILABLE • SECURE PAYMENT • 24/7 CUSTOMER SUPPORT ✦</span>
-              <span>✦ HANDCRAFTED IN INDIA • SUPPORTING LOCAL ARTISANS SINCE 2010 ✦</span>
-            </div>
-            <div className="flex items-center gap-8 whitespace-nowrap pl-8 text-sm font-semibold tracking-wide">
-              <span>✦ 100% BIS HALLMARKED JEWELLERY • EVERY PIECE CERTIFIED ✦</span>
-              <span>✦ LIFETIME EXCHANGE GUARANTEE • EXCHANGE AT FULL VALUE ANYTIME ✦</span>
-              <span>✦ FREE INSURED SHIPPING ON ORDERS ABOVE ₹1,999 • PAN INDIA ✦</span>
-              <span>✦ 30-DAY HASSLE-FREE RETURNS • NO QUESTIONS ASKED ✦</span>
-              <span>✦ COD AVAILABLE • SECURE PAYMENT • 24/7 CUSTOMER SUPPORT ✦</span>
-              <span>✦ HANDCRAFTED IN INDIA • SUPPORTING LOCAL ARTISANS SINCE 2010 ✦</span>
-            </div>
-          </div>
-        </div>
+      {/* ANNOUNCEMENT BAR */}
+      <div className="announcement-bar">
+        A little treat, on us. Free shipping on orders ₹399+
+        <span>·</span> Anti-tarnish & waterproof <span>·</span> Made for your everyday
       </div>
 
-      {/* MAIN HEADER */}
-      <header className={`fixed w-full transition-all duration-300 z-[100] ${isScrolled ? "top-0 bg-white border-b border-[#E8E2D9] shadow-md" : "top-[48px] md:top-[56px] bg-white/95 backdrop-blur-sm border-b border-transparent"}`}>
-        
-        <div className="hidden lg:block bg-[#FAF9F6] border-b border-[#E8E2D9] py-2">
-          <div className="container-premium px-4">
-            <div className="flex flex-wrap items-center justify-center gap-6 text-[11px] font-medium uppercase tracking-wider text-[#241A14]/70">
-              {policyLinks.map((policy) => (
-                <Link key={policy.label} href={policy.href} className="flex items-center gap-1.5 hover:text-[#C5A059] transition-colors group">
-                  <policy.icon className="w-3.5 h-3.5 text-[#C5A059]/80 group-hover:text-[#C5A059] transition-colors" />
-                  <span>{policy.label}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+      {/* HEADER */}
+      <header
+        className={`sticky top-0 z-30 transition-all duration-300 bg-[var(--paper)] border-b border-[var(--line)] ${
+          isScrolled ? "is-scrolled shadow-[0_8px_28px_-20px_rgba(41,42,35,0.28)]" : ""
+        }`}
+      >
+        <nav className="nav editorial-container flex items-center justify-between h-[88px] max-md:h-[72px]" aria-label="Main navigation">
+          {/* Mobile menu trigger */}
+          <button
+            className="icon-button md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <svg className="w-[22px] h-[22px]"><use href="#i-menu" /></svg>
+          </button>
 
-        <div className="container-premium px-4 h-[72px] lg:h-[80px] flex items-center justify-between relative">
-          
-          <div className="flex items-center gap-6 lg:gap-8 w-full lg:w-auto">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-[#241A14]"
-              aria-label="Open menu"
+          {/* Desktop Nav Links */}
+          <div className="hidden md:flex items-center gap-[29px] text-[12px] flex-1">
+            <Link
+              href="/shop"
+              className="relative py-[10px] text-[var(--ink)] hover:after:w-full after:content-[''] after:absolute after:bottom-[4px] after:left-0 after:w-0 after:h-[1px] after:bg-[var(--ink)] after:transition-all after:duration-200"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-            
-            <Link href="/" className="flex flex-col items-start mr-4 lg:mr-6" aria-label="Satvastones Home">
-              <span className="text-lg lg:text-xl font-serif text-[#241A14] tracking-[0.15em] uppercase font-semibold leading-tight">
-                SATVASTONES
-              </span>
-              <span className="text-[9px] lg:text-[10px] text-[#C5A059] italic tracking-[0.3em] uppercase mt-[-2px]">
-                Certified Jewellers Since 2010
-              </span>
+              Shop all
             </Link>
-
-            <nav className="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main categories">
-              {navCategories.map((cat, idx) => (
-                <MegaMenu key={cat.label} category={cat} index={idx} />
-              ))}
-            </nav>
+            <Link
+              href="/about"
+              className="relative py-[10px] text-[var(--ink)] hover:after:w-full after:content-[''] after:absolute after:bottom-[4px] after:left-0 after:w-0 after:h-[1px] after:bg-[var(--ink)] after:transition-all after:duration-200"
+            >
+              Our world
+            </Link>
+            <Link
+              href="/#care"
+              className="relative py-[10px] text-[var(--ink)] hover:after:w-full after:content-[''] after:absolute after:bottom-[4px] after:left-0 after:w-0 after:h-[1px] after:bg-[var(--ink)] after:transition-all after:duration-200"
+            >
+              Care guide
+            </Link>
           </div>
 
-          <div className="hidden lg:flex items-center gap-6 px-4">
-            {trustBadges.slice(0, 4).map((badge, i) => (
-              <div key={i} className="flex items-center gap-2.5 py-1.5 px-3 bg-[#FAF9F6] rounded-full border border-[#E8E2D9] hover:border-[#C5A059]/50 transition-all duration-300 group">
-                <div className="w-7 h-7 rounded-full bg-[#1a1612]/5 flex items-center justify-center group-hover:bg-[#C5A059]/10 transition-colors">
-                  <badge.icon className="w-3.5 h-3.5 text-[#241A14] group-hover:text-[#C5A059] transition-colors" />
-                </div>
-                <div className="text-left leading-tight">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#241A14] block">{badge.label.split('\n')[0]}</span>
-                  <span className="text-[9px] text-[#241A14]/60 leading-none">{badge.desc.split('\n')[0]}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* Brand Logo in Instrument Serif */}
+          <Link
+            href="/"
+            className="brand text-center font-serif text-[42px] md:text-[48px] leading-none tracking-[-0.02em] whitespace-nowrap text-[var(--ink)] select-none"
+            aria-label="SatvaStones home"
+          >
+            satvastones<sup className="font-sans text-[8px] font-normal ml-1 align-super tracking-normal">®</sup>
+          </Link>
 
-          <div className="flex items-center gap-2 lg:gap-4 w-full lg:w-auto justify-end">
-            <button onClick={() => setSearchOpen(!searchOpen)} className="p-2 text-[#241A14]/70 hover:text-[#C5A059] transition-colors relative" aria-label="Search">
-              <Search className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
+          {/* Nav Actions */}
+          <div className="flex items-center justify-end gap-[18px] md:gap-[23px] flex-1">
+            <button
+              className="icon-button"
+              onClick={() => setSearchOpen(!searchOpen)}
+              aria-label="Search jewellery"
+              aria-expanded={searchOpen}
+            >
+              <svg className="w-[20px] h-[20px] md:w-[22px] md:h-[22px]"><use href="#i-search" /></svg>
             </button>
 
-            <Link href="/wishlist" className="p-2 text-[#241A14]/70 hover:text-[#C5A059] transition-colors relative hidden sm:block" aria-label="Wishlist">
-              <Heart className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
-              {wishlistCount > 0 && <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#C5A059] text-white text-[9px] font-bold rounded-full flex items-center justify-center">{wishlistCount > 9 ? '9+' : wishlistCount}</span>}
+            <Link
+              href="/wishlist"
+              className="icon-button hidden sm:inline-flex items-center gap-1.5 text-[11px]"
+              aria-label={`Wishlist, ${wishlistCount} items`}
+            >
+              <svg className="w-[20px] h-[20px] md:w-[22px] md:h-[22px]"><use href="#i-heart" /></svg>
+              <span>({wishlistCount})</span>
             </Link>
 
-            <Link href="/cart" className="p-2 text-[#241A14]/70 hover:text-[#C5A059] transition-colors relative" aria-label="Shopping bag">
-              <ShoppingBag className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#241A14] text-white text-[10px] font-bold rounded-full flex items-center justify-center">{cartCount > 9 ? '9+' : cartCount}</span>
-              )}
-            </Link>
+            <button
+              className="icon-button bag-button flex items-center gap-1.5 text-[11px]"
+              onClick={() => setCartDrawerOpen(true)}
+              aria-label={`Open shopping bag, ${cartCount} items`}
+            >
+              <svg className="w-[20px] h-[20px] md:w-[22px] md:h-[22px]"><use href="#i-bag" /></svg>
+              <span id="cartCount">({cartCount})</span>
+            </button>
 
-            <div className="relative hidden sm:block">
-              <button onClick={() => setUserMenuOpen(!userMenuOpen)} className="p-2 text-[#241A14]/70 hover:text-[#C5A059] transition-colors flex items-center gap-1.5 group" aria-label="Account">
-                <User className="w-5 h-5 lg:w-5.5 lg:h-5.5" />
-                <span className="text-[11px] font-medium uppercase tracking-wider text-[#241A14]/60 group-hover:text-[#241A14] hidden lg:inline">Account</span>
+            {/* User Profile */}
+            <div className="relative">
+              <button
+                className="icon-button hidden sm:inline-flex"
+                onClick={() => setUserMenuOpen(!userMenuOpen)}
+                aria-label="Account"
+                aria-expanded={userMenuOpen}
+              >
+                <svg className="w-[20px] h-[20px] md:w-[22px] md:h-[22px]"><use href="#i-user" /></svg>
               </button>
+
               {userMenuOpen && (
-                <div className="absolute top-full right-0 mt-2 w-64 bg-white border border-[#E8E2D9] shadow-xl z-50 py-2 rounded-lg animate-fade-in" onMouseLeave={() => setUserMenuOpen(false)}>
-                  {currentUser ? (
-                    <div className="px-4 py-3 border-b border-[#E8E2D9] mb-2">
-                      <p className="text-sm font-medium text-[#241A14] truncate">{currentUser.name}</p>
-                      <p className="text-[11px] text-[#241A14]/40 truncate">{currentUser.email}</p>
-                    </div>
-                  ) : (
-                    <div className="px-4 py-3 border-b border-[#E8E2D9] mb-2 text-center">
-                      <p className="text-sm font-medium text-[#241A14]">Welcome to Satvastones</p>
-                      <p className="text-[11px] text-[#241A14]/40">Sign in to access your account</p>
-                    </div>
-                  )}
-                  <Link href="/account" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><User className="w-4 h-4" /> My Profile</Link>
-                  <Link href="/account/orders" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><ShoppingBag className="w-4 h-4" /> My Orders</Link>
-                  <Link href="/wishlist" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><Heart className="w-4 h-4" /> Wishlist ({wishlistCount})</Link>
-                  <Link href="/account/addresses" className="px-4 py-2.5 text-sm text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] flex items-center gap-2 transition-colors"><MapPin className="w-4 h-4" /> Addresses</Link>
-                  {isAdmin && (
-                    <Link href="/aniadmin" className="px-4 py-2.5 text-sm text-[#C5A059] hover:bg-[#FFFEFB] flex items-center gap-2 transition-colors"><Award className="w-4 h-4" /> Admin Dashboard</Link>
-                  )}
-                  <hr className="my-2 border-[#E8E2D9]" />
-                  <button onClick={onLogout} className="w-full px-4 py-2.5 text-sm text-red-700 hover:bg-red-50 text-left flex items-center gap-2 transition-colors"><MessageSquare className="w-4 h-4" /> Sign Out</button>
+                <div
+                  className="absolute right-0 mt-3 w-72 bg-[var(--white)] border border-[var(--line)] shadow-[0_16px_40px_rgba(41,42,35,0.12)] z-50 overflow-hidden"
+                  onMouseLeave={() => setUserMenuOpen(false)}
+                >
+                  <div className="px-5 py-4 bg-[var(--paper)] border-b border-[var(--line)]">
+                    <p className="font-serif text-[18px] leading-none tracking-[-0.02em] text-[var(--ink)] truncate">
+                      {currentUser ? currentUser.name || "Welcome back" : "Welcome"}
+                    </p>
+                    <p className="text-[11px] text-[var(--muted)] mt-1.5 truncate">
+                      {currentUser ? currentUser.email : "Sign in to save pieces & track orders"}
+                    </p>
+                  </div>
+                  <div className="p-2">
+                    <Link
+                      href="/account"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center justify-between px-3 py-2.5 text-[13px] text-[var(--ink)] hover:bg-[var(--paper)] transition-colors"
+                    >
+                      <span>My Account</span>
+                      <span className="text-[10px] tracking-[0.08em] text-[var(--muted)]">→</span>
+                    </Link>
+                    <Link
+                      href="/account/orders"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center justify-between px-3 py-2.5 text-[13px] text-[var(--ink)] hover:bg-[var(--paper)] transition-colors"
+                    >
+                      <span>Orders & Tracking</span>
+                      <span className="text-[10px] tracking-[0.08em] text-[var(--muted)]">→</span>
+                    </Link>
+                    <Link
+                      href="/wishlist"
+                      onClick={() => setUserMenuOpen(false)}
+                      className="flex items-center justify-between px-3 py-2.5 text-[13px] text-[var(--ink)] hover:bg-[var(--paper)] transition-colors"
+                    >
+                      <span>Saved Pieces</span>
+                      <span className="text-[10px] tracking-[0.08em] bg-[var(--paper)] border border-[var(--line)] px-1.5 py-0.5">{wishlistCount}</span>
+                    </Link>
+                    {isAdmin && (
+                      <Link
+                        href="/admin"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center justify-between px-3 py-2.5 text-[13px] text-[var(--olive)] font-medium hover:bg-[var(--paper)] transition-colors"
+                      >
+                        <span>Admin Panel</span>
+                        <span className="text-[10px] tracking-[0.08em]">→</span>
+                      </Link>
+                    )}
+                  </div>
+                  <div className="border-t border-[var(--line)] p-2 bg-[var(--paper)]">
+                    {currentUser ? (
+                      <button
+                        onClick={() => signOut({ callbackUrl: "/" })}
+                        className="w-full text-left px-3 py-2.5 text-[13px] text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
+                      >
+                        Sign Out
+                      </button>
+                    ) : (
+                      <Link
+                        href="/auth/login"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center justify-center gap-2 w-full px-3 py-2.5 bg-[var(--olive)] text-[var(--white)] text-[11px] tracking-[0.06em] font-medium hover:bg-[var(--olive-dark)] transition-colors"
+                      >
+                        Sign In
+                        <svg className="w-3.5 h-3.5"><use href="#i-arrow" /></svg>
+                      </Link>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
           </div>
-        </div>
+        </nav>
 
-        <div className="lg:hidden bg-white border-t border-[#E8E2D9]">
-          <div className="container-premium px-4 py-3 overflow-x-auto">
-            <nav className="flex gap-3 whitespace-nowrap pb-2" role="navigation" aria-label="Categories">
-              {navCategories.map((cat) => (
-                <Link key={cat.label} href={cat.href} className="px-4 py-2 bg-[#FAF9F6] text-[#241A14]/80 hover:text-[#C5A059] text-[11px] font-medium uppercase tracking-wider rounded-full border border-[#E8E2D9] whitespace-nowrap transition-colors">
-                  {cat.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </header>
+        {/* MOBILE MENU */}
+        {mobileMenuOpen && (
+          <div className="md:hidden flex flex-col px-6 py-7 gap-5 border-t border-[var(--line)] bg-[var(--paper)]">
+            <div className="flex flex-col gap-3 font-serif text-[26px]">
+              <Link
+                href="/shop"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:text-[var(--olive)] transition-colors"
+              >
+                Shop all pieces
+              </Link>
+              <Link
+                href="/shop/earrings"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-[21px] text-[var(--muted)] hover:text-[var(--ink)] transition-colors pl-2"
+              >
+                — Earrings
+              </Link>
+              <Link
+                href="/shop/necklaces"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-[21px] text-[var(--muted)] hover:text-[var(--ink)] transition-colors pl-2"
+              >
+                — Necklaces
+              </Link>
+              <Link
+                href="/shop/rings"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-[21px] text-[var(--muted)] hover:text-[var(--ink)] transition-colors pl-2"
+              >
+                — Rings
+              </Link>
+              <Link
+                href="/shop/bracelets"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-[21px] text-[var(--muted)] hover:text-[var(--ink)] transition-colors pl-2"
+              >
+                — Bracelets
+              </Link>
+              <Link
+                href="/about"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:text-[var(--olive)] transition-colors pt-2"
+              >
+                Our world &amp; story
+              </Link>
+              <Link
+                href="/#care"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:text-[var(--olive)] transition-colors"
+              >
+                Jewellery care guide
+              </Link>
+            </div>
 
-      {/* FULLSCREEN SEARCH OVERLAY */}
-      {searchOpen && (
-        <div className="fixed inset-0 z-[150] bg-white animate-fade-in flex flex-col">
-          <div className="container-premium px-4 py-6 flex items-center justify-between border-b border-[#E8E2D9]">
-            <span className="font-serif text-xl text-[#241A14] tracking-[0.1em] uppercase">Search Satvastones</span>
-            <button onClick={() => setSearchOpen(false)} className="p-2 text-[#241A14]/50 hover:text-[#241A14] transition-colors lg:hidden"><X className="w-6 h-6" /></button>
+            <div className="font-sans text-xs pt-4 border-t border-[var(--line)] space-y-3">
+              <Link
+                href="/wishlist"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:text-[var(--olive)] transition-colors flex items-center justify-between py-1"
+              >
+                <span>Saved pieces (Wishlist)</span>
+                <span className="px-2 py-0.5 border border-[var(--line)] bg-[var(--white)] text-[11px]">{wishlistCount}</span>
+              </Link>
+              <Link
+                href="/account"
+                onClick={() => setMobileMenuOpen(false)}
+                className="hover:text-[var(--olive)] transition-colors flex items-center justify-between py-1"
+              >
+                <span>Account &amp; Orders</span>
+                <span>→</span>
+              </Link>
+            </div>
           </div>
-          <div className="flex-1 flex items-start justify-center pt-12 px-4">
-            <form onSubmit={handleSearch} className="w-full max-w-4xl">
-              <div className="relative">
-                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-[#241A14]/30 w-6 h-6" />
+        )}
+
+        {/* SEARCH PANEL */}
+        {searchOpen && (
+          <div className="search-panel border-t border-[var(--line)] py-5 bg-[var(--paper)]">
+            <div className="editorial-container">
+              <form onSubmit={handleSearchSubmit} className="flex items-center gap-4 pb-3 border-b border-[var(--line)]">
+                <svg className="w-5 h-5 text-[var(--muted)] flex-shrink-0"><use href="#i-search" /></svg>
                 <input
-                  type="text"
+                  id="searchInput"
+                  type="search"
+                  autoFocus
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for jewellery, designs, collections, gemstones..."
-                  autoFocus
-                  className="w-full pl-14 pr-16 py-5 bg-[#FAF9F6] border-2 border-[#E8E2D9] text-[#241A14] text-lg font-medium tracking-wide placeholder:text-[#241A14]/20 focus:outline-none focus:border-[#C5A059] focus:bg-white transition-all"
+                  placeholder="Search rings, hoops, necklaces, pearl, anti-tarnish..."
+                  aria-label="Search products"
+                  className="w-full border-0 outline-0 bg-transparent text-[15px] text-[var(--ink)] placeholder:text-[var(--muted)]"
                 />
-                <button type="button" onClick={() => setSearchOpen(false)} className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-[#E8E2D9] rounded-full text-[#241A14]/50 transition-colors lg:hidden"><X className="w-5 h-5" /></button>
-                <button type="submit" className="absolute right-4 top-1/2 -translate-y-1/2 hidden lg:block px-6 py-2.5 bg-[#241A14] text-white text-sm font-medium uppercase tracking-wider hover:bg-[#1a1612] transition-colors">Search</button>
-              </div>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <span className="text-[11px] font-medium uppercase tracking-wider text-[#241A14]/50">Popular searches:</span>
-                {popularSearches.map((term) => (
-                  <Link key={term} href={`/shop?search=${encodeURIComponent(term)}`} className="px-4 py-2 bg-white border border-[#E8E2D9] text-[12px] text-[#241A14]/70 hover:border-[#C5A059] hover:text-[#C5A059] rounded-full transition-all" onClick={() => setSearchOpen(false)}>{term}</Link>
+                <button
+                  type="button"
+                  className="icon-button"
+                  onClick={() => setSearchOpen(false)}
+                  aria-label="Close search"
+                >
+                  <svg className="w-5 h-5"><use href="#i-close" /></svg>
+                </button>
+              </form>
+
+              {/* Quick Search Chips */}
+              <div className="flex flex-wrap items-center gap-2 pt-3 text-[11px]">
+                <span className="text-[var(--muted)] uppercase tracking-wider text-[9px] mr-1">Popular:</span>
+                {["Hoops", "Necklace", "Rings", "Bracelets", "Pearl", "Anti-Tarnish"].map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => {
+                      router.push(`/shop?search=${encodeURIComponent(tag.toLowerCase())}`);
+                      setSearchOpen(false);
+                    }}
+                    className="px-2.5 py-1 border border-[var(--line)] bg-[var(--white)] text-[var(--ink)] hover:border-[var(--ink)] transition-colors"
+                  >
+                    {tag}
+                  </button>
                 ))}
               </div>
-            </form>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* SLIDE-IN CART DRAWER */}
+      <div
+        className={`overlay ${cartDrawerOpen ? "open" : ""}`}
+        onClick={() => setCartDrawerOpen(false)}
+        aria-hidden="true"
+      />
+      <aside
+        className={`cart-drawer ${cartDrawerOpen ? "open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cartTitle"
+      >
+        <div className="flex items-center justify-between px-[27px] py-[25px] border-b border-[var(--line)]">
+          <h2 id="cartTitle" className="m-0 font-serif text-[34px] font-normal text-[var(--ink)]">
+            Your little collection
+          </h2>
+          <button
+            className="icon-button"
+            onClick={() => setCartDrawerOpen(false)}
+            aria-label="Close shopping bag"
+          >
+            <svg className="w-[20px] h-[20px]"><use href="#i-close" /></svg>
+          </button>
+        </div>
+
+        {/* Free shipping progress */}
+        <div className="p-[20px_27px] border-b border-[var(--line)]">
+          <p className="m-0 mb-3 text-[11px] text-[var(--olive)] font-medium">
+            {remainingForFreeShipping > 0
+              ? `You're ${money(remainingForFreeShipping)} away from complimentary shipping.`
+              : "A little extra joy: your shipping is on us."}
+          </p>
+          <div className="shipping-track">
+            <div className="shipping-fill" style={{ width: `${shippingProgress}%` }} />
           </div>
         </div>
-      )}
 
-      {/* MOBILE MENU */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[200] bg-white animate-fade-in flex flex-col">
-          <div className="flex items-center justify-between p-4 lg:p-6 border-b border-[#E8E2D9]">
-            <Link href="/" onClick={() => setMobileMenuOpen(false)} className="font-serif tracking-[0.15em] text-[#241A14] text-xl lg:text-2xl">SATVASTONES</Link>
-            <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-[#241A14]/70 hover:text-[#241A14] transition-colors"><X className="w-7 h-7 lg:w-8 lg:h-8" /></button>
-          </div>
-          
-          <div className="flex-1 overflow-y-auto px-4 py-6">
-            <div className="mb-6 p-4 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9]">
-              <h3 className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]/50 mb-3">Our Guarantees</h3>
-              <div className="grid grid-cols-3 gap-3">
-                {trustBadges.map((badge, i) => (
-                  <div key={i} className="text-center p-3 bg-white rounded-lg border border-[#E8E2D9]">
-                    <div className="w-10 h-10 mx-auto mb-2 bg-[#1a1612]/5 rounded-full flex items-center justify-center">
-                      <badge.icon className="w-5 h-5 text-[#241A14]" />
+        {/* Items List */}
+        <div className="flex-1 overflow-y-auto px-[27px]">
+          {cartItems.length > 0 ? (
+            cartItems.map((item) => (
+              <div key={item.productId} className="grid grid-cols-[78px_1fr] gap-[17px] py-6 border-b border-[var(--line)]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={item.image || "/gold_ring_minimalist_1774634383905.png"}
+                  alt={item.name}
+                  className="w-[78px] h-[102px] object-cover bg-[#e7e1d7]"
+                />
+                <div className="flex flex-col items-start justify-center">
+                  <h3 className="text-[12px] font-medium m-0 mb-1.5 text-[var(--ink)]">{item.name}</h3>
+                  <p className="text-[11px] text-[var(--muted)] m-0 mb-3">
+                    Anti-tarnish finish · {money(item.price)}
+                  </p>
+                  <div className="w-full flex items-center justify-between">
+                    <div className="flex items-center border border-[var(--line)]">
+                      <button
+                        className="bg-none w-7 h-[26px] text-xs flex items-center justify-center cursor-pointer"
+                        onClick={() => updateQuantity(item.productId, item.quantity - 1)}
+                        aria-label="Decrease quantity"
+                      >
+                        −
+                      </button>
+                      <span className="text-[11px] px-2">{item.quantity}</span>
+                      <button
+                        className="bg-none w-7 h-[26px] text-xs flex items-center justify-center cursor-pointer"
+                        onClick={() => updateQuantity(item.productId, item.quantity + 1)}
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
                     </div>
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#241A14] leading-tight">{badge.label.split('\n')[0]}</p>
-                    <p className="text-[9px] text-[#241A14]/50 leading-tight">{badge.desc.split('\n')[0]}</p>
+                    <button
+                      className="bg-none text-[10px] underline text-[var(--muted)] hover:text-[var(--ink)] p-1 cursor-pointer"
+                      onClick={() => removeItem(item.productId)}
+                    >
+                      Remove
+                    </button>
                   </div>
-                ))}
+                </div>
               </div>
+            ))
+          ) : (
+            <div className="pt-16 text-center">
+              <svg className="w-[43px] h-[43px] text-[var(--olive)] mx-auto mb-4"><use href="#i-bag" /></svg>
+              <h3 className="font-serif text-[32px] font-normal text-[var(--ink)] m-0 mb-3">
+                A little room for lovely.
+              </h3>
+              <p className="text-[var(--muted)] text-[12px] mb-6">
+                Your bag is waiting for its first favourite.
+              </p>
+              <Link
+                href="/shop"
+                onClick={() => setCartDrawerOpen(false)}
+                className="button inline-flex"
+              >
+                Explore the collection <svg className="w-[19px] h-[19px]"><use href="#i-arrow" /></svg>
+              </Link>
             </div>
+          )}
+        </div>
 
-            <nav className="space-y-1 mb-6">
-              {navCategories.map((cat) => (
-                <MobileCategoryMenu key={cat.label} category={cat} onClose={() => setMobileMenuOpen(false)} />
-              ))}
-            </nav>
-
-            <div className="border-t border-[#E8E2D9] pt-6 mb-6">
-              <h3 className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]/50 mb-4">Policies & Support</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {policyLinks.map((policy) => (
-                  <Link key={policy.label} href={policy.href} className="flex items-center gap-2 p-3 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9] hover:border-[#C5A059]/50 transition-colors" onClick={() => setMobileMenuOpen(false)}>
-                    <policy.icon className="w-4 h-4 text-[#C5A059]" />
-                    <span className="text-[11px] font-medium text-[#241A14] leading-tight">{policy.label}</span>
-                  </Link>
-                ))}
-              </div>
+        {/* Footer */}
+        {cartItems.length > 0 && (
+          <div className="p-[24px_27px] border-t border-[var(--line)]">
+            <div className="flex justify-between text-[14px] mb-2.5 text-[var(--ink)] font-medium">
+              <span>Subtotal</span>
+              <span>{money(subtotal)}</span>
             </div>
-
-            <div className="border-t border-[#E8E2D9] pt-6">
-              <h3 className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]/50 mb-4">Contact Us</h3>
-              <div className="space-y-3 text-sm text-[#241A14]/70">
-                <a href="tel:+919016703180" className="flex items-center gap-3 p-3 bg-[#FAF9F6] rounded-lg hover:border-[#C5A059]/50 border border-[#E8E2D9] transition-colors"><Phone className="w-5 h-5 text-[#C5A059]" /><span>Call / WhatsApp: +91 90167 03180</span></a>
-                <a href="mailto:support@satvastones.in" className="flex items-center gap-3 p-3 bg-[#FAF9F6] rounded-lg hover:border-[#C5A059]/50 border border-[#E8E2D9] transition-colors"><Mail className="w-5 h-5 text-[#C5A059]" /><span>Email: support@satvastones.in</span></a>
-                <div className="flex items-start gap-3 p-3 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9]"><MapPin className="w-5 h-5 text-[#C5A059] mt-0.5 flex-shrink-0" /><span>Mumbai HQ: 123 Jewellery Street, Zaveri Bazaar, Mumbai 400002<br />Delhi • Bangalore • Chennai • Kolkata</span></div>
-              </div>
+            <div className="flex justify-between text-[11px] text-[var(--muted)] mb-3">
+              <span>Shipping</span>
+              <span>{shipping > 0 ? money(shipping) : "Complimentary"}</span>
+            </div>
+            <p className="text-[var(--muted)] text-[10px] mb-5 leading-relaxed">
+              Prices include applicable taxes. Anti-tarnish finish guaranteed. Thoughtfully packed.
+            </p>
+            <div className="space-y-2.5">
+              <button
+                onClick={() => {
+                  setCartDrawerOpen(false);
+                  router.push("/checkout");
+                }}
+                className="button w-full justify-between !py-4"
+              >
+                <span>Proceed to Checkout · {money(subtotal + shipping)}</span>
+                <svg className="w-[19px] h-[19px]"><use href="#i-arrow" /></svg>
+              </button>
+              <button
+                onClick={() => {
+                  setCartDrawerOpen(false);
+                  router.push("/cart");
+                }}
+                className="w-full block text-center py-2.5 text-[11px] text-[var(--muted)] hover:text-[var(--ink)] tracking-wider uppercase underline underline-offset-4 transition-colors"
+              >
+                View full bag
+              </button>
+            </div>
+            <div className="text-center text-[9px] text-[var(--muted)] mt-3">
+              Free shipping over ₹399 · COD across India
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </aside>
+
+      {/* TOAST NOTIFICATION */}
+      <div className={`toast ${toastMessage ? "show" : ""}`} role="status" aria-live="polite">
+        {toastMessage}
+      </div>
     </>
-  );
-}
-
-function MegaMenu({ category, index }: { category: { label: string; href: string; sub: string[] }; index: number }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  return (
-    <div className="relative" ref={ref} onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-[#241A14]/80 hover:text-[#C5A059] transition-colors relative group flex items-center gap-1.5"
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-      >
-        {category.label}
-        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-
-      {isOpen && (
-        <div className="absolute left-0 top-full mt-1 w-[720px] bg-white border border-[#E8E2D9] shadow-2xl rounded-lg overflow-hidden z-50 animate-fade-in">
-          <div className="p-6 lg:p-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-              {category.sub.map((sub, si) => (
-                <Link key={sub} href={`${category.href}?sub=${sub.toLowerCase()}`} className="group flex flex-col gap-2 p-4 bg-[#FAF9F6] rounded-lg border border-[#E8E2D9] hover:border-[#C5A059]/50 hover:bg-white transition-all duration-300">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#241A14]">{sub}</span>
-                  <span className="text-[10px] text-[#241A14]/50 group-hover:text-[#C5A059] transition-colors">View Collection →</span>
-                </Link>
-              ))}
-            </div>
-            
-            <div className="mt-6 pt-6 border-t border-[#E8E2D9] grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="flex items-center gap-3 p-3 bg-[#FFFEFB] rounded-lg border border-[#C5A059]/20">
-                <Award className="w-5 h-5 text-[#C5A059] flex-shrink-0" />
-                <div><p className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]">BIS Hallmarked</p><p className="text-[9px] text-[#241A14]/50">Every piece certified</p></div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-[#FFFEFB] rounded-lg border border-[#C5A059]/20">
-                <Shield className="w-5 h-5 text-[#C5A059] flex-shrink-0" />
-                <div><p className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]">Lifetime Exchange</p><p className="text-[9px] text-[#241A14]/50">Full value guarantee</p></div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-[#FFFEFB] rounded-lg border border-[#C5A059]/20">
-                <Truck className="w-5 h-5 text-[#C5A059] flex-shrink-0" />
-                <div><p className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]">Free Shipping</p><p className="text-[9px] text-[#241A14]/50">On orders ₹1,999+</p></div>
-              </div>
-              <div className="flex items-center gap-3 p-3 bg-[#FFFEFB] rounded-lg border border-[#C5A059]/20">
-                <RotateCcw className="w-5 h-5 text-[#C5A059] flex-shrink-0" />
-                <div><p className="text-[10px] font-bold uppercase tracking-wider text-[#241A14]">30-Day Returns</p><p className="text-[9px] text-[#241A14]/50">Hassle-free policy</p></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function MobileCategoryMenu({ category, onClose }: { category: { label: string; href: string; sub: string[] }; onClose: () => void }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div className="border border-[#E8E2D9] rounded-lg overflow-hidden bg-white">
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-4 py-3.5 flex items-center justify-between bg-[#FAF9F6] hover:bg-white transition-colors text-left"
-        aria-expanded={isOpen}
-      >
-        <span className="text-[12px] font-bold uppercase tracking-wider text-[#241A14]">{category.label}</span>
-        <ChevronDown className={`w-5 h-5 text-[#241A14]/50 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
-      {isOpen && (
-        <div className="px-4 py-4 space-y-2 bg-white animate-slide-down">
-          {category.sub.map((sub) => (
-            <Link key={sub} href={`${category.href}?sub=${sub.toLowerCase()}`} className="flex items-center justify-between px-3 py-2.5 text-[12px] text-[#241A14]/70 hover:text-[#C5A059] hover:bg-[#FAF9F6] rounded-lg transition-colors" onClick={onClose}>
-              <span>{sub}</span>
-              <ChevronRight className="w-4 h-4 text-[#C5A059]/70" />
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }

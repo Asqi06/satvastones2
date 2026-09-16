@@ -20,6 +20,8 @@ import {
   Users,
   MessageSquare,
   HelpCircle,
+  FileText,
+  Mail,
   Settings,
   LogOut,
   Menu,
@@ -61,6 +63,7 @@ const navSections: NavSection[] = [
       { label: "Trends", href: "/admin/trends", icon: TrendingUp },
       { label: "Best Sellers", href: "/admin/best-sellers", icon: Star },
       { label: "New Collection", href: "/admin/new-collection", icon: Sparkles },
+      { label: "Journal", href: "/admin/blogs", icon: FileText },
     ],
   },
   {
@@ -82,6 +85,7 @@ const navSections: NavSection[] = [
     items: [
       { label: "Reviews", href: "/admin/reviews", icon: MessageSquare },
       { label: "FAQs", href: "/admin/faqs", icon: HelpCircle },
+      { label: "Newsletter", href: "/admin/newsletter", icon: Mail },
       { label: "Settings", href: "/admin/settings", icon: Settings },
     ],
   },
@@ -115,7 +119,7 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
       <aside
         className={`fixed top-0 left-0 z-50 h-full bg-white border-r border-luxury-brown/10 shadow-lg flex flex-col transition-all duration-300
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0 lg:sticky lg:z-auto
+          lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:z-auto
           ${collapsed ? "lg:w-[72px]" : "lg:w-[280px]"}
           w-[280px]`}
       >

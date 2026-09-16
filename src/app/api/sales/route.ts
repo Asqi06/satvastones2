@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function GET() {
   try {
@@ -25,6 +26,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const body = await request.json();
     const { title, subtitle, discountPercent, bgColor, type, sortOrder, isActive, productIds } = body;
@@ -43,13 +47,12 @@ export async function POST(request: Request) {
       });
 
       if (productIds && productIds.length > 0) {
-        await tx.saleProduct.createMany({
-          data: productIds.map((productId: string, index: number) => ({
-            saleId: createdSale.id,
-            productId,
-            sortOrder: index,
-          })),
-        });
+        // NOTE: createMany is not supported on MongoDB — insert one by one.
+        for (const [index, productId] of (productIds as string[]).entries()) {
+          await tx.saleProduct.create({
+            data: { saleId: createdSale.id, productId, sortOrder: index },
+          });
+        }
       }
 
       return createdSale;

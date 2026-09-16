@@ -58,19 +58,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category: cat, products } = data;
 
   const name = cat.name || "Jewellery";
-  const title = `${name} | Shop ${name} Online | SatvaStones`;
+  const title = `${name} for Women Online | Korean Anti-Tarnish ${name} – SatvaStones`;
   const description =
     cat.description ||
-    `Shop premium ${name.toLowerCase()} at SatvaStones. Anti-tarnish, waterproof, handmade designs with free shipping across India.`;
+    `Buy ${name.toLowerCase()} for women online in India at SatvaStones. Anti-tarnish, waterproof Korean designs starting under ₹500 with COD & free shipping over ₹399.`;
+
+  const ogImage = products?.[0]?.images?.[0]
+    ? [products[0].images[0].startsWith("http") ? products[0].images[0] : `https://satvastones.in${products[0].images[0]}`]
+    : undefined;
 
   return {
     title,
     description,
+    keywords: [
+      `${name.toLowerCase()} for women`,
+      `buy ${name.toLowerCase()} online india`,
+      `korean ${name.toLowerCase()}`,
+      "anti tarnish jewellery",
+      "waterproof jewellery",
+    ],
     alternates: { canonical: `https://satvastones.in/shop/${cat.slug}` },
     openGraph: {
       title,
       description,
-      images: products?.[0]?.images?.[0] ? [products[0].images[0]] : [],
+      url: `https://satvastones.in/shop/${cat.slug}`,
+      type: "website",
+      ...(ogImage ? { images: ogImage } : {}),
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
   };
 }
@@ -83,21 +106,41 @@ export default async function CategoryPage({ params }: Props) {
 
   const { category: cat, products, childCategories } = data;
 
+  const ratingMap = new Map<string, { avg: number; count: number }>();
+  if (products.length > 0) {
+    try {
+      const ratingRows = await prisma.review.groupBy({
+        by: ["productId"],
+        where: { productId: { in: products.slice(0, 20).map((p) => p.id) } },
+        _avg: { rating: true },
+        _count: { rating: true },
+      });
+      for (const row of ratingRows) {
+        ratingMap.set(row.productId, {
+          avg: row._avg.rating ?? 0,
+          count: row._count.rating,
+        });
+      }
+    } catch {
+      // Ratings are enrichment-only; omit when DB aggregation is unavailable.
+    }
+  }
+
   const itemListJsonLd = {
     "@context": "https://schema.org/",
     "@type": "ItemList",
     "@id": `https://satvastones.in/shop/${cat.slug}#itemlist`,
     "name": `${cat.name} Collection`,
-    "itemListElement": products.slice(0, 20).map((product, index) => ({
-      "@type": "ListItem",
-      "position": index + 1,
-      "item": {
+    "itemListElement": products.slice(0, 20).map((product, index) => {
+      const item: Record<string, unknown> = {
         "@type": "Product",
         "name": product.name,
         "url": `https://satvastones.in/product/${product.slug}`,
         "image": product.images?.[0]
-          ? `https://satvastones.in${product.images[0]}`
-          : "",
+          ? product.images[0].startsWith("http")
+            ? product.images[0]
+            : `https://satvastones.in${product.images[0]}`
+          : undefined,
         "offers": {
           "@type": "Offer",
           "priceCurrency": "INR",
@@ -106,8 +149,25 @@ export default async function CategoryPage({ params }: Props) {
             ? "https://schema.org/InStock"
             : "https://schema.org/OutOfStock",
         },
-      },
-    })),
+      };
+
+      const rating = ratingMap.get(product.id);
+      if (rating && rating.count > 0) {
+        (item as Record<string, unknown>).aggregateRating = {
+          "@type": "AggregateRating",
+          reviewCount: String(rating.count),
+          ratingValue: String(Math.round(rating.avg * 10) / 10),
+          bestRating: "5",
+          worstRating: "1",
+        };
+      }
+
+      return {
+        "@type": "ListItem",
+        "position": index + 1,
+        "item": item,
+      };
+    }),
   };
 
   const breadcrumbJsonLd = {
@@ -136,7 +196,7 @@ export default async function CategoryPage({ params }: Props) {
   };
 
   return (
-    <div className="bg-[var(--luxury-cream)] min-h-screen pt-[120px] lg:pt-[140px] pb-24">
+    <div className="bg-[var(--paper)] text-[var(--ink)]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -145,57 +205,83 @@ export default async function CategoryPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "@id": `https://satvastones.in/shop/${cat.slug}#faq`,
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: `Are ${cat.name.toLowerCase()} waterproof?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `Yes. SatvaStones ${cat.name.toLowerCase()} are anti-tarnish and waterproof — safe for daily wear, rain and workouts. Rinse and pat dry to keep the shine.`,
+                },
+              },
+              {
+                "@type": "Question",
+                name: `What is the price range for ${cat.name.toLowerCase()}?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `Most SatvaStones ${cat.name.toLowerCase()} start under ₹500 with premium picks under ₹2500. Prepaid orders over ₹399 ship free with COD available.`,
+                },
+              },
+              {
+                "@type": "Question",
+                name: `Are SatvaStones ${cat.name.toLowerCase()} good for gifting?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `Yes. All ${cat.name.toLowerCase()} arrive gift-ready with skin-safe, nickel-free finishes — ideal for birthdays, anniversaries and festive gifting for her.`,
+                },
+              },
+            ],
+          }),
+        }}
+      />
 
-      <div className="container-premium">
+      <div className="editorial-container py-10 lg:py-14">
         {/* Breadcrumbs */}
-        <div className="mb-12">
-          <div className="flex items-center gap-3 label-sm text-[var(--luxury-brown)]/50">
-            <Link href="/" className="hover:text-[var(--luxury-brown)] transition-colors">
+        <nav aria-label="Breadcrumb" className="mb-8">
+          <div className="flex items-center gap-2.5 text-[11px] text-[var(--muted)]">
+            <Link href="/" className="hover:text-[var(--ink)] transition-colors">
               Home
             </Link>
             <ChevronRight className="w-3 h-3" />
-            <Link href="/shop" className="hover:text-[var(--luxury-brown)] transition-colors">
-              Curations
+            <Link href="/shop" className="hover:text-[var(--ink)] transition-colors">
+              Shop
             </Link>
             <ChevronRight className="w-3 h-3" />
-            <span className="text-[var(--luxury-brown)] font-bold truncate">
+            <span className="text-[var(--ink)] font-medium truncate" aria-current="page">
               {cat.name}
             </span>
           </div>
-        </div>
+        </nav>
 
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between border-b border-[var(--luxury-border)] pb-16 mb-20 gap-10">
-          <div className="animate-fade-in">
-            <p className="label-sm text-[var(--luxury-gold)] mb-4">
-              The Archives
-            </p>
-            <h1 className="heading-section text-[var(--luxury-brown)] leading-tight">
-              {cat.name}
+        <div className="section-heading">
+          <div>
+            <div className="eyebrow">Korean · Anti-tarnish · Waterproof</div>
+            <h1 className="font-serif font-normal tracking-[-0.035em] leading-[1.05] text-[clamp(42px,4.3vw,63px)] mt-3">
+              {cat.name} <em className="text-[var(--olive)]">for women.</em>
             </h1>
-            {cat.description && (
-              <p className="text-[var(--luxury-brown)]/60 mt-6 max-w-2xl leading-relaxed text-[0.95rem]">
-                {cat.description}
-              </p>
-            )}
-          </div>
-          <div className="bg-white border border-[var(--luxury-border)] px-8 py-4 animate-fade-in shadow-sm shrink-0">
-            <p className="label-sm text-[var(--luxury-brown)]/60">
-              {products.length}{" "}
-              <span className="text-[var(--luxury-brown)]">Artifacts Catalogued</span>
+            <p className="text-[var(--muted)] mt-4 max-w-2xl leading-relaxed text-[13px]">
+              {cat.description ||
+                `Buy ${cat.name.toLowerCase()} for women online in India. Anti-tarnish, waterproof Korean designs — skin-safe, gift-ready, COD available with free shipping over ₹399.`}
             </p>
           </div>
+          <span className="product-count" aria-live="polite">
+            {products.length} pieces
+          </span>
         </div>
 
         {/* Child Categories */}
         {childCategories.length > 0 && (
-          <div className="flex flex-wrap gap-4 mb-20">
+          <div className="tabs mb-8" role="group" aria-label="Subcategories">
             {childCategories.map((child) => (
-              <Link
-                key={child.id}
-                href={`/shop/${child.slug}`}
-                className="px-6 py-3 bg-white border border-[var(--luxury-border)] label-sm text-[var(--luxury-brown)] hover:border-[var(--luxury-gold)] hover:text-[var(--luxury-gold)] transition-colors"
-              >
+              <Link key={child.id} href={`/shop/${child.slug}`} className="tab">
                 {child.name}
               </Link>
             ))}
@@ -204,22 +290,52 @@ export default async function CategoryPage({ params }: Props) {
 
         {/* Products Grid */}
         {products.length === 0 ? (
-          <div className="py-40 text-center flex flex-col items-center justify-center bg-white border border-[var(--luxury-border)]">
-            <h2 className="font-serif text-3xl text-[var(--luxury-brown)] mb-4 italic">
-              The archive is vacant
-            </h2>
-            <p className="label-sm text-[var(--luxury-brown)]/50">
-              New pieces are being curated for this collection.
-            </p>
+          <div className="empty-products">
+            <h2 className="font-serif text-[32px] font-normal mb-3">Nothing here just yet</h2>
+            <p className="text-[11px] text-[var(--muted)]">New pieces are being curated for this collection.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-16">
+          <div className="product-grid">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         )}
+
+        <div className="collection-footer">
+          <p>Good on their own. Even better together.</p>
+        </div>
       </div>
+
+      {/* Benefits — same editorial strip as homepage */}
+      <section className="benefits" aria-label="The SatvaStones details">
+        <div className="benefits-inner editorial-container">
+          <div className="benefit">
+            <svg><use href="#i-sparkle" /></svg> Anti-tarnish finish
+          </div>
+          <div className="benefit">
+            <svg><use href="#i-drop" /></svg> Water-friendly pieces
+          </div>
+          <div className="benefit">
+            <svg><use href="#i-gift" /></svg> Arrives gift-ready
+          </div>
+          <div className="benefit">
+            <svg><use href="#i-truck" /></svg> Shipped across India · COD
+          </div>
+        </div>
+      </section>
+
+      {/* Care note — editorial */}
+      <section className="daily-note">
+        <span className="tiny-star" aria-hidden="true">✳</span>
+        <h2>“The best things in your jewellery box<br />aren’t waiting for an occasion.”</h2>
+        <p>Less saving it. More wearing it — explore the full edit.</p>
+        <div className="mt-6">
+          <Link href="/shop" className="button inline-flex">
+            Explore the edit <svg className="w-[19px] h-[19px]"><use href="#i-arrow" /></svg>
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

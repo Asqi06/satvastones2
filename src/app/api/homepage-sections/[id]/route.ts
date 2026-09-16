@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function GET(
   request: Request,
@@ -35,6 +36,9 @@ export async function GET(
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const { id } = await params;
   try {
     const body = await request.json();
@@ -56,16 +60,17 @@ export async function PUT(
         });
 
         if (productIds.length > 0) {
-          await tx.homepageSectionProduct.createMany({
-            data: productIds.map(
-              (item: { productId: string; sortOrder?: number; badge?: string }) => ({
+          // NOTE: createMany is not supported on MongoDB — insert one by one.
+          for (const item of productIds as { productId: string; sortOrder?: number; badge?: string }[]) {
+            await tx.homepageSectionProduct.create({
+              data: {
                 sectionId: id,
                 productId: item.productId,
                 sortOrder: item.sortOrder ?? 0,
                 badge: item.badge ?? null,
-              })
-            ),
-          });
+              },
+            });
+          }
         }
       }
 
@@ -92,6 +97,9 @@ export async function PUT(
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   const { id } = await params;
   try {
     const existing = await prisma.homepageSection.findUnique({

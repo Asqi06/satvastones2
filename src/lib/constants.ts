@@ -1,5 +1,5 @@
 export const APP_NAME = "Satvastones";
-export const APP_DESCRIPTION = "Luxury Korean & Western Jewellery";
+export const APP_DESCRIPTION = "Anti-Tarnish & Waterproof Korean Aesthetic Jewellery";
 
 export const CATEGORIES = [
   { name: "Korean Jewellery", slug: "korean", image: "/images/korean.jpg" },
@@ -39,22 +39,19 @@ export const PRODUCT_STYLES = [
 export const MATERIALS = [
   "Gold Plated",
   "Silver Plated",
-  "Rose Gold",
-  "Sterling Silver",
+  "Rose Gold Plated",
   "Brass",
   "Stainless Steel",
   "Pearl",
   "Crystal",
-  "Diamond",
-  "Kundan",
+  "Cubic Zirconia",
   "Oxidized Silver",
 ] as const;
 
 export const PRICE_RANGES = [
   { label: "Under ₹500", min: 0, max: 500 },
   { label: "₹500 - ₹1,000", min: 500, max: 1000 },
-  { label: "₹1,000 - ₹2,500", min: 1000, max: 2500 },
-  { label: "₹2,500 - ₹5,000", min: 2500, max: 5000 },
-  { label: "₹5,000 - ₹10,000", min: 5000, max: 10000 },
-  { label: "Above ₹10,000", min: 10000, max: Infinity },
+  { label: "₹1,000 - ₹2,000", min: 1000, max: 2000 },
+  { label: "₹2,000 - ₹3,500", min: 2000, max: 3500 },
+  { label: "Above ₹3,500", min: 3500, max: Infinity },
 ] as const;

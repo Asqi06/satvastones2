@@ -6,6 +6,7 @@ Disallow: /aniadmin/
 Disallow: /admin
 Disallow: /admin/
 Disallow: /api/
+Disallow: /auth/
 Disallow: /cart
 Disallow: /cart/
 Disallow: /checkout
@@ -20,6 +21,10 @@ Disallow: /*?*sub=
 Disallow: /*?*search=
 Disallow: /*?*sort=
 Disallow: /*?*page=
+Disallow: /*?*minPrice=
+Disallow: /*?*maxPrice=
+Disallow: /*?*style=
+Disallow: /*?*material=
 Disallow: /*?*variant=
 Disallow: /*?*color=
 Disallow: /*?*size=

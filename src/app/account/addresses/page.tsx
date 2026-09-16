@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { MapPin, Plus, Edit2, Trash2, Check } from "lucide-react";
+import AccountSidebar from "@/components/account/AccountSidebar";
 
 interface Address {
   id: string;
@@ -16,7 +18,11 @@ interface Address {
   isDefault: boolean;
 }
 
+const inputClass =
+  "px-4 py-3 bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] text-sm placeholder:text-[var(--muted)] focus:outline-none focus:border-[var(--olive)] w-full";
+
 export default function AddressesPage() {
+  const { data: session } = useSession();
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -99,181 +105,190 @@ export default function AddressesPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl lg:text-3xl font-serif text-white">My Addresses</h1>
-        <button
-          onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2.5 bg-[#C9A96E] text-black font-semibold rounded-lg hover:bg-[#b8955d] transition-colors text-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Add Address
-        </button>
-      </div>
-
-      {/* Form */}
-      {showForm && (
-        <div className="bg-[#1a1a1a] rounded-xl p-6 border border-[#2a2a2a] mb-6">
-          <h2 className="text-lg font-serif text-white mb-4">
-            {editingId ? "Edit Address" : "New Address"}
-          </h2>
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input
-              type="text"
-              placeholder="Full Name *"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              required
-              className="px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E]"
-            />
-            <input
-              type="tel"
-              placeholder="Phone *"
-              value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              required
-              className="px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E]"
-            />
-            <input
-              type="text"
-              placeholder="Address Line 1 *"
-              value={form.line1}
-              onChange={(e) => setForm({ ...form, line1: e.target.value })}
-              required
-              className="sm:col-span-2 px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E]"
-            />
-            <input
-              type="text"
-              placeholder="Address Line 2"
-              value={form.line2}
-              onChange={(e) => setForm({ ...form, line2: e.target.value })}
-              className="sm:col-span-2 px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E]"
-            />
-            <input
-              type="text"
-              placeholder="City *"
-              value={form.city}
-              onChange={(e) => setForm({ ...form, city: e.target.value })}
-              required
-              className="px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E]"
-            />
-            <input
-              type="text"
-              placeholder="State *"
-              value={form.state}
-              onChange={(e) => setForm({ ...form, state: e.target.value })}
-              required
-              className="px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E]"
-            />
-            <input
-              type="text"
-              placeholder="PIN Code *"
-              value={form.postalCode}
-              onChange={(e) => setForm({ ...form, postalCode: e.target.value })}
-              required
-              className="px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E]"
-            />
-            <input
-              type="text"
-              placeholder="Country"
-              value={form.country}
-              onChange={(e) => setForm({ ...form, country: e.target.value })}
-              className="px-4 py-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#C9A96E]"
-            />
-            <label className="sm:col-span-2 flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={form.isDefault}
-                onChange={(e) => setForm({ ...form, isDefault: e.target.checked })}
-                className="accent-[#C9A96E]"
-              />
-              Set as default address
-            </label>
-            <div className="sm:col-span-2 flex gap-3">
-              <button
-                type="submit"
-                className="px-6 py-2.5 bg-[#C9A96E] text-black font-semibold rounded-lg hover:bg-[#b8955d] transition-colors text-sm"
-              >
-                {editingId ? "Update" : "Save"} Address
-              </button>
-              <button
-                type="button"
-                onClick={resetForm}
-                className="px-6 py-2.5 border border-[#2a2a2a] text-gray-400 rounded-lg hover:border-[#3a3a3a] text-sm"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* Address List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {addresses.map((addr) => (
-          <div
-            key={addr.id}
-            className="bg-[#1a1a1a] rounded-xl p-6 border border-[#2a2a2a] relative"
-          >
-            {addr.isDefault && (
-              <span className="absolute top-4 right-4 flex items-center gap-1 text-xs text-[#C9A96E]">
-                <Check className="w-3 h-3" />
-                Default
-              </span>
-            )}
-            <div className="flex items-start gap-3 mb-3">
-              <MapPin className="w-5 h-5 text-[#C9A96E] mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-white font-medium">{addr.name}</p>
-                <p className="text-gray-400 text-sm">{addr.line1}</p>
-                {addr.line2 && <p className="text-gray-400 text-sm">{addr.line2}</p>}
-                <p className="text-gray-400 text-sm">
-                  {addr.city}, {addr.state} {addr.postalCode}
-                </p>
-                <p className="text-gray-500 text-xs mt-1">{addr.phone}</p>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setForm({
-                    name: addr.name,
-                    phone: addr.phone,
-                    line1: addr.line1,
-                    line2: addr.line2 || "",
-                    city: addr.city,
-                    state: addr.state,
-                    postalCode: addr.postalCode,
-                    country: addr.country,
-                    isDefault: addr.isDefault,
-                  });
-                  setEditingId(addr.id);
-                  setShowForm(true);
-                }}
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-[#C9A96E]"
-              >
-                <Edit2 className="w-3 h-3" />
-                Edit
-              </button>
-              <button
-                onClick={() => deleteAddress(addr.id)}
-                className="flex items-center gap-1 text-sm text-gray-400 hover:text-red-400"
-              >
-                <Trash2 className="w-3 h-3" />
-                Delete
-              </button>
-            </div>
+    <div className="bg-[var(--paper)] text-[var(--ink)]">
+      <div className="editorial-container py-10 lg:py-14">
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="eyebrow">Faster checkout</div>
+            <h1 className="font-serif font-normal tracking-[-0.03em] leading-[1.02] text-[clamp(42px,4.3vw,63px)] mt-3">
+              Saved <em className="text-[var(--olive)]">addresses.</em>
+            </h1>
           </div>
-        ))}
-      </div>
-
-      {!loading && addresses.length === 0 && !showForm && (
-        <div className="text-center py-16 bg-[#1a1a1a] rounded-xl border border-[#2a2a2a]">
-          <MapPin className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-          <h2 className="text-lg font-serif text-white mb-2">No Addresses</h2>
-          <p className="text-gray-400">Add your first shipping address.</p>
+          <button onClick={() => setShowForm(true)} className="button">
+            <Plus className="w-4 h-4" />
+            Add address
+          </button>
         </div>
-      )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+          <div className="lg:col-span-1">
+            <AccountSidebar userName={session?.user?.name} userEmail={session?.user?.email} />
+          </div>
+
+          <div className="lg:col-span-3">
+            {/* Form */}
+            {showForm && (
+              <div className="bg-[var(--white)] border border-[var(--line)] p-6 mb-6">
+                <h2 className="font-serif text-[24px] font-normal mb-5">
+                  {editingId ? "Edit address" : "New address"}
+                </h2>
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Full Name *"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    required
+                    className={inputClass}
+                  />
+                  <input
+                    type="tel"
+                    placeholder="Phone *"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                    required
+                    className={inputClass}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Address Line 1 *"
+                    value={form.line1}
+                    onChange={(e) => setForm({ ...form, line1: e.target.value })}
+                    required
+                    className={`${inputClass} sm:col-span-2`}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Address Line 2"
+                    value={form.line2}
+                    onChange={(e) => setForm({ ...form, line2: e.target.value })}
+                    className={`${inputClass} sm:col-span-2`}
+                  />
+                  <input
+                    type="text"
+                    placeholder="City *"
+                    value={form.city}
+                    onChange={(e) => setForm({ ...form, city: e.target.value })}
+                    required
+                    className={inputClass}
+                  />
+                  <input
+                    type="text"
+                    placeholder="State *"
+                    value={form.state}
+                    onChange={(e) => setForm({ ...form, state: e.target.value })}
+                    required
+                    className={inputClass}
+                  />
+                  <input
+                    type="text"
+                    placeholder="PIN Code *"
+                    value={form.postalCode}
+                    onChange={(e) => setForm({ ...form, postalCode: e.target.value })}
+                    required
+                    className={inputClass}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Country"
+                    value={form.country}
+                    onChange={(e) => setForm({ ...form, country: e.target.value })}
+                    className={inputClass}
+                  />
+                  <label className="sm:col-span-2 flex items-center gap-2 text-sm text-[var(--muted)] cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.isDefault}
+                      onChange={(e) => setForm({ ...form, isDefault: e.target.checked })}
+                      className="accent-[#505a3d]"
+                    />
+                    Set as default address
+                  </label>
+                  <div className="sm:col-span-2 flex flex-wrap gap-3">
+                    <button type="submit" className="button">
+                      {editingId ? "Update" : "Save"} address
+                    </button>
+                    <button
+                      type="button"
+                      onClick={resetForm}
+                      className="px-6 py-3 border border-[var(--line)] text-sm text-[var(--muted)] hover:text-[var(--ink)] hover:border-[var(--ink)] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {/* Address List */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {addresses.map((addr) => (
+                <div
+                  key={addr.id}
+                  className="bg-[var(--white)] border border-[var(--line)] p-6 relative"
+                >
+                  {addr.isDefault && (
+                    <span className="absolute top-4 right-4 flex items-center gap-1 text-[10px] uppercase tracking-[0.12em] text-[var(--olive)]">
+                      <Check className="w-3 h-3" />
+                      Default
+                    </span>
+                  )}
+                  <div className="flex items-start gap-3 mb-4">
+                    <MapPin className="w-5 h-5 text-[var(--olive)] mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-[var(--ink)] font-medium">{addr.name}</p>
+                      <p className="text-[var(--muted)] text-sm">{addr.line1}</p>
+                      {addr.line2 && <p className="text-[var(--muted)] text-sm">{addr.line2}</p>}
+                      <p className="text-[var(--muted)] text-sm">
+                        {addr.city}, {addr.state} {addr.postalCode}
+                      </p>
+                      <p className="text-[var(--muted)] text-xs mt-1">{addr.phone}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4 pt-4 border-t border-[var(--line)]">
+                    <button
+                      onClick={() => {
+                        setForm({
+                          name: addr.name,
+                          phone: addr.phone,
+                          line1: addr.line1,
+                          line2: addr.line2 || "",
+                          city: addr.city,
+                          state: addr.state,
+                          postalCode: addr.postalCode,
+                          country: addr.country,
+                          isDefault: addr.isDefault,
+                        });
+                        setEditingId(addr.id);
+                        setShowForm(true);
+                      }}
+                      className="flex items-center gap-1.5 text-[13px] text-[var(--muted)] hover:text-[var(--olive)] transition-colors"
+                    >
+                      <Edit2 className="w-3.5 h-3.5" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => deleteAddress(addr.id)}
+                      className="flex items-center gap-1.5 text-[13px] text-[var(--muted)] hover:text-[#9b5144] transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {!loading && addresses.length === 0 && !showForm && (
+              <div className="text-center py-16 bg-[var(--white)] border border-[var(--line)]">
+                <MapPin className="w-10 h-10 text-[var(--olive)] mx-auto mb-4 opacity-60" />
+                <h2 className="font-serif text-[24px] font-normal mb-2">No addresses yet</h2>
+                <p className="text-[var(--muted)] text-sm">Add your first shipping address.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

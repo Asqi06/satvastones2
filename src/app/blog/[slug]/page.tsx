@@ -97,7 +97,7 @@ export default async function BlogPage({ params }: Props) {
   };
 
   return (
-    <div className="bg-[var(--luxury-cream)] min-h-screen pt-[120px] lg:pt-[140px] pb-24">
+    <div className="bg-[var(--paper)] text-[var(--ink)] min-h-screen">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
@@ -107,15 +107,15 @@ export default async function BlogPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
 
-      <div className="container-premium max-w-4xl mx-auto px-4">
+      <div className="editorial-container max-w-4xl py-10 lg:py-14">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 label-sm text-[var(--luxury-brown)]/50 hover:text-[var(--luxury-brown)] transition-colors mb-12"
+          className="eyebrow inline-flex items-center gap-2 text-[var(--muted)] hover:text-[var(--ink)] transition-colors mb-12"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Journal
         </Link>
 
-        <article className="bg-white border border-[var(--luxury-border)] shadow-sm">
+        <article className="bg-[var(--white)] border border-[var(--line)]">
           {blog.image && (
             <div className="relative w-full aspect-[16/9]">
               <Image
@@ -129,7 +129,7 @@ export default async function BlogPage({ params }: Props) {
           )}
 
           <div className="p-8 lg:p-14">
-            <p className="label-sm text-[var(--luxury-gold)] mb-4">
+            <p className="eyebrow text-[var(--olive)] mb-4">
               {blog.author ? `${blog.author} · ` : ""}
               {blog.publishedAt
                 ? new Date(blog.publishedAt).toLocaleDateString("en-IN", {
@@ -139,16 +139,16 @@ export default async function BlogPage({ params }: Props) {
                   })
                 : "SatvaStones Journal"}
             </p>
-            <h1 className="heading-section text-[var(--luxury-brown)] mb-8 leading-tight">
+            <h1 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-4xl lg:text-6xl mb-8 leading-tight">
               {blog.title}
             </h1>
             {blog.excerpt && (
-              <p className="text-[var(--luxury-brown)]/60 italic mb-8 border-l-2 border-[var(--luxury-gold)] pl-6">
+              <p className="text-[var(--muted)] italic mb-8 border-l-2 border-[var(--olive)] pl-6">
                 {blog.excerpt}
               </p>
             )}
             <div
-              className="prose lg:prose-lg max-w-none text-[var(--luxury-brown)]/80 leading-relaxed"
+              className="prose lg:prose-lg max-w-none text-[var(--muted)] leading-relaxed"
               dangerouslySetInnerHTML={{ __html: blog.content }}
             />
           </div>

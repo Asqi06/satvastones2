@@ -18,11 +18,16 @@ export default function ProductForm({ productId }: { productId?: string }) {
     style: "WESTERN",
     stock: "0",
     sku: "",
+    weight: "",
     categoryId: "",
     isFeatured: false,
     isBestSeller: false,
     isNewCollection: false,
     isActive: true,
+    metaTitle: "",
+    metaDescription: "",
+    focusKeywords: "",
+    seoContent: "",
   });
 
   useEffect(() => {
@@ -55,11 +60,16 @@ export default function ProductForm({ productId }: { productId?: string }) {
           style: p.style,
           stock: p.stock.toString(),
           sku: p.sku || "",
+          weight: p.weight?.toString() || "",
           categoryId: p.categoryId,
           isFeatured: p.isFeatured,
           isBestSeller: p.isBestSeller || false,
           isNewCollection: p.isNewCollection || false,
           isActive: p.isActive,
+          metaTitle: p.metaTitle || "",
+          metaDescription: p.metaDescription || "",
+          focusKeywords: p.focusKeywords || "",
+          seoContent: p.seoContent || "",
         });
         setImages(p.images || []);
       }
@@ -112,13 +122,16 @@ export default function ProductForm({ productId }: { productId?: string }) {
           price: parseFloat(form.price),
           comparePrice: form.comparePrice ? parseFloat(form.comparePrice) : null,
           stock: parseInt(form.stock),
+          weight: form.weight ? parseFloat(form.weight) : null,
         }),
       });
 
       if (res.ok) {
         router.push("/admin/products");
+        router.refresh();
       } else {
-        alert("Failed to save product");
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || "Failed to save product");
       }
     } catch {
       alert("Failed to save product");
@@ -272,6 +285,73 @@ export default function ProductForm({ productId }: { productId?: string }) {
                   onChange={(e) => setForm({ ...form, sku: e.target.value })}
                   className={inputClass}
                   placeholder="UNIQUE IDENTIFIER"
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Weight (grams)</label>
+                <input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={form.weight}
+                  onChange={(e) => setForm({ ...form, weight: e.target.value })}
+                  className={inputClass}
+                  placeholder="E.G. 12.5"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* SEO */}
+          <div>
+            <p className="text-[10px] tracking-[0.3em] uppercase font-bold text-luxury-gold mb-6">
+              SEO
+            </p>
+            <div className="grid grid-cols-1 gap-6">
+              <div>
+                <label className={labelClass}>Meta Title</label>
+                <input
+                  type="text"
+                  value={form.metaTitle}
+                  onChange={(e) => setForm({ ...form, metaTitle: e.target.value })}
+                  className={inputClass}
+                  placeholder="LEAVE BLANK TO AUTO-GENERATE FROM PRODUCT NAME"
+                />
+                <p className="text-[10px] text-luxury-brown/30 mt-1 tracking-wider">
+                  {form.metaTitle.length}/60 characters recommended
+                </p>
+              </div>
+              <div>
+                <label className={labelClass}>Meta Description</label>
+                <textarea
+                  rows={2}
+                  value={form.metaDescription}
+                  onChange={(e) => setForm({ ...form, metaDescription: e.target.value })}
+                  className={inputClass}
+                  placeholder="SHOWN IN GOOGLE SEARCH RESULTS"
+                />
+                <p className="text-[10px] text-luxury-brown/30 mt-1 tracking-wider">
+                  {form.metaDescription.length}/160 characters recommended
+                </p>
+              </div>
+              <div>
+                <label className={labelClass}>Focus Keywords</label>
+                <input
+                  type="text"
+                  value={form.focusKeywords}
+                  onChange={(e) => setForm({ ...form, focusKeywords: e.target.value })}
+                  className={inputClass}
+                  placeholder="COMMA SEPARATED, E.G. GOLD RING, ANTI TARNISH RING"
+                />
+              </div>
+              <div>
+                <label className={labelClass}>SEO Content</label>
+                <textarea
+                  rows={5}
+                  value={form.seoContent}
+                  onChange={(e) => setForm({ ...form, seoContent: e.target.value })}
+                  className={inputClass}
+                  placeholder="EXTRA DESCRIPTIVE COPY RENDERED ON THE PRODUCT PAGE"
                 />
               </div>
             </div>

@@ -30,10 +30,11 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
   }
 
   if (searchQuery) {
+    // NOTE: `mode: "insensitive"` is not supported on MongoDB — contains is case-sensitive.
     where.OR = [
-      { orderNumber: { contains: searchQuery, mode: "insensitive" } },
-      { user: { name: { contains: searchQuery, mode: "insensitive" } } },
-      { user: { email: { contains: searchQuery, mode: "insensitive" } } },
+      { orderNumber: { contains: searchQuery } },
+      { user: { name: { contains: searchQuery } } },
+      { user: { email: { contains: searchQuery } } },
     ];
   }
 

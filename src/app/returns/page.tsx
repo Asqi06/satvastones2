@@ -7,23 +7,59 @@ export const metadata: Metadata = {
 };
 
 export default function ReturnsPage() {
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": "https://satvastones.in/returns#faq",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Can I return SatvaStones jewellery?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "All sales are final. We do not accept returns, refunds or cancellations after confirmation, except verified damage or defect claims.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "What if my jewellery arrives damaged?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Email support@satvastones.in within 48 hours of delivery with photos, packaging photos and Order ID for a free replacement.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Can I cancel my jewellery order?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Only within 30 minutes of placement if not yet packed or dispatched. Email support@satvastones.in immediately with your Order ID.",
+        },
+      },
+    ],
+  };
+
   return (
-    <div className="bg-luxury-cream pt-40 pb-32 min-h-screen">
-      <div className="container-premium max-w-4xl">
-        <div className="mb-24 animate-luxury-fade">
-          <p className="text-luxury-gold text-[10px] tracking-[0.5em] uppercase font-bold mb-6">Policy</p>
-          <h1 className="text-5xl lg:text-8xl font-serif text-luxury-brown mb-12">Returns & Damage Policy</h1>
-          <div className="h-px w-24 bg-luxury-gold"></div>
+    <div className="bg-[var(--paper)] text-[var(--ink)] min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
+      <div className="editorial-container max-w-4xl py-10 lg:py-14">
+        <div className="mb-10 lg:mb-14">
+          <p className="eyebrow text-[var(--muted)] mb-6">Policy</p>
+          <h1 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-5xl lg:text-7xl mb-8">Returns & <em className="text-[var(--olive)]">Damage Policy</em></h1>
+          <div className="h-px w-24 bg-[var(--olive)]"></div>
         </div>
 
-        <div className="space-y-20 text-luxury-brown/60 font-light leading-relaxed tracking-wide animate-luxury-fade luxury-delay-200">
+        <div className="space-y-12 text-[var(--muted)] font-light leading-relaxed tracking-wide">
         {/* Intro Copy */}
-        <p className="text-luxury-brown/70 text-base lg:text-lg leading-relaxed max-w-3xl">
+        <p className="text-[var(--muted)] text-base lg:text-lg leading-relaxed max-w-3xl">
           At Satvastones, we stand behind the quality of our anti tarnish, waterproof jewellery. If your order arrives damaged, defective, or different from what you ordered, our return and exchange policy below explains exactly how to raise a claim within 48 hours of delivery.
         </p>
 
         <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">No Returns or Refunds</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">No Returns or Refunds</h2>
             <p>
               SatvaStones does not accept returns, refunds, or cancellations once an order has been placed and confirmed. All sales are final. This policy applies to all products in our collection including Korean aesthetic earrings, gold-plated necklaces, anti-tarnish rings, designer bracelets, and ₹99 Sale items.
             </p>
@@ -36,9 +72,9 @@ export default function ReturnsPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Damaged Items Exception</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Damaged Items Exception</h2>
             <p>
-              If your item arrives damaged or defective, we will provide a free replacement at no additional cost. You must contact our support team at curation@satvastones.com within 48 hours of delivery with clear photographs of the damage and your Order Identifier. Please retain all original packaging materials as they may be required for the claims investigation.
+              If your item arrives damaged or defective, we will provide a free replacement at no additional cost. You must contact our support team at support@satvastones.in within 48 hours of delivery with clear photographs of the damage and your Order Identifier. Please retain all original packaging materials as they may be required for the claims investigation.
             </p>
             <p>
               Damage includes but is not limited to broken clasps, missing stones, bent metal parts, discolouration upon arrival, or physical breakage sustained during transit. Minor cosmetic variations that occur during the handcrafting process — such as subtle differences in stone placement or metal finish — are not classified as defects and are part of the unique character of artisanal jewelry.
@@ -46,12 +82,12 @@ export default function ReturnsPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Damage Claim Process</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Damage Claim Process</h2>
             <p>
               To file a damage claim for your Korean earrings, western necklace, or any other SatvaStones product, please follow these steps:
             </p>
-            <ol className="list-decimal list-inside space-y-4 text-luxury-brown/70">
-              <li>Email curation@satvastones.com with the subject line "DAMAGE CLAIM — [Your Order Number]".</li>
+            <ol className="list-decimal list-inside space-y-4 text-[var(--muted)]">
+              <li>Email support@satvastones.in with the subject line "DAMAGE CLAIM — [Your Order Number]".</li>
               <li>Attach clear, well-lit photographs of the damaged area from multiple angles.</li>
               <li>Include photographs of the original packaging showing any external damage during transit.</li>
               <li>Mention your Order Identifier and the product name.</li>
@@ -62,11 +98,11 @@ export default function ReturnsPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Non-Eligible Claims</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Non-Eligible Claims</h2>
             <p>
               The following situations are not eligible for replacement under our damage policy:
             </p>
-            <ul className="list-disc list-inside space-y-3 text-luxury-brown/70">
+            <ul className="list-disc list-inside space-y-3 text-[var(--muted)]">
               <li>Claims submitted after 48 hours of delivery confirmation.</li>
               <li>Items showing signs of wear, scratches, or tarnish after use — though genuine anti-tarnish issues within 30 days of delivery for our guaranteed pieces will be reviewed case by case.</li>
               <li>Damage caused by misuse, accidental drops, exposure to chemicals, or improper storage after delivery.</li>
@@ -79,9 +115,9 @@ export default function ReturnsPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Order Cancellation Policy</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Order Cancellation Policy</h2>
             <p>
-              Orders can be cancelled only within 30 minutes of placement, provided the order has not yet been processed for dispatch. To request a cancellation, please email curation@satvastones.com immediately with your Order Identifier. Orders that have already been packed or dispatched cannot be cancelled under our no-return policy.
+              Orders can be cancelled only within 30 minutes of placement, provided the order has not yet been processed for dispatch. To request a cancellation, please email support@satvastones.in immediately with your Order Identifier. Orders that have already been packed or dispatched cannot be cancelled under our no-return policy.
             </p>
             <p>
               For COD (Cash on Delivery) orders, cancellation requests will be honoured if made before the package is handed over to our courier partner. Customers who repeatedly place COD orders without accepting delivery may have their COD privileges revoked.

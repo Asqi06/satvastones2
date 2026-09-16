@@ -9,17 +9,17 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="bg-luxury-cream pt-40 pb-32 min-h-screen">
-      <div className="container-premium max-w-4xl">
-        <div className="mb-24 animate-luxury-fade">
-          <p className="text-luxury-gold text-[10px] tracking-[0.5em] uppercase font-bold mb-6">Governance</p>
-          <h1 className="text-5xl lg:text-8xl font-serif text-luxury-brown mb-12">Terms of Service</h1>
-          <div className="h-px w-24 bg-luxury-gold"></div>
+    <div className="bg-[var(--paper)] text-[var(--ink)] min-h-screen">
+      <div className="editorial-container max-w-4xl py-10 lg:py-14">
+        <div className="mb-10 lg:mb-14">
+          <p className="eyebrow text-[var(--muted)] mb-6">Governance</p>
+          <h1 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-5xl lg:text-7xl mb-8">Terms of <em className="text-[var(--olive)]">Service</em></h1>
+          <div className="h-px w-24 bg-[var(--olive)]"></div>
         </div>
 
-        <div className="space-y-20 text-luxury-brown/60 font-light leading-relaxed tracking-wide animate-luxury-fade luxury-delay-200">
+        <div className="space-y-12 text-[var(--muted)] font-light leading-relaxed tracking-wide">
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Interactions</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Interactions</h2>
             <p>
               By accessing the Satvastones archive at satvastones.in, you agree to interact with the platform in good faith and respect all intellectual property pertaining to our artisanal designs. This website is intended for users who are at least 18 years of age. If you are under 18, you may use SatvaStones only under the supervision of a parent or legal guardian.
             </p>
@@ -32,7 +32,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Acquisition Verification</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Acquisition Verification</h2>
             <p>
               Prices and availability are subject to archival adjustments without prior notice. All product listings for Korean aesthetic earrings, gold-plated necklaces, anti-tarnish rings, and designer bracelets are displayed in Indian Rupees (INR) inclusive of applicable taxes unless stated otherwise.
             </p>
@@ -45,7 +45,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Design Integrity</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Design Integrity</h2>
             <p>
               Reproduction of any Satvastones design or digital asset — including product images, descriptions, logos, and marketing materials — without explicit written consent from our Board of Directors is strictly prohibited. All content featured on this website, including photographs of our anti-tarnish jewelry collection, is protected under the Copyright Act, 1957 of India and international copyright treaties.
             </p>
@@ -55,7 +55,7 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Liability & Warranty</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Liability & Warranty</h2>
             <p>
               SatvaStones provides its products and services on an "as is" and "as available" basis. While we take every precaution to ensure our anti-tarnish and waterproof jewelry meets the highest quality standards, we do not warrant that the product descriptions, colours, or images are entirely accurate, complete, or error-free. Screen settings and device displays may cause slight variations in colour representation.
             </p>
@@ -65,12 +65,12 @@ export default function TermsPage() {
           </section>
 
           <section className="space-y-8">
-            <h2 className="text-luxury-brown text-xl font-serif uppercase tracking-widest italic border-b border-luxury-brown/5 pb-4">Jurisdiction & Dispute Resolution</h2>
+            <h2 className="font-serif font-normal tracking-[-0.03em] text-[var(--ink)] text-2xl lg:text-3xl border-b border-[var(--line)] pb-4">Jurisdiction & Dispute Resolution</h2>
             <p>
               These protocols are governed by the laws of Bharat (India). Any disputes arising from or relating to these terms, your use of the SatvaStones website, or your purchase of Korean aesthetic jewelry, western minimalist accessories, or any other products from our collection will be mediated within the courts of Mumbai, Maharashtra.
             </p>
             <p>
-              Before initiating formal legal proceedings, we encourage you to contact our customer support team at curation@satvastones.com to resolve any concerns amicably. We are committed to addressing all customer grievances within 5-7 business days through our internal dispute resolution process.
+              Before initiating formal legal proceedings, we encourage you to contact our customer support team at support@satvastones.in to resolve any concerns amicably. We are committed to addressing all customer grievances within 5-7 business days through our internal dispute resolution process.
             </p>
           </section>
         </div>
