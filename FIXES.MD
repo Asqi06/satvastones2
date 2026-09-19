@@ -2232,3 +2232,32 @@ The site ran three clashing visual systems (`luxury-*` cream/gold, `brand-*` win
   - Both online Razorpay and COD payment methods must continue to be supported in `/api/checkout` and `/checkout`.
   - Never remove `product.seoContent` conditional rendering or Specifications table on PDP.
 
+---
+
+## Fix — GitLab `website` repo synced: template stub replaced with real project code (products/coupons restored)
+
+### Problem
+The GitLab repo (`satvastones-group1/website`, branch `main`) contained only a 5-file template stub (`README.md`, `Website/.gitkeep`, `app.js`, `index.html`, `styles.css`) — no `src/`, no `prisma/`, no products/coupons APIs. Pushing the real code failed (`fetch first` — remote had work missing locally), and the follow-up `pull --allow-unrelated-histories` staged those 4 stub files into the working tree, so the project looked polluted/missing next to the template.
+
+### Root Cause
+Two unrelated histories: GitHub `origin/main` held the real Next.js + Prisma 6 + MongoDB app, while GitLab `main` held an AI-generated editorial-storefront stub. A plain push is a non-fast-forward (correctly rejected); the unrelated-histories merge imports the stub files unless they are explicitly removed during conflict resolution. `main` is also a protected branch on GitLab, so `--force` push is rejected — merge-then-push is the only path.
+
+### Fix
+1. Aborted the first merge attempt (`git merge --abort`) to restore a clean tree at `4a8fdbd`.
+2. Re-ran the unrelated-histories pull, then resolved it as: `git checkout --ours README.md` (keep project README) + `git rm -f app.js index.html styles.css Website/.gitkeep` (drop the entire template stub).
+3. Committed merge `3377f8a` ("Merge GitLab website template history into main - keep project code, drop template stub files").
+4. Pushed normally (no force): GitLab `306acf5..3377f8a`, then `origin/main` `4a8fdbd..3377f8a` so both remotes are in sync.
+
+### Verification
+- `git ls-tree HEAD` contains `src`, `prisma`, `public`, `package.json`, including `src/app/api/products/route.ts`, `src/app/api/coupons/route.ts`, `prisma/seed.ts`.
+- Local `src/app/api` lists all 18 route groups (products, coupons, orders, blogs, checkout, etc.).
+- NOTE: this restores the *code* for products/coupons on GitLab. If the deployed site still shows zero products/coupons, that is *data*, not code — set `DATABASE_URL` to the MongoDB Atlas string in the deploy dashboard, then run `npx prisma db push` + `npm run seed` once (per the MongoDB-migration entry above).
+
+### Commit hash
+- `3377f8a` (merge) + follow-up commit for this log entry.
+
+### Do NOT Revert
+- Never re-add root `app.js`, `index.html`, `styles.css`, or `Website/` — they are the dead template stub, not part of the Next.js app (Stage 5 deleted the Vite `index.html`; the stub `index.html`/`styles.css` would shadow nothing but pollute the root).
+- Never force-push to GitLab `main` (protected) — sync via merge, keeping `--ours` README and deleting stub files.
+- Both remotes (`origin` GitHub, `gitlab`) must stay at the same merge commit; do not let them diverge again.
+
