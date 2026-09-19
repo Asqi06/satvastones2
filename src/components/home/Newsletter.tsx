@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { Check, Mail } from "lucide-react";
+import { Check } from "lucide-react";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 export default function Newsletter() {
-  const reduce = useReducedMotion();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<Status>("idle");
   const [message, setMessage] = useState("");
@@ -26,7 +24,7 @@ export default function Newsletter() {
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
         setStatus("success");
-        setMessage(data.message || "You're subscribed — welcome to SatvaStones.");
+        setMessage(data.message || "You're on the list — see you Sunday.");
         setEmail("");
       } else {
         setStatus("error");
@@ -39,15 +37,18 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="newsletter-editorial">
+    <section className="newsletter-editorial" aria-labelledby="newsletter-heading">
       <div className="newsletter-editorial-inner editorial-container">
         <div>
-          <h2>A good thing in your inbox.</h2>
-          <p>Fresh drops, little notes, and first dibs. Never the noise.</p>
+          <span className="kicker" style={{ background: "#F2A007" }}>Free every Sunday</span>
+          <h2 id="newsletter-heading" className="mt-4">
+            The <em>Sunday</em> supplement.
+          </h2>
+          <p>Fresh drops, little notes, first dibs. One mail a week, never the noise.</p>
         </div>
 
         {status === "success" ? (
-          <div className="inline-flex items-center gap-2 text-sm text-[var(--olive)] font-medium">
+          <div className="inline-flex items-center gap-2 text-sm text-[#F2A007] font-bold">
             <Check className="w-4 h-4" /> {message}
           </div>
         ) : (
@@ -68,13 +69,13 @@ export default function Newsletter() {
               disabled={status === "submitting"}
               aria-label="Join the mailing list"
             >
-              <svg className="w-5 h-5 text-[var(--ink)]"><use href="#i-arrow" /></svg>
+              <svg className="w-5 h-5 icon"><use href="#i-arrow" /></svg>
             </button>
           </form>
         )}
       </div>
       {status === "error" && (
-        <p className="text-xs text-red-700 editorial-container mt-2">{message}</p>
+        <p className="text-xs font-bold text-[#FFB4A2] editorial-container mt-2">{message}</p>
       )}
     </section>
   );

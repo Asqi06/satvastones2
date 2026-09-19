@@ -94,14 +94,22 @@ export default function ProductCard({ product }: { product: Product }) {
               className="object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#e7e1d7]">
-              <span className="font-serif text-4xl text-[var(--olive)]/40 tracking-[0.2em]">Satva</span>
+            <div className="w-full h-full flex items-center justify-center bg-[#F4E7C9]">
+              <span className="font-serif font-black text-4xl tracking-tight text-transparent" style={{ WebkitTextStroke: "2px #211A0C" }}>
+                Satva
+              </span>
             </div>
           )}
         </Link>
 
-        {discount > 0 && <span className="product-label">-{discount}%</span>}
-        {outOfStock && <span className="product-label">Sold out</span>}
+        {discount > 0 && !outOfStock && (
+          <span className="product-label starburst" role="img" aria-label={`${discount} percent off`}>
+            −{discount}%
+          </span>
+        )}
+        {outOfStock && (
+          <span className="product-label sticker sticker-pop">Sold out</span>
+        )}
 
         <button
           onClick={toggleWishlist}
@@ -118,7 +126,7 @@ export default function ProductCard({ product }: { product: Product }) {
           aria-label={`Add ${product.name} to bag`}
           className="quick-add"
         >
-          <span>{added ? "Added to bag" : outOfStock ? "Sold out" : "Add to bag"}</span>
+          <span>{added ? "In the bag ✓" : outOfStock ? "Sold out" : "Add to bag"}</span>
           {added ? <Check className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
         </button>
       </div>
@@ -127,7 +135,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div>
           <div className="product-topline">
             <Link href={`/product/${product.slug}`}>
-              <h3 className="product-name hover:text-[var(--olive)] transition-colors line-clamp-1">
+              <h3 className="product-name hover:text-[var(--color-pop)] transition-colors line-clamp-2">
                 {product.name}
               </h3>
             </Link>
@@ -136,19 +144,28 @@ export default function ProductCard({ product }: { product: Product }) {
 
           <p className="product-subtitle">
             {product.material ? `${product.material} · Anti-tarnish` : "Anti-tarnish finish"}
-            {product.comparePrice && product.comparePrice > product.price ? ` · ₹${product.comparePrice.toLocaleString("en-IN")}` : ""}
+            {product.comparePrice && product.comparePrice > product.price ? (
+              <>
+                {" · "}
+                <s>₹{product.comparePrice.toLocaleString("en-IN")}</s>
+                {" · You save ₹" + (product.comparePrice - product.price).toLocaleString("en-IN")}
+              </>
+            ) : ""}
           </p>
         </div>
 
         <div className="product-bottom mt-auto">
-          <span className="gold-dot" role="img" aria-label="Gold finish" />
+          <span className="flex items-center gap-2">
+            <span className="gold-dot" role="img" aria-label="Gold finish" />
+            {product.category ? product.category.name : "Everyday gold"}
+          </span>
           {reviewCount > 0 ? (
-            <span className="flex items-center gap-1 text-[11px] text-[var(--muted)]">
-              <Star className="w-3 h-3 fill-[#a98250] text-[#a98250]" />
-              {reviewCount} review{reviewCount > 1 ? "s" : ""}
+            <span className="flex items-center gap-1">
+              <Star className="w-3 h-3 fill-[#F2A007]" />
+              {reviewCount}
             </span>
           ) : (
-            <span>Anti-tarnish finish</span>
+            <span>Waterproof</span>
           )}
         </div>
       </div>

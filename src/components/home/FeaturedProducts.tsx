@@ -130,14 +130,14 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
     <section className="shop-section editorial-container" id="shop">
       <div className="section-heading">
         <div>
-          <div className="eyebrow">Your jewellery box, upgraded</div>
+          <div className="eyebrow">Filed under: daily wear</div>
           <h2>
-            On heavy <em>rotation.</em>
+            The most <em>re-worn.</em>
           </h2>
         </div>
         <Link href="/shop" className="text-link">
           Explore the edit{" "}
-          <svg className="w-4 h-4"><use href="#i-arrow" /></svg>
+          <svg className="w-4 h-4 icon"><use href="#i-arrow" /></svg>
         </Link>
       </div>
 
@@ -178,7 +178,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                     />
                   </Link>
 
-                  {label && <span className="product-label">{label}</span>}
+                  {label && <span className="product-label sticker sticker-sun">{label}</span>}
 
                   <button
                     className={`wish-button ${saved ? "saved" : ""}`}
@@ -206,7 +206,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
                 <div className="product-meta">
                   <div className="product-topline">
                     <Link href={`/product/${p.slug}`}>
-                      <h3 className="product-name hover:text-[var(--olive)] transition-colors">
+                      <h3 className="product-name hover:text-[var(--color-pop)] transition-colors">
                         {p.name}
                       </h3>
                     </Link>
@@ -233,7 +233,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
       </div>
 
       <div className="collection-footer">
-        <p>Good on their own. Even better together.</p>
+        <p>Good on their own. Even better stacked.</p>
       </div>
     </section>
   );

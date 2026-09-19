@@ -2234,6 +2234,78 @@ The site ran three clashing visual systems (`luxury-*` cream/gold, `brand-*` win
 
 ---
 
+## Redesign — "The Everyday Gold Gazette" (full frontend overwrite, from scratch)
+
+### Problem
+The user asked for the entire existing frontend/UI to be overwritten and redesigned
+from scratch: bold and beautiful, playful and editorial, genuinely unique —
+explicitly not generic AI-looking design.
+
+### Root Cause
+The previous Dōri editorial system (olive/paper/blush, Instrument Serif + DM Sans,
+soft hairlines, polite microcopy) was coherent but safe and familiar — it read as
+another quiet-luxury template. Nothing about it was ownable to SatvaStones.
+
+### Fix — new design language
+The storefront is now art-directed as **a jewellery house printed like a beloved
+city newspaper crossed with a bazaar sticker wall** ("The Everyday Gold Gazette"):
+- **Palette**: newsprint `#FFF6E4`, warm ink `#211A0C`, marigold `#F2A007`,
+  sindoor red `#CE3B17`, leaf green `#2F6B33`, muted gold `#B98A2F`. Ink rules
+  (thick + double), hard offset print shadows (`4-6px` solid, zero blur) instead
+  of soft glows. No purple/blue gradients anywhere.
+- **Type**: Fraunces 900 (display, italic sindoor accents, hand-drawn squiggle
+  underlines) + Archivo 800 (UI labels) via `next/font`. Cormorant/Montserrat and
+  the DM Sans/Instrument `<link>` tags are gone.
+- **Ownable motifs**: masthead nameplate with dateline, marquee crier ticker,
+  issue numbers + "Inside this issue" table of contents, sticker badges
+  (rotated, hard-shadowed), starburst discount seals, ticket-stub dashed
+  dividers, price-tag pills, "Letters to the editor" reviews, "Ask the gold
+  desk" FAQ, "Sunday supplement" newsletter, colophon footer on ink.
+- **Voice**: honest and specific ("Gold-coloured, not solid gold", "Water
+  forgiven", "Wear the good stuff") — no fake press, no fake counts, no lorem.
+
+### Files Changed (visual layer only — logic/data/SEO untouched)
+- `src/app/globals.css` (full rewrite; legacy `--brand-*`/`--luxury-*` names KEPT
+  and repointed; all shared classes redefined so un-rewritten pages reskin too)
+- `src/app/layout.tsx` (Fraunces + Archivo, `themeColor #FFF6E4`, JSON-LD kept)
+- `src/components/layout/Header.tsx` (masthead + ticker + section nav; cart,
+  search, account, toast, free-ship-₹399 logic identical)
+- `src/components/layout/Footer.tsx` (ink colophon; same links/contacts/socials)
+- `src/app/page.tsx` (front page + issue TOC + editor's letter + most-clipped;
+  same queries, mocks, JSON-LD, slugs)
+- `src/components/home/{FeaturedProducts,CategoryShowcase,SocialProof,Newsletter}.tsx`
+  (same props/data/flow; Newsletter drops the unused `motion/react` import)
+- `src/components/product/ProductCard.tsx` (market-stall card; same cart/wishlist logic)
+- `src/app/manifest.ts` + `src/app/opengraph-image.tsx` (palette-matched)
+
+### Verification
+- `npm run lint` → exit 0, zero errors.
+- `npm run build` → exit 0, all 48 routes (only pre-existing unused-var warnings;
+  no new warnings from rewritten files). First failure attempt was the known
+  stale-`.next` contention (a `next dev` + `next start` were running) — killed
+  them, wiped `.next`, rebuilt clean per FIXES.MD hygiene rule.
+- `next start` smoke: `/` → 200 with new headline, masthead, ticker, Fraunces,
+  ItemList/FAQ JSON-LD present, no `opacity:0` wrapper.
+- `.next/static/css` ≈ 172KB with `.flex{` + `.starburst` present (Tailwind running).
+
+### Commit hash
+- Pending commit.
+
+### Do NOT Revert
+- The Gazette tokens and motifs above are the single source of truth — do not
+  drift back to olive/paper-blush quiet luxury, generic gradient heroes, or
+  centered-blob layouts.
+- Fraunces + Archivo must stay the loaded fonts; do not re-add DM Sans/Instrument
+  links or Cormorant/Montserrat.
+- All previously logged functional constraints still hold: `requireAdmin()` on
+  mutating APIs, `trustHost: true`, Prisma v6 + MongoDB (no adapter/`createMany`/
+  `mode:insensitive`), conditional `aggregateRating`, sitemap/robots rules,
+  `/product/{slug}` + `/shop/{category}` URLs, ₹399 free-ship everywhere,
+  contact consistency (`support@satvastones.in`, `+91 90167 03180`, Vapi 396191),
+  CSS-only route entrance, `force-dynamic` on authed pages.
+
+---
+
 ## Fix — GitLab `website` repo synced: template stub replaced with real project code (products/coupons restored)
 
 ### Problem

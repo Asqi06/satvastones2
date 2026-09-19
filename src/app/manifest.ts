@@ -10,8 +10,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Premium Korean and aesthetic jewellery online in India. Tarnish-free, waterproof rings, necklaces & gifts for her.",
     start_url: "/",
     display: "standalone",
-    background_color: "#FDF6EC",
-    theme_color: "#722F37",
+    background_color: "#FFF6E4",
+    theme_color: "#211A0C",
     icons: [
       { src: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
       { src: "/favicon-192x192.png", sizes: "192x192", type: "image/png" },

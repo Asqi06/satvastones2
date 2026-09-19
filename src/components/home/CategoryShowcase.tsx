@@ -56,14 +56,14 @@ export default function CategoryShowcase({
     <section className="shop-section editorial-container" aria-labelledby="categories-heading">
       <div className="section-heading">
         <div>
-          <div className="eyebrow">Shop by category</div>
+          <div className="eyebrow">The departments</div>
           <h2 id="categories-heading">
-            Find your <em>everyday piece.</em>
+            Pick your <em>department.</em>
           </h2>
         </div>
         <Link href="/shop" className="text-link">
-          View all products{" "}
-          <svg className="w-4 h-4"><use href="#i-arrow" /></svg>
+          View everything{" "}
+          <svg className="w-4 h-4 icon"><use href="#i-arrow" /></svg>
         </Link>
       </div>
 
@@ -88,7 +88,7 @@ export default function CategoryShowcase({
                   <span className="cat-tile-word">Satva</span>
                 </div>
               )}
-              <span className="product-label">Anti-tarnish</span>
+              <span className="product-label sticker sticker-leaf">Anti-tarnish</span>
             </div>
             <div className="cat-tile-meta">
               <div className="cat-tile-topline">

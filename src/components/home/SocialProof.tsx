@@ -36,14 +36,14 @@ export default function SocialProof() {
     <section className="reviews-section editorial-container" aria-labelledby="reviews-heading">
       <div className="section-heading">
         <div>
-          <div className="eyebrow">Loved across India</div>
+          <div className="eyebrow">Letters to the editor</div>
           <h2 id="reviews-heading">
-            What our <em>customers say.</em>
+            Pinned to <em>our board.</em>
           </h2>
         </div>
         <Link href="/shop" className="text-link">
           Find your piece{" "}
-          <svg className="w-4 h-4"><use href="#i-arrow" /></svg>
+          <svg className="w-4 h-4 icon"><use href="#i-arrow" /></svg>
         </Link>
       </div>
 

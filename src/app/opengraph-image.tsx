@@ -19,19 +19,20 @@ export default function OpengraphImage() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#F6F3EC",
-          color: "#505A3D",
+          backgroundColor: "#FFF6E4",
+          color: "#211A0C",
           fontFamily: "serif",
+          border: "24px solid #211A0C",
         }}
       >
-        <div style={{ fontSize: 104, fontWeight: 700, letterSpacing: -2 }}>
-          SatvaStones
+        <div style={{ fontSize: 104, fontWeight: 900, letterSpacing: -2 }}>
+          satvastones
         </div>
-        <div style={{ fontSize: 42, color: "#292A23", marginTop: 12 }}>
+        <div style={{ fontSize: 42, color: "#CE3B17", marginTop: 12, fontStyle: "italic" }}>
           Korean &amp; Aesthetic Jewellery · India
         </div>
-        <div style={{ fontSize: 28, color: "#77786E", marginTop: 28 }}>
-          Tarnish-free · Waterproof · Everyday Luxury
+        <div style={{ fontSize: 28, color: "#6B5F45", marginTop: 28 }}>
+          Anti-tarnish · Waterproof · Worn daily
         </div>
       </div>
     ),

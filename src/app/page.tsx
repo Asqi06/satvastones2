@@ -331,23 +331,27 @@ export default async function HomePage() {
         <symbol id="i-truck" viewBox="0 0 24 24"><path d="M1 5h13v12H1zM14 9h5l4 4v4h-9" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><circle cx="5" cy="18" r="2" fill="none" stroke="currentColor" strokeWidth="1.5" /><circle cx="19" cy="18" r="2" fill="none" stroke="currentColor" strokeWidth="1.5" /></symbol>
       </svg>
 
-      {/* 1. HERO SECTION */}
+      {/* 1. FRONT PAGE */}
       <section className="hero-editorial editorial-container">
         <div className="hero-copy">
-          <div className="hero-kicker eyebrow">
-            <span className="tiny-star">✳</span> Not-so-precious. Still very special.
-          </div>
+          <span className="kicker">Issue No. 07 · The everyday gold issue</span>
           <h1 className="hero-title">
-            A little gold.<br /> A little<br /><em>every day.</em>
+            Gold for the days that <em className="squiggle">aren&apos;t special.</em>
           </h1>
           <p className="hero-description">
-            For the coffee runs, the big plans, and everything in between. Anti-tarnish, waterproof jewellery that lives a little, just like you.
+            Gold-coloured, not solid gold — and proud of it. Anti-tarnish, waterproof
+            jewellery for coffee runs, big plans, and everything in between. Starting under ₹500.
           </p>
-          <a href="#shop" className="button">
-            Find your everyday <svg className="w-[19px] h-[19px]"><use href="#i-arrow" /></svg>
-          </a>
+          <div className="flex flex-wrap items-center gap-4">
+            <a href="#shop" className="button">
+              Shop the issue <svg className="w-[19px] h-[19px] icon"><use href="#i-arrow" /></svg>
+            </a>
+            <a href="#bestsellers" className="text-link">
+              See bestsellers
+            </a>
+          </div>
           <div className="flex flex-wrap items-center gap-2 mt-6">
-            <span className="text-[9px] tracking-wider uppercase text-[var(--muted)] font-semibold mr-1">Quick edit:</span>
+            <span className="text-[9px] tracking-wider uppercase text-[var(--muted)] font-extrabold mr-1">Quick edit:</span>
             {[
               { label: "Earrings", href: "/shop/earrings" },
               { label: "Necklaces", href: "/shop/necklaces" },
@@ -357,14 +361,14 @@ export default async function HomePage() {
               <Link
                 key={chip.label}
                 href={chip.href}
-                className="text-[11px] py-1 px-3 border border-[var(--line)] bg-[var(--white)] text-[var(--ink)] hover:border-[var(--ink)] transition-colors"
+                className="tab !py-1.5 !px-3"
               >
                 {chip.label}
               </Link>
             ))}
           </div>
           <div className="hero-footnote mt-4">
-            <svg className="w-[15px] h-[15px] text-[var(--olive)]"><use href="#i-sparkle" /></svg> Anti-tarnish. Waterproof. No occasion needed.
+            <svg className="w-[15px] h-[15px] text-[var(--pop,#CE3B17)]"><use href="#i-sparkle" /></svg> No occasion needed. Water forgiven.
           </div>
         </div>
 
@@ -375,18 +379,18 @@ export default async function HomePage() {
             alt="Sculptural gold-toned jewellery in warm, natural light"
             fetchPriority="high"
           />
-          <div className="image-note">The everyday edit / No. 01</div>
-          <div className="hero-stamp" aria-label="Everyday kind of gold">
-            <span>Everyday</span>
-            <strong>kind of</strong>
-            <span>shine</span>
+          <div className="image-note">Fig. 01 — worn daily, everywhere</div>
+          <div className="hero-stamp" aria-label="Starting under 500 rupees">
+            <span>Starting</span>
+            <strong>₹499</strong>
+            <span> onwards</span>
           </div>
           <a href="#shop" className="hero-product-note">
             <div>
-              <span className="text-[9px] text-[var(--muted)] uppercase tracking-wider block mb-1">
-                MEET YOUR NEW PLUS-ONE
+              <span className="text-[9px] font-extrabold text-[var(--muted)] uppercase tracking-wider block mb-1">
+                Meet your new plus-one
               </span>
-              <strong className="font-serif text-[23px] font-normal text-[var(--ink)]">
+              <strong className="font-serif text-[23px] font-black tracking-tight text-[var(--ink)]">
                 Small details. Big feeling.
               </strong>
             </div>
@@ -397,7 +401,30 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 2. BENEFITS SECTION */}
+      {/* 2. INSIDE THIS ISSUE — table of contents */}
+      <nav className="editorial-container py-8" aria-label="Inside this issue">
+        <div className="ticket-div pt-6">
+          <p className="label-sm mb-4">Inside this issue</p>
+          <div className="flex flex-wrap gap-x-8 gap-y-3 font-serif font-bold text-[17px]">
+            {[
+              { n: "01", label: "The re-worns", href: "#shop" },
+              { n: "02", label: "Departments", href: "#departments" },
+              { n: "03", label: "Mood board", href: "#moods" },
+              { n: "04", label: "Editor's letter", href: "#story" },
+              { n: "05", label: "Most clipped", href: "#bestsellers" },
+              { n: "06", label: "Letters", href: "#letters" },
+              { n: "07", label: "Gold desk", href: "#care" },
+            ].map((item) => (
+              <a key={item.n} href={item.href} className="hover:text-[var(--pop,#CE3B17)] transition-colors">
+                <span className="text-[11px] font-sans font-extrabold text-[var(--pop,#CE3B17)] mr-2">{item.n}</span>
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </nav>
+
+      {/* 3. BENEFITS SECTION */}
       <section className="benefits" aria-label="The SatvaStones details">
         <div className="benefits-inner editorial-container">
           <div className="benefit">
@@ -410,29 +437,31 @@ export default async function HomePage() {
             <svg><use href="#i-gift" /></svg> Arrives gift-ready
           </div>
           <div className="benefit">
-            <svg><use href="#i-truck" /></svg> Shipped across India · COD
+            <svg><use href="#i-truck" /></svg> Free ship ₹399+ · COD
           </div>
         </div>
       </section>
 
-      {/* 3. CATEGORIES — SatvaStones sections in Dori editorial style */}
-      <CategoryShowcase categories={categories} />
+      {/* 4. DEPARTMENTS */}
+      <div id="departments" className="scroll-mt-32">
+        <CategoryShowcase categories={categories} />
+      </div>
 
       {/* 4. SHOP SECTION (TABS + INTERACTIVE PRODUCTS) */}
       <FeaturedProducts products={displayProducts} />
 
-      {/* 5. SHOP BY TREND — SatvaStones trends in Dori editorial style */}
-      <section className="shop-section editorial-container trend-section" aria-labelledby="trend-heading">
+      {/* 6. SHOP BY TREND — the mood board */}
+      <section id="moods" className="shop-section editorial-container trend-section scroll-mt-32" aria-labelledby="trend-heading">
         <div className="section-heading">
           <div>
-            <div className="eyebrow">Shop by trend</div>
+            <div className="eyebrow">The mood board</div>
             <h2 id="trend-heading">
-              Wear your <em>mood.</em>
+              Shop by mood, <em>not by rule.</em>
             </h2>
           </div>
           <Link href="/shop" className="text-link">
-            Explore all trends{" "}
-            <svg className="w-4 h-4"><use href="#i-arrow" /></svg>
+            Break all four{" "}
+            <svg className="w-4 h-4 icon"><use href="#i-arrow" /></svg>
           </Link>
         </div>
         <div className="trend-grid">
@@ -461,7 +490,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6. STORY SECTION */}
+      {/* 7. LETTER FROM THE EDITOR */}
       <section className="story" id="story">
         <div className="story-image">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -473,42 +502,46 @@ export default async function HomePage() {
           <div className="story-image-caption">Less saving it. More wearing it.</div>
         </div>
         <div className="story-copy">
-          <div className="eyebrow">A note from SatvaStones</div>
+          <div className="eyebrow">Letter from the editor</div>
           <h2>
-            Life happens.<br /><em>Keep the gold on.</em>
+            Dear locker,<br />we&apos;re <em>breaking up.</em>
           </h2>
           <p>
-            Somewhere along the way, jewellery became something we saved for “a special day”. We’re here for the other days.
+            Somewhere along the way, jewellery became something we saved for “a special day”.
+            This is a newspaper for the other days — the auto rides, the desk-to-dinner
+            plans, the just-because moments.
           </p>
           <p>
-            The auto rides. The desk-to-dinner plans. The just-because moments. Thoughtfully chosen Korean and Western imitation jewellery, with an anti-tarnish finish and a little more personality.
+            Thoughtfully picked Korean and Western imitation jewellery with an anti-tarnish
+            finish. Gold-coloured, honestly priced, and made to be re-worn until
+            it feels like yours.
           </p>
           <Link href="/shop" className="text-link">
-            Meet your kind of gold <svg className="w-4 h-4"><use href="#i-arrow" /></svg>
+            Read the whole collection <svg className="w-4 h-4 icon"><use href="#i-arrow" /></svg>
           </Link>
           <div className="story-details">
             <div>
-              <strong>Everyday</strong>Not locked-away jewellery
+              <strong>399+</strong>Free shipping over ₹399
             </div>
             <div>
-              <strong>Considered</strong>Details that make a difference
+              <strong>COD</strong>Cash on delivery, pan-India
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. BEST SELLERS — direct crawl paths for SEO (FIXES.MD: must remain) */}
-      <section className="shop-section editorial-container bestsellers-section" aria-labelledby="bestsellers-heading">
+      {/* 8. BEST SELLERS — direct crawl paths for SEO (FIXES.MD: must remain) */}
+      <section id="bestsellers" className="shop-section editorial-container bestsellers-section scroll-mt-32" aria-labelledby="bestsellers-heading">
         <div className="section-heading">
           <div>
-            <div className="eyebrow">Our most loved pieces, handpicked for you</div>
+            <div className="eyebrow">Clipped, saved & re-ordered</div>
             <h2 id="bestsellers-heading">
-              Best <em>sellers.</em>
+              Most <em>clipped.</em>
             </h2>
           </div>
           <Link href="/shop?sort=best-selling" className="text-link">
             View all{" "}
-            <svg className="w-4 h-4"><use href="#i-arrow" /></svg>
+            <svg className="w-4 h-4 icon"><use href="#i-arrow" /></svg>
           </Link>
         </div>
         <div className="product-grid">
@@ -525,7 +558,11 @@ export default async function HomePage() {
                     className="w-full h-full object-cover"
                   />
                 </Link>
-                {idx === 0 && <span className="product-label">Most loved</span>}
+                {idx === 0 && (
+                  <span className="product-label starburst" role="img" aria-label="Most clipped piece">
+                    No.1
+                  </span>
+                )}
               </div>
               <div className="product-meta">
                 <div className="product-topline">
@@ -548,24 +585,26 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 8. DAILY NOTE BANNER */}
+      {/* 9. OVERHEARD AT THE STUDIO */}
       <section className="daily-note">
-        <span className="tiny-star" aria-hidden="true">✳</span>
+        <span className="sticker sticker-sun" aria-hidden="true">Overheard at the studio</span>
         <h2>
-          “The best things in your jewellery box<br />aren’t waiting for an occasion.”
+          “Nobody ever said <em>‘what a lovely locker’.</em> Wear the good stuff.”
         </h2>
-        <p>The SatvaStones way of looking at things</p>
+        <p>The SatvaStones house view, since 2026</p>
       </section>
 
-      {/* 9. REVIEWS — SatvaStones customer reviews in Dori editorial style */}
-      <SocialProof />
+      {/* 10. LETTERS */}
+      <div id="letters" className="scroll-mt-32">
+        <SocialProof />
+      </div>
 
-      {/* 10. CARE & FAQ GUIDE */}
+      {/* 11. ASK THE GOLD DESK */}
       <section className="care-section editorial-container" id="care">
         <div className="care-intro">
-          <div className="eyebrow">A little love goes a long way</div>
-          <h2>Good things, kept well.</h2>
-          <p>A few answers before you find your favourite. Because the little details matter.</p>
+          <div className="eyebrow">Ask the gold desk</div>
+          <h2>Good questions, kept short.</h2>
+          <p>Everything readers ask before picking a favourite. Answered the way we&apos;d answer a friend.</p>
         </div>
         <div>
           <details className="dori-faq" open>
