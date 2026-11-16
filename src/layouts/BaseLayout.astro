@@ -30,10 +30,16 @@ const props = Astro.props;
 <html lang="en-IN">
   <head>
     <SEOHead {...props} />
-    <!-- Razorpay Official Checkout SDK -->
-    <script is:inline src="https://checkout.razorpay.com/v1/checkout.js"></script>
   </head>
   <body class="min-h-screen flex flex-col bg-white text-[#111111] selection:bg-[#f2707f] selection:text-white">
+    <!-- Accessible Skip to Main Content Link for Screen Readers & Keyboard Users -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[999999] focus:bg-[#111111] focus:text-white focus:px-4 focus:py-2.5 focus:rounded-xl focus:text-xs focus:font-bold focus:shadow-xl focus:outline-none"
+    >
+      Skip to main content
+    </a>
+
     <!-- Announcement Bar (Jewelsmars Infinite Black Marquee) -->
     <AnnouncementBar />
 
@@ -41,7 +47,7 @@ const props = Astro.props;
     <Header />
 
     <!-- Main Content Slot (with mobile dock clearance) -->
-    <main class="flex-1 pb-16 lg:pb-0">
+    <main id="main-content" class="flex-1 pb-16 lg:pb-0" tabindex="-1">
       <slot />
     </main>
 
@@ -54,12 +60,12 @@ const props = Astro.props;
     <!-- Mobile Fixed Bottom Navigation Bar -->
     <MobileBottomNav />
 
-    <!-- Client-side Interactive Islands -->
-    <CartDrawer client:load />
-    <SearchModal client:load />
+    <!-- Client-side Interactive Islands (Deferred to client:idle to avoid hydration blocking LCP/FCP) -->
+    <CartDrawer client:idle />
+    <SearchModal client:idle />
     <SocialProofToast client:idle />
-    <RingSizeModal client:load />
-    <GSTInvoiceModal client:load />
-    <CookieConsentManager client:load />
+    <RingSizeModal client:idle />
+    <GSTInvoiceModal client:idle />
+    <CookieConsentManager client:idle />
   </body>
 </html>

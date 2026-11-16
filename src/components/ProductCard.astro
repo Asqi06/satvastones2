@@ -8,8 +8,21 @@ export interface Props {
 
 const { product } = Astro.props;
 
-const primaryImage = product.images[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
-const secondaryImage = product.images[1]?.url || primaryImage;
+function getOptimizedImageUrl(url: string, width = 450): string {
+  if (!url) return url;
+  if (url.includes('images.unsplash.com')) {
+    let clean = url.replace(/w=\d+/, `w=${width}`).replace(/&q=\d+/, '&q=80');
+    if (!clean.includes('fm=')) clean += '&fm=webp';
+    return clean;
+  }
+  return url;
+}
+
+const rawPrimaryImage = product.images[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=450&q=80&fm=webp';
+const rawSecondaryImage = product.images[1]?.url || rawPrimaryImage;
+
+const primaryImage = getOptimizedImageUrl(rawPrimaryImage, 450);
+const secondaryImage = getOptimizedImageUrl(rawSecondaryImage, 450);
 
 const discountPercent = product.compareAtPricePaise
   ? Math.round(((product.compareAtPricePaise - product.pricePaise) / product.compareAtPricePaise) * 100)
@@ -50,15 +63,18 @@ const discountPercent = product.compareAtPricePaise
       data-wishlist-image={primaryImage}
       class="card-wishlist-btn absolute bottom-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 hover:bg-white text-[#111111] hover:text-[#f2707f] border border-[#eeeeee] flex items-center justify-center transition-all shadow-md cursor-pointer"
       title="Save to wishlist"
+      aria-label={`Save ${product.name} to wishlist`}
     >
       <svg class="w-4 h-4 stroke-[1.8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
       </svg>
     </button>
 
-    <!-- Primary Image -->
+    <!-- Primary Image with Responsive srcset -->
     <img
       src={primaryImage}
+      srcset={`${getOptimizedImageUrl(rawPrimaryImage, 300)} 300w, ${getOptimizedImageUrl(rawPrimaryImage, 450)} 450w, ${getOptimizedImageUrl(rawPrimaryImage, 600)} 600w`}
+      sizes="(max-width: 640px) 48vw, (max-width: 1024px) 30vw, 320px"
       alt={product.images[0]?.alt || `${product.name} - Waterproof Anti Tarnish Jewellery India`}
       width="400"
       height="533"
@@ -70,6 +86,8 @@ const discountPercent = product.compareAtPricePaise
     <!-- Secondary Hover Image -->
     <img
       src={secondaryImage}
+      srcset={`${getOptimizedImageUrl(rawSecondaryImage, 300)} 300w, ${getOptimizedImageUrl(rawSecondaryImage, 450)} 450w, ${getOptimizedImageUrl(rawSecondaryImage, 600)} 600w`}
+      sizes="(max-width: 640px) 48vw, (max-width: 1024px) 30vw, 320px"
       alt={product.images[1]?.alt || `${product.name} view - 18K Gold PVD Satvastones`}
       width="400"
       height="533"
@@ -128,6 +146,7 @@ const discountPercent = product.compareAtPricePaise
         data-product-slug={product.slug}
         data-product-price={product.pricePaise}
         data-product-image={primaryImage}
+        aria-label={`Add ${product.name} to cart`}
         class="quick-add-btn w-full bg-[#f2707f] hover:bg-[#e05e6d] text-white py-2.5 rounded-[10px] text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-1.5"
       >
         <span>ADD TO CART</span>

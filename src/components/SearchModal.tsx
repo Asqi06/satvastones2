@@ -68,12 +68,14 @@ export default function SearchModal() {
             ref={inputRef}
             type="text"
             placeholder="Search rings, necklaces, bracelets, earrings..."
+            aria-label="Search jewellery collections"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full bg-transparent text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:outline-none"
           />
           <button
             onClick={() => setIsOpen(false)}
+            aria-label="Close search modal"
             className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-2.5 py-1 rounded-lg uppercase tracking-wider font-bold transition-colors cursor-pointer"
           >
             ESC
