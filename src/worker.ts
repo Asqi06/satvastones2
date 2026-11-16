@@ -4,6 +4,7 @@ import * as claimsHandler from '../functions/api/claims';
 import * as consentHandler from '../functions/api/consent';
 import * as privacyHandler from '../functions/api/privacy-requests';
 import * as settingsHandler from '../functions/api/settings';
+import * as adminAuthHandler from '../functions/api/admin-auth';
 
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -33,6 +34,12 @@ export default {
         next: () => env.ASSETS.fetch(request),
         data: {}
       };
+
+      if (url.pathname === '/api/admin/auth') {
+        if (request.method === 'OPTIONS') return adminAuthHandler.onRequestOptions();
+        if (request.method === 'GET') return adminAuthHandler.onRequestGet(context as any);
+        if (request.method === 'POST') return adminAuthHandler.onRequestPost(context as any);
+      }
 
       if (url.pathname === '/api/orders' || url.pathname.startsWith('/api/orders/')) {
         if (request.method === 'OPTIONS') return ordersHandler.onRequestOptions();

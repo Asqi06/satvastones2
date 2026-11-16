@@ -17,6 +17,7 @@ bucket_name = "satvastones-media"
 
 [vars]
 ENVIRONMENT = "production"
+ADMIN_USERNAME = "@dmin"
 BRAND_NAME = "Satvastones Jewellery"
 PROPRIETOR_NAME = "Anirudh A Verma"
 GSTIN = "24DDAPV4074H1ZF"

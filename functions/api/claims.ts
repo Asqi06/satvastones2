@@ -1,6 +1,7 @@
 // Cloudflare Pages Function: /api/claims
 // Handles 360° unboxing video claims verification for transit damage / anti-tarnish warranty
 // Connects to Cloudflare D1 (SQLite) binding: context.env.DB
+import { verifyAdminAuth } from '../../src/lib/server-auth';
 
 interface Env {
   DB: any;
@@ -20,8 +21,16 @@ export async function onRequestOptions() {
 
 // GET /api/claims
 export async function onRequestGet(context: { request: Request; env: Env }) {
-  const { env } = context;
+  const { request, env } = context;
   const db = env.DB;
+
+  const isAuth = await verifyAdminAuth(request, env);
+  if (!isAuth) {
+    return new Response(
+      JSON.stringify({ success: false, error: 'Unauthorized: Admin authentication token required to view claims.' }),
+      { status: 401, headers: corsHeaders }
+    );
+  }
 
   if (!db) {
     return new Response(
@@ -114,6 +123,14 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
 export async function onRequestPut(context: { request: Request; env: Env }) {
   const { request, env } = context;
   const db = env.DB;
+
+  const isAuth = await verifyAdminAuth(request, env);
+  if (!isAuth) {
+    return new Response(
+      JSON.stringify({ success: false, error: 'Unauthorized: Admin authentication token required to update claims.' }),
+      { status: 401, headers: corsHeaders }
+    );
+  }
 
   if (!db) {
     return new Response(

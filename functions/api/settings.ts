@@ -1,5 +1,6 @@
 // Cloudflare Pages Function: /api/settings
 // Manages global site settings in Cloudflare D1: context.env.DB
+import { verifyAdminAuth } from '../../src/lib/server-auth';
 
 interface Env {
   DB: any;
@@ -46,6 +47,14 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 export async function onRequestPost(context: { request: Request; env: Env }) {
   const { request, env } = context;
   const db = env.DB;
+
+  const isAuth = await verifyAdminAuth(request, env);
+  if (!isAuth) {
+    return new Response(
+      JSON.stringify({ success: false, error: 'Unauthorized: Admin authentication token required to update settings.' }),
+      { status: 401, headers: corsHeaders }
+    );
+  }
 
   if (!db) {
     return new Response(

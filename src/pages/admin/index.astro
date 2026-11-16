@@ -46,7 +46,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 type="text"
                 required
                 autocomplete="username"
-                placeholder="e.g. anirudh or admin"
+                placeholder="Enter admin ID"
                 class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
               />
             </div>
@@ -54,7 +54,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <div>
               <div class="flex justify-between items-center mb-1">
                 <label class="block text-xs font-bold text-gray-700">Security Passkey</label>
-                <span class="text-[10px] text-gray-400 font-mono">satva@vapi2026</span>
               </div>
               <div class="relative">
                 <input
@@ -62,7 +61,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                   type="password"
                   required
                   autocomplete="current-password"
-                  placeholder="Enter master passkey..."
+                  placeholder="••••••••••••"
                   class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f] pr-10"
                 />
                 <button
@@ -1060,12 +1059,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   } from '../../lib/cloudflare';
   import { getSupabaseConfig, saveSupabaseConfig, fetchOrdersFromSupabase } from '../../lib/supabase';
 
-  const AUTH_KEY = 'satvastones_admin_authenticated';
-  const MASTER_PIN = 'satva@vapi2026';
+  const TOKEN_KEY = 'satvastones_admin_token';
+  let inactivityTimer: any = null;
 
   const loginGate = document.getElementById('admin-login-gate');
   const dashboardView = document.getElementById('admin-dashboard-view');
   const loginForm = document.getElementById('admin-login-form');
+  const loginBtn = document.getElementById('admin-login-btn') as HTMLButtonElement;
   const usernameInput = document.getElementById('admin-username-input') as HTMLInputElement;
   const passwordInput = document.getElementById('admin-password-input') as HTMLInputElement;
   const errorMsg = document.getElementById('login-error-msg');
@@ -1077,41 +1077,125 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
   });
 
-  // Check Authentication Status
-  function checkAuth() {
-    const isAuth = sessionStorage.getItem(AUTH_KEY);
-    if (isAuth === 'true') {
-      loginGate?.classList.add('hidden');
-      dashboardView?.classList.remove('hidden');
-      initDashboard();
-    } else {
-      loginGate?.classList.remove('hidden');
-      dashboardView?.classList.add('hidden');
-    }
+  // 30-Minute Inactivity Auto-Lock (Bank-Grade Security Standard)
+  function resetInactivityTimer() {
+    if (inactivityTimer) clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      const token = sessionStorage.getItem(TOKEN_KEY);
+      if (token) {
+        sessionStorage.removeItem(TOKEN_KEY);
+        alert('Administrative session locked due to 30 minutes of inactivity. Please re-authenticate.');
+        checkAuth();
+      }
+    }, 30 * 60 * 1000); // 30 minutes
   }
 
-  // Handle Login Attempt
-  loginForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const user = usernameInput?.value.trim().toLowerCase();
-    const pass = passwordInput?.value;
-
-    if (pass === MASTER_PIN && (user === 'anirudh' || user === 'admin' || user.includes('satva'))) {
-      sessionStorage.setItem(AUTH_KEY, 'true');
-      if (errorMsg) errorMsg.classList.add('hidden');
-      checkAuth();
-    } else {
-      if (errorMsg) {
-        errorMsg.textContent = 'Invalid credentials. Access restricted to authorized personnel.';
-        errorMsg.classList.remove('hidden');
+  ['mousemove', 'keydown', 'click', 'scroll'].forEach((event) => {
+    window.addEventListener(event, () => {
+      if (sessionStorage.getItem(TOKEN_KEY)) {
+        resetInactivityTimer();
       }
-      passwordInput.value = '';
+    }, { passive: true });
+  });
+
+  // Check Authentication Status via Cryptographic Edge Endpoint
+  async function checkAuth() {
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      loginGate?.classList.remove('hidden');
+      dashboardView?.classList.add('hidden');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/admin/auth', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json() as any;
+
+      if (res.ok && data.success && data.authenticated) {
+        loginGate?.classList.add('hidden');
+        dashboardView?.classList.remove('hidden');
+        resetInactivityTimer();
+        initDashboard();
+        return;
+      }
+    } catch (err) {
+      console.warn('Authentication verification offline or edge error:', err);
+      // In offline development without worker running, check if token exists
+      if (token && window.location.hostname === 'localhost') {
+        loginGate?.classList.add('hidden');
+        dashboardView?.classList.remove('hidden');
+        initDashboard();
+        return;
+      }
+    }
+
+    // Invalid or expired token
+    sessionStorage.removeItem(TOKEN_KEY);
+    loginGate?.classList.remove('hidden');
+    dashboardView?.classList.add('hidden');
+  }
+
+  // Handle Server-Side Login Attempt
+  loginForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = usernameInput?.value.trim();
+    const password = passwordInput?.value.trim();
+
+    if (!username || !password) return;
+
+    if (loginBtn) {
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = 'Verifying Passkey & Encryption...';
+    }
+
+    try {
+      const res = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json() as any;
+
+      if (res.ok && data.success && data.token) {
+        sessionStorage.setItem(TOKEN_KEY, data.token);
+        if (errorMsg) errorMsg.classList.add('hidden');
+        passwordInput.value = '';
+        checkAuth();
+      } else {
+        if (errorMsg) {
+          errorMsg.textContent = data.error || 'Invalid administrative credentials. Attempt recorded.';
+          errorMsg.classList.remove('hidden');
+        }
+        passwordInput.value = '';
+      }
+    } catch (err: any) {
+      // Local dev fallback if /api/admin/auth worker not running on dev port
+      if (window.location.hostname === 'localhost' && username === '@dmin' && password === '@dmin060409') {
+        sessionStorage.setItem(TOKEN_KEY, 'local-dev-admin-token');
+        if (errorMsg) errorMsg.classList.add('hidden');
+        passwordInput.value = '';
+        checkAuth();
+      } else {
+        if (errorMsg) {
+          errorMsg.textContent = 'Authentication server unreachable or rate limit exceeded.';
+          errorMsg.classList.remove('hidden');
+        }
+      }
+    } finally {
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = 'Authenticate & Unlock Terminal →';
+      }
     }
   });
 
   // Handle Logout
   logoutBtn?.addEventListener('click', () => {
-    sessionStorage.removeItem(AUTH_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+    if (inactivityTimer) clearTimeout(inactivityTimer);
     checkAuth();
   });
 

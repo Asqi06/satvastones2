@@ -1,5 +1,6 @@
 // Cloudflare Pages Function: /api/orders
 // Connects directly to Cloudflare D1 (SQLite) binding: context.env.DB
+import { verifyAdminAuth } from '../../src/lib/server-auth';
 
 interface Env {
   DB: any; // D1Database
@@ -61,7 +62,15 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       return new Response(JSON.stringify({ success: true, order }), { status: 200, headers: corsHeaders });
     }
 
-    // Admin List: Fetch latest 150 orders
+    // Admin List: Fetch latest 150 orders - Requires Admin Authentication
+    const isAuth = await verifyAdminAuth(request, env);
+    if (!isAuth) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Unauthorized: Admin authentication token required to view order history.' }),
+        { status: 401, headers: corsHeaders }
+      );
+    }
+
     const { results } = await db.prepare(`
       SELECT * FROM orders 
       ORDER BY datetime(created_at) DESC 
@@ -158,6 +167,14 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
 export async function onRequestPut(context: { request: Request; env: Env }) {
   const { request, env } = context;
   const db = env.DB;
+
+  const isAuth = await verifyAdminAuth(request, env);
+  if (!isAuth) {
+    return new Response(
+      JSON.stringify({ success: false, error: 'Unauthorized: Admin authentication token required to update orders.' }),
+      { status: 401, headers: corsHeaders }
+    );
+  }
 
   if (!db) {
     return new Response(
