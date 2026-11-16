@@ -1,0 +1,84 @@
+---
+import { REVIEWS } from '../data/products';
+
+const enhancedReviews = [
+  {
+    ...REVIEWS[0],
+    city: 'Mumbai',
+    photo: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=300&q=80'
+  },
+  {
+    ...REVIEWS[1],
+    city: 'Bengaluru',
+    photo: 'https://images.unsplash.com/photo-1611591475152-47eac9c5bdfa?auto=format&fit=crop&w=300&q=80'
+  },
+  {
+    ...REVIEWS[2],
+    city: 'Ahmedabad',
+    photo: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=300&q=80'
+  }
+];
+---
+
+<section class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+    <div>
+      <span class="text-xs font-extrabold uppercase tracking-wider text-[#f2707f]">
+        REAL PATRONS • 10,000+ REVIEWS
+      </span>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-[#111111] tracking-tight">
+        Loved Across India
+      </h2>
+    </div>
+    <div class="flex items-center gap-2 bg-[#ffe7e9] px-3.5 py-1.5 rounded-full self-start sm:self-auto">
+      <div class="flex text-[#f2707f] gap-0.5">
+        {Array.from({ length: 5 }).map(() => (
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          </svg>
+        ))}
+      </div>
+      <span class="text-xs font-bold text-[#111111]">4.9 / 5.0 Rating</span>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+    {enhancedReviews.map((review) => (
+      <div class="bg-white border border-[#eeeeee] p-5 sm:p-6 rounded-[20px] shadow-xs hover:border-[#f2707f] transition-all flex flex-col justify-between space-y-4">
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex text-[#f2707f] gap-0.5">
+              {Array.from({ length: review.rating }).map(() => (
+                <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <span class="inline-flex items-center gap-1 text-[10px] bg-[#e6f9f0] text-[#007c52] px-2.5 py-0.5 rounded-full font-bold">
+              <svg class="w-2.5 h-2.5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              <span>Verified Buyer</span>
+            </span>
+          </div>
+
+          <p class="text-xs sm:text-sm text-[#333333] leading-relaxed">
+            "{review.content}"
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 pt-3 border-t border-[#f5f5f5]">
+          <img
+            src={review.photo}
+            alt={review.authorName}
+            class="w-10 h-10 rounded-full object-cover border border-[#f2707f]/40"
+          />
+          <div class="min-w-0 flex-1">
+            <p class="text-xs font-bold text-[#111111] truncate">{review.authorName}</p>
+            <p class="text-[10px] text-[#888888]">{review.city} • {review.date}</p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>

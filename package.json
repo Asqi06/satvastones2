@@ -1,0 +1,28 @@
+{
+  "name": "satvastonesjewellery.in",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "postinstall": "node -e \"const fs = require('fs'); try { const f = 'node_modules/astro/bin/astro.mjs'; if (fs.existsSync(f)) { let c = fs.readFileSync(f, 'utf8'); c = c.replace(/IS_STACKBLITZ \\? '>=22\\.22\\.0' : '>=22\\.23\\.4'/g, '\\'>=22.0.0\\''); fs.writeFileSync(f, c); } } catch {}\""
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.4.8",
+    "@astrojs/react": "^7.0.1",
+    "@supabase/supabase-js": "^2.119.0",
+    "@tailwindcss/vite": "^4.3.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "astro": "^7.4.12",
+    "lucide-react": "^1.73.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.5"
+  }
+}

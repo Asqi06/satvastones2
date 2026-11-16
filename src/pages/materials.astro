@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Craft & Science', url: '/materials' }
+];
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  'headline': 'The Metallurgy of Anti-Tarnish Jewellery: 316L Surgical Steel and 18K Gold Vacuum PVD',
+  'description': 'Why are only a few metals suitable for making jewellery? Learn how 316L stainless steel and 18K vacuum PVD gold eliminate tarnishing, oxidation, and skin irritation.',
+  'author': {
+    '@type': 'Person',
+    'name': 'Anirudh A Verma'
+  },
+  'publisher': {
+    '@type': 'Organization',
+    'name': 'Satvastones Jewellery',
+    'logo': 'https://satvastones.in/satvastones-logo.png'
+  }
+};
+---
+
+<BaseLayout
+  title="Materials & Metallurgy | Anti Tarnish Jewellery India | Satvastones"
+  description="Discover why 316L surgical stainless steel and 18K Gold Vacuum PVD are the only true anti-tarnish solutions for daily wear. Learn how to identify real waterproof jewellery."
+  schema={articleSchema}
+  breadcrumbs={breadcrumbs}
+>
+  <!-- Jewelsmars Clean Header -->
+  <div class="bg-white border-b border-gray-100 py-8 sm:py-12">
+    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+      <span class="inline-block bg-[#ffe7e9] text-[#a1505a] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+        Engineering &amp; Science
+      </span>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+        The Science Behind Anti-Tarnish Metallurgy
+      </h1>
+      <p class="text-xs sm:text-sm text-gray-500 max-w-lg mx-auto leading-relaxed">
+        Zero cheap alloy bases, zero skin discoloration, and zero compromise. Here is why Satvastones jewellery lasts through showers, gym sessions, and daily wear.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
+    <div class="max-w-3xl mx-auto space-y-12">
+      
+      <!-- Section 1: 316L Stainless Steel -->
+      <div class="bg-white p-6 sm:p-8 border border-gray-200 rounded-[22px] space-y-3.5 shadow-2xs">
+        <div class="flex items-center gap-3.5 border-b border-gray-100 pb-3">
+          <span class="w-10 h-10 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-sm">
+            01
+          </span>
+          <div>
+            <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Substrate Foundation</span>
+            <h2 class="text-lg sm:text-xl font-bold text-gray-900">316L Surgical Stainless Steel</h2>
+          </div>
+        </div>
+        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+          316L is the worldwide gold standard for surgical implants and luxury watchmaking. Formulated with 2–3% molybdenum, it provides remarkable resistance against chlorides found in tap water, sweat, and sea salt. Unlike copper or brass, it will never react with your natural body oils to leave unsightly green rings.
+        </p>
+      </div>
+
+      <!-- Section 2: 18K Gold PVD Coating -->
+      <div class="bg-white p-6 sm:p-8 border border-gray-200 rounded-[22px] space-y-3.5 shadow-2xs">
+        <div class="flex items-center gap-3.5 border-b border-gray-100 pb-3">
+          <span class="w-10 h-10 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-sm">
+            02
+          </span>
+          <div>
+            <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Molecular Bonding</span>
+            <h2 class="text-lg sm:text-xl font-bold text-gray-900">18-Karat Gold Vacuum PVD Coating</h2>
+          </div>
+        </div>
+        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+          Conventional flash electroplating submerges cheap metals in chemical baths, leaving a micro-thin layer that wears away in weeks. In contrast, <strong>our PVD (Physical Vapor Deposition) coating occurs inside a high-vacuum chamber</strong> where authentic 18K gold and titanium nitride are vaporized into a plasma cloud and deposited atom-by-atom onto the steel. This creates a dense atomic bond up to 10 times more durable than conventional plating.
+        </p>
+      </div>
+
+      <!-- Deep Dive 1: Why are only a few metals suitable for making jewellery? -->
+      <div class="bg-white p-6 sm:p-8 border border-gray-200 rounded-[22px] space-y-4 shadow-2xs">
+        <div class="flex items-center gap-3.5 border-b border-gray-100 pb-3">
+          <span class="w-10 h-10 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-sm">
+            03
+          </span>
+          <div>
+            <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Metallurgical Principles</span>
+            <h2 class="text-lg sm:text-xl font-bold text-gray-900">Why Are Only a Few Metals Suitable for Making Jewellery?</h2>
+          </div>
+        </div>
+        <div class="text-xs sm:text-sm text-gray-600 space-y-3 leading-relaxed">
+          <p>
+            Out of the 90+ naturally occurring metals on Earth, only a handful are suitable for crafting fine or daily jewellery. The reasons come down to three fundamental chemical principles:
+          </p>
+          <ul class="list-disc pl-5 space-y-2">
+            <li>
+              <strong class="text-gray-900">Reactivity Series &amp; Oxidation:</strong> Most base metals (iron, copper, zinc, brass) react spontaneously with atmospheric oxygen and humidity. Iron forms brittle rust, while copper and brass produce green copper carbonate when exposed to sweat. Only noble metals (Gold, Platinum) and self-passivating alloys (316L Stainless Steel, Titanium) form an impenetrable chromium-oxide barrier that halts oxidation completely.
+            </li>
+            <li>
+              <strong class="text-gray-900">Biocompatibility &amp; Skin Allergies:</strong> Over 15% of women worldwide suffer from contact dermatitis caused by nickel, cadmium, and lead in cheap fashion jewellery. Medical-grade 316L steel binds nickel within its crystalline lattice so it cannot leach onto the skin, making it 100% hypoallergenic.
+            </li>
+            <li>
+              <strong class="text-gray-900">Tensile Strength &amp; Wearability:</strong> Pure gold and silver are too malleable and scratch, bend, or deform under daily activity. 316L surgical steel offers the optimal balance of hardness, scratch resistance, and structural integrity.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Deep Dive 2: How to Identify Anti-Tarnish Jewellery -->
+      <div class="bg-white p-6 sm:p-8 border border-gray-200 rounded-[22px] space-y-4 shadow-2xs">
+        <div class="flex items-center gap-3.5 border-b border-gray-100 pb-3">
+          <span class="w-10 h-10 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-sm">
+            04
+          </span>
+          <div>
+            <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Consumer Verification Guide</span>
+            <h2 class="text-lg sm:text-xl font-bold text-gray-900">How to Identify Genuine Anti-Tarnish Jewellery</h2>
+          </div>
+        </div>
+        <div class="text-xs sm:text-sm text-gray-600 space-y-3 leading-relaxed">
+          <p>
+            Don't be misled by generic fashion sellers who label cheap copper or zinc alloy as "tarnish-free." Here are the 4 scientific tests to verify authentic anti-tarnish jewellery:
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-200/80 space-y-1">
+              <span class="font-bold text-gray-900">1. Substrate Transparency</span>
+              <p class="text-[11px] text-gray-500">Genuine brands disclose 316L Surgical Stainless Steel or Titanium. If the listing states "alloy" or "copper base," it will tarnish.</p>
+            </div>
+            <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-200/80 space-y-1">
+              <span class="font-bold text-gray-900">2. The Magnet Test</span>
+              <p class="text-[11px] text-gray-500">Austenitic 316L steel has very weak to zero magnetic pull. If it snaps aggressively, it is cheap iron; if completely non-magnetic and soft, it may be brass.</p>
+            </div>
+            <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-200/80 space-y-1">
+              <span class="font-bold text-gray-900">3. Saline Water Immersion</span>
+              <p class="text-[11px] text-gray-500">Submerge the jewellery in salt water for 24 hours. Cheap plating bubbles, peels, or turns brown. Satvastones 18K PVD emerges pristine.</p>
+            </div>
+            <div class="p-3.5 bg-gray-50 rounded-xl border border-gray-200/80 space-y-1">
+              <span class="font-bold text-gray-900">4. Zero Green Mark Test</span>
+              <p class="text-[11px] text-gray-500">Wear the ring or necklace during a high-sweat workout. Copper/brass turns skin green immediately; 316L surgical steel leaves zero discoloration.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Matrix -->
+      <div class="bg-[#fffafb] p-6 sm:p-8 border border-[#f9d8dc] rounded-[22px] space-y-4">
+        <div class="text-center space-y-1">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#a1505a]">Quality Comparison</span>
+          <h3 class="text-lg sm:text-xl font-bold text-gray-900">How Satvastones Compares</h3>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead>
+              <tr class="border-b border-gray-200 text-gray-900 font-bold">
+                <th class="py-2.5">Attribute</th>
+                <th class="py-2.5 text-[#f2707f]">Satvastones (18K PVD)</th>
+                <th class="py-2.5 text-gray-400">Cheap Gold Plated Alloy</th>
+                <th class="py-2.5 text-gray-400">925 Sterling Silver</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-gray-600">
+              <tr>
+                <td class="py-3 font-medium text-gray-900">Water &amp; Sweat Proof</td>
+                <td class="py-3 text-emerald-700 font-bold">Daily Showers &amp; Gym Safe</td>
+                <td class="py-3 text-red-500 font-medium">Tarnishes within days</td>
+                <td class="py-3 text-amber-600 font-medium">Tarnishes in air/sweat</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-medium text-gray-900">Green Skin Marks</td>
+                <td class="py-3 text-emerald-700 font-bold">Zero (100% Nickel-Free)</td>
+                <td class="py-3 text-red-500 font-medium">High risk (Brass/Copper)</td>
+                <td class="py-3 text-amber-600 font-medium">Can react with sulfur</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-medium text-gray-900">Durability Benchmark</td>
+                <td class="py-3 text-emerald-700 font-bold">10x thicker vacuum bond</td>
+                <td class="py-3 text-red-500 font-medium">Flakes and peels easily</td>
+                <td class="py-3 text-gray-600">Soft metal, scratches easily</td>
+              </tr>
+              <tr>
+                <td class="py-3 font-medium text-gray-900">Price vs Value</td>
+                <td class="py-3 text-emerald-700 font-bold">Affordable Daily Luxury</td>
+                <td class="py-3 text-red-500 font-medium">Throwaway fashion</td>
+                <td class="py-3 text-gray-600">High maintenance cost</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="text-center pt-2">
+        <a
+          href="/shop"
+          class="inline-block bg-[#f2707f] hover:bg-[#e05e6d] text-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg shadow-[#f2707f]/25 transition-all"
+        >
+          Explore Anti-Tarnish Collection &rarr;
+        </a>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>

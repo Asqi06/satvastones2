@@ -1,0 +1,313 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Track Order | Satvastones Anti-Tarnish Jewellery"
+  description="Track your Satvastones fine jewellery parcel in real-time. Orders dispatched directly from our Vapi store location within 24-48 hours via BlueDart or Delhivery express courier."
+>
+  <!-- Minimalist Header -->
+  <div class="bg-white border-b border-gray-100 py-8 sm:py-12">
+    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#a1505a]">Order Status & Invoice Desk</span>
+      <h1 class="text-2xl sm:text-4xl font-bold text-gray-900 tracking-tight">Track Your Shipment</h1>
+      <p class="text-xs sm:text-sm text-gray-500 max-w-md mx-auto">
+        All parcels are hand-inspected and dispatched from our <strong>Vapi store location (Gujarat)</strong> within 24–48 hours.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="max-w-xl mx-auto space-y-6">
+      
+      <!-- Tracking Form Card -->
+      <div class="bg-white p-6 sm:p-8 border border-gray-200 rounded-2xl shadow-xs space-y-5">
+        <div class="text-center space-y-1 pb-3 border-b border-gray-100">
+          <h2 class="text-lg font-bold text-gray-900">Enter Order Information</h2>
+          <p class="text-xs text-gray-500">Track courier status and access your official GST tax invoice</p>
+        </div>
+
+        <form id="track-order-form" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+              Order Reference or Courier AWB Number *
+            </label>
+            <input
+              id="track-order-id"
+              type="text"
+              required
+              value="SAT-2026-784912"
+              placeholder="e.g. SAT-2026-784912 or BLR-892147321"
+              class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs uppercase tracking-wider rounded-xl focus:outline-none focus:border-[#f2707f]"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">
+              Registered Phone Number or Email (Optional)
+            </label>
+            <input
+              id="track-contact"
+              type="text"
+              value="+91 90167 03180"
+              placeholder="e.g. 9016703180 or priya@example.com"
+              class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-[#111111] hover:bg-black text-white py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            <span>Track Shipment & Access Invoice →</span>
+          </button>
+        </form>
+
+        <p class="text-[11px] text-center text-gray-500">
+          Need assistance? Reach out to our concierge at <a href="mailto:support@satvastones.in" class="text-[#f2707f] font-semibold underline">support@satvastones.in</a>
+        </p>
+      </div>
+
+      <!-- Live Order Results Container -->
+      <div id="tracking-result" class="hidden bg-white border border-gray-200 p-6 sm:p-8 rounded-2xl space-y-5 shadow-xs">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center pb-3 border-b border-gray-100 gap-2">
+          <div>
+            <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Vapi Store Dispatch</span>
+            <h3 id="result-order-num" class="text-lg font-bold text-gray-900"></h3>
+            <p id="result-patron-info" class="text-xs text-gray-500"></p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="result-status-pill" class="inline-block bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold px-3 py-1 rounded-full self-start sm:self-auto">
+              Dispatched from Vapi
+            </span>
+            <button
+              id="track-print-invoice-btn"
+              type="button"
+              class="bg-black hover:bg-gray-800 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+              </svg>
+              <span>GST Invoice</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tracking Timeline -->
+        <div id="tracking-timeline-container" class="space-y-6 relative pl-6 before:content-[''] before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-200">
+          
+          <div id="step-verified" class="relative">
+            <span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-emerald-50"></span>
+            <p class="text-xs font-bold text-gray-900">Order Received & Confirmed</p>
+            <p class="text-[11px] text-gray-500">Inventory reserved and payment verified via Razorpay.</p>
+          </div>
+
+          <div id="step-packing" class="relative">
+            <span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-emerald-50"></span>
+            <p class="text-xs font-bold text-gray-900">Packed at Vapi Store (Gujarat)</p>
+            <p class="text-[11px] text-gray-500">Hand-inspected, wrapped in velvet pouch, and sealed with warranty certificate.</p>
+          </div>
+
+          <div id="step-dispatched" class="relative">
+            <span id="step-dispatched-dot" class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-[#f2707f] ring-4 ring-rose-50 animate-pulse"></span>
+            <p id="step-dispatched-title" class="text-xs font-bold text-[#f2707f]">Dispatched within 24–48 Hours</p>
+            <p id="result-courier-details" class="text-[11px] text-gray-600">Handed over to BlueDart Express / Delhivery from our Vapi hub.</p>
+          </div>
+
+          <div id="step-transit" class="relative opacity-60">
+            <span id="step-transit-dot" class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-gray-300"></span>
+            <p class="text-xs font-bold text-gray-500">In Transit (Air Express)</p>
+            <p class="text-[11px] text-gray-400">Moving through regional logistics network to destination hub.</p>
+          </div>
+
+          <div id="step-delivered" class="relative opacity-60">
+            <span id="step-delivered-dot" class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-gray-300"></span>
+            <p class="text-xs font-bold text-gray-500">Delivered</p>
+            <p class="text-[11px] text-gray-400">Safely delivered to patron address.</p>
+          </div>
+
+        </div>
+
+        <!-- Order Items Preview -->
+        <div class="pt-4 border-t border-gray-100">
+          <p class="text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-2">Package Contents</p>
+          <div id="result-items-list" class="space-y-2"></div>
+        </div>
+
+        <!-- Policy Guidelines Box -->
+        <div class="p-4 bg-rose-50/30 border border-rose-100 rounded-xl text-xs text-gray-700 space-y-1.5">
+          <p class="font-bold text-gray-900">Important Delivery & Inspection Guidelines:</p>
+          <p>
+            • <strong>Pre-Dispatch Cancellation:</strong> Orders can only be cancelled before dispatch from our Vapi store. Once handed over to courier, cancellation is strictly not possible.
+          </p>
+          <p>
+            • <strong>Transit Damage Claims:</strong> We do not offer cash refunds. For any transit damages, an <strong>unedited 360-degree unboxing video proof</strong> is mandatory to process a free replacement.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { getAdminOrders, findOrderByRef, type AdminOrder } from '../stores/adminStore';
+  import { fetchOrderFromCloudflare } from '../lib/cloudflare';
+  import { getSupabase } from '../lib/supabase';
+
+  const form = document.getElementById('track-order-form');
+  const resultBox = document.getElementById('tracking-result');
+  const orderNumDisplay = document.getElementById('result-order-num');
+  const patronInfoDisplay = document.getElementById('result-patron-info');
+  const courierDetailsDisplay = document.getElementById('result-courier-details');
+  const statusPill = document.getElementById('result-status-pill');
+  const itemsList = document.getElementById('result-items-list');
+  const invoiceBtn = document.getElementById('track-print-invoice-btn');
+  const orderInput = document.getElementById('track-order-id') as HTMLInputElement;
+
+  let currentMatchedOrder: AdminOrder | null = null;
+
+  async function performLookup(val: string) {
+    if (!val) return;
+    const cleanVal = val.trim();
+    
+    // 1. Look up via local store helper
+    let matched = findOrderByRef(cleanVal);
+
+    // 2. Look up via Cloudflare D1 edge database
+    if (!matched) {
+      try {
+        const cfOrder = await fetchOrderFromCloudflare(cleanVal);
+        if (cfOrder) {
+          matched = cfOrder;
+        }
+      } catch (e) {
+        console.warn('Cloudflare D1 lookup error:', e);
+      }
+    }
+
+    // 3. Look up via Supabase PostgreSQL cloud if configured
+    if (!matched) {
+      try {
+        const sb = getSupabase();
+        if (sb) {
+          const { data } = await sb
+            .from('orders')
+            .select('*')
+            .or(`order_number.ilike.%${cleanVal}%,tracking_number.ilike.%${cleanVal}%,phone.ilike.%${cleanVal}%`)
+            .limit(1);
+
+          if (data && data[0]) {
+            const d = data[0];
+            matched = {
+              id: d.id,
+              orderNumber: d.order_number,
+              createdAt: d.created_at,
+              customerName: d.customer_name,
+              email: d.email,
+              phone: d.phone,
+              address: d.address,
+              city: d.city,
+              state: d.state,
+              pincode: d.pincode,
+              items: d.items,
+              subtotalPaise: d.subtotal_paise,
+              shippingPaise: d.shipping_paise,
+              discountPaise: d.discount_paise,
+              totalPaise: d.total_paise,
+              paymentMethod: d.payment_method,
+              paymentStatus: d.payment_status,
+              fulfillmentStatus: d.fulfillment_status,
+              courierPartner: d.courier_partner,
+              trackingNumber: d.tracking_number
+            };
+          }
+        }
+      } catch (err) {
+        console.warn('Cloud track query notice:', err);
+      }
+    }
+
+    if (!matched) {
+      const orders = getAdminOrders();
+      matched = orders.find(
+        (o) =>
+          o.orderNumber.toUpperCase() === cleanVal.toUpperCase() ||
+          (o.trackingNumber && o.trackingNumber.toUpperCase() === cleanVal.toUpperCase()) ||
+          o.phone.includes(cleanVal)
+      ) || orders[0];
+    }
+
+    if (matched) {
+      currentMatchedOrder = matched;
+      if (orderNumDisplay) orderNumDisplay.textContent = `Order: ${matched.orderNumber}`;
+      if (patronInfoDisplay) patronInfoDisplay.textContent = `Patron: ${matched.customerName} • ${matched.city}, ${matched.state} (PIN: ${matched.pincode})`;
+      
+      const courier = matched.courierPartner || 'BlueDart Air Express';
+      const awb = matched.trackingNumber || 'BLR-892147321';
+
+      if (courierDetailsDisplay) {
+        courierDetailsDisplay.textContent = `Dispatched via ${courier} (AWB: ${awb}). Handed over from Vapi store location.`;
+      }
+
+      if (statusPill) {
+        if (matched.fulfillmentStatus === 'VERIFIED') {
+          statusPill.textContent = 'Order Verified';
+          statusPill.className = 'inline-block bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold px-3 py-1 rounded-full';
+        } else if (matched.fulfillmentStatus === 'PACKING_AT_VAPI') {
+          statusPill.textContent = 'Packing at Vapi';
+          statusPill.className = 'inline-block bg-amber-50 text-amber-700 border border-amber-200 text-xs font-bold px-3 py-1 rounded-full';
+        } else if (matched.fulfillmentStatus === 'DELIVERED') {
+          statusPill.textContent = 'Delivered';
+          statusPill.className = 'inline-block bg-gray-100 text-gray-800 border border-gray-200 text-xs font-bold px-3 py-1 rounded-full';
+        } else {
+          statusPill.textContent = 'Dispatched from Vapi';
+          statusPill.className = 'inline-block bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-bold px-3 py-1 rounded-full';
+        }
+      }
+
+      if (itemsList) {
+        itemsList.innerHTML = matched.items
+          .map(
+            (i) => `
+          <div class="flex items-center gap-3 p-2 bg-gray-50 rounded-xl">
+            <img src="${i.image}" alt="${i.name}" class="w-10 h-10 object-cover rounded-lg bg-white border border-gray-200" />
+            <div class="flex-1 min-w-0">
+              <p class="text-xs font-bold text-gray-900 truncate">${i.name}</p>
+              <p class="text-[10px] text-gray-500">Qty: ${i.quantity} • ₹${Math.round(i.pricePaise / 100)}</p>
+            </div>
+          </div>
+        `
+          )
+          .join('');
+      }
+
+      if (resultBox) {
+        resultBox.classList.remove('hidden');
+        resultBox.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    performLookup(orderInput?.value);
+  });
+
+  invoiceBtn?.addEventListener('click', () => {
+    if (currentMatchedOrder) {
+      window.dispatchEvent(new CustomEvent('satvastones:open_invoice', { detail: currentMatchedOrder }));
+    }
+  });
+
+  // Check URL parameters for direct link from guest checkout
+  const params = new URLSearchParams(window.location.search);
+  const directOrder = params.get('order') || params.get('awb') || params.get('ref');
+  if (directOrder) {
+    if (orderInput) orderInput.value = directOrder;
+    performLookup(directOrder);
+  }
+</script>

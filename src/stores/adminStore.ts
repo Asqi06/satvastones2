@@ -1,0 +1,648 @@
+import { PRODUCTS, type Product } from '../data/products';
+
+export interface AdminOrder {
+  id: string;
+  orderNumber: string;
+  createdAt: string;
+  customerName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  pincode: string;
+  items: Array<{
+    name: string;
+    quantity: number;
+    pricePaise: number;
+    image: string;
+  }>;
+  subtotalPaise: number;
+  shippingPaise: number;
+  discountPaise: number;
+  totalPaise: number;
+  paymentMethod: string;
+  paymentStatus: 'PAID' | 'PENDING' | 'FAILED';
+  fulfillmentStatus: 'VERIFIED' | 'PACKING_AT_VAPI' | 'DISPATCHED' | 'OUT_FOR_DELIVERY' | 'DELIVERED';
+  courierPartner?: string;
+  trackingNumber?: string;
+}
+
+export interface DamageClaim {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  phone: string;
+  submissionDate: string;
+  videoProofUrl: string;
+  description: string;
+  status: 'PENDING_REVIEW' | 'REPLACEMENT_APPROVED' | 'REJECTED';
+}
+
+export interface AdminProduct {
+  id: string;
+  name: string;
+  slug: string;
+  sku: string;
+  category: string;
+  pricePaise: number;
+  compareAtPricePaise?: number;
+  headline: string;
+  image: string;
+  inStock: boolean;
+  material: string;
+  finish: string;
+}
+
+export interface AdminCoupon {
+  id: string;
+  code: string;
+  discountPercent?: number;
+  flatDiscountPaise?: number;
+  minOrderPaise: number;
+  isActive: boolean;
+  description: string;
+}
+
+export interface CategoryDetail {
+  id: string;
+  slug: string;
+  name: string;
+  tagline: string;
+  description: string;
+  image: string;
+}
+
+export interface SiteSettings {
+  shippingChargePaise: number; // e.g. 4900 = ₹49
+  freeShippingThresholdPaise: number; // e.g. 49900 = ₹499
+  stackDiscountPercent: number; // e.g. 15%
+  announcementText: string;
+  heroHeadline: string;
+  heroTagline: string;
+  heroImage: string;
+  categoryImages: Record<string, string>;
+  // Cloudinary credentials & config
+  cloudinaryCloudName: string;
+  cloudinaryUploadPreset: string;
+  // Stack Studio curation: IDs of products available in Stack Studio
+  stackStudioEnabledProducts: string[];
+  // Editable Category details
+  categories: CategoryDetail[];
+  // Social Proof Toast Control (Real Orders Only)
+  enableSocialProofToast?: boolean;
+}
+
+const DEFAULT_CATEGORIES_DATA: CategoryDetail[] = [
+  {
+    id: 'rings',
+    slug: 'rings',
+    name: 'Rings',
+    tagline: 'Minimalist bands & statement signets',
+    description: 'Anti-tarnish rings sculpted in durable 316L stainless steel with rich 18K gold PVD finish.',
+    image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'bracelets',
+    slug: 'bracelets',
+    name: 'Bracelets',
+    tagline: 'Delicate chains & structured cuffs',
+    description: 'Designed for daily wear, effortless stacking, and total water resistance. Anti tarnish jewellery bracelet collection for women.',
+    image: 'https://images.unsplash.com/photo-1611085583191-a3b181a88401?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'necklaces',
+    slug: 'necklaces',
+    name: 'Necklaces',
+    tagline: 'Refined pendants & herringbone chains',
+    description: 'Graceful silhouettes that retain their luminous shine through workouts and showers. Waterproof jewellery India.',
+    image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'earrings',
+    slug: 'earrings',
+    name: 'Earrings',
+    tagline: 'Sculptural huggies & understated studs',
+    description: 'Featherlight, hypoallergenic studs and hoops that never irritate sensitive ears. 100% nickel-free.',
+    image: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'bangles',
+    slug: 'bangles',
+    name: 'Bangles',
+    tagline: 'Modern minimal Kada & seamless bangles',
+    description: 'Contemporary interpretations of classic Indian wrists, engineered to never discolor.',
+    image: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'gift-sets',
+    slug: 'gift-sets',
+    name: 'Gift Sets',
+    tagline: 'Curated pairings in bespoke gift boxes',
+    description: 'Thoughtfully paired jewellery ensembles ready for birthdays, anniversaries and self-love.',
+    image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'jewellery-set',
+    slug: 'jewellery-set',
+    name: 'Jewellery Sets',
+    tagline: 'Coordinated Anti-Tarnish Suites',
+    description: 'Complete anti tarnish jewellery set matching necklaces, bracelets, and huggies. Ideal for daily use, festive styling, and pairing with sarees.',
+    image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80'
+  },
+  {
+    id: 'mystery-jewellery-jar',
+    slug: 'mystery-jewellery-jar',
+    name: 'Mystery Jewellery Jar',
+    tagline: 'Surprise Anti-Tarnish Capsule (Value ₹4,999+)',
+    description: 'The viral SatvaStones Mystery Jewellery Jar experience. Unbox 3 handcrafted waterproof pieces dispatched from our Vapi store location.',
+    image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800&q=80'
+  }
+];
+
+const DEFAULT_SETTINGS: SiteSettings = {
+  shippingChargePaise: 4900,
+  freeShippingThresholdPaise: 49900,
+  stackDiscountPercent: 15,
+  announcementText: 'LIMITED EDITION BIRTHDAY ATELIER — UPTO 60% PRIVILEGE SAVINGS · COMPLIMENTARY EXPRESS SHIPPING ON ORDERS ABOVE ₹499 · HAND-INSPECTED & DISPATCHED FROM VAPI ATELIER IN 24–48 HOURS · 18K VACUUM GOLD PVD · 100% WATERPROOF & SWEAT-PROOF',
+  heroHeadline: 'Anti Tarnish Jewellery That Feels Like You.',
+  heroTagline: 'Waterproof, sweat-proof anti-tarnish fine jewellery engineered with 316L surgical stainless steel & 18K vacuum gold PVD. Hand-inspected and dispatched from our Vapi atelier.',
+  heroImage: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=2000&q=85',
+  categoryImages: {
+    rings: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=600&q=80',
+    bracelets: 'https://images.unsplash.com/photo-1611085583191-a3b181a88401?auto=format&fit=crop&w=600&q=80',
+    necklaces: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80',
+    earrings: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=600&q=80',
+    bangles: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&fit=crop&w=600&q=80',
+    'gift-sets': 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=600&q=80'
+  },
+  cloudinaryCloudName: '',
+  cloudinaryUploadPreset: '',
+  enableSocialProofToast: true,
+  stackStudioEnabledProducts: [
+    'prod-1', // Aura Herringbone Snake Chain
+    'prod-2', // Elysian Croissant Dome Ring
+    'prod-3', // Serene Molten Pearl Pendant
+    'prod-4', // Solace Chunky Link Chain Bracelet
+    'prod-5', // Chloe Sculptural Ribbed Huggies
+    'prod-6', // Vesta Twisted Cable Kada Bangle
+    'prod-7'  // Mira Dual Bezel Solitaire Ring
+  ],
+  categories: DEFAULT_CATEGORIES_DATA
+};
+
+const DEFAULT_COUPONS: AdminCoupon[] = [
+  {
+    id: 'coup-1',
+    code: 'FIRSTBUY',
+    flatDiscountPaise: 20000,
+    minOrderPaise: 249900,
+    isActive: true,
+    description: 'Flat ₹200 OFF on orders above ₹2,499'
+  },
+  {
+    id: 'coup-2',
+    code: 'SATVA10',
+    discountPercent: 10,
+    minOrderPaise: 0,
+    isActive: true,
+    description: '10% OFF on all fine anti-tarnish jewellery'
+  },
+  {
+    id: 'coup-3',
+    code: 'FESTIVE15',
+    discountPercent: 15,
+    minOrderPaise: 299900,
+    isActive: true,
+    description: '15% Privilege savings on festive orders above ₹2,999'
+  }
+];
+
+const DEFAULT_ORDERS: AdminOrder[] = [
+  {
+    id: 'ord-1',
+    orderNumber: 'SAT-2026-784912',
+    createdAt: '2026-11-14T10:30:00Z',
+    customerName: 'Priya Sharma',
+    email: 'priya.sharma@gmail.com',
+    phone: '+91 90167 03180',
+    address: 'Flat 402, Green Glen Layout, Bellandur',
+    city: 'Bengaluru',
+    state: 'Karnataka',
+    pincode: '560103',
+    items: [
+      {
+        name: 'Aura Herringbone Snake Chain',
+        quantity: 1,
+        pricePaise: 169900,
+        image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=200&q=80'
+      }
+    ],
+    subtotalPaise: 169900,
+    shippingPaise: 0,
+    discountPaise: 0,
+    totalPaise: 169900,
+    paymentMethod: 'UPI (Google Pay via Razorpay)',
+    paymentStatus: 'PAID',
+    fulfillmentStatus: 'DISPATCHED',
+    courierPartner: 'BlueDart Air Express',
+    trackingNumber: 'BLR-892147321'
+  },
+  {
+    id: 'ord-2',
+    orderNumber: 'SAT-2026-641029',
+    createdAt: '2026-11-15T08:15:00Z',
+    customerName: 'Sneha Patel',
+    email: 'sneha.patel@yahoo.com',
+    phone: '+91 97123 88410',
+    address: '12 Shantiniketan Bungalows, Satellite',
+    city: 'Ahmedabad',
+    state: 'Gujarat',
+    pincode: '380015',
+    items: [
+      {
+        name: 'Elysian Croissant Dome Ring',
+        quantity: 1,
+        pricePaise: 129900,
+        image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=200&q=80'
+      },
+      {
+        name: 'Chloe Sculptural Ribbed Huggies',
+        quantity: 1,
+        pricePaise: 89900,
+        image: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=200&q=80'
+      }
+    ],
+    subtotalPaise: 219800,
+    shippingPaise: 0,
+    discountPaise: 0,
+    totalPaise: 219800,
+    paymentMethod: 'Credit Card (HDFC via Razorpay)',
+    paymentStatus: 'PAID',
+    fulfillmentStatus: 'PACKING_AT_VAPI',
+    courierPartner: 'Delhivery Prime',
+    trackingNumber: 'DEL-39102451'
+  },
+  {
+    id: 'ord-3',
+    orderNumber: 'SAT-2026-519283',
+    createdAt: '2026-11-15T11:45:00Z',
+    customerName: 'Ananya Sen',
+    email: 'ananya.sen@gmail.com',
+    phone: '+91 99031 22849',
+    address: '44 Salt Lake Sector V',
+    city: 'Kolkata',
+    state: 'West Bengal',
+    pincode: '700091',
+    items: [
+      {
+        name: 'The Golden Hour Gifting Capsule',
+        quantity: 1,
+        pricePaise: 349900,
+        image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=200&q=80'
+      }
+    ],
+    subtotalPaise: 349900,
+    shippingPaise: 0,
+    discountPaise: 20000,
+    totalPaise: 329900,
+    paymentMethod: 'UPI (PhonePe via Razorpay)',
+    paymentStatus: 'PAID',
+    fulfillmentStatus: 'VERIFIED'
+  }
+];
+
+const DEFAULT_CLAIMS: DamageClaim[] = [
+  {
+    id: 'claim-1',
+    orderNumber: 'SAT-2026-000098',
+    customerName: 'Rhea Kapoor',
+    phone: '+91 98111 23456',
+    submissionDate: '2026-11-13',
+    videoProofUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+    description: 'Outer carton crushed in transit by courier. Unboxing video shows broken earring post.',
+    status: 'REPLACEMENT_APPROVED'
+  }
+];
+
+// LocalStorage Keys
+const ORDERS_KEY = 'satvastones_admin_orders';
+const CLAIMS_KEY = 'satvastones_admin_claims';
+const PRODUCTS_KEY = 'satvastones_admin_products';
+const COUPONS_KEY = 'satvastones_admin_coupons';
+const SETTINGS_KEY = 'satvastones_site_settings';
+
+// ==========================================
+// 1. ORDERS ENGINE
+// ==========================================
+export function getAdminOrders(): AdminOrder[] {
+  if (typeof window === 'undefined') return DEFAULT_ORDERS;
+  const stored = localStorage.getItem(ORDERS_KEY);
+  if (!stored) {
+    localStorage.setItem(ORDERS_KEY, JSON.stringify(DEFAULT_ORDERS));
+    return DEFAULT_ORDERS;
+  }
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return DEFAULT_ORDERS;
+  }
+}
+
+export const getOrders = getAdminOrders;
+
+export function saveAdminOrders(orders: AdminOrder[]): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+  window.dispatchEvent(new CustomEvent('satvastones:orders_updated', { detail: orders }));
+}
+
+export function addAdminOrder(order: AdminOrder): void {
+  const current = getAdminOrders();
+  const updated = [order, ...current];
+  saveAdminOrders(updated);
+}
+
+export function updateOrderStatus(
+  orderNumber: string,
+  newStatus: AdminOrder['fulfillmentStatus'],
+  courier?: string,
+  tracking?: string
+): void {
+  const orders = getAdminOrders();
+  const updated = orders.map((o) => {
+    if (o.orderNumber === orderNumber) {
+      return {
+        ...o,
+        fulfillmentStatus: newStatus,
+        ...(courier ? { courierPartner: courier } : {}),
+        ...(tracking ? { trackingNumber: tracking } : {})
+      };
+    }
+    return o;
+  });
+  saveAdminOrders(updated);
+}
+
+export function deleteAdminOrder(orderNumber: string): void {
+  const orders = getAdminOrders();
+  const updated = orders.filter((o) => o.orderNumber !== orderNumber);
+  saveAdminOrders(updated);
+}
+
+export function findOrderByRef(ref: string): AdminOrder | null {
+  const q = ref.trim().toUpperCase();
+  const orders = getAdminOrders();
+  return (
+    orders.find(
+      (o) =>
+        o.orderNumber.toUpperCase() === q ||
+        (o.trackingNumber && o.trackingNumber.toUpperCase() === q) ||
+        o.phone.replace(/[^0-9]/g, '').includes(q.replace(/[^0-9]/g, '')) ||
+        o.email.toUpperCase() === q
+    ) || null
+  );
+}
+
+// ==========================================
+// 2. PRODUCTS & INVENTORY CRUD
+// ==========================================
+export function getAdminProducts(): AdminProduct[] {
+  if (typeof window === 'undefined') {
+    return PRODUCTS.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      sku: p.sku,
+      category: p.category,
+      pricePaise: p.pricePaise,
+      compareAtPricePaise: p.compareAtPricePaise,
+      headline: p.headline,
+      image: p.images[0]?.url || '',
+      inStock: p.inStock,
+      material: p.material,
+      finish: p.finish
+    }));
+  }
+
+  const stored = localStorage.getItem(PRODUCTS_KEY);
+  if (!stored) {
+    const initial = PRODUCTS.map((p) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      sku: p.sku,
+      category: p.category,
+      pricePaise: p.pricePaise,
+      compareAtPricePaise: p.compareAtPricePaise,
+      headline: p.headline,
+      image: p.images[0]?.url || '',
+      inStock: p.inStock,
+      material: p.material,
+      finish: p.finish
+    }));
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(initial));
+    return initial;
+  }
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return [];
+  }
+}
+
+export function saveAdminProducts(products: AdminProduct[]): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  window.dispatchEvent(new CustomEvent('satvastones:products_updated', { detail: products }));
+}
+
+export function addAdminProduct(product: AdminProduct): void {
+  const current = getAdminProducts();
+  const updated = [product, ...current];
+  saveAdminProducts(updated);
+}
+
+export function updateAdminProduct(product: AdminProduct): void {
+  const current = getAdminProducts();
+  const updated = current.map((p) => (p.id === product.id ? product : p));
+  saveAdminProducts(updated);
+}
+
+export function deleteAdminProduct(productId: string): void {
+  const current = getAdminProducts();
+  const updated = current.filter((p) => p.id !== productId);
+  saveAdminProducts(updated);
+}
+
+export function toggleAdminProductStock(productId: string): void {
+  const current = getAdminProducts();
+  const updated = current.map((p) => (p.id === productId ? { ...p, inStock: !p.inStock } : p));
+  saveAdminProducts(updated);
+}
+
+// ==========================================
+// 3. COUPONS CRUD
+// ==========================================
+export function getAdminCoupons(): AdminCoupon[] {
+  if (typeof window === 'undefined') return DEFAULT_COUPONS;
+  const stored = localStorage.getItem(COUPONS_KEY);
+  if (!stored) {
+    localStorage.setItem(COUPONS_KEY, JSON.stringify(DEFAULT_COUPONS));
+    return DEFAULT_COUPONS;
+  }
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return DEFAULT_COUPONS;
+  }
+}
+
+export function saveAdminCoupons(coupons: AdminCoupon[]): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(COUPONS_KEY, JSON.stringify(coupons));
+  window.dispatchEvent(new CustomEvent('satvastones:coupons_updated', { detail: coupons }));
+}
+
+export function addAdminCoupon(coupon: AdminCoupon): void {
+  const current = getAdminCoupons();
+  const updated = [coupon, ...current];
+  saveAdminCoupons(updated);
+}
+
+export function updateAdminCoupon(coupon: AdminCoupon): void {
+  const current = getAdminCoupons();
+  const updated = current.map((c) => (c.id === coupon.id ? coupon : c));
+  saveAdminCoupons(updated);
+}
+
+export function deleteAdminCoupon(couponId: string): void {
+  const current = getAdminCoupons();
+  const updated = current.filter((c) => c.id !== couponId);
+  saveAdminCoupons(updated);
+}
+
+export function toggleCouponActive(couponId: string): void {
+  const current = getAdminCoupons();
+  const updated = current.map((c) => (c.id === couponId ? { ...c, isActive: !c.isActive } : c));
+  saveAdminCoupons(updated);
+}
+
+// ==========================================
+// 4. SITE SETTINGS & PRICING CONFIG
+// ==========================================
+export function getSiteSettings(): SiteSettings {
+  if (typeof window === 'undefined') return DEFAULT_SETTINGS;
+  const stored = localStorage.getItem(SETTINGS_KEY);
+  if (!stored) {
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(DEFAULT_SETTINGS));
+    return DEFAULT_SETTINGS;
+  }
+  try {
+    const parsed = JSON.parse(stored);
+    let changed = false;
+
+    // Migrate/sanitize outdated green brooch hero image
+    if (!parsed.heroImage || parsed.heroImage.includes('photo-1535632066927-ab7c9ab60908')) {
+      parsed.heroImage = DEFAULT_SETTINGS.heroImage;
+      changed = true;
+    }
+
+    // Migrate/sanitize broken 404 bracelet image
+    if (parsed.categoryImages) {
+      if (parsed.categoryImages.bracelets && parsed.categoryImages.bracelets.includes('photo-1611591475152')) {
+        parsed.categoryImages.bracelets = DEFAULT_SETTINGS.categoryImages.bracelets;
+        changed = true;
+      }
+    }
+
+    if (parsed.categories && Array.isArray(parsed.categories)) {
+      parsed.categories = parsed.categories.map((c: any) => {
+        if (c.slug === 'bracelets' && c.image && c.image.includes('photo-1611591475152')) {
+          changed = true;
+          return { ...c, image: DEFAULT_SETTINGS.categoryImages.bracelets };
+        }
+        return c;
+      });
+    }
+
+    const merged = { ...DEFAULT_SETTINGS, ...parsed };
+    if (changed) {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(merged));
+    }
+    return merged;
+  } catch {
+    return DEFAULT_SETTINGS;
+  }
+}
+
+export function saveSiteSettings(settings: SiteSettings): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  window.dispatchEvent(new CustomEvent('satvastones:settings_updated', { detail: settings }));
+}
+
+export function updateAdminCategory(slug: string, details: Partial<CategoryDetail>): void {
+  const settings = getSiteSettings();
+  const currentCats = settings.categories && settings.categories.length > 0 ? settings.categories : DEFAULT_CATEGORIES_DATA;
+  const updatedCategories = currentCats.map((cat) =>
+    cat.slug === slug ? { ...cat, ...details } : cat
+  );
+  const updatedImages = { ...settings.categoryImages };
+  if (details.image) {
+    updatedImages[slug] = details.image;
+  }
+  saveSiteSettings({
+    ...settings,
+    categories: updatedCategories,
+    categoryImages: updatedImages
+  });
+}
+
+export function toggleStackStudioProduct(productId: string): void {
+  const settings = getSiteSettings();
+  const current = settings.stackStudioEnabledProducts || [];
+  const exists = current.includes(productId);
+  const updated = exists ? current.filter((id) => id !== productId) : [...current, productId];
+  saveSiteSettings({
+    ...settings,
+    stackStudioEnabledProducts: updated
+  });
+}
+
+export function updateCloudinaryConfig(cloudName: string, uploadPreset: string): void {
+  const settings = getSiteSettings();
+  saveSiteSettings({
+    ...settings,
+    cloudinaryCloudName: cloudName,
+    cloudinaryUploadPreset: uploadPreset
+  });
+}
+
+// ==========================================
+// 5. 360° VIDEO CLAIMS
+// ==========================================
+export function getDamageClaims(): DamageClaim[] {
+  if (typeof window === 'undefined') return DEFAULT_CLAIMS;
+  const stored = localStorage.getItem(CLAIMS_KEY);
+  if (!stored) {
+    localStorage.setItem(CLAIMS_KEY, JSON.stringify(DEFAULT_CLAIMS));
+    return DEFAULT_CLAIMS;
+  }
+  try {
+    return JSON.parse(stored);
+  } catch {
+    return DEFAULT_CLAIMS;
+  }
+}
+
+export function saveDamageClaims(claims: DamageClaim[]): void {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(CLAIMS_KEY, JSON.stringify(claims));
+}
+
+export function updateClaimStatus(claimId: string, status: DamageClaim['status']): void {
+  const claims = getDamageClaims();
+  const updated = claims.map((c) => (c.id === claimId ? { ...c, status } : c));
+  saveDamageClaims(updated);
+}

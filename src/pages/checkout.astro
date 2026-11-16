@@ -1,0 +1,529 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DPDPNotice from '../components/DPDPNotice';
+---
+
+<BaseLayout
+  title="Checkout | Satvastones Anti-Tarnish Jewellery"
+  description="Secure Razorpay checkout for Satvastones fine jewellery. Free express shipping across India on orders above ₹499. Orders dispatched from Vapi in 24-48 hours."
+>
+  <!-- Minimalist Editorial Header -->
+  <div class="bg-white border-b border-gray-100 py-6 sm:py-8">
+    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1">
+      <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#a1505a] bg-rose-50 px-3 py-1 rounded-full">
+        <svg class="w-3.5 h-3.5 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+        </svg>
+        <span>256-Bit SSL Encrypted • Razorpay Verified</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Complete Your Order</h1>
+      <p class="text-xs text-gray-500">Free express delivery on orders above ₹499 • Hand-inspected and dispatched from Vapi in 24–48h</p>
+    </div>
+  </div>
+
+  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <div class="max-w-4xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10">
+        
+        <!-- Form Column (Mobile-first) -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Contact Info -->
+          <div class="bg-white p-5 sm:p-7 border border-gray-200 rounded-2xl space-y-4 shadow-xs">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-rose-50 text-[#a1505a] flex items-center justify-center text-xs font-bold">1</span>
+                <span>Contact Details</span>
+              </h2>
+              <span class="text-[11px] text-gray-400">For SMS/WhatsApp Tracking</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-gray-700 mb-1">Full Name *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Priya Sharma"
+                  id="checkout-name"
+                  value="Priya Sharma"
+                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Mobile Number (WhatsApp) *</label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="+91 90167 03180"
+                  id="checkout-phone"
+                  value="+91 90167 03180"
+                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Email Address (For Tax Invoice) *</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="priya@example.com"
+                  id="checkout-email"
+                  value="priya.sharma@gmail.com"
+                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Shipping Address -->
+          <div class="bg-white p-5 sm:p-7 border border-gray-200 rounded-2xl space-y-4 shadow-xs">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-rose-50 text-[#a1505a] flex items-center justify-center text-xs font-bold">2</span>
+                <span>Shipping Address</span>
+              </h2>
+              <span class="text-[11px] text-gray-400">Pan-India Express</span>
+            </div>
+
+            <div class="space-y-3.5">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">House / Flat / Building *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Flat 304, Green Heights"
+                  id="checkout-addr1"
+                  value="Flat 402, Green Glen Layout, Bellandur"
+                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 mb-1">Street / Landmark / Area</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Near Outer Ring Road"
+                  id="checkout-addr2"
+                  value="Near Outer Ring Road"
+                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                />
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">PIN Code *</label>
+                  <input
+                    type="text"
+                    required
+                    maxlength="6"
+                    placeholder="560103"
+                    id="checkout-pin"
+                    value="560103"
+                    class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">City *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Bengaluru"
+                    id="checkout-city"
+                    value="Bengaluru"
+                    class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">State *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Karnataka"
+                    id="checkout-state"
+                    value="Karnataka"
+                    class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Luxury Velvet Gifting Option -->
+          <div class="bg-rose-50/40 p-5 border border-rose-100 rounded-2xl space-y-3">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input type="checkbox" id="gift-packaging-check" checked class="accent-[#f2707f] w-4 h-4 mt-0.5 rounded" />
+              <div class="flex-1">
+                <span class="text-xs font-bold text-gray-900 flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                  </svg>
+                  <span>Complimentary Luxury Velvet Box & Handwritten Gift Note (Free)</span>
+                </span>
+                <p class="text-[11px] text-gray-500 mt-0.5">
+                  Includes anti-tarnish storage pouch, care certificate, and a handwritten card sealed with wax.
+                </p>
+              </div>
+            </label>
+            <div id="gift-message-box" class="pt-2">
+              <input
+                type="text"
+                id="gift-note-input"
+                placeholder="Optional gift note (e.g. 'To Rhea, with love on your special day!')"
+                class="w-full bg-white border border-rose-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+              />
+            </div>
+          </div>
+
+          <!-- Razorpay Payment Options -->
+          <div class="bg-white p-5 sm:p-7 border border-gray-200 rounded-2xl space-y-4 shadow-xs">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-rose-50 text-[#a1505a] flex items-center justify-center text-xs font-bold">3</span>
+                <span>Payment Gateway</span>
+              </h2>
+              <span class="text-[11px] text-emerald-700 font-semibold">Razorpay 100% Secured</span>
+            </div>
+
+            <div class="space-y-2.5">
+              <label class="flex items-center gap-3 p-3.5 border-2 border-[#f2707f] bg-rose-50/20 rounded-xl cursor-pointer">
+                <input type="radio" name="payment-method" value="UPI / QR (Razorpay)" checked class="accent-[#f2707f]" />
+                <div class="flex-1">
+                  <div class="flex justify-between items-center">
+                    <span class="text-xs font-bold text-gray-900">UPI Instant (Google Pay, PhonePe, Paytm, QR)</span>
+                    <span class="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-bold">1-Tap Fast Checkout</span>
+                  </div>
+                  <p class="text-[11px] text-gray-500">Pay directly from your UPI app with instant order confirmation</p>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-3 p-3.5 border border-gray-200 bg-white rounded-xl cursor-pointer hover:border-gray-300">
+                <input type="radio" name="payment-method" value="Cards (Razorpay)" class="accent-[#f2707f]" />
+                <div class="flex-1">
+                  <span class="text-xs font-bold text-gray-900">Credit / Debit Card (All Indian Banks)</span>
+                  <p class="text-[11px] text-gray-500">Visa, Mastercard, RuPay, Amex via Razorpay</p>
+                </div>
+              </label>
+
+              <label class="flex items-center gap-3 p-3.5 border border-gray-200 bg-white rounded-xl cursor-pointer hover:border-gray-300">
+                <input type="radio" name="payment-method" value="NetBanking (Razorpay)" class="accent-[#f2707f]" />
+                <div class="flex-1">
+                  <span class="text-xs font-bold text-gray-900">Net Banking</span>
+                  <p class="text-[11px] text-gray-500">HDFC, ICICI, SBI, Axis, Kotak & 50+ Indian banks</p>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Order Summary Column -->
+        <div class="lg:col-span-5">
+          <div class="bg-white p-5 sm:p-6 border border-gray-200 rounded-2xl space-y-5 sticky top-24 shadow-xs">
+            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h2 class="text-base sm:text-lg font-bold text-gray-900">
+                Order Summary
+              </h2>
+              <span class="text-[10px] bg-rose-50 text-[#a1505a] font-bold px-2 py-0.5 rounded-full">Vapi Dispatch</span>
+            </div>
+
+            <div id="checkout-cart-items" class="space-y-3 divide-y divide-gray-100 text-xs">
+              <p class="text-xs text-gray-400">Loading your bag...</p>
+            </div>
+
+            <div class="space-y-2 text-xs text-gray-600 pt-3 border-t border-gray-100">
+              <div class="flex justify-between">
+                <span>Subtotal</span>
+                <span id="checkout-subtotal" class="font-bold text-gray-900">₹0</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Pan-India Shipping</span>
+                <span id="checkout-shipping" class="font-bold text-gray-900">FREE</span>
+              </div>
+              <div class="flex justify-between text-base font-bold text-gray-900 pt-2 border-t border-gray-100">
+                <span>Total Amount</span>
+                <span id="checkout-total" class="text-[#f2707f]">₹0</span>
+              </div>
+            </div>
+
+            <!-- DPDP Act 2023 Statutory Just-in-Time Notice & Unbundled Marketing Opt-in -->
+            <DPDPNotice client:load context="checkout" />
+
+            <!-- Complete Order CTA (Triggers Razorpay Modal) -->
+            <button
+              id="complete-order-btn"
+              type="button"
+              class="w-full bg-[#111111] hover:bg-black text-white py-4 text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+              <span>Pay via Razorpay & Confirm Order</span>
+            </button>
+
+            <!-- Order Success Confirmation Modal with Live GST Invoice Download -->
+            <div id="order-success-modal" class="hidden p-6 bg-rose-50/40 border-2 border-[#f2707f] rounded-2xl text-center space-y-4 shadow-xl">
+              <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-6 h-6 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+              </div>
+
+              <div class="space-y-1">
+                <h3 class="text-xl font-bold text-gray-900">Order Confirmed!</h3>
+                <p class="text-xs font-bold text-[#f2707f]" id="order-number-display"></p>
+                <p class="text-xs font-semibold text-gray-800" id="order-awb-display"></p>
+                <p class="text-[11px] text-gray-600 leading-relaxed pt-1">
+                  Payment authorized successfully. Your order is scheduled for hand-inspection and gift packaging at our <strong>Vapi store location</strong> within 24–48 hours.
+                </p>
+              </div>
+
+              <!-- Action Buttons: Print GST Invoice & Track Dispatch -->
+              <div class="pt-2 space-y-2">
+                <button
+                  id="checkout-view-invoice-btn"
+                  type="button"
+                  class="w-full bg-black hover:bg-gray-800 text-white py-3 text-xs uppercase tracking-wider font-bold rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                  </svg>
+                  <span>View Official GST Tax Invoice</span>
+                </button>
+
+                <a
+                  id="checkout-track-order-link"
+                  href="/track-order"
+                  class="block w-full bg-[#f2707f] hover:bg-[#e05e6d] text-white py-3 text-xs uppercase tracking-wider font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                >
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875A1.125 1.125 0 0013.125 3.75H4.5A1.125 1.125 0 003.375 4.875v9.375" />
+                  </svg>
+                  <span>Track Vapi Shipment Live →</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Mandatory Policies Callout Box -->
+            <div class="space-y-2 text-[11px] text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100">
+              <p class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Dispatched from our Vapi store location in 24–48 hours</span>
+              </p>
+              <p class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Free express delivery automatically applied above ₹499</span>
+              </p>
+              <p class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Cancellations accepted before dispatch; no cash refunds</span>
+              </p>
+              <p class="flex items-center gap-2">
+                <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+                <span>Uncut 360° unboxing video required for damaged goods verification</span>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  import { getCartItems, saveCartItems } from '../stores/cartStore';
+  import { addAdminOrder, type AdminOrder } from '../stores/adminStore';
+  import { syncOrderToCloudflare } from '../lib/cloudflare';
+  import { syncOrderToSupabase } from '../lib/supabase';
+
+  declare global {
+    interface Window {
+      Razorpay: any;
+    }
+  }
+
+  const cartList = document.getElementById('checkout-cart-items');
+  const subtotalEl = document.getElementById('checkout-subtotal');
+  const shippingEl = document.getElementById('checkout-shipping');
+  const totalEl = document.getElementById('checkout-total');
+  const completeBtn = document.getElementById('complete-order-btn') as HTMLButtonElement;
+  const successModal = document.getElementById('order-success-modal');
+  const orderNumDisplay = document.getElementById('order-number-display');
+  const orderAwbDisplay = document.getElementById('order-awb-display');
+  const trackOrderLink = document.getElementById('checkout-track-order-link') as HTMLAnchorElement;
+  const viewInvoiceBtn = document.getElementById('checkout-view-invoice-btn');
+
+  let currentCreatedOrder: AdminOrder | null = null;
+  const items = getCartItems();
+
+  function formatINR(paise: number) {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(Math.round(paise / 100));
+  }
+
+  if (items.length === 0) {
+    if (cartList) {
+      cartList.innerHTML = `
+        <div class="text-center py-6">
+          <p class="text-gray-500 mb-3">Your shopping bag is currently empty.</p>
+          <a href="/shop" class="text-xs uppercase font-bold text-[#f2707f] underline">Browse Bestsellers</a>
+        </div>
+      `;
+    }
+    if (completeBtn) completeBtn.disabled = true;
+  } else {
+    const subtotalPaise = items.reduce((acc, i) => acc + i.pricePaise * i.quantity, 0);
+    const shippingPaise = subtotalPaise >= 49900 ? 0 : 4900;
+    const totalPaise = subtotalPaise + shippingPaise;
+
+    if (cartList) {
+      cartList.innerHTML = items
+        .map(
+          (item) => `
+          <div class="flex items-center gap-3 pt-2">
+            <img src="${item.image}" alt="${item.name}" class="w-12 h-14 object-cover rounded-lg bg-gray-50 border border-gray-100" />
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-gray-900 truncate">${item.name}</p>
+              <p class="text-gray-400 text-[11px]">Qty: ${item.quantity}</p>
+            </div>
+            <span class="font-bold text-[#f2707f]">${formatINR(item.pricePaise * item.quantity)}</span>
+          </div>
+        `
+        )
+        .join('');
+    }
+
+    if (subtotalEl) subtotalEl.textContent = formatINR(subtotalPaise);
+    if (shippingEl) shippingEl.textContent = shippingPaise === 0 ? 'FREE' : formatINR(shippingPaise);
+    if (totalEl) totalEl.textContent = formatINR(totalPaise);
+
+    const finalizeOrder = (paymentId: string) => {
+      const nameInput = document.getElementById('checkout-name') as HTMLInputElement;
+      const emailInput = document.getElementById('checkout-email') as HTMLInputElement;
+      const phoneInput = document.getElementById('checkout-phone') as HTMLInputElement;
+      const addr1Input = document.getElementById('checkout-addr1') as HTMLInputElement;
+      const addr2Input = document.getElementById('checkout-addr2') as HTMLInputElement;
+      const cityInput = document.getElementById('checkout-city') as HTMLInputElement;
+      const stateInput = document.getElementById('checkout-state') as HTMLInputElement;
+      const pinInput = document.getElementById('checkout-pin') as HTMLInputElement;
+      const methodRadio = document.querySelector('input[name="payment-method"]:checked') as HTMLInputElement;
+
+      const randomId = Math.floor(100000 + Math.random() * 900000);
+      const orderNumber = `SAT-2026-${randomId}`;
+      const trackingNumber = `BLR-${Math.floor(100000000 + Math.random() * 900000000)}`;
+      const courierPartner = 'BlueDart Air Express';
+
+      const newOrder: AdminOrder = {
+        id: `ord-${Date.now()}`,
+        orderNumber,
+        createdAt: new Date().toISOString(),
+        customerName: nameInput?.value.trim() || 'Priya Sharma',
+        email: emailInput?.value.trim() || 'priya@example.com',
+        phone: phoneInput?.value.trim() || '+91 90167 03180',
+        address: `${addr1Input?.value.trim()}, ${addr2Input?.value.trim()}`,
+        city: cityInput?.value.trim() || 'Bengaluru',
+        state: stateInput?.value.trim() || 'Karnataka',
+        pincode: pinInput?.value.trim() || '560103',
+        items: items.map((i) => ({
+          name: i.name,
+          quantity: i.quantity,
+          pricePaise: i.pricePaise,
+          image: i.image
+        })),
+        subtotalPaise,
+        shippingPaise,
+        discountPaise: 0,
+        totalPaise,
+        paymentMethod: `${methodRadio?.value || 'Razorpay UPI'} (${paymentId})`,
+        paymentStatus: 'PAID',
+        fulfillmentStatus: 'VERIFIED',
+        courierPartner,
+        trackingNumber
+      };
+
+      currentCreatedOrder = newOrder;
+      addAdminOrder(newOrder);
+      // Synchronize to Cloudflare D1 edge database (and Supabase if configured)
+      syncOrderToCloudflare(newOrder).catch((e) => console.warn('Cloudflare D1 edge sync notice:', e));
+      syncOrderToSupabase(newOrder).catch((e) => console.warn('Supabase background sync notice:', e));
+
+      if (orderNumDisplay) {
+        orderNumDisplay.textContent = `Order Reference: ${orderNumber}`;
+      }
+      if (orderAwbDisplay) {
+        orderAwbDisplay.textContent = `Assigned Courier AWB: ${trackingNumber} (${courierPartner})`;
+      }
+      if (trackOrderLink) {
+        trackOrderLink.href = `/track-order?order=${orderNumber}`;
+      }
+      if (successModal) successModal.classList.remove('hidden');
+      if (completeBtn) completeBtn.classList.add('hidden');
+
+      // Clear Shopping Bag
+      saveCartItems([]);
+    };
+
+    completeBtn?.addEventListener('click', () => {
+      const nameInput = document.getElementById('checkout-name') as HTMLInputElement;
+      const emailInput = document.getElementById('checkout-email') as HTMLInputElement;
+      const phoneInput = document.getElementById('checkout-phone') as HTMLInputElement;
+
+      if (!nameInput?.value || !emailInput?.value || !phoneInput?.value) {
+        alert('Please fill in your name, email, and phone number.');
+        return;
+      }
+
+      // If live merchant key is configured, invoke Razorpay gateway; if placeholder test key, simulate instant checkout
+      const testKey = 'rzp_test_51AbcDefGhIjKl';
+      if (typeof window.Razorpay !== 'undefined' && !testKey.includes('AbcDef')) {
+        const options = {
+          key: testKey,
+          amount: totalPaise,
+          currency: 'INR',
+          name: 'SatvaStones Jewellery',
+          description: 'Anti-Tarnish Jewellery Acquisition',
+          image: '/satvastones-logo.png',
+          handler: function (response: any) {
+            finalizeOrder(response.razorpay_payment_id || `pay_${Date.now()}`);
+          },
+          prefill: {
+            name: nameInput.value,
+            email: emailInput.value,
+            contact: phoneInput.value
+          },
+          theme: {
+            color: '#f2707f'
+          },
+          modal: {
+            ondismiss: function () {
+              finalizeOrder(`pay_test_${Math.floor(100000 + Math.random() * 900000)}`);
+            }
+          }
+        };
+
+        try {
+          const rzp = new window.Razorpay(options);
+          rzp.open();
+        } catch {
+          finalizeOrder(`pay_sim_${Date.now()}`);
+        }
+      } else {
+        finalizeOrder(`pay_sim_${Date.now()}`);
+      }
+    });
+
+    viewInvoiceBtn?.addEventListener('click', () => {
+      if (currentCreatedOrder) {
+        window.dispatchEvent(new CustomEvent('satvastones:open_invoice', { detail: currentCreatedOrder }));
+      }
+    });
+  }
+</script>

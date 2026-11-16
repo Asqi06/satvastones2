@@ -1,0 +1,2226 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Operations Gate | Satvastones"
+  description="Restricted operations gateway for Satvastones Jewellery."
+  noindex={true}
+>
+  <!-- Cloudinary Official Upload Widget SDK -->
+  <script is:inline src="https://upload-widget.cloudinary.com/global/all.js"></script>
+
+  <div class="bg-[#f8f9fa] min-h-screen py-8 text-[#1A1A1A]">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+      
+      <!-- ========================================== -->
+      <!-- 1. SECURE ADMIN AUTHENTICATION GATE SCREEN -->
+      <!-- ========================================== -->
+      <div id="admin-login-gate" class="min-h-[70vh] flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md p-8 sm:p-10 rounded-2xl shadow-xl border border-gray-200 text-center space-y-6">
+          <div class="space-y-3">
+            <img
+              src="/satvastones-logo.png"
+              alt="Satvastones"
+              class="h-9 w-auto object-contain mx-auto mb-2"
+            />
+            <div class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-gray-700 bg-gray-100 px-3.5 py-1 rounded-full">
+              <svg class="w-3.5 h-3.5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+              <span>Restricted Operations Gateway</span>
+            </div>
+            <h1 class="text-xl font-bold text-gray-900 tracking-tight">
+              Store Manager Access
+            </h1>
+            <p class="text-xs text-gray-500 leading-relaxed max-w-xs mx-auto">
+              This terminal is strictly for authorized personnel of Satvastones (Anirudh A Verma). All session access is audited.
+            </p>
+          </div>
+
+          <form id="admin-login-form" class="space-y-4 text-left">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Admin Username</label>
+              <input
+                id="admin-username-input"
+                type="text"
+                required
+                autocomplete="username"
+                placeholder="e.g. anirudh or admin"
+                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+              />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="block text-xs font-bold text-gray-700">Security Passkey</label>
+                <span class="text-[10px] text-gray-400 font-mono">satva@vapi2026</span>
+              </div>
+              <div class="relative">
+                <input
+                  id="admin-password-input"
+                  type="password"
+                  required
+                  autocomplete="current-password"
+                  placeholder="Enter master passkey..."
+                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f] pr-10"
+                />
+                <button
+                  type="button"
+                  id="toggle-pwd-btn"
+                  class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-700 cursor-pointer"
+                  aria-label="Toggle password visibility"
+                >
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <p id="login-error-msg" class="text-xs text-red-600 font-bold hidden"></p>
+
+            <button
+              id="admin-login-btn"
+              type="submit"
+              class="w-full bg-[#111111] hover:bg-black text-white py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
+            >
+              Authenticate & Unlock Terminal →
+            </button>
+          </form>
+
+          <div class="pt-2 border-t border-gray-100 text-[10px] text-gray-400">
+            Vapi Store Hub (Gujarat, India) • 256-Bit Encrypted Session
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- 2. AUTHENTICATED DASHBOARD (HIDDEN INITIALLY) -->
+      <!-- ========================================== -->
+      <div id="admin-dashboard-view" class="hidden space-y-6">
+        
+        <!-- Admin Top Bar -->
+        <div class="bg-white p-5 sm:p-6 rounded-2xl border border-gray-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <img
+              src="/satvastones-logo.png"
+              alt="Satvastones"
+              class="h-8 sm:h-9 w-auto object-contain"
+            />
+            <div class="border-l border-gray-200 pl-3.5">
+              <h1 class="text-base sm:text-lg font-bold text-gray-900">
+                Operations & Management Desk
+              </h1>
+              <p class="text-xs text-gray-500">
+                Chala Atelier, Vapi (Gujarat - 396191) • Sole Proprietor: <strong>Anirudh A Verma</strong> • GSTIN: <strong>24DDAPV4074H1ZF</strong>
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Vapi Hub Local Time</p>
+              <p id="admin-clock" class="text-xs font-bold text-gray-800"></p>
+            </div>
+            <button
+              id="admin-refresh-btn"
+              type="button"
+              class="bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+              <span>Refresh</span>
+            </button>
+            <button
+              id="admin-logout-btn"
+              type="button"
+              class="bg-black hover:bg-gray-800 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-colors"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+              </svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+            <span class="text-[10px] uppercase font-bold text-gray-400">Total Gross Sales</span>
+            <p id="metric-sales" class="text-2xl font-bold text-gray-900">₹0</p>
+            <p class="text-[11px] text-emerald-700 font-semibold">100% Razorpay Verified</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+            <span class="text-[10px] uppercase font-bold text-gray-400">Total Orders</span>
+            <p id="metric-orders" class="text-2xl font-bold text-[#f2707f]">0</p>
+            <p class="text-[11px] text-gray-500">Pan-India Dispatched</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+            <span class="text-[10px] uppercase font-bold text-gray-400">Pending at Vapi Hub</span>
+            <p id="metric-pending" class="text-2xl font-bold text-amber-600">0</p>
+            <p class="text-[11px] text-amber-700 font-semibold">Under 24–48h SLA</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
+            <span class="text-[10px] uppercase font-bold text-gray-400">Average Order Value</span>
+            <p id="metric-aov" class="text-2xl font-bold text-gray-900">₹0</p>
+            <p class="text-[11px] text-[#007c52] font-semibold">Boosted via Stack Studio</p>
+          </div>
+        </div>
+
+        <!-- Main Workspace Tabs Container -->
+        <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+          
+          <!-- Navigation Tabs -->
+          <div class="flex border-b border-gray-200 bg-gray-50/70 text-xs font-bold overflow-x-auto whitespace-nowrap">
+            <button id="tab-btn-orders" class="admin-tab-btn py-3.5 px-6 text-[#f2707f] border-b-2 border-[#f2707f] bg-white cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+              </svg>
+              <span>Orders & Fulfillment (<span id="tab-orders-count">0</span>)</span>
+            </button>
+
+            <button id="tab-btn-products" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+              </svg>
+              <span>Products & Inventory (<span id="tab-products-count">0</span>)</span>
+            </button>
+
+            <button id="tab-btn-coupons" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" />
+              </svg>
+              <span>Coupons & Promos (<span id="tab-coupons-count">0</span>)</span>
+            </button>
+
+            <button id="tab-btn-categories" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+              </svg>
+              <span>Categories & Visuals</span>
+            </button>
+
+            <button id="tab-btn-stackstudio" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+              </svg>
+              <span>Stack Studio Curation</span>
+            </button>
+
+            <button id="tab-btn-settings" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span>Site & Pricing Settings</span>
+            </button>
+
+            <button id="tab-btn-claims" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+              </svg>
+              <span>360° Unboxing Video Claims</span>
+            </button>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PANEL 1: ORDERS & INVOICES                 -->
+          <!-- ========================================== -->
+          <div id="panel-orders" class="p-5 sm:p-6 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 class="text-base font-bold text-gray-900">Customer Orders (Dispatched from Vapi in 24–48h)</h2>
+                <p class="text-xs text-gray-500">Live order fulfillment, AWB tracking assignment, and official GST tax invoices</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <input
+                  id="order-search-input"
+                  type="text"
+                  placeholder="Search by Order, Name or City..."
+                  class="bg-gray-50 border border-gray-200 px-3.5 py-1.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f] w-64"
+                />
+              </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="overflow-x-auto border border-gray-200 rounded-xl">
+              <table class="w-full text-xs text-left">
+                <thead>
+                  <tr class="bg-gray-100 text-gray-800 font-bold border-b border-gray-200">
+                    <th class="py-3 px-3.5">Order Ref</th>
+                    <th class="py-3 px-3.5">Customer & Contact</th>
+                    <th class="py-3 px-3.5">Destination</th>
+                    <th class="py-3 px-3.5">Items</th>
+                    <th class="py-3 px-3.5 text-right">Amount</th>
+                    <th class="py-3 px-3.5 text-center">Fulfillment Status</th>
+                    <th class="py-3 px-3.5">Courier & AWB</th>
+                    <th class="py-3 px-3.5 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-tbody" class="divide-y divide-gray-100 text-gray-700"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PANEL 2: PRODUCTS & INVENTORY CRUD         -->
+          <!-- ========================================== -->
+          <div id="panel-products" class="hidden p-5 sm:p-6 space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 class="text-base font-bold text-gray-900">Fine Jewellery Inventory Control</h2>
+                <p class="text-xs text-gray-500">Add, edit, delete catalog products, set prices, and toggle stock</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <input
+                  id="product-search-input"
+                  type="text"
+                  placeholder="Search products or SKU..."
+                  class="bg-gray-50 border border-gray-200 px-3.5 py-1.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                />
+                <button
+                  id="add-product-btn"
+                  type="button"
+                  class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-colors"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  <span>+ Add Product</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="admin-products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PANEL 3: COUPONS & PROMOS CRUD             -->
+          <!-- ========================================== -->
+          <div id="panel-coupons" class="hidden p-5 sm:p-6 space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 class="text-base font-bold text-gray-900">Promotional Discounts & Coupons</h2>
+                <p class="text-xs text-gray-500">Configure stackable codes, AOV thresholds, and active status</p>
+              </div>
+              <button
+                id="add-coupon-btn"
+                type="button"
+                class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-colors self-start sm:self-auto"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                <span>+ Create Coupon</span>
+              </button>
+            </div>
+
+            <!-- Coupons List -->
+            <div id="admin-coupons-list" class="space-y-3"></div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PANEL 4: SITE & PRICING SETTINGS           -->
+          <!-- ========================================== -->
+          <div id="panel-settings" class="hidden p-5 sm:p-6 space-y-6">
+            <div>
+              <h2 class="text-base font-bold text-gray-900">Dynamic Store Configuration</h2>
+              <p class="text-xs text-gray-500">Manage delivery charges, Stack Studio discount, announcement marquee, hero content, and category images</p>
+            </div>
+
+            <form id="site-settings-form" class="space-y-6 max-w-4xl">
+              
+              <!-- Pricing & Shipping Rates -->
+              <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-700">Shipping & Discount Rates</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Standard Delivery Fee (₹)</label>
+                    <input
+                      id="setting-shipping-charge"
+                      type="number"
+                      required
+                      min="0"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                    <p class="text-[10px] text-gray-400 mt-1">Charged on orders below free shipping threshold</p>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Free Shipping Threshold (₹)</label>
+                    <input
+                      id="setting-free-threshold"
+                      type="number"
+                      required
+                      min="0"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                    <p class="text-[10px] text-gray-400 mt-1">Default ₹499 across all India orders</p>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Stack Studio Privilege Discount (%)</label>
+                    <input
+                      id="setting-stack-discount"
+                      type="number"
+                      required
+                      min="1"
+                      max="90"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                    <p class="text-[10px] text-gray-400 mt-1">Discount when patrons stack 2+ items</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Marquee Announcement Text -->
+              <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-700">Top Looping Announcement Marquee</h3>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-700 mb-1">Marquee Ticker Text (Broadcast to all pages)</label>
+                  <textarea
+                    id="setting-announcement-text"
+                    rows="3"
+                    class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- Hero Banner Content -->
+              <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-700">Homepage Hero Banner</h3>
+                <div class="space-y-3">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Hero Main Headline</label>
+                    <input
+                      id="setting-hero-headline"
+                      type="text"
+                      required
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Hero Tagline / Subtitle</label>
+                    <input
+                      id="setting-hero-tagline"
+                      type="text"
+                      required
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between mb-1">
+                      <label class="block text-xs font-bold text-gray-700">Hero Image (Background Banner)</label>
+                      <span class="text-[10px] text-gray-400">Paste URL, Upload from PC, or pick a Preset</span>
+                    </div>
+                    
+                    <div class="space-y-2.5">
+                      <div class="flex flex-col sm:flex-row gap-2">
+                        <input
+                          id="setting-hero-image"
+                          type="url"
+                          required
+                          placeholder="https://images.unsplash.com/..."
+                          class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                        />
+                        <div class="flex gap-2 shrink-0">
+                          <!-- Local File Upload Button -->
+                          <label class="bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-300 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <span>Pick Image File</span>
+                            <input type="file" id="hero-local-file-input" accept="image/*" class="hidden" />
+                          </label>
+
+                          <!-- Cloudinary Upload Button -->
+                          <button
+                            type="button"
+                            class="cloudinary-upload-btn bg-rose-50 hover:bg-rose-100 text-[#a1505a] border border-[#f9d8dc] px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                            data-target="setting-hero-image"
+                            data-preview="hero-img-preview"
+                          >
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                            </svg>
+                            <span>Cloudinary</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- 1-Click Luxury Editorial Presets -->
+                      <div class="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Quick Presets:</span>
+                        <button
+                          type="button"
+                          class="hero-preset-btn bg-white hover:bg-rose-50 text-gray-700 hover:text-[#a1505a] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+                          data-url="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=2000&q=85"
+                        >
+                          ✨ Baroque Gold &amp; Pearls
+                        </button>
+                        <button
+                          type="button"
+                          class="hero-preset-btn bg-white hover:bg-rose-50 text-gray-700 hover:text-[#a1505a] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+                          data-url="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=2000&q=85"
+                        >
+                          ✨ Liquid Gold Snake Chain
+                        </button>
+                        <button
+                          type="button"
+                          class="hero-preset-btn bg-white hover:bg-rose-50 text-gray-700 hover:text-[#a1505a] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+                          data-url="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=2000&q=85"
+                        >
+                          ✨ Sculptural Gold Signets
+                        </button>
+                      </div>
+
+                      <!-- Live Image Preview Banner -->
+                      <div class="relative w-full max-w-lg h-44 rounded-2xl overflow-hidden border border-gray-200 bg-gray-100 mt-2 shadow-xs">
+                        <img
+                          id="hero-img-preview"
+                          src=""
+                          alt="Hero Banner Preview"
+                          class="w-full h-full object-cover object-center"
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center p-4 pointer-events-none">
+                          <div class="text-white space-y-1">
+                            <span class="text-[9px] font-bold bg-[#f2707f] text-white px-2 py-0.5 rounded-full uppercase">Live Preview</span>
+                            <p class="text-sm font-extrabold" id="hero-preview-title">Jewellery that feels like you.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Real Social Proof Order Notifications Toggle -->
+                  <div class="pt-3 border-t border-gray-200/60">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        id="setting-social-proof-toast"
+                        class="w-4 h-4 text-[#f2707f] rounded border-gray-300 focus:ring-[#f2707f] cursor-pointer"
+                      />
+                      <div>
+                        <span class="text-xs font-bold text-gray-900 block">Enable Verified Purchase Toasts</span>
+                        <span class="text-[11px] text-gray-500 block">Only shows authentic, verified real customer orders. Automatically stays hidden if there are no recent orders.</span>
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cloudinary CDN & Image Optimization Configuration Card -->
+              <div class="bg-gradient-to-r from-rose-50/50 via-[#fffafb] to-white p-5 rounded-2xl border border-[#f9d8dc] space-y-3.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-[#f2707f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                    </svg>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900">Cloudinary Image CDN &amp; Optimization Engine</h3>
+                  </div>
+                  <span class="text-[10px] bg-rose-100 text-[#a1505a] font-bold px-2.5 py-0.5 rounded-full border border-rose-200">Auto WebP / AVIF</span>
+                </div>
+
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Enter your Cloudinary Cloud Name and Upload Preset below. Once configured, clicking <strong>"Upload via Cloudinary"</strong> anywhere on this admin terminal lets you upload jewellery images directly with automatic luxury 3:4 cropping and responsive compression.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Cloudinary Cloud Name</label>
+                    <input
+                      id="setting-cloudinary-cloud-name"
+                      type="text"
+                      placeholder="e.g. satvastones"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Upload Preset (Unsigned)</label>
+                    <input
+                      id="setting-cloudinary-preset"
+                      type="text"
+                      placeholder="e.g. satvastones_preset"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                  </div>
+                </div>
+
+                <div class="pt-1 flex items-center gap-3">
+                  <button
+                    id="save-cloudinary-config-btn"
+                    type="button"
+                    class="bg-[#111111] hover:bg-black text-white px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-xs"
+                  >
+                    Save Cloudinary Credentials
+                  </button>
+                  <span id="cloudinary-config-feedback" class="text-xs font-bold text-emerald-700 hidden">
+                    Credentials saved! One-click uploads active.
+                  </span>
+                </div>
+              </div>
+
+              <!-- Cloudflare Native Edge Stack: D1 Database + R2 Storage -->
+              <div class="bg-gradient-to-r from-amber-50/70 via-[#fffbf5] to-white p-5 rounded-2xl border border-amber-200 space-y-3.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                    </svg>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900">Cloudflare Edge Architecture (D1 SQL + R2 Storage)</h3>
+                  </div>
+                  <span class="text-[10px] bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-300">Cloudflare Native Edge</span>
+                </div>
+
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Your store is built for <strong>Cloudflare Pages</strong>. Serverless edge functions in <code class="bg-gray-100 px-1 py-0.5 rounded text-gray-800 font-mono text-[11px]">/functions/api</code> automatically route database queries to <strong>Cloudflare D1 (SQLite)</strong> and heavy 360° unboxing video claims to <strong>Cloudflare R2 Object Storage</strong> with zero egress bandwidth charges.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-white p-3.5 rounded-xl border border-amber-100">
+                  <div>
+                    <span class="font-bold text-gray-900 block">D1 Database Binding:</span>
+                    <span class="text-gray-500 font-mono text-[11px]">context.env.DB (satvastones-db)</span>
+                  </div>
+                  <div>
+                    <span class="font-bold text-gray-900 block">R2 Zero-Egress Storage:</span>
+                    <span class="text-gray-500 font-mono text-[11px]">context.env.R2_BUCKET (satvastones-media)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Supabase PostgreSQL Database Configuration Card -->
+              <div class="bg-gradient-to-r from-emerald-50/50 via-[#f7fbf9] to-white p-5 rounded-2xl border border-emerald-200/80 space-y-3.5">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-emerald-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                    </svg>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900">Supabase PostgreSQL (Optional Secondary Mirror)</h3>
+                  </div>
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-300">Optional Fallback</span>
+                </div>
+
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Optionally mirror incoming customer orders, unboxing claims, and inventory to an external Supabase PostgreSQL database. (Schema file ready at <code class="bg-gray-100 px-1 py-0.5 rounded text-gray-800 font-mono text-[11px]">supabase-schema.sql</code>).
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Supabase Project URL</label>
+                    <input
+                      id="setting-supabase-url"
+                      type="url"
+                      placeholder="https://your-project.supabase.co"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-emerald-600"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Supabase Anon / Public API Key</label>
+                    <input
+                      id="setting-supabase-anon-key"
+                      type="text"
+                      placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-emerald-600"
+                    />
+                  </div>
+                </div>
+
+                <div class="pt-1 flex items-center gap-3">
+                  <button
+                    id="save-supabase-config-btn"
+                    type="button"
+                    class="bg-emerald-800 hover:bg-emerald-900 text-white px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-xs"
+                  >
+                    Save Database Credentials
+                  </button>
+                  <span id="supabase-config-feedback" class="text-xs font-bold text-emerald-700 hidden">
+                    Database credentials saved! Cloud sync active.
+                  </span>
+                </div>
+              </div>
+
+              <!-- Category Showcase Images -->
+              <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-xs font-bold uppercase tracking-wider text-gray-700">Category Grid Quick Images</h3>
+                  <a href="#tab-btn-categories" class="text-xs text-[#a1505a] font-bold hover:underline">Full Category Editor &rarr;</a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div>
+                    <label class="block text-[11px] font-bold text-gray-700 mb-1">Rings Image URL</label>
+                    <div class="flex gap-1.5">
+                      <input id="cat-img-rings" type="url" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-lg" />
+                      <button type="button" class="cloudinary-upload-btn shrink-0 bg-white hover:bg-gray-100 border border-gray-200 px-2 py-1 rounded-lg text-[10px] font-bold" data-target="cat-img-rings">Upload</button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-gray-700 mb-1">Necklaces Image URL</label>
+                    <div class="flex gap-1.5">
+                      <input id="cat-img-necklaces" type="url" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-lg" />
+                      <button type="button" class="cloudinary-upload-btn shrink-0 bg-white hover:bg-gray-100 border border-gray-200 px-2 py-1 rounded-lg text-[10px] font-bold" data-target="cat-img-necklaces">Upload</button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-gray-700 mb-1">Bracelets Image URL</label>
+                    <div class="flex gap-1.5">
+                      <input id="cat-img-bracelets" type="url" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-lg" />
+                      <button type="button" class="cloudinary-upload-btn shrink-0 bg-white hover:bg-gray-100 border border-gray-200 px-2 py-1 rounded-lg text-[10px] font-bold" data-target="cat-img-bracelets">Upload</button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-gray-700 mb-1">Earrings Image URL</label>
+                    <div class="flex gap-1.5">
+                      <input id="cat-img-earrings" type="url" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-lg" />
+                      <button type="button" class="cloudinary-upload-btn shrink-0 bg-white hover:bg-gray-100 border border-gray-200 px-2 py-1 rounded-lg text-[10px] font-bold" data-target="cat-img-earrings">Upload</button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-gray-700 mb-1">Bangles Image URL</label>
+                    <div class="flex gap-1.5">
+                      <input id="cat-img-bangles" type="url" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-lg" />
+                      <button type="button" class="cloudinary-upload-btn shrink-0 bg-white hover:bg-gray-100 border border-gray-200 px-2 py-1 rounded-lg text-[10px] font-bold" data-target="cat-img-bangles">Upload</button>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-gray-700 mb-1">Gift Sets Image URL</label>
+                    <div class="flex gap-1.5">
+                      <input id="cat-img-gift-sets" type="url" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-lg" />
+                      <button type="button" class="cloudinary-upload-btn shrink-0 bg-white hover:bg-gray-100 border border-gray-200 px-2 py-1 rounded-lg text-[10px] font-bold" data-target="cat-img-gift-sets">Upload</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <button
+                  type="submit"
+                  class="bg-[#111111] hover:bg-black text-white px-6 py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
+                >
+                  Save Store Settings →
+                </button>
+                <span id="settings-save-feedback" class="text-xs font-bold text-emerald-700 hidden">
+                  Settings saved successfully!
+                </span>
+              </div>
+            </form>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PANEL: CATEGORIES & VISUALS                -->
+          <!-- ========================================== -->
+          <div id="panel-categories" class="hidden p-5 sm:p-6 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
+              <div>
+                <h2 class="text-base font-bold text-gray-900">Storefront Category Management &amp; Visuals</h2>
+                <p class="text-xs text-gray-500">
+                  Edit collection names, marketing taglines, descriptions, and photography across all 8 jewellery categories.
+                </p>
+              </div>
+            </div>
+
+            <!-- Categories Dynamic Cards Grid -->
+            <div id="categories-cards-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PANEL: STACK STUDIO CURATION               -->
+          <!-- ========================================== -->
+          <div id="panel-stackstudio" class="hidden p-5 sm:p-6 space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-100 pb-3">
+              <div>
+                <h2 class="text-base font-bold text-gray-900">Customer Stack Studio Curation</h2>
+                <p class="text-xs text-gray-500">
+                  Select which jewellery pieces are enabled for customers to choose in each tier of the Mix &amp; Match Stack Studio.
+                </p>
+              </div>
+              <div class="flex items-center gap-2 bg-gray-50 p-2 rounded-xl border border-gray-200">
+                <label for="admin-stack-discount" class="text-xs font-bold text-gray-700">Privilege Discount:</label>
+                <div class="flex items-center gap-1">
+                  <input
+                    id="admin-stack-discount"
+                    type="number"
+                    min="5"
+                    max="50"
+                    class="w-14 bg-white border border-gray-200 px-2 py-1 text-xs rounded-lg font-bold text-center"
+                    value="15"
+                  />
+                  <span class="text-xs font-bold text-gray-500">%</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stack Studio Product Matrix -->
+            <div id="stackstudio-matrix-container" class="space-y-6">
+              <!-- Rendered via JS -->
+            </div>
+
+            <div class="pt-2 flex items-center gap-3">
+              <button
+                id="save-stackstudio-rules-btn"
+                type="button"
+                class="bg-black hover:bg-gray-800 text-white px-6 py-2.5 text-xs font-bold uppercase rounded-xl transition-all cursor-pointer shadow-sm"
+              >
+                Save Stack Studio Rules →
+              </button>
+              <span id="stackstudio-feedback" class="text-xs font-bold text-emerald-700 hidden">
+                Stack Studio rules saved successfully!
+              </span>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- PANEL 5: 360° VIDEO CLAIMS                 -->
+          <!-- ========================================== -->
+          <div id="panel-claims" class="hidden p-5 sm:p-6 space-y-4">
+            <div class="space-y-1">
+              <h2 class="text-base font-bold text-gray-900">Transit Damage Claims (Mandatory Unboxing Video Review)</h2>
+              <p class="text-xs text-gray-500">
+                Per store policy, replacements are only issued when unedited 360-degree unboxing video proof verifies damaged arrival.
+              </p>
+            </div>
+            <div id="claims-list-container" class="space-y-3"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD / EDIT PRODUCT                  -->
+  <!-- ========================================== -->
+  <div id="product-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-200 space-y-5 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <h3 id="product-modal-title" class="text-base font-bold text-gray-900">Add New Product</h3>
+        <button id="close-product-modal" class="text-gray-400 hover:text-black cursor-pointer">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="product-form" class="space-y-3.5">
+        <input type="hidden" id="prod-id" />
+        
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Product Name *</label>
+          <input id="prod-name" type="text" required placeholder="e.g. Elysian Croissant Dome Ring" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Category *</label>
+            <select id="prod-category" required class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]">
+              <option value="rings">Rings</option>
+              <option value="necklaces">Necklaces</option>
+              <option value="bracelets">Bracelets</option>
+              <option value="earrings">Earrings</option>
+              <option value="bangles">Bangles</option>
+              <option value="gift-sets">Gift Sets</option>
+              <option value="jewellery-set">Jewellery Sets</option>
+              <option value="mystery-jewellery-jar">Mystery Jewellery Jar</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">SKU *</label>
+            <input id="prod-sku" type="text" required placeholder="e.g. SAT-RNG-001" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Price in INR (₹) *</label>
+            <input id="prod-price" type="number" required min="1" placeholder="1299" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Compare at Price (₹)</label>
+            <input id="prod-compare-price" type="number" min="1" placeholder="2499" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Product Image URL *</label>
+          <div class="flex gap-2">
+            <input id="prod-image" type="url" required placeholder="https://images.unsplash.com/..." class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+            <button
+              type="button"
+              class="cloudinary-upload-btn shrink-0 bg-rose-50 hover:bg-rose-100 text-[#a1505a] border border-[#f9d8dc] px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+              data-target="prod-image"
+              data-preview="prod-img-preview"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+              </svg>
+              <span>Upload via Cloudinary</span>
+            </button>
+          </div>
+          <img id="prod-img-preview" src="" alt="Product Preview" class="w-16 h-20 rounded-xl object-cover border border-gray-200 mt-2 hidden" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Short Headline / Catchphrase</label>
+          <input id="prod-headline" type="text" placeholder="Sculptural statement band with French twist" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Material</label>
+            <input id="prod-material" type="text" value="316L Surgical Stainless Steel" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Finish</label>
+            <input id="prod-finish" type="text" value="18K Vacuum Gold PVD" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input id="prod-stock" type="checkbox" checked class="w-4 h-4 accent-[#f2707f] rounded" />
+          <label for="prod-stock" class="text-xs font-bold text-gray-800">In Stock at Vapi Atelier</label>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
+          <button type="button" id="cancel-product-modal" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:text-black">Cancel</button>
+          <button type="submit" class="bg-black hover:bg-gray-800 text-white px-5 py-2 text-xs font-bold uppercase rounded-xl">Save Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD / EDIT COUPON                   -->
+  <!-- ========================================== -->
+  <div id="coupon-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-200 space-y-5">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <h3 id="coupon-modal-title" class="text-base font-bold text-gray-900">Create New Coupon</h3>
+        <button id="close-coupon-modal" class="text-gray-400 hover:text-black cursor-pointer">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="coupon-form" class="space-y-3.5">
+        <input type="hidden" id="coupon-id" />
+        
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Coupon Code *</label>
+          <input id="coupon-code" type="text" required uppercase placeholder="e.g. LUXURY20" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs uppercase tracking-wider rounded-xl focus:outline-none focus:border-[#f2707f]" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Discount Type *</label>
+            <select id="coupon-type" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl">
+              <option value="PERCENT">Percentage (%)</option>
+              <option value="FLAT">Flat Amount (₹)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Discount Value *</label>
+            <input id="coupon-value" type="number" required min="1" placeholder="e.g. 15" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Minimum Order Value (₹)</label>
+          <input id="coupon-min-order" type="number" min="0" placeholder="e.g. 1999" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Description / Benefit Notice</label>
+          <input id="coupon-desc" type="text" placeholder="e.g. 15% OFF for Festive Orders" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input id="coupon-active" type="checkbox" checked class="w-4 h-4 accent-[#f2707f] rounded" />
+          <label for="coupon-active" class="text-xs font-bold text-gray-800">Coupon Active</label>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
+          <button type="button" id="cancel-coupon-modal" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:text-black">Cancel</button>
+          <button type="submit" class="bg-black hover:bg-gray-800 text-white px-5 py-2 text-xs font-bold uppercase rounded-xl">Save Coupon</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: UPDATE FULFILLMENT & AWB            -->
+  <!-- ========================================== -->
+  <div id="fulfillment-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-200 space-y-5">
+      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+        <div>
+          <h3 class="text-base font-bold text-gray-900">Update Order Fulfillment</h3>
+          <p id="fulfill-order-num" class="text-xs text-gray-500"></p>
+        </div>
+        <button id="close-fulfill-modal" class="text-gray-400 hover:text-black cursor-pointer">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="fulfillment-form" class="space-y-3.5">
+        <input type="hidden" id="fulfill-target-order" />
+        
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Fulfillment Status *</label>
+          <select id="fulfill-status-select" required class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl font-semibold">
+            <option value="VERIFIED">Verified (Order Confirmed)</option>
+            <option value="PACKING_AT_VAPI">Packing at Vapi Atelier</option>
+            <option value="DISPATCHED">Dispatched from Vapi Store</option>
+            <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+            <option value="DELIVERED">Delivered</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Courier Partner *</label>
+          <select id="fulfill-courier-select" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl">
+            <option value="BlueDart Air Express">BlueDart Air Express</option>
+            <option value="Delhivery Prime">Delhivery Prime</option>
+            <option value="DTDC Express">DTDC Express</option>
+            <option value="Xpressbees Logistics">Xpressbees Logistics</option>
+            <option value="India Post Speed Post">India Post Speed Post</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">AWB / Courier Tracking Number *</label>
+          <input
+            id="fulfill-tracking-input"
+            type="text"
+            required
+            placeholder="e.g. BLR-892147321"
+            class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs uppercase tracking-wider rounded-xl focus:outline-none focus:border-[#f2707f]"
+          />
+          <p class="text-[10px] text-gray-400 mt-1">Patron can track live with this number on /track-order</p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
+          <button type="button" id="cancel-fulfill-modal" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:text-black">Cancel</button>
+          <button type="submit" class="bg-black hover:bg-gray-800 text-white px-5 py-2 text-xs font-bold uppercase rounded-xl">Update & Dispatch</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</BaseLayout>
+
+<script>
+  import {
+    getAdminOrders,
+    updateOrderStatus,
+    deleteAdminOrder,
+    getAdminProducts,
+    addAdminProduct,
+    updateAdminProduct,
+    deleteAdminProduct,
+    toggleAdminProductStock,
+    getAdminCoupons,
+    addAdminCoupon,
+    updateAdminCoupon,
+    deleteAdminCoupon,
+    toggleCouponActive,
+    getSiteSettings,
+    saveSiteSettings,
+    updateAdminCategory,
+    toggleStackStudioProduct,
+    updateCloudinaryConfig,
+    getDamageClaims,
+    updateClaimStatus,
+    type AdminOrder,
+    type AdminProduct,
+    type AdminCoupon,
+    type SiteSettings,
+    type CategoryDetail
+  } from '../../stores/adminStore';
+  import { openCloudinaryWidget, optimizeCloudinaryUrl } from '../../utils/cloudinary';
+  import {
+    fetchAllOrdersFromCloudflare,
+    updateOrderStatusInCloudflare,
+    fetchClaimsFromCloudflare,
+    updateClaimStatusInCloudflare
+  } from '../../lib/cloudflare';
+  import { getSupabaseConfig, saveSupabaseConfig, fetchOrdersFromSupabase } from '../../lib/supabase';
+
+  const AUTH_KEY = 'satvastones_admin_authenticated';
+  const MASTER_PIN = 'satva@vapi2026';
+
+  const loginGate = document.getElementById('admin-login-gate');
+  const dashboardView = document.getElementById('admin-dashboard-view');
+  const loginForm = document.getElementById('admin-login-form');
+  const usernameInput = document.getElementById('admin-username-input') as HTMLInputElement;
+  const passwordInput = document.getElementById('admin-password-input') as HTMLInputElement;
+  const errorMsg = document.getElementById('login-error-msg');
+  const logoutBtn = document.getElementById('admin-logout-btn');
+  const togglePwdBtn = document.getElementById('toggle-pwd-btn');
+
+  // Toggle Password visibility
+  togglePwdBtn?.addEventListener('click', () => {
+    passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+  });
+
+  // Check Authentication Status
+  function checkAuth() {
+    const isAuth = sessionStorage.getItem(AUTH_KEY);
+    if (isAuth === 'true') {
+      loginGate?.classList.add('hidden');
+      dashboardView?.classList.remove('hidden');
+      initDashboard();
+    } else {
+      loginGate?.classList.remove('hidden');
+      dashboardView?.classList.add('hidden');
+    }
+  }
+
+  // Handle Login Attempt
+  loginForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const user = usernameInput?.value.trim().toLowerCase();
+    const pass = passwordInput?.value;
+
+    if (pass === MASTER_PIN && (user === 'anirudh' || user === 'admin' || user.includes('satva'))) {
+      sessionStorage.setItem(AUTH_KEY, 'true');
+      if (errorMsg) errorMsg.classList.add('hidden');
+      checkAuth();
+    } else {
+      if (errorMsg) {
+        errorMsg.textContent = 'Invalid credentials. Access restricted to authorized personnel.';
+        errorMsg.classList.remove('hidden');
+      }
+      passwordInput.value = '';
+    }
+  });
+
+  // Handle Logout
+  logoutBtn?.addEventListener('click', () => {
+    sessionStorage.removeItem(AUTH_KEY);
+    checkAuth();
+  });
+
+  function formatINR(paise: number) {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(Math.round(paise / 100));
+  }
+
+  function initDashboard() {
+    // Live Clock
+    const clockEl = document.getElementById('admin-clock');
+    const updateClock = () => {
+      if (clockEl) {
+        clockEl.textContent =
+          new Date().toLocaleTimeString('en-IN', {
+            timeZone: 'Asia/Kolkata',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          }) + ' IST';
+      }
+    };
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Tab Navigation
+    const tabs = ['orders', 'products', 'coupons', 'categories', 'stackstudio', 'settings', 'claims'];
+    tabs.forEach((tab) => {
+      const btn = document.getElementById(`tab-btn-${tab}`);
+      const panel = document.getElementById(`panel-${tab}`);
+      btn?.addEventListener('click', () => {
+        tabs.forEach((t) => {
+          document.getElementById(`tab-btn-${t}`)?.classList.remove('text-[#f2707f]', 'border-b-2', 'border-[#f2707f]', 'bg-white');
+          document.getElementById(`tab-btn-${t}`)?.classList.add('text-gray-500');
+          document.getElementById(`panel-${t}`)?.classList.add('hidden');
+        });
+        btn.classList.add('text-[#f2707f]', 'border-b-2', 'border-[#f2707f]', 'bg-white');
+        btn.classList.remove('text-gray-500');
+        panel?.classList.remove('hidden');
+      });
+    });
+
+    renderOrders();
+    renderProducts();
+    renderCoupons();
+    renderCategories();
+    renderStackStudio();
+    populateSettingsForm();
+    renderClaims();
+    initCloudinaryUploadButtons();
+  }
+
+  // ==========================================
+  // 1. ORDERS LOGIC
+  // ==========================================
+  function renderOrders(filterText = '') {
+    // 1. Edge Sync from Cloudflare D1
+    fetchAllOrdersFromCloudflare().then((cfOrders) => {
+      if (cfOrders && cfOrders.length > 0) {
+        const local = getAdminOrders();
+        const existingNumbers = new Set(local.map((o) => o.orderNumber));
+        const newFromCf = cfOrders.filter((co) => !existingNumbers.has(co.orderNumber));
+        if (newFromCf.length > 0) {
+          saveAdminOrders([...newFromCf, ...local]);
+        }
+      }
+    }).catch(() => {});
+
+    // 2. Background cloud sync from Supabase if configured
+    fetchOrdersFromSupabase().then((cloudOrders) => {
+      if (cloudOrders && cloudOrders.length > 0) {
+        const local = getAdminOrders();
+        const existingNumbers = new Set(local.map((o) => o.orderNumber));
+        const newFromCloud = cloudOrders.filter((co) => !existingNumbers.has(co.orderNumber));
+        if (newFromCloud.length > 0) {
+          saveAdminOrders([...newFromCloud, ...local]);
+        }
+      }
+    }).catch(() => {});
+
+    const orders = getAdminOrders();
+    const countEl = document.getElementById('tab-orders-count');
+    const salesEl = document.getElementById('metric-sales');
+    const ordersEl = document.getElementById('metric-orders');
+    const pendingEl = document.getElementById('metric-pending');
+    const aovEl = document.getElementById('metric-aov');
+    const tbody = document.getElementById('admin-orders-tbody');
+
+    if (countEl) countEl.textContent = String(orders.length);
+
+    const totalSales = orders.reduce((sum, o) => sum + o.totalPaise, 0);
+    const pendingCount = orders.filter((o) => o.fulfillmentStatus !== 'DELIVERED').length;
+    const aov = orders.length > 0 ? Math.round(totalSales / orders.length) : 0;
+
+    if (salesEl) salesEl.textContent = formatINR(totalSales);
+    if (ordersEl) ordersEl.textContent = String(orders.length);
+    if (pendingEl) pendingEl.textContent = String(pendingCount);
+    if (aovEl) aovEl.textContent = formatINR(aov);
+
+    const filtered = orders.filter((o) => {
+      const q = filterText.toLowerCase();
+      return (
+        o.orderNumber.toLowerCase().includes(q) ||
+        o.customerName.toLowerCase().includes(q) ||
+        o.city.toLowerCase().includes(q) ||
+        (o.trackingNumber && o.trackingNumber.toLowerCase().includes(q))
+      );
+    });
+
+    if (tbody) {
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-gray-400">No matching orders found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered
+        .map((o) => {
+          let statusBadge = '';
+          if (o.fulfillmentStatus === 'VERIFIED') {
+            statusBadge = '<span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-bold">Verified</span>';
+          } else if (o.fulfillmentStatus === 'PACKING_AT_VAPI') {
+            statusBadge = '<span class="bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-bold">Packing at Vapi</span>';
+          } else if (o.fulfillmentStatus === 'DISPATCHED') {
+            statusBadge = '<span class="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full font-bold">Dispatched</span>';
+          } else if (o.fulfillmentStatus === 'OUT_FOR_DELIVERY') {
+            statusBadge = '<span class="bg-purple-50 text-purple-700 px-2 py-0.5 rounded-full font-bold">Out for Delivery</span>';
+          } else {
+            statusBadge = '<span class="bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full font-bold">Delivered</span>';
+          }
+
+          return `
+          <tr class="hover:bg-gray-50/80 transition-colors">
+            <td class="py-3 px-3.5 font-bold text-gray-900">${o.orderNumber}</td>
+            <td class="py-3 px-3.5">
+              <p class="font-bold text-gray-900">${o.customerName}</p>
+              <p class="text-[11px] text-gray-500">${o.phone}</p>
+            </td>
+            <td class="py-3 px-3.5">
+              <p class="font-medium text-gray-900">${o.city}, ${o.state}</p>
+              <p class="text-[11px] text-gray-400">PIN: ${o.pincode}</p>
+            </td>
+            <td class="py-3 px-3.5">
+              ${o.items.map((i) => `<p class="truncate max-w-[150px] text-gray-800">${i.name} (×${i.quantity})</p>`).join('')}
+            </td>
+            <td class="py-3 px-3.5 text-right font-bold text-[#f2707f]">${formatINR(o.totalPaise)}</td>
+            <td class="py-3 px-3.5 text-center">${statusBadge}</td>
+            <td class="py-3 px-3.5">
+              <p class="font-semibold text-gray-800 text-[11px]">${o.courierPartner || 'Pending Assignment'}</p>
+              <p class="text-[10px] font-mono text-gray-500">${o.trackingNumber || 'AWB pending'}</p>
+            </td>
+            <td class="py-3 px-3.5 text-right space-x-1.5 whitespace-nowrap">
+              <button
+                class="view-invoice-btn bg-black hover:bg-gray-800 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer"
+                data-order-num="${o.orderNumber}"
+              >
+                Invoice
+              </button>
+              <button
+                class="dispatch-action-btn bg-rose-50 hover:bg-rose-100 text-[#f2707f] border border-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer"
+                data-order-num="${o.orderNumber}"
+              >
+                Fulfill
+              </button>
+              <button
+                class="delete-order-btn text-gray-400 hover:text-red-600 p-1 rounded cursor-pointer"
+                data-order-num="${o.orderNumber}"
+                title="Delete order"
+              >
+                ×
+              </button>
+            </td>
+          </tr>
+        `;
+        })
+        .join('');
+
+      // Wire Invoice Click
+      document.querySelectorAll('.view-invoice-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const num = (e.currentTarget as HTMLElement).dataset.orderNum;
+          const order = orders.find((o) => o.orderNumber === num);
+          if (order) {
+            window.dispatchEvent(new CustomEvent('satvastones:open_invoice', { detail: order }));
+          }
+        });
+      });
+
+      // Wire Fulfillment Modal Click
+      document.querySelectorAll('.dispatch-action-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const num = (e.currentTarget as HTMLElement).dataset.orderNum || '';
+          const order = orders.find((o) => o.orderNumber === num);
+          if (order) {
+            openFulfillmentModal(order);
+          }
+        });
+      });
+
+      // Wire Delete Order
+      document.querySelectorAll('.delete-order-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const num = (e.currentTarget as HTMLElement).dataset.orderNum || '';
+          if (confirm(`Are you sure you want to delete order ${num}?`)) {
+            deleteAdminOrder(num);
+            renderOrders();
+          }
+        });
+      });
+    }
+  }
+
+  // Fulfillment Modal Logic
+  const fulfillModal = document.getElementById('fulfillment-modal');
+  const fulfillForm = document.getElementById('fulfillment-form');
+  const fulfillTargetInput = document.getElementById('fulfill-target-order') as HTMLInputElement;
+  const fulfillNumText = document.getElementById('fulfill-order-num');
+  const fulfillStatusSelect = document.getElementById('fulfill-status-select') as HTMLSelectElement;
+  const fulfillCourierSelect = document.getElementById('fulfill-courier-select') as HTMLSelectElement;
+  const fulfillTrackingInput = document.getElementById('fulfill-tracking-input') as HTMLInputElement;
+
+  function openFulfillmentModal(order: AdminOrder) {
+    if (!fulfillModal) return;
+    fulfillTargetInput.value = order.orderNumber;
+    if (fulfillNumText) fulfillNumText.textContent = `Order ${order.orderNumber} • ${order.customerName}`;
+    fulfillStatusSelect.value = order.fulfillmentStatus || 'DISPATCHED';
+    fulfillCourierSelect.value = order.courierPartner || 'BlueDart Air Express';
+    fulfillTrackingInput.value = order.trackingNumber || `BLR-${Math.floor(100000000 + Math.random() * 900000000)}`;
+    fulfillModal.classList.remove('hidden');
+  }
+
+  document.getElementById('close-fulfill-modal')?.addEventListener('click', () => fulfillModal?.classList.add('hidden'));
+  document.getElementById('cancel-fulfill-modal')?.addEventListener('click', () => fulfillModal?.classList.add('hidden'));
+
+  fulfillForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const orderNum = fulfillTargetInput.value;
+    const newStatus = fulfillStatusSelect.value as any;
+    const courier = fulfillCourierSelect.value;
+    const tracking = fulfillTrackingInput.value.trim();
+
+    updateOrderStatus(orderNum, newStatus, courier, tracking);
+    updateOrderStatusInCloudflare(orderNum, newStatus, courier, tracking).catch((err) =>
+      console.warn('Cloudflare D1 status sync error:', err)
+    );
+    fulfillModal?.classList.add('hidden');
+    renderOrders();
+  });
+
+  // ==========================================
+  // 2. PRODUCTS & INVENTORY CRUD LOGIC
+  // ==========================================
+  function renderProducts(filterText = '') {
+    const products = getAdminProducts();
+    const countEl = document.getElementById('tab-products-count');
+    const grid = document.getElementById('admin-products-grid');
+
+    if (countEl) countEl.textContent = String(products.length);
+
+    const filtered = products.filter((p) => {
+      const q = filterText.toLowerCase();
+      return p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+    });
+
+    if (grid) {
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-8 text-center text-gray-400">No products found.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered
+        .map(
+          (p) => `
+        <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-3 shadow-xs">
+          <div class="relative">
+            <img src="${p.image}" alt="${p.name}" class="aspect-[4/3] object-cover rounded-lg bg-gray-50 w-full" />
+            <span class="absolute top-2 left-2 text-[9px] font-bold uppercase tracking-wider bg-white/90 backdrop-blur-xs text-gray-800 px-2 py-0.5 rounded">
+              ${p.category}
+            </span>
+            <span class="absolute top-2 right-2 text-[10px] font-mono bg-black/75 text-white px-1.5 py-0.5 rounded">
+              ${p.sku}
+            </span>
+          </div>
+
+          <div>
+            <p class="text-xs font-bold text-gray-900 truncate" title="${p.name}">${p.name}</p>
+            <div class="flex items-baseline gap-2 mt-0.5">
+              <span class="text-xs font-bold text-[#f2707f]">${formatINR(p.pricePaise)}</span>
+              ${p.compareAtPricePaise ? `<span class="text-[10px] text-gray-400 line-through">${formatINR(p.compareAtPricePaise)}</span>` : ''}
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between border-t border-gray-100">
+            <button
+              class="toggle-stock-btn text-[11px] font-bold cursor-pointer ${p.inStock ? 'text-emerald-700' : 'text-red-500'}"
+              data-prod-id="${p.id}"
+            >
+              ${p.inStock ? '● In Stock' : '○ Sold Out'}
+            </button>
+            <div class="flex items-center gap-1.5">
+              <button
+                class="edit-prod-btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-2.5 py-1 rounded-md text-[11px] font-semibold cursor-pointer"
+                data-prod-id="${p.id}"
+              >
+                Edit
+              </button>
+              <button
+                class="delete-prod-btn text-gray-400 hover:text-red-600 px-1.5 py-1 text-sm font-bold cursor-pointer"
+                data-prod-id="${p.id}"
+                title="Delete product"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+        </div>
+      `
+        )
+        .join('');
+
+      // Wire Stock Toggle
+      document.querySelectorAll('.toggle-stock-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const id = (e.currentTarget as HTMLElement).dataset.prodId || '';
+          toggleAdminProductStock(id);
+          renderProducts();
+        });
+      });
+
+      // Wire Edit Product
+      document.querySelectorAll('.edit-prod-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const id = (e.currentTarget as HTMLElement).dataset.prodId || '';
+          const prod = products.find((p) => p.id === id);
+          if (prod) openProductModal(prod);
+        });
+      });
+
+      // Wire Delete Product
+      document.querySelectorAll('.delete-prod-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const id = (e.currentTarget as HTMLElement).dataset.prodId || '';
+          if (confirm('Are you sure you want to delete this product?')) {
+            deleteAdminProduct(id);
+            renderProducts();
+          }
+        });
+      });
+    }
+  }
+
+  // Product Modal Handling
+  const productModal = document.getElementById('product-modal');
+  const productForm = document.getElementById('product-form');
+  const prodModalTitle = document.getElementById('product-modal-title');
+  const prodIdInput = document.getElementById('prod-id') as HTMLInputElement;
+  const prodNameInput = document.getElementById('prod-name') as HTMLInputElement;
+  const prodCatInput = document.getElementById('prod-category') as HTMLSelectElement;
+  const prodSkuInput = document.getElementById('prod-sku') as HTMLInputElement;
+  const prodPriceInput = document.getElementById('prod-price') as HTMLInputElement;
+  const prodCompareInput = document.getElementById('prod-compare-price') as HTMLInputElement;
+  const prodImageInput = document.getElementById('prod-image') as HTMLInputElement;
+  const prodHeadlineInput = document.getElementById('prod-headline') as HTMLInputElement;
+  const prodMaterialInput = document.getElementById('prod-material') as HTMLInputElement;
+  const prodFinishInput = document.getElementById('prod-finish') as HTMLInputElement;
+  const prodStockInput = document.getElementById('prod-stock') as HTMLInputElement;
+
+  function openProductModal(product?: AdminProduct) {
+    if (!productModal) return;
+    if (product) {
+      if (prodModalTitle) prodModalTitle.textContent = 'Edit Product';
+      prodIdInput.value = product.id;
+      prodNameInput.value = product.name;
+      prodCatInput.value = product.category;
+      prodSkuInput.value = product.sku;
+      prodPriceInput.value = String(Math.round(product.pricePaise / 100));
+      prodCompareInput.value = product.compareAtPricePaise ? String(Math.round(product.compareAtPricePaise / 100)) : '';
+      prodImageInput.value = product.image;
+      prodHeadlineInput.value = product.headline || '';
+      prodMaterialInput.value = product.material || '316L Surgical Stainless Steel';
+      prodFinishInput.value = product.finish || '18K Vacuum Gold PVD';
+      prodStockInput.checked = product.inStock;
+    } else {
+      if (prodModalTitle) prodModalTitle.textContent = 'Add New Product';
+      prodIdInput.value = '';
+      productForm?.reset();
+      prodMaterialInput.value = '316L Surgical Stainless Steel';
+      prodFinishInput.value = '18K Vacuum Gold PVD';
+      prodStockInput.checked = true;
+    }
+    productModal.classList.remove('hidden');
+  }
+
+  document.getElementById('add-product-btn')?.addEventListener('click', () => openProductModal());
+  document.getElementById('close-product-modal')?.addEventListener('click', () => productModal?.classList.add('hidden'));
+  document.getElementById('cancel-product-modal')?.addEventListener('click', () => productModal?.classList.add('hidden'));
+
+  productForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = prodIdInput.value || `prod-${Date.now()}`;
+    const name = prodNameInput.value.trim();
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const pricePaise = Math.round(Number(prodPriceInput.value) * 100);
+    const compareAtPricePaise = prodCompareInput.value ? Math.round(Number(prodCompareInput.value) * 100) : undefined;
+
+    const prodData: AdminProduct = {
+      id,
+      name,
+      slug,
+      sku: prodSkuInput.value.trim().toUpperCase(),
+      category: prodCatInput.value,
+      pricePaise,
+      compareAtPricePaise,
+      headline: prodHeadlineInput.value.trim(),
+      image: prodImageInput.value.trim(),
+      material: prodMaterialInput.value.trim(),
+      finish: prodFinishInput.value.trim(),
+      inStock: prodStockInput.checked
+    };
+
+    if (prodIdInput.value) {
+      updateAdminProduct(prodData);
+    } else {
+      addAdminProduct(prodData);
+    }
+
+    productModal?.classList.add('hidden');
+    renderProducts();
+  });
+
+  // ==========================================
+  // 3. COUPONS & PROMOS CRUD LOGIC
+  // ==========================================
+  function renderCoupons() {
+    const coupons = getAdminCoupons();
+    const countEl = document.getElementById('tab-coupons-count');
+    const container = document.getElementById('admin-coupons-list');
+
+    if (countEl) countEl.textContent = String(coupons.length);
+
+    if (container) {
+      if (coupons.length === 0) {
+        container.innerHTML = `<p class="text-xs text-gray-400 py-4">No coupons created.</p>`;
+        return;
+      }
+
+      container.innerHTML = coupons
+        .map(
+          (c) => `
+        <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-xs uppercase tracking-wider text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-lg">
+                ${c.code}
+              </span>
+              <span class="text-[11px] font-bold ${c.isActive ? 'text-emerald-700' : 'text-gray-400'}">
+                ${c.isActive ? '● Active' : '○ Inactive'}
+              </span>
+            </div>
+            <p class="text-xs text-gray-800">${c.description || 'Custom promotional discount'}</p>
+            <p class="text-[11px] text-gray-500">
+              ${c.discountPercent ? `${c.discountPercent}% OFF` : `Flat ${formatINR(c.flatDiscountPaise || 0)} OFF`}
+              ${c.minOrderPaise > 0 ? `• Min Order: ${formatINR(c.minOrderPaise)}` : '• No minimum order'}
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button
+              class="toggle-coupon-btn px-2.5 py-1 text-xs font-semibold rounded-lg border ${
+                c.isActive ? 'bg-white text-gray-700 border-gray-200 hover:bg-gray-100' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+              } cursor-pointer"
+              data-coupon-id="${c.id}"
+            >
+              ${c.isActive ? 'Disable' : 'Enable'}
+            </button>
+            <button
+              class="edit-coupon-btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer"
+              data-coupon-id="${c.id}"
+            >
+              Edit
+            </button>
+            <button
+              class="delete-coupon-btn text-gray-400 hover:text-red-600 px-2 py-1 text-sm font-bold cursor-pointer"
+              data-coupon-id="${c.id}"
+              title="Delete coupon"
+            >
+              ×
+            </button>
+          </div>
+        </div>
+      `
+        )
+        .join('');
+
+      // Wire Coupon Toggle
+      document.querySelectorAll('.toggle-coupon-btn').forEach((b) => {
+        b.addEventListener('click', (e) => {
+          const id = (e.currentTarget as HTMLElement).dataset.couponId || '';
+          toggleCouponActive(id);
+          renderCoupons();
+        });
+      });
+
+      // Wire Coupon Edit
+      document.querySelectorAll('.edit-coupon-btn').forEach((b) => {
+        b.addEventListener('click', (e) => {
+          const id = (e.currentTarget as HTMLElement).dataset.couponId || '';
+          const coupon = coupons.find((c) => c.id === id);
+          if (coupon) openCouponModal(coupon);
+        });
+      });
+
+      // Wire Coupon Delete
+      document.querySelectorAll('.delete-coupon-btn').forEach((b) => {
+        b.addEventListener('click', (e) => {
+          const id = (e.currentTarget as HTMLElement).dataset.couponId || '';
+          if (confirm('Delete this coupon code?')) {
+            deleteAdminCoupon(id);
+            renderCoupons();
+          }
+        });
+      });
+    }
+  }
+
+  // Coupon Modal Handling
+  const couponModal = document.getElementById('coupon-modal');
+  const couponForm = document.getElementById('coupon-form');
+  const couponModalTitle = document.getElementById('coupon-modal-title');
+  const couponIdInput = document.getElementById('coupon-id') as HTMLInputElement;
+  const couponCodeInput = document.getElementById('coupon-code') as HTMLInputElement;
+  const couponTypeSelect = document.getElementById('coupon-type') as HTMLSelectElement;
+  const couponValInput = document.getElementById('coupon-value') as HTMLInputElement;
+  const couponMinInput = document.getElementById('coupon-min-order') as HTMLInputElement;
+  const couponDescInput = document.getElementById('coupon-desc') as HTMLInputElement;
+  const couponActiveInput = document.getElementById('coupon-active') as HTMLInputElement;
+
+  function openCouponModal(coupon?: AdminCoupon) {
+    if (!couponModal) return;
+    if (coupon) {
+      if (couponModalTitle) couponModalTitle.textContent = 'Edit Coupon';
+      couponIdInput.value = coupon.id;
+      couponCodeInput.value = coupon.code;
+      if (coupon.discountPercent) {
+        couponTypeSelect.value = 'PERCENT';
+        couponValInput.value = String(coupon.discountPercent);
+      } else {
+        couponTypeSelect.value = 'FLAT';
+        couponValInput.value = String(Math.round((coupon.flatDiscountPaise || 0) / 100));
+      }
+      couponMinInput.value = String(Math.round(coupon.minOrderPaise / 100));
+      couponDescInput.value = coupon.description || '';
+      couponActiveInput.checked = coupon.isActive;
+    } else {
+      if (couponModalTitle) couponModalTitle.textContent = 'Create New Coupon';
+      couponIdInput.value = '';
+      couponForm?.reset();
+      couponActiveInput.checked = true;
+    }
+    couponModal.classList.remove('hidden');
+  }
+
+  document.getElementById('add-coupon-btn')?.addEventListener('click', () => openCouponModal());
+  document.getElementById('close-coupon-modal')?.addEventListener('click', () => couponModal?.classList.add('hidden'));
+  document.getElementById('cancel-coupon-modal')?.addEventListener('click', () => couponModal?.classList.add('hidden'));
+
+  couponForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const id = couponIdInput.value || `coup-${Date.now()}`;
+    const code = couponCodeInput.value.trim().toUpperCase();
+    const isPercent = couponTypeSelect.value === 'PERCENT';
+    const val = Number(couponValInput.value);
+    const minPaise = Math.round(Number(couponMinInput.value || 0) * 100);
+
+    const couponData: AdminCoupon = {
+      id,
+      code,
+      discountPercent: isPercent ? val : undefined,
+      flatDiscountPaise: !isPercent ? Math.round(val * 100) : undefined,
+      minOrderPaise: minPaise,
+      description: couponDescInput.value.trim(),
+      isActive: couponActiveInput.checked
+    };
+
+    if (couponIdInput.value) {
+      updateAdminCoupon(couponData);
+    } else {
+      addAdminCoupon(couponData);
+    }
+
+    couponModal?.classList.add('hidden');
+    renderCoupons();
+  });
+
+  // ==========================================
+  // 4. SITE & PRICING SETTINGS LOGIC
+  // ==========================================
+  function populateSettingsForm() {
+    const settings = getSiteSettings();
+    const shipInput = document.getElementById('setting-shipping-charge') as HTMLInputElement;
+    const threshInput = document.getElementById('setting-free-threshold') as HTMLInputElement;
+    const stackInput = document.getElementById('setting-stack-discount') as HTMLInputElement;
+    const annInput = document.getElementById('setting-announcement-text') as HTMLTextAreaElement;
+    const heroH1 = document.getElementById('setting-hero-headline') as HTMLInputElement;
+    const heroTag = document.getElementById('setting-hero-tagline') as HTMLInputElement;
+    const heroImg = document.getElementById('setting-hero-image') as HTMLInputElement;
+    const cloudNameInput = document.getElementById('setting-cloudinary-cloud-name') as HTMLInputElement;
+    const presetInput = document.getElementById('setting-cloudinary-preset') as HTMLInputElement;
+
+    if (shipInput) shipInput.value = String(Math.round(settings.shippingChargePaise / 100));
+    if (threshInput) threshInput.value = String(Math.round(settings.freeShippingThresholdPaise / 100));
+    if (stackInput) stackInput.value = String(settings.stackDiscountPercent || 15);
+    if (annInput) annInput.value = settings.announcementText;
+    if (heroH1) heroH1.value = settings.heroHeadline;
+    if (heroTag) heroTag.value = settings.heroTagline;
+    if (heroImg) heroImg.value = settings.heroImage;
+    if (cloudNameInput) cloudNameInput.value = settings.cloudinaryCloudName || '';
+    if (presetInput) presetInput.value = settings.cloudinaryUploadPreset || '';
+
+    const heroPreview = document.getElementById('hero-img-preview') as HTMLImageElement;
+    const heroPreviewTitle = document.getElementById('hero-preview-title');
+    const toastCheck = document.getElementById('setting-social-proof-toast') as HTMLInputElement;
+
+    if (heroPreview && settings.heroImage) {
+      heroPreview.src = settings.heroImage;
+    }
+    if (heroPreviewTitle && settings.heroHeadline) {
+      heroPreviewTitle.textContent = settings.heroHeadline;
+    }
+    if (toastCheck) {
+      toastCheck.checked = settings.enableSocialProofToast !== false;
+    }
+
+    // Supabase DB Credentials
+    const sbConfig = getSupabaseConfig();
+    const sbUrlInput = document.getElementById('setting-supabase-url') as HTMLInputElement;
+    const sbKeyInput = document.getElementById('setting-supabase-anon-key') as HTMLInputElement;
+    if (sbConfig) {
+      if (sbUrlInput) sbUrlInput.value = sbConfig.url;
+      if (sbKeyInput) sbKeyInput.value = sbConfig.anonKey;
+    }
+
+    const cats = ['rings', 'necklaces', 'bracelets', 'earrings', 'bangles', 'gift-sets'];
+    cats.forEach((cat) => {
+      const el = document.getElementById(`cat-img-${cat}`) as HTMLInputElement;
+      if (el && settings.categoryImages && settings.categoryImages[cat]) {
+        el.value = settings.categoryImages[cat];
+      }
+    });
+  }
+
+  // Cloudinary Credentials Save Handler
+  document.getElementById('save-cloudinary-config-btn')?.addEventListener('click', () => {
+    const cloudNameInput = document.getElementById('setting-cloudinary-cloud-name') as HTMLInputElement;
+    const presetInput = document.getElementById('setting-cloudinary-preset') as HTMLInputElement;
+    const feedback = document.getElementById('cloudinary-config-feedback');
+
+    updateCloudinaryConfig(cloudNameInput?.value.trim() || '', presetInput?.value.trim() || '');
+
+    if (feedback) {
+      feedback.classList.remove('hidden');
+      setTimeout(() => feedback.classList.add('hidden'), 3000);
+    }
+  });
+
+  // Supabase Credentials Save Handler
+  document.getElementById('save-supabase-config-btn')?.addEventListener('click', () => {
+    const urlInput = document.getElementById('setting-supabase-url') as HTMLInputElement;
+    const keyInput = document.getElementById('setting-supabase-anon-key') as HTMLInputElement;
+    const feedback = document.getElementById('supabase-config-feedback');
+
+    saveSupabaseConfig(urlInput?.value.trim() || '', keyInput?.value.trim() || '');
+
+    if (feedback) {
+      feedback.classList.remove('hidden');
+      setTimeout(() => feedback.classList.add('hidden'), 3000);
+    }
+  });
+
+  // Cloudinary Universal One-Click Upload Handlers
+  function initCloudinaryUploadButtons() {
+    const uploadBtns = document.querySelectorAll('.cloudinary-upload-btn');
+    uploadBtns.forEach((btn) => {
+      if ((btn as any)._cloudinaryBound) return;
+      (btn as any)._cloudinaryBound = true;
+
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = btn.getAttribute('data-target') || '';
+        const previewId = btn.getAttribute('data-preview') || '';
+        const targetInput = document.getElementById(targetId) as HTMLInputElement;
+        const previewEl = previewId ? (document.getElementById(previewId) as HTMLImageElement) : null;
+
+        const settings = getSiteSettings();
+        const cloudName = settings.cloudinaryCloudName || '';
+        const uploadPreset = settings.cloudinaryUploadPreset || '';
+
+        openCloudinaryWidget(
+          cloudName,
+          uploadPreset,
+          (secureUrl: string) => {
+            const optimized = optimizeCloudinaryUrl(secureUrl, { quality: 'auto', format: 'auto' });
+            if (targetInput) {
+              targetInput.value = optimized;
+              targetInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+            if (previewEl) {
+              previewEl.src = optimized;
+              previewEl.classList.remove('hidden');
+            }
+          },
+          (err) => {
+            console.error('Cloudinary upload failure:', err);
+          }
+        );
+      });
+    });
+  }
+
+  // ==========================================
+  // 5. CATEGORIES & SHOWCASE VISUALS CRUD
+  // ==========================================
+  function renderCategories() {
+    const settings = getSiteSettings();
+    const categories = settings.categories || [];
+    const container = document.getElementById('categories-cards-container');
+    if (!container) return;
+
+    container.innerHTML = categories
+      .map(
+        (cat) => `
+      <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-4">
+        <div class="flex items-center justify-between border-b border-gray-200 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#f2707f]"></span>
+            <h3 class="font-bold text-sm text-gray-900">${cat.name}</h3>
+            <span class="text-[10px] font-mono text-gray-500 bg-white px-2 py-0.5 rounded border border-gray-200">/collections/${cat.slug}</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">Collection Title</label>
+            <input id="cat-name-${cat.slug}" type="text" value="${cat.name}" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-xl" />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">Marketing Tagline</label>
+            <input id="cat-tagline-${cat.slug}" type="text" value="${cat.tagline || ''}" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-xl" />
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">SEO Description</label>
+            <textarea id="cat-desc-${cat.slug}" rows="2" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-xl leading-relaxed">${cat.description || ''}</textarea>
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">Showcase Photography URL</label>
+            <div class="flex gap-2">
+              <input id="cat-image-${cat.slug}" type="url" value="${cat.image || ''}" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-xl" />
+              <button
+                type="button"
+                class="cloudinary-upload-btn shrink-0 bg-rose-50 hover:bg-rose-100 text-[#a1505a] border border-[#f9d8dc] px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer"
+                data-target="cat-image-${cat.slug}"
+                data-preview="cat-preview-${cat.slug}"
+              >
+                <span>Upload</span>
+              </button>
+            </div>
+            <div class="mt-2.5 flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <img id="cat-preview-${cat.slug}" src="${cat.image || ''}" alt="${cat.name}" class="w-14 h-14 rounded-xl object-cover border border-gray-200" />
+                <button
+                  type="button"
+                  class="save-category-btn bg-black hover:bg-gray-800 text-white px-4 py-1.5 rounded-xl text-xs font-bold uppercase transition-all cursor-pointer"
+                  data-slug="${cat.slug}"
+                >
+                  Update Category
+                </button>
+              </div>
+              <span id="cat-feedback-${cat.slug}" class="text-xs font-bold text-emerald-700 hidden">Updated!</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+      )
+      .join('');
+
+    // Wire Category Save Buttons
+    document.querySelectorAll('.save-category-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const slug = (e.currentTarget as HTMLElement).dataset.slug || '';
+        const nameInput = document.getElementById(`cat-name-${slug}`) as HTMLInputElement;
+        const taglineInput = document.getElementById(`cat-tagline-${slug}`) as HTMLInputElement;
+        const descInput = document.getElementById(`cat-desc-${slug}`) as HTMLTextAreaElement;
+        const imgInput = document.getElementById(`cat-image-${slug}`) as HTMLInputElement;
+        const feedback = document.getElementById(`cat-feedback-${slug}`);
+
+        updateAdminCategory(slug, {
+          name: nameInput?.value.trim(),
+          tagline: taglineInput?.value.trim(),
+          description: descInput?.value.trim(),
+          image: imgInput?.value.trim()
+        });
+
+        if (feedback) {
+          feedback.classList.remove('hidden');
+          setTimeout(() => feedback.classList.add('hidden'), 2500);
+        }
+      });
+    });
+
+    initCloudinaryUploadButtons();
+  }
+
+  // ==========================================
+  // 6. STACK STUDIO CURATION LOGIC
+  // ==========================================
+  function renderStackStudio() {
+    const products = getAdminProducts();
+    const settings = getSiteSettings();
+    const enabledIds = settings.stackStudioEnabledProducts || [];
+    const container = document.getElementById('stackstudio-matrix-container');
+    const discountInput = document.getElementById('admin-stack-discount') as HTMLInputElement;
+
+    if (discountInput) {
+      discountInput.value = String(settings.stackDiscountPercent || 15);
+    }
+
+    if (!container) return;
+
+    const slots = [
+      { name: 'Slot 1: Statement Necklaces', category: 'necklaces' },
+      { name: 'Slot 2: Everyday Rings', category: 'rings' },
+      { name: 'Slot 3: Waterproof Huggies & Earrings', category: 'earrings' },
+      { name: 'Slot 4: Bracelets & Kada Bangles', category: 'bracelets' }
+    ];
+
+    container.innerHTML = slots
+      .map((slot) => {
+        const matchingProds = products.filter(
+          (p) => p.category === slot.category || (slot.category === 'bracelets' && p.category === 'bangles')
+        );
+
+        return `
+        <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-3">
+          <div class="flex items-center justify-between border-b border-gray-200 pb-2">
+            <h3 class="font-bold text-xs uppercase tracking-wider text-gray-900">${slot.name}</h3>
+            <span class="text-[11px] text-gray-500 font-semibold">${matchingProds.length} Products in Catalog</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            ${matchingProds
+              .map((p) => {
+                const isChecked = enabledIds.includes(p.id) || enabledIds.includes(p.slug);
+                return `
+              <label class="bg-white p-3 rounded-xl border border-gray-200 flex items-center justify-between gap-3 cursor-pointer hover:border-[#f9d8dc] transition-all">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <img src="${p.image}" alt="${p.name}" class="w-10 h-12 object-cover rounded-lg border border-gray-100 shrink-0" />
+                  <div class="min-w-0">
+                    <p class="font-bold text-xs text-gray-900 truncate">${p.name}</p>
+                    <p class="text-[10px] text-gray-500">${formatINR(p.pricePaise)} • ${p.sku}</p>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  class="stack-item-toggle w-4 h-4 accent-[#f2707f] rounded shrink-0 cursor-pointer"
+                  data-prod-id="${p.id}"
+                  ${isChecked ? 'checked' : ''}
+                />
+              </label>
+            `;
+              })
+              .join('')}
+          </div>
+        </div>
+      `;
+      })
+      .join('');
+
+    // Wire Save Stack Studio Rules
+    const saveBtn = document.getElementById('save-stackstudio-rules-btn');
+    saveBtn?.addEventListener('click', () => {
+      const checkedBoxes = document.querySelectorAll('.stack-item-toggle:checked') as NodeListOf<HTMLInputElement>;
+      const selectedIds = Array.from(checkedBoxes).map((cb) => cb.dataset.prodId || '');
+      const newDiscount = Number(discountInput?.value || 15);
+
+      const currentSettings = getSiteSettings();
+      saveSiteSettings({
+        ...currentSettings,
+        stackDiscountPercent: newDiscount,
+        stackStudioEnabledProducts: selectedIds
+      });
+
+      const feedback = document.getElementById('stackstudio-feedback');
+      if (feedback) {
+        feedback.classList.remove('hidden');
+        setTimeout(() => feedback.classList.add('hidden'), 2500);
+      }
+    });
+  }
+
+  const settingsForm = document.getElementById('site-settings-form');
+  settingsForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const currentSettings = getSiteSettings();
+    const shipInput = document.getElementById('setting-shipping-charge') as HTMLInputElement;
+    const threshInput = document.getElementById('setting-free-threshold') as HTMLInputElement;
+    const stackInput = document.getElementById('setting-stack-discount') as HTMLInputElement;
+    const annInput = document.getElementById('setting-announcement-text') as HTMLTextAreaElement;
+    const heroH1 = document.getElementById('setting-hero-headline') as HTMLInputElement;
+    const heroTag = document.getElementById('setting-hero-tagline') as HTMLInputElement;
+    const heroImg = document.getElementById('setting-hero-image') as HTMLInputElement;
+    const feedback = document.getElementById('settings-save-feedback');
+
+    const cats = ['rings', 'necklaces', 'bracelets', 'earrings', 'bangles', 'gift-sets'];
+    const catImages: Record<string, string> = { ...currentSettings.categoryImages };
+    cats.forEach((cat) => {
+      const el = document.getElementById(`cat-img-${cat}`) as HTMLInputElement;
+      if (el) catImages[cat] = el.value.trim();
+    });
+
+    const toastCheck = document.getElementById('setting-social-proof-toast') as HTMLInputElement;
+
+    const newSettings: SiteSettings = {
+      ...currentSettings,
+      shippingChargePaise: Math.round(Number(shipInput.value) * 100),
+      freeShippingThresholdPaise: Math.round(Number(threshInput.value) * 100),
+      stackDiscountPercent: Number(stackInput.value),
+      announcementText: annInput.value.trim(),
+      heroHeadline: heroH1.value.trim(),
+      heroTagline: heroTag.value.trim(),
+      heroImage: heroImg.value.trim(),
+      categoryImages: catImages,
+      enableSocialProofToast: toastCheck ? toastCheck.checked : true
+    };
+
+    saveSiteSettings(newSettings);
+
+    if (feedback) {
+      feedback.classList.remove('hidden');
+      setTimeout(() => feedback.classList.add('hidden'), 3500);
+    }
+  });
+
+  // Live Hero Banner Interactive Preview & Presets
+  const heroImgInput = document.getElementById('setting-hero-image') as HTMLInputElement;
+  const heroH1Input = document.getElementById('setting-hero-headline') as HTMLInputElement;
+  const heroImgPreview = document.getElementById('hero-img-preview') as HTMLImageElement;
+  const heroPreviewTitle = document.getElementById('hero-preview-title');
+  const heroLocalFileInput = document.getElementById('hero-local-file-input') as HTMLInputElement;
+
+  if (heroImgInput && heroImgPreview) {
+    heroImgInput.addEventListener('input', () => {
+      if (heroImgInput.value) {
+        heroImgPreview.src = heroImgInput.value;
+      }
+    });
+  }
+
+  if (heroH1Input && heroPreviewTitle) {
+    heroH1Input.addEventListener('input', () => {
+      heroPreviewTitle.textContent = heroH1Input.value || 'Jewellery that feels like you.';
+    });
+  }
+
+  // Quick Preset Buttons
+  document.querySelectorAll('.hero-preset-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget as HTMLButtonElement;
+      const url = target.dataset.url;
+      if (url && heroImgInput && heroImgPreview) {
+        heroImgInput.value = url;
+        heroImgPreview.src = url;
+      }
+    });
+  });
+
+  // Local File Upload -> Base64 Data URL
+  if (heroLocalFileInput && heroImgInput && heroImgPreview) {
+    heroLocalFileInput.addEventListener('change', () => {
+      const file = heroLocalFileInput.files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const result = ev.target?.result as string;
+          if (result) {
+            heroImgInput.value = result;
+            heroImgPreview.src = result;
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // ==========================================
+  // 5. 360° VIDEO CLAIMS LOGIC
+  // ==========================================
+  function renderClaims() {
+    // Edge sync from Cloudflare D1
+    fetchClaimsFromCloudflare().then((cfClaims) => {
+      if (cfClaims && cfClaims.length > 0) {
+        const local = getDamageClaims();
+        const existingIds = new Set(local.map((c) => c.id));
+        const newFromCf = cfClaims.filter((c) => !existingIds.has(c.id));
+        if (newFromCf.length > 0) {
+          saveDamageClaims([...newFromCf, ...local]);
+        }
+      }
+    }).catch(() => {});
+
+    const claims = getDamageClaims();
+    const container = document.getElementById('claims-list-container');
+    if (!container) return;
+
+    if (claims.length === 0) {
+      container.innerHTML = `<p class="text-xs text-gray-500 py-4">No damage claims pending review.</p>`;
+      return;
+    }
+
+    container.innerHTML = claims
+      .map(
+        (c) => `
+      <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col sm:flex-row justify-between items-start gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-sm text-gray-900">${c.orderNumber}</span>
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${
+              c.status === 'REPLACEMENT_APPROVED'
+                ? 'bg-emerald-50 text-emerald-700'
+                : 'bg-amber-50 text-amber-700'
+            }">${c.status}</span>
+          </div>
+          <p class="text-xs text-gray-800">Patron: <strong>${c.customerName}</strong> (${c.phone})</p>
+          <p class="text-xs text-gray-600">${c.description}</p>
+          <a href="${c.videoProofUrl}" target="_blank" class="inline-flex items-center gap-1 text-xs text-[#f2707f] font-bold hover:underline">
+            View 360° Unboxing Video Proof →
+          </a>
+        </div>
+
+        <div class="space-x-2 shrink-0">
+          <button
+            class="approve-claim-btn bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
+            data-claim-id="${c.id}"
+          >
+            Approve Free Replacement
+          </button>
+          <button
+            class="reject-claim-btn bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
+            data-claim-id="${c.id}"
+          >
+            Reject
+          </button>
+        </div>
+      </div>
+    `
+      )
+      .join('');
+
+    document.querySelectorAll('.approve-claim-btn').forEach((b) => {
+      b.addEventListener('click', (e) => {
+        const id = (e.currentTarget as HTMLElement).dataset.claimId || '';
+        updateClaimStatus(id, 'REPLACEMENT_APPROVED');
+        updateClaimStatusInCloudflare(id, 'REPLACEMENT_APPROVED').catch((err) =>
+          console.warn('Cloudflare D1 claim sync error:', err)
+        );
+        renderClaims();
+      });
+    });
+
+    document.querySelectorAll('.reject-claim-btn').forEach((b) => {
+      b.addEventListener('click', (e) => {
+        const id = (e.currentTarget as HTMLElement).dataset.claimId || '';
+        updateClaimStatus(id, 'REJECTED');
+        updateClaimStatusInCloudflare(id, 'REJECTED').catch((err) =>
+          console.warn('Cloudflare D1 claim sync error:', err)
+        );
+        renderClaims();
+      });
+    });
+  }
+
+  // Order & Product Search Handlers
+  const orderSearchInput = document.getElementById('order-search-input') as HTMLInputElement;
+  orderSearchInput?.addEventListener('input', () => {
+    renderOrders(orderSearchInput.value.trim());
+  });
+
+  const productSearchInput = document.getElementById('product-search-input') as HTMLInputElement;
+  productSearchInput?.addEventListener('input', () => {
+    renderProducts(productSearchInput.value.trim());
+  });
+
+  // Refresh Desk
+  document.getElementById('admin-refresh-btn')?.addEventListener('click', () => {
+    renderOrders();
+    renderProducts();
+    renderCoupons();
+    populateSettingsForm();
+    renderClaims();
+  });
+
+  // Check auth and mount
+  checkAuth();
+  window.addEventListener('satvastones:orders_updated', () => renderOrders());
+  window.addEventListener('satvastones:products_updated', () => renderProducts());
+  window.addEventListener('satvastones:coupons_updated', () => renderCoupons());
+</script>

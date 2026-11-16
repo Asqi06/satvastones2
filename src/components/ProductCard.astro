@@ -1,0 +1,194 @@
+---
+import type { Product } from '../types/ecommerce';
+import { formatPrice } from '../data/products';
+
+export interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+
+const primaryImage = product.images[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
+const secondaryImage = product.images[1]?.url || primaryImage;
+
+const discountPercent = product.compareAtPricePaise
+  ? Math.round(((product.compareAtPricePaise - product.pricePaise) / product.compareAtPricePaise) * 100)
+  : 0;
+---
+
+<div class="product-card group relative flex flex-col bg-white border border-[#eeeeee] rounded-[18px] overflow-hidden transition-all duration-300 hover:shadow-[0_8px_25px_rgba(242,112,127,0.12)] hover:border-[#f2707f]/50">
+  
+  <!-- Image Container (Jewelsmars 3:4 Aspect Ratio with Squircle Curves) -->
+  <a href={`/products/${product.slug}`} class="relative block aspect-[3/4] overflow-hidden bg-[#fafafa] rounded-t-[18px]" aria-label={product.name}>
+    
+    <!-- Top-Left Badges (Jewelsmars Signature Mauve #a1505a) -->
+    <div class="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
+      {product.isBestseller && (
+        <span class="bg-[#a1505a] text-white text-[9.5px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+          Hot Selling
+        </span>
+      )}
+      {discountPercent > 0 && (
+        <span class="bg-[#f2707f] text-white text-[9.5px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+          -{discountPercent}%
+        </span>
+      )}
+      {product.isNewArrival && !product.isBestseller && (
+        <span class="bg-[#111111] text-white text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs">
+          New
+        </span>
+      )}
+    </div>
+
+    <!-- Floating Circular Wishlist Heart Button (Bottom-Right of Image) -->
+    <button
+      type="button"
+      data-wishlist-id={product.id}
+      data-wishlist-name={product.name}
+      data-wishlist-slug={product.slug}
+      data-wishlist-price={product.pricePaise}
+      data-wishlist-image={primaryImage}
+      class="card-wishlist-btn absolute bottom-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 hover:bg-white text-[#111111] hover:text-[#f2707f] border border-[#eeeeee] flex items-center justify-center transition-all shadow-md cursor-pointer"
+      title="Save to wishlist"
+    >
+      <svg class="w-4 h-4 stroke-[1.8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+      </svg>
+    </button>
+
+    <!-- Primary Image -->
+    <img
+      src={primaryImage}
+      alt={product.images[0]?.alt || `${product.name} - Waterproof Anti Tarnish Jewellery India`}
+      width="400"
+      height="533"
+      loading="lazy"
+      decoding="async"
+      class="product-card-image absolute inset-0 w-full h-full object-cover transition-opacity duration-300 group-hover:opacity-0"
+    />
+
+    <!-- Secondary Hover Image -->
+    <img
+      src={secondaryImage}
+      alt={product.images[1]?.alt || `${product.name} view - 18K Gold PVD Satvastones`}
+      width="400"
+      height="533"
+      loading="lazy"
+      decoding="async"
+      class="product-card-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    />
+  </a>
+
+  <!-- Content & Details (Jewelsmars Mobile-First Clean Hierarchy) -->
+  <div class="p-3.5 sm:p-4 flex flex-col flex-1 justify-between space-y-2.5 bg-white">
+    <div class="space-y-1">
+      <!-- Ratings & Reviews -->
+      <div class="flex items-center gap-1.5 text-[11px]">
+        <div class="flex items-center text-[#f2707f] gap-0.5">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <svg class={`w-3 h-3 ${i < Math.round(product.rating) ? 'fill-current' : 'text-gray-200 fill-current'}`} viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          ))}
+        </div>
+        <span class="font-bold text-[#111111] text-[11px]">{product.rating}</span>
+        <span class="text-[#888888] text-[10px]">({product.reviewCount})</span>
+      </div>
+
+      <!-- Title (2-line clamp) -->
+      <h3 class="text-[13px] sm:text-[14px] font-bold text-[#111111] leading-snug line-clamp-2 hover:text-[#f2707f] transition-colors">
+        <a href={`/products/${product.slug}`}>
+          {product.name}
+        </a>
+      </h3>
+
+      <p class="text-[11px] text-[#666666] line-clamp-1">
+        {product.material}
+      </p>
+    </div>
+
+    <!-- Pricing & Full-Width Jewelsmars "ADD TO CART" Button -->
+    <div class="space-y-2.5 pt-1">
+      <div class="flex items-baseline gap-2">
+        <span class="font-extrabold text-base sm:text-lg text-[#f2707f]">
+          {formatPrice(product.pricePaise)}
+        </span>
+        {product.compareAtPricePaise && (
+          <span class="text-xs text-[#8d979e] line-through font-normal">
+            {formatPrice(product.compareAtPricePaise)}
+          </span>
+        )}
+      </div>
+
+      <!-- Full-Width Jewelsmars Pink Add to Cart CTA -->
+      <button
+        type="button"
+        data-product-id={product.id}
+        data-product-name={product.name}
+        data-product-slug={product.slug}
+        data-product-price={product.pricePaise}
+        data-product-image={primaryImage}
+        class="quick-add-btn w-full bg-[#f2707f] hover:bg-[#e05e6d] text-white py-2.5 rounded-[10px] text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+      >
+        <span>ADD TO CART</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { addToCart } from '../stores/cartStore';
+  import { toggleWishlist, isInWishlist } from '../stores/wishlistStore';
+
+  document.querySelectorAll('.card-wishlist-btn').forEach((btn) => {
+    const el = btn as HTMLElement;
+    const id = el.dataset.wishlistId || '';
+    if (id && isInWishlist(id)) {
+      el.classList.add('text-[#f2707f]', 'bg-[#ffe7e9]', 'border-[#f2707f]');
+    }
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const isSaved = toggleWishlist({
+        id: el.dataset.wishlistId || '',
+        name: el.dataset.wishlistName || '',
+        slug: el.dataset.wishlistSlug || '',
+        sku: '',
+        category: '',
+        headline: '',
+        description: '',
+        material: '',
+        finish: '',
+        careInstructions: [],
+        warranty: '',
+        pricePaise: parseInt(el.dataset.wishlistPrice || '0', 10),
+        rating: 5,
+        reviewCount: 0,
+        images: [{ url: el.dataset.wishlistImage || '', alt: el.dataset.wishlistName || '' }],
+        inStock: true
+      });
+      if (isSaved) {
+        el.classList.add('text-[#f2707f]', 'bg-[#ffe7e9]', 'border-[#f2707f]');
+      } else {
+        el.classList.remove('text-[#f2707f]', 'bg-[#ffe7e9]', 'border-[#f2707f]');
+      }
+    });
+  });
+
+  document.querySelectorAll('.quick-add-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const el = e.currentTarget as HTMLElement;
+      addToCart({
+        productId: el.dataset.productId || '',
+        name: el.dataset.productName || '',
+        slug: el.dataset.productSlug || '',
+        pricePaise: parseInt(el.dataset.productPrice || '0', 10),
+        image: el.dataset.productImage || '',
+        quantity: 1
+      });
+    });
+  });
+</script>

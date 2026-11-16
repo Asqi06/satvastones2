@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { PRODUCTS } from '../data/products';
+import { CATEGORIES } from '../data/categories';
+
+const title = 'All Anti-Tarnish Jewellery | Satvastones Collection';
+const description = 'Explore our full catalogue of trendy 18K gold PVD rings, necklaces, bracelets, earrings, and bangles. Waterproof, sweat-proof, and dispatched from Vapi, Gujarat.';
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- Jewelsmars Style Header Banner -->
+  <div class="bg-[#fafafa] border-b border-[#eeeeee] py-8 sm:py-12">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+      <span class="inline-block bg-[#ffe7e9] text-[#f2707f] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+        ALL JEWELLERY ({PRODUCTS.length})
+      </span>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
+        Anti-Tarnish Collection
+      </h1>
+      <p class="text-xs sm:text-sm text-[#666666] max-w-lg mx-auto leading-relaxed">
+        Shower-safe, sweat-safe, and made for daily wear. Handcrafted in 316L stainless steel & 18K Gold PVD.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+    <!-- Horizontal Scrollable Category Filter Pills (Jewelsmars Mobile-First) -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 sm:mb-8 text-xs scrollbar-none">
+      <a
+        href="/shop"
+        class="px-4 py-2 bg-[#f2707f] text-white rounded-full font-bold whitespace-nowrap shadow-xs"
+      >
+        All ({PRODUCTS.length})
+      </a>
+      {CATEGORIES.map((cat) => (
+        <a
+          href={`/collections/${cat.slug}`}
+          class="px-4 py-2 bg-[#fafafa] hover:bg-[#ffe7e9] hover:text-[#f2707f] text-[#333333] border border-[#eeeeee] rounded-full font-semibold whitespace-nowrap transition-colors"
+        >
+          {cat.name} ({cat.itemCount})
+        </a>
+      ))}
+    </div>
+
+    <!-- 2-Column Mobile Grid / 4-Column Desktop Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+      {PRODUCTS.map((product) => (
+        <ProductCard product={product} />
+      ))}
+    </div>
+
+    <!-- Vapi Store Location Trust Strip -->
+    <div class="mt-14 p-6 bg-[#fafafa] border border-[#eeeeee] rounded-[18px] text-center max-w-2xl mx-auto space-y-2">
+      <p class="text-xs font-bold text-[#f2707f] uppercase tracking-wider">The Satvastones Promise</p>
+      <h3 class="text-base sm:text-lg font-bold text-[#111111]">Dispatched directly from our Vapi Store (Gujarat)</h3>
+      <p class="text-xs text-[#666666] leading-relaxed">
+        Free Express Pan-India Delivery on orders above ₹499. All pieces inspected and packed in 24–48 hours. Questions? Write to <strong class="text-[#111111]">support@satvastones.in</strong>.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

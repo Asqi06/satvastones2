@@ -1,0 +1,246 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Structured FAQ data organized by category
+const faqCategories = [
+  {
+    category: 'Jewellery Styling & Metallurgical Guides',
+    tagline: 'Expert answers to your most frequent jewellery questions',
+    items: [
+      {
+        q: 'How to choose jewellery for saree?',
+        a: 'Choosing jewellery for a saree depends on the saree fabric, neckline of the blouse, and the occasion:\n\n1. Saree Fabric & Weave:\n• Banarasi & Kanjeevaram Silks: Heavy golden zari weaves pair magnificently with structured anti-tarnish chokers, layered herringbone chains, and bold kada bangles.\n• Chiffon, Georgette & Organza: Flowy, lightweight drapes look best with minimalist jewellery—such as our Serene Molten Pearl Pendant, delicate paperclip chain bracelet, and tapered huggie earrings.\n• Linen & Handloom Cottons: Earthy handloom sarees pair effortlessly with sculptural matte or brushed gold dome rings and sculptural torque cuffs.\n\n2. Blouse Neckline Matching:\n• Deep V-Neck / Plunging: Choose a tapered Y-chain or a molten drop pendant that draws the eye downward.\n• Sweetheart / Broad Neck: Ideal for our Royal Heirloom choker necklace or a snug collar chain.\n• Boat Neck or High Collar: Skip heavy necklaces and elevate your look with statement earrings (like our Chloe Ribbed Huggies) and stacked wrist bangles.\n\n3. Daily Wear & Saree Draping: Unlike traditional brass jewellery that oxidizes and stains expensive silk blouses green with sweat, Satvastones 316L stainless steel jewellery is 100% tarnish-free and sweat-proof, making it safe for long wedding celebrations.'
+      },
+      {
+        q: 'How to clean gold jewellery at home?',
+        a: 'To safely clean both solid gold and 18K gold PVD anti-tarnish jewellery at home without dulling the finish, follow this 4-step ritual:\n\n1. Lukewarm Soap Soak: Fill a bowl with warm (never boiling) water and add 2–3 drops of mild, ammonia-free liquid dish soap or baby shampoo. Submerge your jewellery for 10 to 15 minutes to loosen accumulated body oils, dust, and lotions.\n2. Soft-Bristle Gentle Cleaning: Take an ultra-soft baby toothbrush or soft makeup brush and gently clean around crevices, stone settings, and chain links. Never scrub aggressively.\n3. Lukewarm Rinse: Rinse thoroughly under warm running tap water to wash away all soap residue (place a sink strainer plug first to avoid accidents!).\n4. Microfiber Pat Dry: Gently pat the piece dry with a clean, lint-free microfiber cloth or your Satvastones velvet pouch. Allow it to air-dry completely before storing.\n\nWhat to avoid: Never use toothpaste, baking soda, chlorine bleach, vinegar, acetone, or abrasive silver dips—these contain microscopic abrasives that will scratch the golden luster.'
+      },
+      {
+        q: 'Why are only a few metals suitable for making jewellery?',
+        a: 'Only a select few metals are suitable for fine and daily wear jewellery due to strict metallurgical and biocompatibility factors:\n\n1. Oxidation Resistance (Chemical Reactivity): Most common metals—such as iron, copper, brass, and zinc—react eagerly with oxygen, humidity, and skin sweat, producing unsightly green copper carbonates or iron rust that ruins clothing and stains skin. Only noble metals (Gold, Platinum) and highly inert medical alloys (316L Surgical Stainless Steel, Titanium) resist oxidation.\n2. Biocompatibility & Allergy Prevention: Over 15% of the population suffers from contact dermatitis triggered by nickel, cadmium, and lead found in cheap fashion jewellery. Medical-grade 316L surgical steel and gold are biologically inert and hypoallergenic.\n3. Mechanical Strength & Malleability: Metals like pure 24K gold or pure silver are too soft for everyday wear and bend easily out of shape. 316L surgical steel offers high tensile strength and scratch resistance, ensuring rings and clasps retain their structural integrity for life.'
+      },
+      {
+        q: 'What is anti tarnish jewellery made of?',
+        a: 'Authentic anti-tarnish jewellery by Satvastones is engineered using a two-tier scientific construction:\n\n1. The Foundation Core: Medical-Grade 316L Surgical Stainless Steel. 316L contains 16-18% chromium, 10-14% nickel (tightly bound at molecular level so it does not leach), and 2-3% molybdenum. The molybdenum makes it exceptionally resistant to chlorides (salt water, sweat, tap chlorine) and prevents corrosion.\n2. The Surface Coating: 18-Karat Gold Vacuum PVD (Physical Vapor Deposition). Rather than dipping metal into cheap liquid chemical electroplating baths that peel off, PVD takes place inside a high-vacuum plasma chamber. Real 18K gold and titanium nitride are vaporized into an atomic cloud and deposited onto the steel, forming an atomic bond 10x thicker and harder than conventional fashion plating.\n3. 100% Nickel-Safe & Hypoallergenic: Our formula produces zero green skin discoloration, zero rusting, and zero flaking.'
+      },
+      {
+        q: 'Does anti tarnish jewellery fade?',
+        a: 'At Satvastones, we pride ourselves on complete honesty with our patrons. While cheap brands make fraudulent claims of "lifetime permanent mirror shine," here is the scientific truth:\n\n• The Core Metal Never Fades: 316L surgical steel will never rust, turn black, or discolor. It remains rust-proof for decades.\n• The 18K Gold PVD Coating: Vacuum PVD gold is extraordinarily resilient against sweat, tap water, gym workouts, and tropical humidity. With normal daily wear, it retains its warm golden glow for years.\n• Wear Factors: Like any gold surface, constant friction against hard surfaces, abrasive chemical scouring, or concentrated industrial bleaching agents can gradually thin the micro-coating over time. Following our simple "Last On, First Off" ritual ensures your pieces stay radiant.'
+      },
+      {
+        q: 'How to identify anti tarnish jewellery?',
+        a: 'You can identify whether jewellery is genuine waterproof anti-tarnish or cheap electroplated alloy through these 4 checks:\n\n1. Material & Substrate Disclosure: Reputable brands explicitly disclose the underlying metal as 316L Surgical Stainless Steel or Titanium with Vacuum PVD coating. Avoid pieces that vaguely list "alloy," "mixed metal," or "brass core."\n2. The Magnet Test: 316L surgical stainless steel is an austenitic alloy and exhibits zero to very weak magnetic attraction when cold-worked. If a piece strongly snaps to a magnet, it is likely cheap carbon steel that will rust quickly. If it is completely non-magnetic but feels very light or soft, it is likely brass or zinc which will oxidize green.\n3. The Saline Water Test: Submerge the piece in a warm salt-water solution for 24 hours. Cheap fashion jewellery will discolor, develop black tarnish spots, or show bubbling within hours. Genuine 316L PVD steel emerges unaffected.\n4. Skin Wear (Zero Green Mark): Wear the piece on a humid, sweaty day. If your skin turns green or black, it is copper/brass alloy. Satvastones jewellery leaves zero skin marks.'
+      }
+    ]
+  },
+  {
+    category: 'Product Quality & Waterproof Wear',
+    tagline: 'Engineered for gym workouts, daily showers, and tropical humidity',
+    items: [
+      {
+        q: 'Can I wear Satvastones jewellery in the shower, gym, or swimming pool?',
+        a: 'Yes, absolutely! Satvastones jewellery is engineered specifically for active daily lifestyles. You can comfortably wear it while showering, washing dishes, working out, or running in humid Indian weather. If you swim in chlorinated pools or sea salt water, simply rinse your jewellery with clean fresh water afterward and pat dry with a soft cloth.'
+      },
+      {
+        q: 'Will this jewellery turn my skin green or cause an allergic rash?',
+        a: 'Never. The infamous green discoloration from cheap fashion jewellery is caused by copper and brass oxidizing against skin sweat, while allergic skin rashes are caused by cheap nickel alloys. Satvastones uses biocompatible 316L surgical stainless steel that is 100% nickel-safe, lead-free, and hypoallergenic.'
+      },
+      {
+        q: 'What is the Mystery Jewellery Jar and what does it contain?',
+        a: 'The Satvastones Mystery Jewellery Jar is our curated luxury surprise experience! Each glass keepsake jar contains 3 surprise anti-tarnish pieces (a combination of necklaces, earrings, bracelets, or rings) with a combined retail value of ₹4,999+. Every piece inside the jar is crafted in our signature 18K gold PVD and 316L surgical stainless steel.'
+      }
+    ]
+  },
+  {
+    category: 'Vapi Store Dispatch & Express Shipping',
+    tagline: 'Direct fulfillment from our Gujarat atelier across 19,000+ Indian pincodes',
+    items: [
+      {
+        q: 'Where are orders processed and dispatched from?',
+        a: 'Every single order is hand-inspected, cleaned, sealed, and dispatched directly from our Vapi store location in Gujarat within 24 to 48 hours of order confirmation.'
+      },
+      {
+        q: 'What are the shipping charges and free delivery threshold?',
+        a: 'Shipping is 100% FREE all over India on all orders above ₹499. For orders below ₹499, a nominal flat courier fee of ₹49 is charged at checkout to cover express air logistics.'
+      },
+      {
+        q: 'How long does delivery take across Indian cities?',
+        a: 'Once dispatched from our Vapi store (24–48 hours), express delivery takes:\n• Metro Cities (Mumbai, Surat, Ahmedabad, Delhi NCR, Bengaluru, Pune, Hyderabad, Chennai, Kolkata): 2–3 business days via BlueDart / Delhivery Air.\n• Rest of India & Tier 2/3 pin codes: 3–5 business days.'
+      },
+      {
+        q: 'How do I track my order once it is shipped?',
+        a: 'As soon as your parcel is packed and handed to our courier partner (BlueDart / Delhivery / Xpressbees), you will receive an SMS and email notification with your live Courier AWB Tracking Number. You can also visit our Track Order page (/track-order) and enter your order number, AWB, or phone number for real-time tracking.'
+      }
+    ]
+  },
+  {
+    category: 'Cancellations, Refunds & Transit Damage Policy',
+    tagline: 'Transparent policies designed to protect our patrons and operations',
+    items: [
+      {
+        q: 'Can I cancel my order before or after dispatch?',
+        a: 'You can cancel your order for a full reversal anytime BEFORE dispatch happens from our Vapi store (typically within 24–48 hours). Once the order is dispatched and handed to the courier partner, neither you nor we can cancel the parcel while it is in transit.'
+      },
+      {
+        q: 'Do you offer cash refunds?',
+        a: 'No, we do not provide cash refunds. We encourage patrons to check dimensions, sizing charts, ring sizer guides, and photos carefully before confirming an order.'
+      },
+      {
+        q: 'What if my parcel arrives damaged in transit? (Mandatory Unboxing Video)',
+        a: 'If your jewellery arrives damaged due to courier transit handling, we will issue a free replacement immediately. However, it is strictly mandatory to record an unedited, continuous 360-degree unboxing video proof clearly showing the outer sealed courier flyer, cutting open the package, and inspecting the item. Without this video proof, damage claims cannot be entertained.'
+      }
+    ]
+  },
+  {
+    category: 'Brand Credibility & Legal Entity',
+    tagline: 'Official proprietorship details and customer care contact',
+    items: [
+      {
+        q: 'What is the legal business entity behind Satvastones?',
+        a: 'Satvastones Jewellery operates as an Indian registered Sole Proprietorship under the legal name of Anirudh A Verma (GSTIN: 24DDAPV4074H1ZF), with our design and dispatch atelier located at Chala, Vapi, Gujarat - 396191.'
+      },
+      {
+        q: 'Do you provide a formal GST Tax Invoice with every purchase?',
+        a: 'Yes! Every purchase—including guest checkouts—comes with an official GST Tax Invoice containing HSN code 7117 (Imitation Fine Jewellery), GSTIN 24DDAPV4074H1ZF, legal entity details of Anirudh A Verma, breakdown of 3% jewellery GST, and complete order details.'
+      },
+      {
+        q: 'How can I contact the customer support team?',
+        a: 'You can write directly to our support team at support@satvastones.in. We are available Monday through Saturday (10 AM to 7 PM IST) and resolve all queries within 12–24 business hours.'
+      }
+    ]
+  }
+];
+
+// Flatten all questions for Google FAQPage JSON-LD Schema
+const allFaqItems = faqCategories.flatMap((cat) => cat.items);
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  'mainEntity': allFaqItems.map((item) => ({
+    '@type': 'Question',
+    'name': item.q,
+    'acceptedAnswer': {
+      '@type': 'Answer',
+      'text': item.a.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')
+    }
+  }))
+};
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Help & Knowledge', url: '/faqs' }
+];
+---
+
+<BaseLayout
+  title="FAQs & Knowledge Guide | Anti-Tarnish Jewellery India | Satvastones"
+  description="Comprehensive guide on anti-tarnish jewellery: how to choose jewellery for saree, how to clean gold jewellery at home, metallurgy of 316L steel, Vapi dispatch, and care tips."
+  schema={faqSchema}
+  breadcrumbs={breadcrumbs}
+>
+  <!-- Jewelsmars Clean Header -->
+  <div class="bg-white border-b border-gray-100 py-8 sm:py-12">
+    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
+      <span class="inline-block bg-[#ffe7e9] text-[#a1505a] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
+        Help &amp; Knowledge Masterclass
+      </span>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
+        Frequently Asked Questions &amp; Jewellery Guides
+      </h1>
+      <p class="text-xs sm:text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
+        Everything you need to know about anti-tarnish metallurgy, saree jewellery styling, home gold cleaning, 24–48h Vapi dispatch, and courier policies.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-[960px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12">
+    
+    <!-- Quick Topic Navigation Pills -->
+    <div class="flex flex-wrap items-center justify-center gap-2 pb-2">
+      <a href="#styling-guide" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
+        Styling &amp; Saree Guide
+      </a>
+      <a href="#cleaning-guide" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
+        Gold Cleaning at Home
+      </a>
+      <a href="#metallurgy-guide" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
+        Anti-Tarnish Metallurgy
+      </a>
+      <a href="#shipping-policy" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
+        Vapi Dispatch &amp; Shipping
+      </a>
+      <a href="#returns-policy" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
+        Unboxing Video &amp; Damage
+      </a>
+    </div>
+
+    {faqCategories.map((cat, catIdx) => (
+      <section class="space-y-4" id={`cat-section-${catIdx}`}>
+        <div class="border-b border-gray-100 pb-2.5">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-[#f2707f]"></span>
+            <h2 class="text-base sm:text-lg font-bold text-gray-900 tracking-tight">
+              {cat.category}
+            </h2>
+          </div>
+          <p class="text-xs text-gray-400 mt-0.5 ml-4.5">{cat.tagline}</p>
+        </div>
+
+        <div class="space-y-3">
+          {cat.items.map((item, itemIdx) => (
+            <details
+              class="group bg-white border border-gray-200 rounded-[18px] p-4 sm:p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-all duration-200 shadow-2xs"
+              open={catIdx === 0 && itemIdx < 2}
+            >
+              <summary class="flex items-center justify-between cursor-pointer font-bold text-xs sm:text-sm text-gray-900 select-none">
+                <span class="pr-4 leading-snug">{item.q}</span>
+                <span class="text-gray-400 group-open:rotate-180 group-open:text-[#f2707f] transition-transform duration-200 shrink-0 text-xs">
+                  ▼
+                </span>
+              </summary>
+              <div class="pt-3 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-3 whitespace-pre-line">
+                {item.a}
+              </div>
+            </details>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <!-- Callout Box: Unboxing Video Policy Alert -->
+    <div class="bg-amber-50/70 border border-amber-200 rounded-[20px] p-5 sm:p-6 space-y-2">
+      <div class="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase tracking-wider">
+        <svg class="w-4 h-4 text-amber-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+        </svg>
+        <span>Important Advisory on Transit Damage Claims</span>
+      </div>
+      <p class="text-xs text-amber-800 leading-relaxed">
+        Every Satvastones parcel is bubble-wrapped in reinforced tampering-evident envelopes before dispatch from Vapi. If you observe any physical transit damage, <strong>an unedited, continuous 360-degree video proof of the unopened package being cut open</strong> is mandatory to process a free express replacement.
+      </p>
+    </div>
+
+    <!-- Help Banner -->
+    <div class="bg-[#fffafb] border border-[#f9d8dc] rounded-[24px] p-6 sm:p-8 text-center space-y-3">
+      <h3 class="text-base sm:text-lg font-bold text-gray-900">Still have a question or need styling advice?</h3>
+      <p class="text-xs sm:text-sm text-gray-500 max-w-md mx-auto">
+        Our customer support team and jewellery stylists are available Monday to Saturday (10 AM to 7 PM IST).
+      </p>
+      <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+        <a
+          href="mailto:support@satvastones.in"
+          class="inline-block bg-[#f2707f] hover:bg-[#e05e6d] text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all"
+        >
+          Email support@satvastones.in
+        </a>
+        <a
+          href="/track-order"
+          class="inline-block bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
+        >
+          Track My Order
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

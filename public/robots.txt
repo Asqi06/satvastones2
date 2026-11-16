@@ -1,0 +1,83 @@
+# Robots.txt for Satvastones Jewellery (https://www.satvastones.in)
+User-agent: *
+Allow: /
+Allow: /collections/
+Allow: /products/
+Allow: /blog/
+Allow: /legal/
+Allow: /about
+Allow: /contact
+Allow: /faqs
+Allow: /materials
+Allow: /jewellery-care
+Allow: /llms.txt
+Allow: /llms-full.txt
+
+# Crawl traps and dynamic private routes
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+Disallow: /cart
+Disallow: /cart/
+Disallow: /checkout
+Disallow: /checkout/
+Disallow: /account
+Disallow: /account/
+Disallow: /orders
+Disallow: /orders/
+Disallow: /search
+Disallow: /search/
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+
+# AI Search & LLM Bots (Explicitly Permitted for Generative Answers & Search Overviews)
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+
+User-agent: OAI-SearchBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+
+User-agent: Google-Extended
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+
+User-agent: Claude-Web
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+
+User-agent: Applebot-Extended
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+
+# XML Sitemap Index
+Sitemap: https://www.satvastones.in/sitemap.xml

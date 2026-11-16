@@ -1,0 +1,1091 @@
+{
+  "version": 2,
+  "skills": {
+    "ab-testing-ecommerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/ab-testing-ecommerce/SKILL.md",
+      "computedHash": "75968859299fe38c63e18cf1e5521027fcac3094175db4144846df7f0a9682a1"
+    },
+    "ab-testing-pricing": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/ab-testing-pricing/SKILL.md",
+      "computedHash": "51b8373d875d267a2931f33afb7747c5b032ebeb57bf84429713c68369e22df6"
+    },
+    "accessibility-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/accessibility-commerce/SKILL.md",
+      "computedHash": "df1b1b3e94b5592a4205da5ff2a071c411012f4275de6d3972f85ae7516692da"
+    },
+    "account-security": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/account-security/SKILL.md",
+      "computedHash": "215474e76fa73a29a1fd1ae5ea805dfa02ea32e32b0511a20c79c3f311ca20c2"
+    },
+    "accounts-payable-management": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/accounts-payable-management/SKILL.md",
+      "computedHash": "9dd2806a7157507c31da9d3fafd5676d517bd11e381f287d21ff4ebcae2402c1"
+    },
+    "accounts-receivable-automation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/accounts-receivable-automation/SKILL.md",
+      "computedHash": "e719ca240ed9f706e0d58c28b639d9cf2ac1b2eebbe7d8051b7f12db40562cd7"
+    },
+    "affiliate-program": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/affiliate-program/SKILL.md",
+      "computedHash": "f612a244e0a12913bac17ec618b27c60250fb8e3bfb71626a47ca20af30f80e5"
+    },
+    "analytics-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/integrations-apis/analytics-integration/SKILL.md",
+      "computedHash": "a641fcd1b911cf425ddb01159745a9662240eeecaf53121e10d2cf5bccd6e748"
+    },
+    "applovin-ads-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/applovin-ads-integration/SKILL.md",
+      "computedHash": "7a1e5f623ef208aa056eff81e6e671c4ba76b6095bd2465c6a83745d6300692e"
+    },
+    "attribution-modeling": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/attribution-modeling/SKILL.md",
+      "computedHash": "f8b75c06ba78827e8a99d49457a8134f359a789d5a300b4faf36c5ae88e966b1"
+    },
+    "b2b-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/b2b-commerce/SKILL.md",
+      "computedHash": "4550a2d37098b7d93d18fe71406a7376ebf3af53e232237900e3746920659999"
+    },
+    "bot-protection": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/bot-protection/SKILL.md",
+      "computedHash": "6b9b2c2e7e2395739257d94ac94f040557dbb599c6537e79936dbf7e7eed6d6b"
+    },
+    "buy-now-pay-later": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/buy-now-pay-later/SKILL.md",
+      "computedHash": "0c91635a3f117f03ba429527f4c684239a7b85347393e1e6db07a358f88508ed"
+    },
+    "cart-abandonment-recovery": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/cart-abandonment-recovery/SKILL.md",
+      "computedHash": "28725a0e58c14219ad1755904c99b152abe1b4f86b96681c7cab3867d8babc33"
+    },
+    "cart-logic": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/cart-logic/SKILL.md",
+      "computedHash": "537bc7d3ce6136ffd1ca9f44ae8ced947b2a65a045719865169bc0bb9fe05cd3"
+    },
+    "cart-recovery-sms": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/cart-recovery-sms/SKILL.md",
+      "computedHash": "e01c3166f5c8a8740ad960f056e81c2ac55a57a6b1aeb9ffd663e6d387d97ea4"
+    },
+    "cash-flow-forecasting": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/cash-flow-forecasting/SKILL.md",
+      "computedHash": "22504201d7412832cfcc63e87b5e5c77cf9c83ac42b685332d6538da2fb8f51d"
+    },
+    "catalog-import-export": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/catalog-import-export/SKILL.md",
+      "computedHash": "0fbb813d4742df41130c1d93b78c3203e02120fbb8604ca999021d69650a915e"
+    },
+    "chargeback-management-prevention": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/chargeback-management-prevention/SKILL.md",
+      "computedHash": "7233f62ddea1e11432111bf4a7fc3117984253ae47f5368cac95b7a851492610"
+    },
+    "checkout-flow-optimization": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/checkout-flow-optimization/SKILL.md",
+      "computedHash": "93fb1a246393268c1a3ca9d18222c90e97fb1b06f9b8784213540befc3a80ea9"
+    },
+    "cogs-tracking-allocation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/cogs-tracking-allocation/SKILL.md",
+      "computedHash": "d98be3ad9fee0f526772b2a5d5a7e932726a1bbb66a1476299930830e7acfe83"
+    },
+    "commerce-api-gateway": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/headless-modern/commerce-api-gateway/SKILL.md",
+      "computedHash": "bd27cfb1bde193b130041e0941544ed979cc6b106a7dbfaf6c9124e2b744e875"
+    },
+    "commerce-js-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/headless-modern/commerce-js-integration/SKILL.md",
+      "computedHash": "f632b62429e634017065b76a18d159d04e4166618d7a8853d80a344df0316f40"
+    },
+    "composable-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/headless-modern/composable-commerce/SKILL.md",
+      "computedHash": "00bd84bf011d83e1300b2a48afc3ca2c714674ebe0940ef9a8899793cb04b8c5"
+    },
+    "content-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/content-commerce/SKILL.md",
+      "computedHash": "801d3a28d1c581b12e2769351ced9a0075a3bf4845049592737bbe44d2d1a2f7"
+    },
+    "conversion-rate-optimization": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/conversion-rate-optimization/SKILL.md",
+      "computedHash": "ccb4001deec9bb54743b378168d1f846410879b08ac8f6c48374ce26686274a9"
+    },
+    "cost-allocation-analysis": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/cost-allocation-analysis/SKILL.md",
+      "computedHash": "2b3cc2685db4f046761b450fe19d2311e0eeeb422ea06970b0e9c02ff8b0356f"
+    },
+    "coupon-management": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/coupon-management/SKILL.md",
+      "computedHash": "f9b00166e3ea5b3d5a551fa1e0fc5d12e73b5b7473d849aac62e84fb1f9cfad5"
+    },
+    "cross-sell-upsell-engine": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/cross-sell-upsell-engine/SKILL.md",
+      "computedHash": "69e14990306e3ea88f226101ad65c1f519528b008798204fb9f9628e2a613caf"
+    },
+    "currency-hedging-management": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/currency-hedging-management/SKILL.md",
+      "computedHash": "fe2b244e0be45e03d2b88bc909d093d679c0318acc33773c2bfccea09049cbf1"
+    },
+    "customer-accounts": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/customer-accounts/SKILL.md",
+      "computedHash": "4e7750b5b1bdd5867acf3f792c813d2f4f776a1f1e9f992cd58445400a4ae7ed"
+    },
+    "customer-analytics": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/customer-analytics/SKILL.md",
+      "computedHash": "18b52ad3167bc5dda201171b145e5ba475b2df72d73123f0208e02fcf64d3175"
+    },
+    "customer-lifetime-value": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/customer-lifetime-value/SKILL.md",
+      "computedHash": "a293e29bcdebd30ebaa439328ccd7954bfd41be21b16d46a487de03434b9eae9"
+    },
+    "customer-retention-engine": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/customer-retention-engine/SKILL.md",
+      "computedHash": "943decee4f97416ed1fad7e854ed2aa0fba1545a015f83f2c1d78179bbbd564b"
+    },
+    "customer-segmentation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/customer-segmentation/SKILL.md",
+      "computedHash": "31242b5ffc6d07274647b6f622a586ffb56e6e841ccc194b64d24bc9f975a174"
+    },
+    "customer-support-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/customer-support-integration/SKILL.md",
+      "computedHash": "67d1635019052ed5dd74cd1143383311863e57ecbf6953c01a6faded0ecd97af"
+    },
+    "data-retention-policies": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/data-retention-policies/SKILL.md",
+      "computedHash": "22299d94ae5b93b802d0c231c476a001f4cb2786776a0d228a55aa7563283f1f"
+    },
+    "database-optimization-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/infrastructure-performance/database-optimization-commerce/SKILL.md",
+      "computedHash": "1c88edb20a76a1b024bd820f2300937c6ee26f48effccd07c3cdc65173f8465f"
+    },
+    "demand-forecasting": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/demand-forecasting/SKILL.md",
+      "computedHash": "1ad3d05d4995ad67d4c359330e622a83ecd12e42767350c820aff46d30100007"
+    },
+    "digital-products": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/digital-products/SKILL.md",
+      "computedHash": "4edabd938e32a08ee4e9ea9af7558c7ac87d5b67792b726ac2ec171a68de88a2"
+    },
+    "discount-engine": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/discount-engine/SKILL.md",
+      "computedHash": "a23a5cf2d071228fa0d8085371a42e0731e77d48a14c91a708faf20742347858"
+    },
+    "dropshipping-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/dropshipping-integration/SKILL.md",
+      "computedHash": "680017084df2941f8e32dfcf4c1a6662c14e63a445c59f14821153028436b820"
+    },
+    "dynamic-pricing": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/dynamic-pricing/SKILL.md",
+      "computedHash": "2bd2453585349550098c5b54b39b7f6ce76f08efb4be35b3f523f00166bcf94f"
+    },
+    "ecommerce-budgeting-forecasting": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/ecommerce-budgeting-forecasting/SKILL.md",
+      "computedHash": "ce36b985517d7da8527127d5998c2cb7fa7aac3a6f6e41e65e1d1c5aa49727d6"
+    },
+    "ecommerce-caching": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/infrastructure-performance/ecommerce-caching/SKILL.md",
+      "computedHash": "7f8ca5f1da2f2fd93d11380a8e3bea786b9a3a6e7855d6e3ee1f5e2233dff58e"
+    },
+    "ecommerce-data-warehouse": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/ecommerce-data-warehouse/SKILL.md",
+      "computedHash": "2e3a4b8b34b3e5257bc365a3a56bd934d0060297b3648537a0702467b42ef639"
+    },
+    "ecommerce-seo": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/ecommerce-seo/SKILL.md",
+      "computedHash": "55e6618d9b835e8e1d4aae7898b77fd884fa771875dca20c79120c4f7831785f"
+    },
+    "edge-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/infrastructure-performance/edge-commerce/SKILL.md",
+      "computedHash": "c37454ee1f93110b11b8fe493c03782b71cf04ffd3c935e1e7b122eda2afad67"
+    },
+    "email-list-segmentation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/email-list-segmentation/SKILL.md",
+      "computedHash": "8a3219ee778b6a561124ab2bfe1c9f34076aa5979ef30a8c09c1c7d5703c5bc0"
+    },
+    "email-marketing-automation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/email-marketing-automation/SKILL.md",
+      "computedHash": "9224a9c1985d1e1ade42ea725e70c470bd1b54020d0e7ea179b58d9192af4937"
+    },
+    "email-service-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/integrations-apis/email-service-integration/SKILL.md",
+      "computedHash": "7196a5d6611bb505665c4b2d7d68bf4b833608954524c5b5377610b80a6feb38"
+    },
+    "erp-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/integrations-apis/erp-integration/SKILL.md",
+      "computedHash": "f54ed948044b0dea780fbaade7bdbb6846059f6850d903ce192037ee80496eb9"
+    },
+    "exit-intent-popups": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/exit-intent-popups/SKILL.md",
+      "computedHash": "0042c1f928d2462d9957a4358f7a812d29631e40179d11424cb4fcc5469a2a32"
+    },
+    "faceted-navigation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/faceted-navigation/SKILL.md",
+      "computedHash": "43b8ab962cc5bb561c13d45b4e197234ebe47c060ea42c9c75bed518a3af313c"
+    },
+    "financial-analytics-dashboard": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/financial-analytics-dashboard/SKILL.md",
+      "computedHash": "8bb031f10e493ed12dbd615f6c447a492c27eff597391cb3378a0859836d900c"
+    },
+    "financial-audit-trail": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/financial-audit-trail/SKILL.md",
+      "computedHash": "0c5f0bea7f171df31d2853a36f8670a21bc6f4262c57a37d6c1cdadadf2cfcec"
+    },
+    "financial-compliance-sox": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/financial-compliance-sox/SKILL.md",
+      "computedHash": "8ca963c21c29b4941a44a34372bb40d9dbadb1e0ab540b286775936a081d21a5"
+    },
+    "financial-reporting-dashboard": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/financial-reporting-dashboard/SKILL.md",
+      "computedHash": "bd80a0d3774dfb88af10f280d9bf22621f11a5f678f483e388ba8923559a8f0b"
+    },
+    "first-party-data-collection": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/first-party-data-collection/SKILL.md",
+      "computedHash": "e5c3bfef430552b89a47c2a5d41153362216731e23c023aaf15fcf61a335c618"
+    },
+    "flash-sale-engine": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/flash-sale-engine/SKILL.md",
+      "computedHash": "8e9c489ffda0185c78044c8ddeb9e63faa017e5c48fad658aa01491c9ba10594"
+    },
+    "flash-sale-scaling": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/infrastructure-performance/flash-sale-scaling/SKILL.md",
+      "computedHash": "8d08273713ce987532acf20b100df4a5ba833e93fd699abedd4e9a47c63fb09e"
+    },
+    "fraud-detection": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/fraud-detection/SKILL.md",
+      "computedHash": "e372b9d780e53ddae641b8db28b5459b19fd5359691e86479c4b02ea2ca73c44"
+    },
+    "free-shipping-thresholds": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/free-shipping-thresholds/SKILL.md",
+      "computedHash": "2cde9cbfc9f691604d11053f25417c8d93dc427d116498829832ee9360d33d3f"
+    },
+    "gdpr-ecommerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/gdpr-ecommerce/SKILL.md",
+      "computedHash": "0394cb7d22ebeff2cd787bff4a072af0ab8ba8a195000c1327416d9f658051af"
+    },
+    "gift-cards": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/gift-cards/SKILL.md",
+      "computedHash": "fd5ff55d3751c8be06b9b0389d6dfab807cd38f074f0051ded8646df4289167d"
+    },
+    "google-ads-ecommerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/google-ads-ecommerce/SKILL.md",
+      "computedHash": "8d815f5718d11894207e84081516d8db8f24741c08c804a3441e66b030c56a7d"
+    },
+    "google-shopping-feed": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/google-shopping-feed/SKILL.md",
+      "computedHash": "813893d2a97c724d5e0b7f244b5032bbb65bd5a4e50e43b42e6ddd954f842bc3"
+    },
+    "guest-checkout": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/guest-checkout/SKILL.md",
+      "computedHash": "5d2f04b714eaae339cc86f5d556de3e2f2812fed176e2af1e1a10c362921e740"
+    },
+    "image-optimization-cdn": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/infrastructure-performance/image-optimization-cdn/SKILL.md",
+      "computedHash": "21c46c26151437c6f08a1876fa0331626d065c3c957e7c297e02aae0e2af5f08"
+    },
+    "image-zoom-360": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/image-zoom-360/SKILL.md",
+      "computedHash": "b85c8d726d1fceb00fd27ff97881c3571b8e041a888a9f98cc66a81aeb20f436"
+    },
+    "influencer-marketplace-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/influencer-marketplace-integration/SKILL.md",
+      "computedHash": "99e3a39d06bd60d3ad835fc964cbd9bb64968ba1a6b21c6d1d1cb72d243cf4a6"
+    },
+    "influencer-tracking": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/influencer-tracking/SKILL.md",
+      "computedHash": "1021aa413ccebdd2200df96bcfb06ddc512b1ea3d95a3bd36ded31d220095c5b"
+    },
+    "international-shipping": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/international-shipping/SKILL.md",
+      "computedHash": "7f1ff15abfd0bba5dea70301587b96943636016788b395d151f968db1859b7e6"
+    },
+    "inventory-tracking": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/inventory-tracking/SKILL.md",
+      "computedHash": "966b8b629efdd14ecc5b37bf7f570d8b834af11454d01799dd93929b4106ae2b"
+    },
+    "invoice-generation-automation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/invoice-generation-automation/SKILL.md",
+      "computedHash": "5724c04423e216662cde4e0eb46eebc97287be3e9ab50442f56bd481ac641228"
+    },
+    "jamstack-storefront": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/headless-modern/jamstack-storefront/SKILL.md",
+      "computedHash": "8cfdd710c04f230a433badf3362f071a421a09aed54b0a0bd3b231b69b5fd03c"
+    },
+    "lifecycle-marketing-automation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/lifecycle-marketing-automation/SKILL.md",
+      "computedHash": "6b8931d87850d00ad7daa9a7a9d6b95ace9fd4591420dbc56c04dfefa4909636"
+    },
+    "live-chat-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/live-chat-commerce/SKILL.md",
+      "computedHash": "0d4bb072dfd39c699f2a030f9478674890e403eea5a449d1b8b564d0c1e1b599"
+    },
+    "load-testing-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/infrastructure-performance/load-testing-commerce/SKILL.md",
+      "computedHash": "8b45a3eb2f952be631b2dfbe3e41da8c4a5cf041559f7f4195300200eb668825"
+    },
+    "low-stock-alerts": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/low-stock-alerts/SKILL.md",
+      "computedHash": "97cf17bcdc0355c079680c9fb7d2af463592aab0ac14bf998b2d0f1d70321660"
+    },
+    "loyalty-points-system": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/loyalty-points-system/SKILL.md",
+      "computedHash": "bab5ed9f9f4832c842fd166d30b5085e847848a0d06680d633c1cb6728e20612"
+    },
+    "loyalty-program-optimization": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/loyalty-program-optimization/SKILL.md",
+      "computedHash": "3eb12bcbd5f05d5cc7238e48ee30a0f3654d29667331f6ddd641648edea32171"
+    },
+    "magento-graphql": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-magento/magento-graphql/SKILL.md",
+      "computedHash": "e3a2122ace778c592ea721ab2a0710ef3f4a40517f58d124641ca73207048982"
+    },
+    "magento-indexing-caching": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-magento/magento-indexing-caching/SKILL.md",
+      "computedHash": "4015a86478aaba167a7ddac745d8031495d384a64e4e406e5be10d73be3b3957"
+    },
+    "magento-module-development": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-magento/magento-module-development/SKILL.md",
+      "computedHash": "995e2a31de1347551ed80ef03d0b63d4a194c048f7d6c4acebc5f10ce1d860b5"
+    },
+    "magento-multi-store": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-magento/magento-multi-store/SKILL.md",
+      "computedHash": "ccf3471fc078011454863fa771a8980fed7018ce6406f515b1922039d9b8de81"
+    },
+    "marketing-attribution-dashboard": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/marketing-attribution-dashboard/SKILL.md",
+      "computedHash": "9540aa4fd85c83717db13d6af217a9016a679353444c5ceccd2317eb8c1d3e5b"
+    },
+    "marketing-spend-analysis": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/marketing-spend-analysis/SKILL.md",
+      "computedHash": "98897a4b9323895aa043c0173eb1c588a09fecdb159b6234070fb128a7c67aa9"
+    },
+    "marketplace-advertising": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/marketplace-advertising/SKILL.md",
+      "computedHash": "da6c995bc14723bbadae1e232d1e229de90bbcb814a039be2cfc5a205901b839"
+    },
+    "marketplace-building": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/marketplace-building/SKILL.md",
+      "computedHash": "3edad9a67e87f915b2568100511be4e8194b46d980e943898f46a41fc7d5b6e8"
+    },
+    "marketplace-connectors": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/integrations-apis/marketplace-connectors/SKILL.md",
+      "computedHash": "b02371c9f7535bc3015dac4725f69251cd5fd928f091cb1ca0932aa3133c9557"
+    },
+    "marketplace-fee-reconciliation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/marketplace-fee-reconciliation/SKILL.md",
+      "computedHash": "5020e99f18b758846bebf78b75989a184cf6224433b6c9bb73bf122206be17dc"
+    },
+    "medusa-development": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/headless-modern/medusa-development/SKILL.md",
+      "computedHash": "9f4219cba7deef5fd029ace9d6e9ef328f39623a2bd512f47f1c54f0d0fe4bd3"
+    },
+    "mega-menu-builder": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/mega-menu-builder/SKILL.md",
+      "computedHash": "0a7540d44afc94d4dcda5bcae52c07862ab0d68a96de850f3ad46e359df9f42a"
+    },
+    "merchandising-rules": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/merchandising-rules/SKILL.md",
+      "computedHash": "3c54fc2b356e9b6742cd9fa71d74d5b91e557bda727517febd1410a94dc910c5"
+    },
+    "meta-ads-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/meta-ads-integration/SKILL.md",
+      "computedHash": "6954a0d588be8f8731bed03ccc7b7889b1c0d5a848a5ef8126fad2968825d92f"
+    },
+    "monitoring-alerting-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/infrastructure-performance/monitoring-alerting-commerce/SKILL.md",
+      "computedHash": "29a1d189246c0348eec15f50e78887212b61fa09b7cb30b8e30d26826f9f0764"
+    },
+    "multi-channel-selling": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/multi-channel-selling/SKILL.md",
+      "computedHash": "317d56f7151f10ef3bc3e9a44f71eae73069db316fe4ddb07a6033501727e65a"
+    },
+    "multi-currency": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/multi-currency/SKILL.md",
+      "computedHash": "2c145c4ef2d624e8d4626d72cd33f10d623d3338a14b72f9e5312118f4c9d106"
+    },
+    "multi-warehouse": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/multi-warehouse/SKILL.md",
+      "computedHash": "93910cfa389d7cbd32738174ca0655570ce8a08b579f9e18b32dba23f2b6f865"
+    },
+    "order-fulfillment-workflow": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/order-fulfillment-workflow/SKILL.md",
+      "computedHash": "cb69fc3c522d5d4109ac2286bdebbaebffcc1512f4c39ba48c0a731f4c90cae2"
+    },
+    "order-management-system": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/order-management-system/SKILL.md",
+      "computedHash": "f9d0f0fd993910b0eeb03f89cb33cc1da6c8fa90da6b3175a81c83c65daf9215"
+    },
+    "order-processing-pipeline": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/order-processing-pipeline/SKILL.md",
+      "computedHash": "a68e47cb6f7c05e57755f5063bf45c2fa866d6c24ebc0557d5a1451175d99616"
+    },
+    "package-fit-optimization": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/package-fit-optimization/SKILL.md",
+      "computedHash": "3da2def8e3ca86db3d3615082437d9b673057bfc2acee4d2cd50ef2f52943bc2"
+    },
+    "payment-reconciliation-automation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/payment-reconciliation-automation/SKILL.md",
+      "computedHash": "4b6488afe846a9af9db2f7b36387815ef12255f195ee8ca2d43c92b751f2fc23"
+    },
+    "payment-terms-optimization": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/payment-terms-optimization/SKILL.md",
+      "computedHash": "14f2c236be8ffbe4af887de6f0961740177c2a5ec5727b84e1fe8e68a8ec8135"
+    },
+    "payout-split-management": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/payout-split-management/SKILL.md",
+      "computedHash": "121c3f571a9ac831c759f165538b1219c9c0a3347c8a7ed2ffc685b283f177dc"
+    },
+    "paypal-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/paypal-integration/SKILL.md",
+      "computedHash": "ae0a454fe8fca5b80f67ee4114301d65e84b1a7769c21b164ab794c048e060db"
+    },
+    "pci-dss-compliance": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/pci-dss-compliance/SKILL.md",
+      "computedHash": "225e79406c535b23776e07bf939a29b1ad7857f081a31f04cb92d4641611a015"
+    },
+    "personalization-engine": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/personalization-engine/SKILL.md",
+      "computedHash": "4678ca7aec383d0f640b3c7ffdb6ac80bb3e0a1a1e800dec89e0c3056d39c6be"
+    },
+    "pos-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/integrations-apis/pos-integration/SKILL.md",
+      "computedHash": "694254e4f13a52e0947c5139e6759677c9e0d92680d90dc37b07e471371b5a68"
+    },
+    "predictive-personalization": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/predictive-personalization/SKILL.md",
+      "computedHash": "75428b739ebb7f12247f4ff9ebee70676ef54ce33b518b8d3d3ac769c4b20cd4"
+    },
+    "price-rules-engine": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/price-rules-engine/SKILL.md",
+      "computedHash": "34ea865064e648ac805cbc70eed56e824094892269f48d3870bad803dcdc8dca"
+    },
+    "product-analytics": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/product-analytics/SKILL.md",
+      "computedHash": "60afe9c93761fef1ff437f7f2700aeef29139a83b8643ad2c0cf3c02e3abb733"
+    },
+    "product-bundles-kits": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/product-bundles-kits/SKILL.md",
+      "computedHash": "b8a7b4e5b6d5739d6e17684bd5b26fe8c814605da36e3cb643b1ba5423c2e19a"
+    },
+    "product-categorization": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/product-categorization/SKILL.md",
+      "computedHash": "5afe23e58b42e0fd0a8d298f35df5e6bbd3de12863f92a41759031e49303754c"
+    },
+    "product-comparison": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/product-comparison/SKILL.md",
+      "computedHash": "c0a9afcf4fb539802d37c927d907e1f8b0d0bb84709cf4c6526e68ce05357b2c"
+    },
+    "product-content-enrichment": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/product-content-enrichment/SKILL.md",
+      "computedHash": "22417d3052d084d1813f3c0568d58481ad465d0e1cf26e6dc23dd81011fe4670"
+    },
+    "product-data-modeling": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/product-data-modeling/SKILL.md",
+      "computedHash": "70976ed0736d7c62e1eaaeecbf2ee5524c26cd273b6e78bb7d923ac467a85ce4"
+    },
+    "product-information-management": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/integrations-apis/product-information-management/SKILL.md",
+      "computedHash": "1d1ab47629d97343c9d7b5c62581134b53c0a1f018288292fc650167aee761a9"
+    },
+    "product-launch-campaigns": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/product-launch-campaigns/SKILL.md",
+      "computedHash": "9af4356f136e2d37fd1b9a73281bbf83d158d68811974e29e492521133faf89f"
+    },
+    "product-page-design": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/product-page-design/SKILL.md",
+      "computedHash": "6de97641d58bf7b82cd69c1c45bcdc79511d5d72b869ea8b78c440d8adcd3e21"
+    },
+    "product-reviews-ratings": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/product-reviews-ratings/SKILL.md",
+      "computedHash": "4c6a48a33cd34207af34ec489064bb8ceb72a86e17300a303ad563c364878947"
+    },
+    "profit-margin-analysis": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/profit-margin-analysis/SKILL.md",
+      "computedHash": "f81058cff0cb5749e4f3379cb649799bb5f495410a32601afa6a7d5e483b0c6a"
+    },
+    "push-notifications": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/push-notifications/SKILL.md",
+      "computedHash": "c955237539eb2dcff36276a7b3d380734d04a1e534f6a0d79890dc74d6d7cb6b"
+    },
+    "pwa-storefront": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/headless-modern/pwa-storefront/SKILL.md",
+      "computedHash": "83a6b68edac7b890bb5d10d1f8ae1dfcb193bf95e9e1f3fc41f4ced41b07994c"
+    },
+    "quick-view-modal": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/quick-view-modal/SKILL.md",
+      "computedHash": "4cb623c07fe408e715f9a5bbb3c378bfb12281789f1728d99a1b96f85e5d1c41"
+    },
+    "recently-viewed-products": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/recently-viewed-products/SKILL.md",
+      "computedHash": "97823e486d548b7340d46b9ca445612ebd4aed55a544b12cea1e9531af9787c0"
+    },
+    "referral-program": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/referral-program/SKILL.md",
+      "computedHash": "effb33fa1aff5fae502a7a01abeb74def535bedba72f8ef43f6bdc23a773c5ed"
+    },
+    "referral-viral-loops": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/referral-viral-loops/SKILL.md",
+      "computedHash": "06289f17f71ff4974f34f585362b12d22ae4e954ec1c39fa58f7f40dabfcd7a9"
+    },
+    "responsive-storefront": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/responsive-storefront/SKILL.md",
+      "computedHash": "36c5ed9696171ab9a7c531242e66dfad6bb11d266a12af4970526c04e8ebca1d"
+    },
+    "return-fraud-prevention": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/return-fraud-prevention/SKILL.md",
+      "computedHash": "b61f7a40bbb1923087613ffa7ce3fde569cb4a3abf9533d1a29cda16a48f8140"
+    },
+    "returns-management": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/returns-management/SKILL.md",
+      "computedHash": "4488b9e4146c654596cac8d595ac73a0e383320152c9325817c4a9c3d13b9ae8"
+    },
+    "returns-refund-policy": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/returns-refund-policy/SKILL.md",
+      "computedHash": "2112a1e06b8f122db6d60485e8000998e4ed26f6b30eb9bedbb7406b8d6954a3"
+    },
+    "revenue-recognition-accounting": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/revenue-recognition-accounting/SKILL.md",
+      "computedHash": "03c44e1da65857217280b4504103be1d9eed0a8a4d66af0a626ff0ca08c8e913"
+    },
+    "review-generation-engine": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/review-generation-engine/SKILL.md",
+      "computedHash": "d2935582ea7fef1c30c9ab9c22ebe2fba602ded605637e919c0434d1dd1f63ec"
+    },
+    "saleor-development": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/headless-modern/saleor-development/SKILL.md",
+      "computedHash": "e52fd2871c874f809ceb4dcf9940cb711f41bef44d1543001164bf51692054ba"
+    },
+    "sales-reporting-dashboard": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/sales-reporting-dashboard/SKILL.md",
+      "computedHash": "ad910d90d1c0634d41c932248de312d8972718397a29a09f230aeba4b896e4bd"
+    },
+    "same-day-delivery": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/same-day-delivery/SKILL.md",
+      "computedHash": "7beaa35c66632cbb8ca60d882adc11457e6c58d120de5a528d0b5ca02b811ac6"
+    },
+    "search-autocomplete": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/search-autocomplete/SKILL.md",
+      "computedHash": "da9d6bc79174ed3d7c8e147eb0b42a152a57376cd61db9152e18ff2845531b26"
+    },
+    "seasonal-campaign-automation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/seasonal-campaign-automation/SKILL.md",
+      "computedHash": "b23c61a8bdc99d6a44efbe3792eff092fe0bae9edcbd24716eadced378c0f233"
+    },
+    "secure-checkout": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/security-compliance/secure-checkout/SKILL.md",
+      "computedHash": "03dec8a1c18acf441204af1efbed9d797aa1f3b6e88de582ff57cd4a77996e2c"
+    },
+    "sfcc-business-manager": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-salesforce-cc/sfcc-business-manager/SKILL.md",
+      "computedHash": "c0fbb2ea7d4fac533be84903eae6d985a1049610544ddc9e2db89d9f8c902766"
+    },
+    "sfcc-cartridge-development": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-salesforce-cc/sfcc-cartridge-development/SKILL.md",
+      "computedHash": "38e55785d282f3948df530439e28ad64216bba99832d0c998688081d601d7b4d"
+    },
+    "sfcc-ocapi-scapi": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-salesforce-cc/sfcc-ocapi-scapi/SKILL.md",
+      "computedHash": "dad7b513aa71af0d2918dbdfd1cdf8aabf5fa03df2af1c72fe05f48db5603544"
+    },
+    "shipment-tracking": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/shipment-tracking/SKILL.md",
+      "computedHash": "22125b7d2328977441b61cc449156f10122b3d05346ec6894ab3c2d1da39249f"
+    },
+    "shipping-rate-calculator": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/fulfillment-shipping/shipping-rate-calculator/SKILL.md",
+      "computedHash": "fec640ea01665c2f59d9a2a9d70d8fa6263bded4b39f6b9c48ec3422aba99802"
+    },
+    "shopify-admin-api": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-shopify/shopify-admin-api/SKILL.md",
+      "computedHash": "35ebdc6eeeeedafbd895b3726e08bed48934cc5a5be985d71f3e1b08cfe4b284"
+    },
+    "shopify-app-development": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-shopify/shopify-app-development/SKILL.md",
+      "computedHash": "ae42e44cf2df01bb33f4fe25e5d6d80c118eb5a7e3c8a282c31a1371c2e50b9e"
+    },
+    "shopify-app-review-triage": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-shopify/shopify-app-review-triage/SKILL.md",
+      "computedHash": "f0e4d53766ae9f23abaf44e8d986f135dc8b7aa38e8582a62104c3498849ced8"
+    },
+    "shopify-checkout-extensions": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-shopify/shopify-checkout-extensions/SKILL.md",
+      "computedHash": "b4aa966762ea67dc4d746ed5e7c286062f8723e8b4c778b1c97e87701baaa03a"
+    },
+    "shopify-hydrogen": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/headless-modern/shopify-hydrogen/SKILL.md",
+      "computedHash": "42f8c1860776f70615a306c69558ed75ec24065ff07013f472b2493c3361a59c"
+    },
+    "shopify-metafields": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-shopify/shopify-metafields/SKILL.md",
+      "computedHash": "fda4551737850f78235b3c94cc1eae7d60250ab6c6c054c4cff3b07a63f0789b"
+    },
+    "shopify-storefront-api": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-shopify/shopify-storefront-api/SKILL.md",
+      "computedHash": "a2088dbab624043b1e92a4517e854def4eee2c6b6180dab50f1aed533fe836a0"
+    },
+    "shopify-theme-development": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-shopify/shopify-theme-development/SKILL.md",
+      "computedHash": "bd157433a6424633122261a5d0b17c6ce326f7be113c17b783475dadcf0fb324"
+    },
+    "shopify-webhooks": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-shopify/shopify-webhooks/SKILL.md",
+      "computedHash": "5cc6b4f9c13101b83417a342d5ee1eae2284d7bea123226e5e5c05a8e796544d"
+    },
+    "sms-marketing": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/sms-marketing/SKILL.md",
+      "computedHash": "275ddb2794e8188b7e9a2475174d3efd6cd84f2da2eb723a7e95850b1836077f"
+    },
+    "social-commerce": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/social-commerce/SKILL.md",
+      "computedHash": "7f7682da668abe4f0a9d3452297632e1b744e28985a84d9e12da1074744982ac"
+    },
+    "social-proof-widgets": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/social-proof-widgets/SKILL.md",
+      "computedHash": "29bcc4479cd741ad3352b48563783f213d67f6133563115939566da89197580c"
+    },
+    "storefront-theming": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/storefront-theming/SKILL.md",
+      "computedHash": "5585e1a75392088a8c3689f6381038b53ffbdc69a35b02b5d4b1a448c52ded64"
+    },
+    "stripe-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/stripe-integration/SKILL.md",
+      "computedHash": "4bd0665c6ea1291261b41c6d6bd75fcbd8043e34a3f04b50997d345702d548d3"
+    },
+    "subscription-billing": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/subscription-billing/SKILL.md",
+      "computedHash": "4631c94aa5d7199662d9b1f6f3744702ba24798d65dc1ad1e7ac0c04c055796b"
+    },
+    "tax-calculation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/tax-calculation/SKILL.md",
+      "computedHash": "3b3a621adf86cf72f82b769da8aab7a1b6a50ef48cf19d26701345e580b6f44f"
+    },
+    "tax-compliance-automation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/payments-checkout/tax-compliance-automation/SKILL.md",
+      "computedHash": "9fd7a9dbeda76cfded9bb1501f0e5250fd67beee86a6a199fef308ce40c6df20"
+    },
+    "tiktok-ads-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/tiktok-ads-integration/SKILL.md",
+      "computedHash": "9554d8f42a68b2a0879e0459ed7c64ca6afdfc7ae451ebe74b90f527403aa4c1"
+    },
+    "tiktok-shop-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/tiktok-shop-integration/SKILL.md",
+      "computedHash": "ef1b0aec264084aede4796243ca45879a8ade4c58d5073da5ff3a3780d289df5"
+    },
+    "ugc-campaign-management": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/ugc-campaign-management/SKILL.md",
+      "computedHash": "95865d6bed088c89660bf824315d46c767a12870ee93e750dd2d4177c806b02e"
+    },
+    "unit-economics-tracking": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/data-analytics/unit-economics-tracking/SKILL.md",
+      "computedHash": "bfec1080d25a65b263eb873020fdb4f74f93f20c00693b1c5766f25c4c401356"
+    },
+    "user-generated-content": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/customer-crm/user-generated-content/SKILL.md",
+      "computedHash": "8e304f9a53510514b4635953ca2d16be9995ca845fd89ef2e131952a0f7aa952"
+    },
+    "variant-matrix": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/catalog-inventory/variant-matrix/SKILL.md",
+      "computedHash": "9c27c21363cf5c011615a2e4a58d8fa2eb221cf041018189468c93058f109517"
+    },
+    "vendor-management": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/business-operations/vendor-management/SKILL.md",
+      "computedHash": "f3fc4830cc7e6af7f671ecedf68a6b6e2f830ee4f6437f675a0629a3b2f37500"
+    },
+    "video-commerce-integration": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/video-commerce-integration/SKILL.md",
+      "computedHash": "f95e83e4d53d0c446c14a4eba025f4b487573c858c0d5716d7b7f1539ad9e483"
+    },
+    "volume-pricing": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/pricing-promotions/volume-pricing/SKILL.md",
+      "computedHash": "41627ae5a2078929d12575a3693cc00cc9cf6a4b5049121b440be25e378b93e5"
+    },
+    "webhook-architecture": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/integrations-apis/webhook-architecture/SKILL.md",
+      "computedHash": "af40de4087998c82c22ea1f861264f77b05abdc3288fc7dd5003d6cae3eb5cd1"
+    },
+    "win-back-reactivation": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/marketing-growth/win-back-reactivation/SKILL.md",
+      "computedHash": "ca4ee46a2e8ad9329e27ee4a8470d1ece70a3414d7dbb6a2ad99a22e7b74f8de"
+    },
+    "wishlist-save-for-later": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/storefront-ui/wishlist-save-for-later/SKILL.md",
+      "computedHash": "d9cccf547b444c190bb91b27cd6f51771519282eb1e67ccbf1af8c78b365cf90"
+    },
+    "woocommerce-blocks": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-woocommerce/woocommerce-blocks/SKILL.md",
+      "computedHash": "2bab645df08516b243f381d8defd580355340d5080b76f6d45d1aac1b80adc0d"
+    },
+    "woocommerce-performance": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-woocommerce/woocommerce-performance/SKILL.md",
+      "computedHash": "3baca06cb1f8724ade4db8ede26f00e51230f3f0c5844d6e263fde5e593b4ef1"
+    },
+    "woocommerce-plugin-development": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-woocommerce/woocommerce-plugin-development/SKILL.md",
+      "computedHash": "1197c03470e547e9088b9d1508d6d5cd58e5ab6fcf8669268ad39a16c9e3c88d"
+    },
+    "woocommerce-rest-api": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-woocommerce/woocommerce-rest-api/SKILL.md",
+      "computedHash": "c8c628d5e9188474ea8444f391825292112fef436fa48cca12f0e25f9ff7d610"
+    },
+    "woocommerce-subscriptions": {
+      "source": "finsilabs/awesome-ecommerce-skills",
+      "sourceType": "github",
+      "skillPath": "skills/platform-woocommerce/woocommerce-subscriptions/SKILL.md",
+      "computedHash": "00eedfcac6d3153c90bb6373ea99b8d6a9246b6960656f24693d3d0e96b63b2b"
+    }
+  }
+}

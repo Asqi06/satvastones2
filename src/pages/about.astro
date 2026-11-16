@@ -1,0 +1,98 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About Us | Satvastones Anti-Tarnish Jewellery"
+  description="The story of Satvastones: Anti-tarnish everyday jewellery crafted from 316L stainless steel & 18K gold PVD, dispatched from our Vapi store location."
+>
+  <!-- Jewelsmars Clean Header -->
+  <div class="bg-white border-b border-gray-100 py-8 sm:py-12">
+    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1">
+      <span class="text-xs font-bold uppercase tracking-widest text-[#a1505a]">Our Story</span>
+      <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Jewellery That Feels Like You</h1>
+      <p class="text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
+        Crafted with intention, backed by science, and dispatched directly from our <strong>Vapi store location (Gujarat)</strong>.
+      </p>
+    </div>
+  </div>
+
+  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
+    <div class="max-w-3xl mx-auto space-y-10">
+      
+      <!-- Visual Card -->
+      <div class="aspect-[16/9] bg-gray-50 rounded-[24px] overflow-hidden border border-gray-100 shadow-sm">
+        <img
+          src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1400&q=80"
+          alt="Satvastones jewellery craftsmanship"
+          class="w-full h-full object-cover"
+        />
+      </div>
+
+      <div class="space-y-6 text-xs sm:text-sm text-gray-600 leading-relaxed">
+        <div class="space-y-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#a1505a]">Our Mission</span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-gray-900">Why We Started Satvastones</h2>
+        </div>
+
+        <p>
+          Satvastones was born from a simple frustration: why does everyday jewellery either have to be prohibitively expensive solid gold or cheap fashion jewellery that tarnishes and turns your skin green in two weeks?
+        </p>
+        <p>
+          We set out to create affordable luxury pieces that you can wear anywhere — during morning gym workouts, rushed commutes, daily showers, and late-night celebrations.
+        </p>
+        <p>
+          We refuse to make false promises that any metal on Earth will retain 100% of its shine forever under every harsh chemical circumstance. What we proudly promise is that the <strong>quality of our products is exceptionally high</strong>. By combining medical-grade 316L surgical stainless steel with authentic 18K vacuum gold PVD, our pieces effortlessly withstand sweat, water, and tropical Indian heat.
+        </p>
+
+        <!-- Brand Pillars Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4">
+          <div class="p-4 bg-rose-50/30 border border-rose-100 rounded-2xl text-center space-y-1.5 flex flex-col items-center">
+            <svg class="w-6 h-6 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
+            <h4 class="font-bold text-gray-900 text-xs">18K PVD Gold</h4>
+            <p class="text-[11px] text-gray-500">Atomic bond 10x thicker than electroplating.</p>
+          </div>
+          <div class="p-4 bg-rose-50/30 border border-rose-100 rounded-2xl text-center space-y-1.5 flex flex-col items-center">
+            <svg class="w-6 h-6 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+            </svg>
+            <h4 class="font-bold text-gray-900 text-xs">Vapi Store Hub</h4>
+            <p class="text-[11px] text-gray-500">Hand-inspected & dispatched in 24–48 hours.</p>
+          </div>
+          <div class="p-4 bg-rose-50/30 border border-rose-100 rounded-2xl text-center space-y-1.5 flex flex-col items-center">
+            <svg class="w-6 h-6 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+            <h4 class="font-bold text-gray-900 text-xs">Hypoallergenic</h4>
+            <p class="text-[11px] text-gray-500">100% Nickel-free, lead-free, zero green skin.</p>
+          </div>
+        </div>
+
+        <!-- Legal Transparency Disclosure -->
+        <div class="p-5 bg-gray-50 border border-gray-200 rounded-[20px] space-y-2 mt-6">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-900">Entity & Provenance</h4>
+          <p class="text-xs text-gray-600">
+            <strong>Brand:</strong> Satvastones Fine Jewellery<br />
+            <strong>Legal Entity:</strong> Sole Proprietorship registered under the legal name of <strong>Anirudh A Verma</strong><br />
+            <strong>GSTIN:</strong> 24DDAPV4074H1ZF<br />
+            <strong>Operations Hub & Atelier:</strong> Chala, Vapi, Gujarat - 396191, India<br />
+            <strong>Official Support:</strong> <a href="mailto:support@satvastones.in" class="text-[#f2707f] font-bold underline">support@satvastones.in</a>
+          </p>
+        </div>
+
+        <div class="text-center pt-4">
+          <a
+            href="/shop"
+            class="inline-block bg-[#f2707f] hover:bg-[#e05e6d] text-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg shadow-[#f2707f]/25 transition-all"
+          >
+            Explore the Collection →
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>

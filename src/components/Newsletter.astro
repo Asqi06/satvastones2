@@ -1,0 +1,47 @@
+---
+// Newsletter.astro - Jewelsmars VIP Discount Callout Box
+---
+
+<section class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+  <div class="bg-[#ffe7e9] rounded-[24px] p-8 sm:p-14 text-center max-w-3xl mx-auto space-y-4 border border-[#f9d8dc] shadow-xs">
+    <span class="inline-block bg-[#f2707f] text-white text-[11px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">
+      VIP PRIVILEGE CLUB
+    </span>
+    
+    <h2 class="text-2xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
+      Get ₹200 OFF Your First Order
+    </h2>
+
+    <p class="text-xs sm:text-sm text-[#555555] max-w-md mx-auto leading-relaxed">
+      Subscribe for exclusive weekly capsule drops from our Vapi atelier and instant VIP secret sales.
+    </p>
+
+    <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-2 pt-2" id="newsletter-form">
+      <input
+        type="email"
+        placeholder="Enter your email address"
+        required
+        class="flex-1 bg-white border border-[#e5e5e5] text-[#111111] placeholder-gray-400 px-4 py-3 text-xs rounded-[10px] focus:outline-none focus:border-[#f2707f]"
+      />
+      <button
+        type="submit"
+        class="bg-[#f2707f] hover:bg-[#e05e6d] text-white px-7 py-3 text-xs uppercase tracking-wider font-bold rounded-[10px] transition-all shadow-sm cursor-pointer whitespace-nowrap"
+      >
+        CLAIM ₹200
+      </button>
+    </form>
+
+    <p class="text-[11px] text-[#777777] pt-1">
+      Use coupon code <strong class="text-[#f2707f]">FIRSTBUY</strong> at checkout. No spam ever.
+    </p>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('newsletter-form');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Congratulations! Code FIRSTBUY is active for ₹200 off your order.');
+    (form as HTMLFormElement).reset();
+  });
+</script>

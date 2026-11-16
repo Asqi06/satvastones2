@@ -1,0 +1,368 @@
+---
+// Header.astro - Premium Editorial Minimalist Header (Mejuri / COS inspired)
+const navLinks = [
+  { name: 'New In', href: '/collections/new-arrivals' },
+  { name: 'Rings', href: '/collections/rings' },
+  { name: 'Necklaces', href: '/collections/necklaces' },
+  { name: 'Bracelets', href: '/collections/bracelets' },
+  { name: 'Earrings', href: '/collections/earrings' },
+  { name: 'Stack Studio', href: '/stack-builder' },
+  { name: 'Shop All', href: '/shop' }
+];
+---
+
+<header id="main-site-header" class="sticky top-0 z-40 bg-white border-b border-gray-100 transition-shadow duration-200">
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
+    
+    <!-- Left: Mobile Hamburger & Search -->
+    <div class="flex items-center gap-1 lg:hidden">
+      <button
+        id="mobile-menu-toggle"
+        class="p-2 -ml-2 text-[#111111] hover:text-[#f2707f] transition-colors focus:outline-none cursor-pointer"
+        aria-label="Open navigation menu"
+      >
+        <svg class="w-6 h-6 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+      </button>
+
+      <button
+        id="mobile-search-btn"
+        class="p-2 text-[#111111] hover:text-[#f2707f] transition-colors focus:outline-none cursor-pointer"
+        aria-label="Search fine jewellery"
+      >
+        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Center/Left Logo: Authentic SatvaStones Cursive Script -->
+    <div class="flex items-center">
+      <a href="/" class="flex items-center group py-2" aria-label="Satvastones Fine Jewellery">
+        <img
+          id="header-logo-img"
+          src="/satvastones-logo.png"
+          alt="Satvastones"
+          class="h-8 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+        />
+      </a>
+    </div>
+
+    <!-- Center Navigation (Desktop): Editorial Spacing & Refined Typography -->
+    <nav class="hidden lg:flex items-center space-x-7 xl:space-x-9">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="text-[13px] font-medium tracking-[0.03em] text-[#222222] hover:text-[#f2707f] transition-colors relative py-1.5 group/nav"
+        >
+          <span>{link.name}</span>
+          <span class="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#f2707f] transition-all duration-200 group-hover/nav:w-full"></span>
+        </a>
+      ))}
+    </nav>
+
+    <!-- Right Utilities: Clean Minimalist Line Icons -->
+    <div class="flex items-center gap-1 sm:gap-2">
+      <!-- Desktop Search Icon -->
+      <button
+        id="desktop-search-btn"
+        class="hidden lg:flex items-center justify-center p-2.5 text-[#222222] hover:text-[#f2707f] rounded-full transition-colors cursor-pointer"
+        aria-label="Search catalog"
+        title="Search (⌘K)"
+      >
+        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+      </button>
+
+      <!-- Account Icon -->
+      <a
+        href="/account"
+        class="p-2.5 text-[#222222] hover:text-[#f2707f] rounded-full transition-colors"
+        aria-label="Member Account"
+        title="Account"
+      >
+        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+        </svg>
+      </a>
+
+      <!-- Wishlist Icon -->
+      <a
+        href="/wishlist"
+        class="p-2.5 text-[#222222] hover:text-[#f2707f] rounded-full transition-colors relative"
+        aria-label="Saved Wishlist"
+        title="Wishlist"
+      >
+        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+        </svg>
+        <span
+          id="header-wishlist-count"
+          class="absolute top-1.5 right-1.5 w-4 h-4 bg-[#f2707f] text-white text-[9px] font-bold rounded-full flex items-center justify-center opacity-0 transition-opacity"
+        >
+          0
+        </span>
+      </a>
+
+      <!-- Shopping Bag Icon -->
+      <button
+        id="header-cart-toggle"
+        class="p-2.5 text-[#222222] hover:text-[#f2707f] rounded-full transition-colors relative cursor-pointer"
+        aria-label="Open Shopping Bag"
+        title="Shopping Bag"
+      >
+        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        <span
+          id="header-cart-count"
+          class="absolute top-1.5 right-1.5 w-4 h-4 bg-[#f2707f] text-white text-[9px] font-bold rounded-full flex items-center justify-center opacity-0 transition-opacity"
+        >
+          0
+        </span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ========================================== -->
+<!-- MOBILE DRAWER & BACKDROP OVERLAY           -->
+<!-- Rendered at root level for 100% opacity,   -->
+<!-- zero backdrop blur artifacts, high contrast-->
+<!-- ========================================== -->
+<div
+  id="mobile-drawer-overlay"
+  class="fixed inset-0 bg-black/60 z-[99998] transition-opacity duration-300 opacity-0 pointer-events-none"
+  aria-hidden="true"
+></div>
+
+<div
+  id="mobile-nav-drawer"
+  class="fixed inset-y-0 left-0 w-80 max-w-[85vw] z-[99999] transform -translate-x-full transition-transform duration-300 ease-out flex flex-col shadow-2xl"
+  style="background-color: #ffffff !important; opacity: 1 !important;"
+>
+  <!-- Drawer Header -->
+  <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-white">
+    <a href="/" class="block">
+      <img
+        src="/satvastones-logo.png"
+        alt="Satvastones"
+        class="h-8 w-auto object-contain"
+      />
+    </a>
+    <button
+      id="close-mobile-drawer"
+      class="p-2 text-gray-500 hover:text-black transition-colors rounded-full hover:bg-gray-100 cursor-pointer"
+      aria-label="Close navigation menu"
+    >
+      <svg class="w-5 h-5 stroke-[1.75]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Drawer Body Navigation Links -->
+  <div class="flex-1 overflow-y-auto p-5 space-y-6 bg-white">
+    
+    <!-- Primary Category Links -->
+    <div class="space-y-1">
+      <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">Collections</p>
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="flex items-center justify-between py-2.5 text-sm font-semibold text-[#111111] hover:text-[#f2707f] transition-colors border-b border-gray-50 group"
+        >
+          <span>{link.name}</span>
+          <svg class="w-4 h-4 text-gray-300 group-hover:text-[#f2707f] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </a>
+      ))}
+    </div>
+
+    <!-- Quick Concierge Tools (Ring Sizer & Order Tracking) -->
+    <div class="pt-2 space-y-2">
+      <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Atelier Services</p>
+      
+      <!-- Interactive Ring Sizer Trigger -->
+      <button
+        id="mobile-ring-sizer-trigger"
+        type="button"
+        class="w-full text-left p-3.5 bg-rose-50/50 hover:bg-rose-50 border border-rose-100/60 rounded-xl flex items-center justify-between text-xs font-semibold text-gray-900 transition-colors cursor-pointer"
+      >
+        <span class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-[#f2707f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m-3-3h6" />
+          </svg>
+          <span>Interactive Ring Sizer</span>
+        </span>
+        <span class="text-[#f2707f] text-[11px] font-bold">Open Tool →</span>
+      </button>
+
+      <!-- Track Vapi Shipment -->
+      <a
+        href="/track-order"
+        class="w-full text-left p-3.5 bg-gray-50 hover:bg-gray-100 border border-gray-200/60 rounded-xl flex items-center justify-between text-xs font-semibold text-gray-900 transition-colors block"
+      >
+        <span class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875A1.125 1.125 0 0013.125 3.75H4.5A1.125 1.125 0 003.375 4.875v9.375" />
+          </svg>
+          <span>Track Order & GST Invoice</span>
+        </span>
+        <span class="text-gray-500 text-[11px] font-bold">Track →</span>
+      </a>
+
+      <!-- Jewellery Care Guide -->
+      <a
+        href="/jewellery-care"
+        class="w-full text-left p-3.5 bg-gray-50 hover:bg-gray-100 border border-gray-200/60 rounded-xl flex items-center justify-between text-xs font-semibold text-gray-900 transition-colors block"
+      >
+        <span class="flex items-center gap-2.5">
+          <svg class="w-4 h-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+          </svg>
+          <span>Anti-Tarnish Care Guide</span>
+        </span>
+        <span class="text-gray-400">→</span>
+      </a>
+    </div>
+
+    <!-- Vapi Store Guarantee Card -->
+    <div class="p-4 bg-gray-50/80 rounded-2xl border border-gray-100 text-[11px] text-gray-600 space-y-2">
+      <p class="font-bold text-gray-900 text-xs flex items-center gap-1.5">
+        <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>SatvaStones Assurance</span>
+      </p>
+      <div class="space-y-1 text-gray-600">
+        <p class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span>Dispatched from Vapi store in 24–48 hours</span>
+        </p>
+        <p class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span>Free Express Delivery above ₹499</span>
+        </p>
+        <p class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span>18K Vacuum Gold PVD • 100% Waterproof</span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Drawer Footer: High Contrast Actions -->
+  <div class="p-4 border-t border-gray-100 bg-white space-y-2">
+    <a
+      href="/account"
+      class="block w-full text-center py-3 text-xs font-bold uppercase tracking-wider bg-black hover:bg-gray-800 text-white rounded-xl transition-colors"
+    >
+      My Account
+    </a>
+    <p class="text-[11px] text-center text-gray-500">
+      Need Help? <a href="mailto:support@satvastones.in" class="text-gray-900 font-semibold hover:underline">support@satvastones.in</a>
+    </p>
+  </div>
+</div>
+
+<script>
+  import { getCartItems } from '../stores/cartStore';
+  import { getWishlistItems } from '../stores/wishlistStore';
+
+  // Subtle header shadow on scroll (keeps logo clean and permanent)
+  const header = document.getElementById('main-site-header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      header?.classList.add('shadow-xs');
+    } else {
+      header?.classList.remove('shadow-xs');
+    }
+  });
+
+  // Mobile Drawer Open / Close Logic
+  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const closeBtn = document.getElementById('close-mobile-drawer');
+  const drawer = document.getElementById('mobile-nav-drawer');
+  const overlay = document.getElementById('mobile-drawer-overlay');
+
+  const openDrawer = () => {
+    drawer?.classList.remove('-translate-x-full');
+    overlay?.classList.remove('opacity-0', 'pointer-events-none');
+    overlay?.classList.add('opacity-100');
+    document.body.style.overflow = 'hidden';
+  };
+
+  const closeDrawer = () => {
+    drawer?.classList.add('-translate-x-full');
+    overlay?.classList.remove('opacity-100');
+    overlay?.classList.add('opacity-0', 'pointer-events-none');
+    document.body.style.overflow = '';
+  };
+
+  toggleBtn?.addEventListener('click', openDrawer);
+  closeBtn?.addEventListener('click', closeDrawer);
+  overlay?.addEventListener('click', closeDrawer);
+
+  // Cart Drawer Trigger
+  const cartBtn = document.getElementById('header-cart-toggle');
+  cartBtn?.addEventListener('click', () => {
+    window.dispatchEvent(new CustomEvent('satvastones:open_cart'));
+  });
+
+  // Search Modal Triggers
+  const desktopSearchBtn = document.getElementById('desktop-search-btn');
+  const mobileSearchBtn = document.getElementById('mobile-search-btn');
+
+  const openSearch = () => {
+    window.dispatchEvent(new CustomEvent('satvastones:open_search'));
+  };
+
+  desktopSearchBtn?.addEventListener('click', openSearch);
+  mobileSearchBtn?.addEventListener('click', openSearch);
+
+  // Ring Sizer Triggers
+  const mobileRingSizerBtn = document.getElementById('mobile-ring-sizer-trigger');
+  mobileRingSizerBtn?.addEventListener('click', () => {
+    closeDrawer();
+    window.dispatchEvent(new CustomEvent('satvastones:open_ring_sizer'));
+  });
+
+  // Live Count Badges for Cart and Wishlist
+  const updateCounts = () => {
+    const cartCount = document.getElementById('header-cart-count');
+    const wishlistCount = document.getElementById('header-wishlist-count');
+
+    const cartItems = getCartItems();
+    const totalQty = cartItems.reduce((acc, cur) => acc + cur.quantity, 0);
+
+    if (cartCount) {
+      cartCount.textContent = String(totalQty);
+      if (totalQty > 0) {
+        cartCount.classList.remove('opacity-0');
+      } else {
+        cartCount.classList.add('opacity-0');
+      }
+    }
+
+    const wishlistItems = getWishlistItems();
+    if (wishlistCount) {
+      wishlistCount.textContent = String(wishlistItems.length);
+      if (wishlistItems.length > 0) {
+        wishlistCount.classList.remove('opacity-0');
+      } else {
+        wishlistCount.classList.add('opacity-0');
+      }
+    }
+  };
+
+  updateCounts();
+  window.addEventListener('satvastones:cart_updated', updateCounts);
+  window.addEventListener('satvastones:wishlist_updated', updateCounts);
+</script>

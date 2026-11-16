@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <!-- Homepage -->
+  <url>
+    <loc>https://www.satvastones.in/</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Core Store Pages -->
+  <url>
+    <loc>https://www.satvastones.in/shop</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/stack-builder</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/about</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/materials</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/jewellery-care</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/faqs</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/contact</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/track-order</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/wishlist</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Legal, DPDP & E-Commerce Compliance Pages -->
+  <url>
+    <loc>https://www.satvastones.in/privacy-policy</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/terms-and-conditions</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/refund-policy</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/shipping-policy</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/grievance-redressal</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/privacy-rights</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/policies/warranty</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Category & Collection Pages -->
+  <url>
+    <loc>https://www.satvastones.in/collections/rings</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/necklaces</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/bracelets</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/earrings</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/bangles</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/gift-sets</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/jewellery-set</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/mystery-jewellery-jar</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/bestsellers</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/collections/new-arrivals</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- Product Pages with Google Image Extensions -->
+  <url>
+    <loc>https://www.satvastones.in/products/aura-herringbone-snake-chain</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Aura Herringbone Snake Chain - Anti-Tarnish 18K Gold PVD Waterproof Necklace</image:title>
+      <image:caption>Satvastones 316L surgical steel herringbone snake chain waterproof necklace</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/elysian-croissant-dome-ring</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Elysian Croissant Dome Ring - Waterproof Anti Tarnish Ring India</image:title>
+      <image:caption>French Parisian ribbed croissant ring in 18K gold PVD steel</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/serene-molten-pearl-pendant</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Serene Molten Pearl Pendant - Organic Baroque Freshwater Pearl Anti-Tarnish Necklace</image:title>
+      <image:caption>Organic molten gold bezel with natural freshwater pearl pendant</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/solace-chunky-link-chain-bracelet</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1611591475152-47eac9c5bdfa?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Solace Chunky Link Chain Bracelet - Anti Tarnish Jewellery Bracelet India</image:title>
+      <image:caption>Substantial paperclip chain bracelet in 316L waterproof surgical stainless steel</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/chloe-sculptural-ribbed-huggies</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Chloe Sculptural Ribbed Huggies - Waterproof Hypoallergenic Earrings</image:title>
+      <image:caption>Tapered ribbed golden huggie earrings crafted in nickel-free steel</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/vesta-twisted-cable-kada-bangle</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Vesta Twisted Cable Kada Bangle - Everyday Anti-Tarnish Bangle India</image:title>
+      <image:caption>Structured torque cuff bangle engineered for daily wristwear</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/mira-dual-bezel-solitaire-ring</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1603561591411-07134e71a2a9?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Mira Dual Bezel Solitaire Ring - Anti-Tarnish 5A Cubic Zirconia Ring</image:title>
+      <image:caption>Low profile protective bezel solitaire ring in 18K gold PVD</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/the-golden-hour-gifting-capsule</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>The Golden Hour Gifting Capsule - Anti Tarnish Jewellery Gift Set</image:title>
+      <image:caption>Curated 3-piece jewellery suite presented in luxury velvet gift packaging</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/the-mystery-jewellery-jar</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>The Mystery Jewellery Jar - Surprise Anti-Tarnish Jewellery Box India</image:title>
+      <image:caption>Unbox 3 handcrafted waterproof pieces worth ₹4,999+ in glass keepsake jar</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.satvastones.in/products/royal-heirloom-anti-tarnish-jewellery-set</loc>
+    <lastmod>2026-11-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&amp;fit=crop&amp;w=1200&amp;q=85</image:loc>
+      <image:title>Royal Heirloom Anti-Tarnish Jewellery Set - Complete Matching Set for Saree &amp; Daily Wear</image:title>
+      <image:caption>Harmonious 3-piece anti tarnish jewellery set with choker necklace, bracelet and earrings</image:caption>
+    </image:image>
+  </url>
+</urlset>

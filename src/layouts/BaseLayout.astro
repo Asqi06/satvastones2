@@ -1,0 +1,65 @@
+---
+import SEOHead from '../components/SEOHead.astro';
+import AnnouncementBar from '../components/AnnouncementBar.astro';
+import Header from '../components/Header.astro';
+import MobileBottomNav from '../components/MobileBottomNav.astro';
+import Footer from '../components/Footer.astro';
+import CartDrawer from '../components/CartDrawer';
+import SearchModal from '../components/SearchModal';
+import SocialProofToast from '../components/SocialProofToast';
+import RingSizeModal from '../components/RingSizeModal';
+import GSTInvoiceModal from '../components/GSTInvoiceModal';
+import CookieConsentManager from '../components/CookieConsentManager';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  type?: 'website' | 'product' | 'article';
+  schema?: Record<string, any>;
+  noindex?: boolean;
+}
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <SEOHead {...props} />
+    <!-- Razorpay Official Checkout SDK -->
+    <script is:inline src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </head>
+  <body class="min-h-screen flex flex-col bg-white text-[#111111] selection:bg-[#f2707f] selection:text-white">
+    <!-- Announcement Bar (Jewelsmars Infinite Black Marquee) -->
+    <AnnouncementBar />
+
+    <!-- Sticky Navigation Header -->
+    <Header />
+
+    <!-- Main Content Slot (with mobile dock clearance) -->
+    <main class="flex-1 pb-16 lg:pb-0">
+      <slot />
+    </main>
+
+    <!-- WhatsApp Floating Concierge Widget -->
+    <WhatsAppButton />
+
+    <!-- Footer -->
+    <Footer />
+
+    <!-- Mobile Fixed Bottom Navigation Bar -->
+    <MobileBottomNav />
+
+    <!-- Client-side Interactive Islands -->
+    <CartDrawer client:load />
+    <SearchModal client:load />
+    <SocialProofToast client:idle />
+    <RingSizeModal client:load />
+    <GSTInvoiceModal client:load />
+    <CookieConsentManager client:load />
+  </body>
+</html>

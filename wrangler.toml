@@ -1,0 +1,22 @@
+name = "satvastones-store"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-03-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "satvastones-db"
+database_id = "local-d1-placeholder"
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "satvastones-media"
+
+[vars]
+ENVIRONMENT = "production"
+BRAND_NAME = "Satvastones Jewellery"
+PROPRIETOR_NAME = "Anirudh A Verma"
+GSTIN = "24DDAPV4074H1ZF"
+STORE_LOCATION = "Chala, Vapi, Gujarat - 396191, India"
+FREE_SHIPPING_THRESHOLD_PAISE = "49900"
+SUPPORT_EMAIL = "support@satvastones.in"
