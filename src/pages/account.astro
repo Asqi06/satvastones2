@@ -1,132 +1,437 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import GSTInvoiceModal from '../components/GSTInvoiceModal';
 ---
 
 <BaseLayout
-  title="My Account | Satvastones Anti-Tarnish Jewellery"
-  description="Manage your Satvastones orders, delivery addresses, and account details."
+  title="My Account | Satvastones Fine Jewellery"
+  description="Manage your personal Satvastones orders, delivery addresses, and VIP membership."
 >
-  <!-- Jewelsmars Clean Header -->
-  <div class="bg-white border-b border-gray-100 py-6 sm:py-10">
+  <!-- Interactive GST Tax Invoice Modal -->
+  <GSTInvoiceModal client:load />
+
+  <!-- Header Banner -->
+  <div class="bg-white border-b border-gray-100 py-6 sm:py-8">
     <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1">
-      <span class="text-xs font-bold uppercase tracking-widest text-[#a1505a]">Member Hub</span>
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">My Account</h1>
-      <p class="text-xs text-gray-500">Manage orders, track Vapi store dispatches, and access saved pieces</p>
+      <span class="text-xs font-bold uppercase tracking-widest text-[#a1505a]">Satvastones Atelier Circle</span>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Personal Account Portal</h1>
+      <p class="text-xs text-gray-500">Secure member access for order history, real-time tracking, and saved delivery details</p>
     </div>
   </div>
 
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-    <div class="max-w-4xl mx-auto space-y-6">
+  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div class="max-w-4xl mx-auto">
       
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- ============================================================== -->
+      <!-- STATE 1: GUEST / UNAUTHENTICATED VIEW (SIGN IN / REGISTER TABS) -->
+      <!-- ============================================================== -->
+      <div id="auth-gate-view" class="max-w-md mx-auto bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
         
-        <!-- Sidebar Navigation -->
-        <div class="space-y-2 text-xs">
-          <div class="p-4 bg-white border border-gray-200 rounded-[18px] space-y-1 mb-4 shadow-xs">
-            <p class="text-[10px] uppercase font-bold text-gray-400">Welcome Back</p>
-            <h3 class="text-base font-extrabold text-gray-900">Satvastones Member</h3>
-            <p class="text-[11px] text-[#f2707f] font-bold">VIP Tier • Free Shipping Unlocked</p>
-          </div>
-
-          <a href="/account" class="w-full p-3.5 bg-[#111111] text-white font-bold rounded-xl shadow-sm transition-colors flex items-center gap-2.5">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-            </svg>
-            <span>My Orders & Tracking</span>
-          </a>
-          <a href="/wishlist" class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-[#f9d8dc] hover:text-[#f2707f] font-bold rounded-xl transition-colors flex items-center gap-2.5">
-            <svg class="w-4 h-4 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-            </svg>
-            <span>Saved Wishlist</span>
-          </a>
-          <a href="/track-order" class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-[#f9d8dc] hover:text-[#f2707f] font-bold rounded-xl transition-colors flex items-center gap-2.5">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875A1.125 1.125 0 0013.125 3.75H4.5A1.125 1.125 0 003.375 4.875v9.375" />
-            </svg>
-            <span>Track Vapi Shipment</span>
-          </a>
-          <a href="/jewellery-care" class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-[#f9d8dc] hover:text-[#f2707f] font-bold rounded-xl transition-colors flex items-center gap-2.5">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-            </svg>
-            <span>Jewellery Care Guide</span>
-          </a>
-          <a href="/faqs" class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-[#f9d8dc] hover:text-[#f2707f] font-bold rounded-xl transition-colors flex items-center gap-2.5">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
-            </svg>
-            <span>FAQs & Support</span>
-          </a>
+        <!-- Tab Switcher -->
+        <div class="flex bg-gray-100 p-1 rounded-2xl text-xs font-bold">
+          <button
+            type="button"
+            id="tab-btn-signin"
+            class="flex-1 py-2.5 rounded-xl transition-all cursor-pointer bg-white text-gray-900 shadow-xs"
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            id="tab-btn-register"
+            class="flex-1 py-2.5 rounded-xl transition-all cursor-pointer text-gray-500 hover:text-gray-900"
+          >
+            Create Account
+          </button>
         </div>
 
-        <!-- Main Account Content -->
-        <div class="md:col-span-2 space-y-5">
-          
-          <!-- Recent Orders Card -->
-          <div class="bg-white p-5 sm:p-7 border border-gray-200 rounded-[22px] space-y-4 shadow-xs">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-              <div>
-                <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Live Fulfillment</span>
-                <h2 class="text-lg font-bold text-gray-900">Recent Orders</h2>
-              </div>
-              <span class="text-xs text-gray-500">Dispatched from Vapi</span>
-            </div>
-            
-            <div class="border border-gray-200 rounded-[16px] p-4 bg-gray-50 space-y-3">
-              <div class="flex justify-between items-start text-xs border-b border-gray-200 pb-3">
-                <div>
-                  <span class="font-extrabold text-sm text-gray-900">Order #SAT-2026-000108</span>
-                  <p class="text-[11px] text-gray-500">Confirmed on 14 Nov 2026 • Express Courier</p>
-                </div>
-                <span class="bg-[#e6f9f0] text-[#007c52] text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                  Dispatched from Vapi
-                </span>
-              </div>
+        <!-- Alert Notification -->
+        <div id="auth-alert" class="hidden p-3.5 rounded-xl text-xs font-medium space-y-1"></div>
 
-              <div class="flex items-center gap-3.5 text-xs">
-                <img
-                  src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=200&q=80"
-                  alt="Aura Snake Chain"
-                  class="w-14 h-18 object-cover rounded-[10px] bg-white border border-gray-200 shrink-0"
-                />
-                <div class="flex-1 space-y-0.5 min-w-0">
-                  <h4 class="text-sm font-bold text-gray-900 truncate">Aura Herringbone Snake Chain</h4>
-                  <p class="text-[11px] text-gray-500">18K PVD Gold • Surgical 316L</p>
-                  <p class="font-extrabold text-xs text-[#f2707f] pt-0.5">₹1,699</p>
-                </div>
-                <div>
-                  <a
-                    href="/track-order"
-                    class="text-xs font-bold text-[#f2707f] hover:underline"
-                  >
-                    Track →
-                  </a>
-                </div>
-              </div>
-            </div>
+        <!-- Form 1: Sign In -->
+        <form id="form-signin" class="space-y-4">
+          <div class="space-y-1">
+            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Sign In to Your Account</h2>
+            <p class="text-xs text-gray-500">Access your past orders, delivery tracking, and saved addresses.</p>
+          </div>
 
-            <!-- Shipping Policy Notice -->
-            <div class="p-3.5 bg-[#fffafb] border border-[#f9d8dc] rounded-xl text-xs text-gray-600 space-y-1">
-              <p class="font-bold text-gray-900">Order & Shipping Reminders:</p>
-              <p>• Orders leave our Vapi store within 24–48 hours.</p>
-              <p>• Cancellations are only permitted prior to courier handover.</p>
-              <p>• 360° unedited unboxing video is mandatory for any transit damage verification.</p>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Mobile Number or Email Address *</label>
+            <input
+              type="text"
+              id="signin-identifier"
+              required
+              autocomplete="username"
+              placeholder="e.g. 9016703180 or priya@gmail.com"
+              class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+            />
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-xs font-bold text-gray-700">Security Password *</label>
+              <a href="https://wa.me/919016703180?text=Hello%20Satvastones%2C%20I%20need%20help%20logging%20in%20to%20my%20account" target="_blank" rel="noopener noreferrer" class="text-[11px] text-[#f2707f] hover:underline font-bold">Forgot?</a>
+            </div>
+            <div class="relative">
+              <input
+                type="password"
+                id="signin-password"
+                required
+                autocomplete="current-password"
+                placeholder="••••••••••••"
+                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f] pr-10"
+              />
+              <button
+                type="button"
+                id="toggle-signin-pwd"
+                class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-700 cursor-pointer"
+                aria-label="Toggle password visibility"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
             </div>
           </div>
 
-          <!-- Customer Care Card -->
-          <div class="bg-white p-5 sm:p-6 border border-gray-200 rounded-[22px] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+          <button
+            type="submit"
+            id="signin-submit-btn"
+            class="w-full bg-[#111111] hover:bg-black text-white py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
+          >
+            Authenticate & Sign In →
+          </button>
+
+          <p class="text-center text-xs text-gray-500 pt-2">
+            New to Satvastones? 
+            <button type="button" id="switch-to-register" class="text-[#f2707f] font-bold hover:underline cursor-pointer">Create a personal account</button>
+          </p>
+        </form>
+
+        <!-- Form 2: Register -->
+        <form id="form-register" class="space-y-4 hidden">
+          <div class="space-y-1">
+            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Create Personal Account</h2>
+            <p class="text-xs text-gray-500">Save delivery addresses and track all current and past dispatches.</p>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Full Legal Name *</label>
+            <input
+              type="text"
+              id="reg-name"
+              required
+              autocomplete="name"
+              placeholder="e.g. Priya Sharma"
+              class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <h3 class="text-sm font-bold text-gray-900">Need Help with Your Order?</h3>
-              <p class="text-xs text-gray-500">Our Vapi concierge team is here to assist you.</p>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Mobile Number (+91) *</label>
+              <input
+                type="tel"
+                id="reg-phone"
+                required
+                maxlength="10"
+                autocomplete="tel"
+                placeholder="10-digit mobile number"
+                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+              />
             </div>
-            <a
-              href="mailto:support@satvastones.in"
-              class="bg-[#f2707f] hover:bg-[#e05e6d] text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl shadow-xs transition-colors whitespace-nowrap"
-            >
-              Email Support
-            </a>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Email Address *</label>
+              <input
+                type="email"
+                id="reg-email"
+                required
+                autocomplete="email"
+                placeholder="e.g. priya@gmail.com"
+                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Create Password (Min 8 characters) *</label>
+            <input
+              type="password"
+              id="reg-password"
+              required
+              minlength="8"
+              autocomplete="new-password"
+              placeholder="••••••••••••"
+              class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+            />
+          </div>
+
+          <!-- Optional Shipping Address -->
+          <div class="pt-2 border-t border-gray-100 space-y-2.5">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500">Default Shipping Address (Optional)</span>
+            <input
+              type="text"
+              id="reg-address"
+              placeholder="Flat / Building / Street Address"
+              class="w-full bg-gray-50 border border-gray-200 px-4 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+            />
+            <div class="grid grid-cols-3 gap-2">
+              <input
+                type="text"
+                id="reg-city"
+                placeholder="City"
+                class="bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+              />
+              <input
+                type="text"
+                id="reg-state"
+                placeholder="State"
+                class="bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+              />
+              <input
+                type="text"
+                id="reg-pincode"
+                maxlength="6"
+                placeholder="PIN Code"
+                class="bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+              />
+            </div>
+          </div>
+
+          <label class="flex items-start gap-2.5 text-[11px] text-gray-500 pt-1 cursor-pointer">
+            <input type="checkbox" id="reg-consent" required checked class="accent-[#f2707f] mt-0.5" />
+            <span>I consent to processing my contact and delivery data for order fulfilment in strict compliance with the DPDP Act, 2023 and <a href="/privacy-policy" class="text-[#f2707f] underline" target="_blank">Privacy Policy</a>.</span>
+          </label>
+
+          <button
+            type="submit"
+            id="reg-submit-btn"
+            class="w-full bg-[#a1505a] hover:bg-[#8b4049] text-white py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
+          >
+            Create Personal Account →
+          </button>
+
+          <p class="text-center text-xs text-gray-500 pt-1">
+            Already have an account? 
+            <button type="button" id="switch-to-signin" class="text-[#f2707f] font-bold hover:underline cursor-pointer">Sign in here</button>
+          </p>
+        </form>
+
+        <div class="pt-3 border-t border-gray-100 flex items-center justify-center gap-2 text-[10px] text-gray-400">
+          <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+          </svg>
+          <span>PBKDF2 100k Iterations • 256-Bit Edge Encryption • DPDP Act 2023 Compliant</span>
+        </div>
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- STATE 2: AUTHENTICATED CUSTOMER DASHBOARD (HIDDEN INITIALLY) -->
+      <!-- ============================================================== -->
+      <div id="account-dashboard-view" class="hidden space-y-6">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Sidebar Navigation & Profile Card -->
+          <div class="space-y-3">
+            
+            <!-- Customer Profile Card -->
+            <div class="p-5 bg-white border border-gray-200 rounded-3xl space-y-3 shadow-xs">
+              <div class="flex items-center gap-3">
+                <div id="cust-avatar" class="w-11 h-11 rounded-full bg-[#fff0f2] text-[#f2707f] flex items-center justify-center text-sm font-extrabold uppercase border border-[#f9d8dc]">
+                  S
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Welcome back</p>
+                  <h3 id="cust-name-display" class="text-base font-extrabold text-gray-900 truncate">Satvastones Patron</h3>
+                </div>
+              </div>
+
+              <div class="space-y-1 text-xs text-gray-500 pt-2 border-t border-gray-100">
+                <p id="cust-phone-display" class="flex items-center gap-1.5 truncate">
+                  <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  <span>+91 90167 03180</span>
+                </p>
+                <p id="cust-email-display" class="flex items-center gap-1.5 truncate">
+                  <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span>customer@example.com</span>
+                </p>
+              </div>
+
+              <div class="pt-2">
+                <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#a1505a] bg-rose-50 border border-rose-100 px-3 py-1 rounded-full">
+                  <span>★ Atelier Member Tier</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="space-y-1 text-xs">
+              <button
+                type="button"
+                id="menu-btn-orders"
+                class="w-full p-3.5 bg-[#111111] text-white font-bold rounded-2xl shadow-xs transition-all flex items-center gap-2.5 text-left cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+                </svg>
+                <span>My Orders & Tracking</span>
+              </button>
+
+              <button
+                type="button"
+                id="menu-btn-address"
+                class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-gray-300 font-bold rounded-2xl transition-all flex items-center gap-2.5 text-left cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                </svg>
+                <span>Saved Shipping Address</span>
+              </button>
+
+              <a
+                href="/wishlist"
+                class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-rose-200 hover:text-rose-600 font-bold rounded-2xl transition-all flex items-center gap-2.5 text-left"
+              >
+                <svg class="w-4 h-4 shrink-0 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+                <span>Saved Wishlist</span>
+              </a>
+
+              <a
+                href="/privacy-rights"
+                class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-gray-300 font-bold rounded-2xl transition-all flex items-center gap-2.5 text-left"
+              >
+                <svg class="w-4 h-4 shrink-0 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+                <span>DPDP Data Rights</span>
+              </a>
+
+              <button
+                type="button"
+                id="cust-logout-btn"
+                class="w-full p-3.5 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold rounded-2xl transition-all flex items-center gap-2.5 text-left cursor-pointer pt-3 border border-rose-100"
+              >
+                <svg class="w-4 h-4 shrink-0 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                </svg>
+                <span>Sign Out</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Main Content Area (Dynamic Tabs) -->
+          <div class="md:col-span-2 space-y-6">
+            
+            <!-- SECTION A: MY ORDERS -->
+            <div id="section-orders" class="space-y-4">
+              <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+                <div>
+                  <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Cloudflare D1 Verified</span>
+                  <h2 class="text-lg font-bold text-gray-900">Order History & Tracking</h2>
+                </div>
+                <span class="text-xs text-gray-500">Atelier Dispatches</span>
+              </div>
+
+              <!-- Orders List Container -->
+              <div id="orders-container" class="space-y-4">
+                <div class="p-8 text-center bg-gray-50 rounded-2xl border border-gray-200 text-gray-400 text-xs">
+                  Loading verified customer orders...
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION B: SAVED ADDRESS -->
+            <div id="section-address" class="hidden bg-white p-6 sm:p-7 border border-gray-200 rounded-3xl space-y-5 shadow-xs">
+              <div class="border-b border-gray-100 pb-3">
+                <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Fast Pan-India Checkout</span>
+                <h2 class="text-lg font-bold text-gray-900">Manage Saved Delivery Address</h2>
+                <p class="text-xs text-gray-500">This address will automatically pre-fill your checkout details.</p>
+              </div>
+
+              <div id="address-alert" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+
+              <form id="form-address-update" class="space-y-3.5">
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">House / Flat / Street Address *</label>
+                  <input
+                    type="text"
+                    id="edit-address"
+                    required
+                    placeholder="e.g. Flat 402, Green Glen Layout, Bellandur"
+                    class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  />
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">City *</label>
+                    <input
+                      type="text"
+                      id="edit-city"
+                      required
+                      placeholder="Bengaluru"
+                      class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">State *</label>
+                    <input
+                      type="text"
+                      id="edit-state"
+                      required
+                      placeholder="Karnataka"
+                      class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">PIN Code (6 digits) *</label>
+                    <input
+                      type="text"
+                      id="edit-pincode"
+                      required
+                      maxlength="6"
+                      placeholder="560103"
+                      class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  id="btn-save-address"
+                  class="bg-[#111111] hover:bg-black text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-xs"
+                >
+                  Save Address Changes
+                </button>
+              </form>
+            </div>
+
+            <!-- Customer Concierge Support -->
+            <div class="bg-white p-5 sm:p-6 border border-gray-200 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
+              <div class="space-y-0.5 text-center sm:text-left">
+                <h3 class="text-sm font-bold text-gray-900">Need Atelier Assistance with Your Order?</h3>
+                <p class="text-xs text-gray-500">Contact our Vapi customer support directly via WhatsApp or Email.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <a
+                  href="https://wa.me/919016703180?text=Hello%20Satvastones%2C%20I%20need%20help%20with%20my%20order"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="bg-[#25D366] hover:bg-[#20ba59] text-white px-4 py-2 text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-xs whitespace-nowrap"
+                >
+                  <span>WhatsApp Concierge</span>
+                </a>
+              </div>
+            </div>
+
           </div>
 
         </div>
@@ -135,4 +440,386 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     </div>
   </div>
+
+  <!-- Client-Side Customer Authentication & Dashboard Engine -->
+  <script>
+    const CUST_TOKEN_KEY = 'satva_customer_token';
+    const CUST_USER_KEY = 'satva_customer_user';
+
+    // Elements
+    const authGateView = document.getElementById('auth-gate-view');
+    const dashboardView = document.getElementById('account-dashboard-view');
+    const authAlert = document.getElementById('auth-alert');
+
+    // Tabs
+    const tabSignIn = document.getElementById('tab-btn-signin');
+    const tabRegister = document.getElementById('tab-btn-register');
+    const formSignIn = document.getElementById('form-signin');
+    const formRegister = document.getElementById('form-register');
+    const switchToRegister = document.getElementById('switch-to-register');
+    const switchToSignIn = document.getElementById('switch-to-signin');
+
+    // Password Toggle
+    const toggleSignInPwd = document.getElementById('toggle-signin-pwd');
+    const inputSignInPwd = document.getElementById('signin-password') as HTMLInputElement;
+
+    toggleSignInPwd?.addEventListener('click', () => {
+      if (inputSignInPwd) {
+        inputSignInPwd.type = inputSignInPwd.type === 'password' ? 'text' : 'password';
+      }
+    });
+
+    // Dashboard Menus
+    const menuBtnOrders = document.getElementById('menu-btn-orders');
+    const menuBtnAddress = document.getElementById('menu-btn-address');
+    const sectionOrders = document.getElementById('section-orders');
+    const sectionAddress = document.getElementById('section-address');
+    const custLogoutBtn = document.getElementById('cust-logout-btn');
+
+    // Form Address
+    const formAddressUpdate = document.getElementById('form-address-update');
+    const addressAlert = document.getElementById('address-alert');
+
+    // Switch between Sign In and Register Tabs
+    function showSignInTab() {
+      tabSignIn?.classList.add('bg-white', 'text-gray-900', 'shadow-xs');
+      tabSignIn?.classList.remove('text-gray-500');
+      tabRegister?.classList.remove('bg-white', 'text-gray-900', 'shadow-xs');
+      tabRegister?.classList.add('text-gray-500');
+      formSignIn?.classList.remove('hidden');
+      formRegister?.classList.add('hidden');
+      if (authAlert) authAlert.classList.add('hidden');
+    }
+
+    function showRegisterTab() {
+      tabRegister?.classList.add('bg-white', 'text-gray-900', 'shadow-xs');
+      tabRegister?.classList.remove('text-gray-500');
+      tabSignIn?.classList.remove('bg-white', 'text-gray-900', 'shadow-xs');
+      tabSignIn?.classList.add('text-gray-500');
+      formRegister?.classList.remove('hidden');
+      formSignIn?.classList.add('hidden');
+      if (authAlert) authAlert.classList.add('hidden');
+    }
+
+    tabSignIn?.addEventListener('click', showSignInTab);
+    tabRegister?.addEventListener('click', showRegisterTab);
+    switchToRegister?.addEventListener('click', showRegisterTab);
+    switchToSignIn?.addEventListener('click', showSignInTab);
+
+    function showAlert(msg: string, isError = true) {
+      if (!authAlert) return;
+      authAlert.textContent = msg;
+      authAlert.className = isError
+        ? 'p-3.5 rounded-xl text-xs font-medium bg-red-50 text-red-700 border border-red-200'
+        : 'p-3.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200';
+      authAlert.classList.remove('hidden');
+    }
+
+    // 1. SIGN IN SUBMIT
+    formSignIn?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const identifier = (document.getElementById('signin-identifier') as HTMLInputElement)?.value.trim();
+      const password = inputSignInPwd?.value.trim();
+      const submitBtn = document.getElementById('signin-submit-btn') as HTMLButtonElement;
+
+      if (!identifier || !password) return;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Verifying Credentials...';
+      }
+
+      try {
+        const res = await fetch('/api/customer/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, password })
+        });
+        const data = await res.json() as any;
+
+        if (res.ok && data.success && data.token) {
+          localStorage.setItem(CUST_TOKEN_KEY, data.token);
+          localStorage.setItem(CUST_USER_KEY, JSON.stringify(data.customer));
+          initDashboard(data.customer);
+        } else {
+          showAlert(data.error || 'Invalid credentials. Please verify your mobile number or password.', true);
+        }
+      } catch (err) {
+        showAlert('Network error: Unable to connect to authentication server.', true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Authenticate & Sign In →';
+        }
+      }
+    });
+
+    // 2. REGISTER SUBMIT
+    formRegister?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fullName = (document.getElementById('reg-name') as HTMLInputElement)?.value.trim();
+      const phone = (document.getElementById('reg-phone') as HTMLInputElement)?.value.trim();
+      const email = (document.getElementById('reg-email') as HTMLInputElement)?.value.trim();
+      const password = (document.getElementById('reg-password') as HTMLInputElement)?.value.trim();
+      const address = (document.getElementById('reg-address') as HTMLInputElement)?.value.trim();
+      const city = (document.getElementById('reg-city') as HTMLInputElement)?.value.trim();
+      const state = (document.getElementById('reg-state') as HTMLInputElement)?.value.trim();
+      const pincode = (document.getElementById('reg-pincode') as HTMLInputElement)?.value.trim();
+      const submitBtn = document.getElementById('reg-submit-btn') as HTMLButtonElement;
+
+      if (!fullName || !phone || !email || !password) return;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating Account...';
+      }
+
+      try {
+        const res = await fetch('/api/customer/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fullName, phone, email, password, address, city, state, pincode })
+        });
+        const data = await res.json() as any;
+
+        if (res.ok && data.success && data.token) {
+          localStorage.setItem(CUST_TOKEN_KEY, data.token);
+          localStorage.setItem(CUST_USER_KEY, JSON.stringify(data.customer));
+          initDashboard(data.customer);
+        } else {
+          showAlert(data.error || 'Failed to create account.', true);
+        }
+      } catch (err) {
+        showAlert('Network error: Unable to connect to registration server.', true);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Personal Account →';
+        }
+      }
+    });
+
+    // 3. LOGOUT
+    custLogoutBtn?.addEventListener('click', async () => {
+      localStorage.removeItem(CUST_TOKEN_KEY);
+      localStorage.removeItem(CUST_USER_KEY);
+      try {
+        await fetch('/api/customer/logout', { method: 'POST' });
+      } catch {}
+      location.reload();
+    });
+
+    // Navigation Sub-tabs
+    menuBtnOrders?.addEventListener('click', () => {
+      menuBtnOrders.className = 'w-full p-3.5 bg-[#111111] text-white font-bold rounded-2xl shadow-xs transition-all flex items-center gap-2.5 text-left cursor-pointer';
+      menuBtnAddress?.classList.remove('bg-[#111111]', 'text-white');
+      menuBtnAddress?.classList.add('bg-white', 'text-gray-800');
+      sectionOrders?.classList.remove('hidden');
+      sectionAddress?.classList.add('hidden');
+    });
+
+    menuBtnAddress?.addEventListener('click', () => {
+      menuBtnAddress.className = 'w-full p-3.5 bg-[#111111] text-white font-bold rounded-2xl shadow-xs transition-all flex items-center gap-2.5 text-left cursor-pointer';
+      menuBtnOrders?.classList.remove('bg-[#111111]', 'text-white');
+      menuBtnOrders?.classList.add('bg-white', 'text-gray-800');
+      sectionAddress?.classList.remove('hidden');
+      sectionOrders?.classList.add('hidden');
+    });
+
+    // 4. LOAD DASHBOARD
+    function initDashboard(customer: any) {
+      authGateView?.classList.add('hidden');
+      dashboardView?.classList.remove('hidden');
+
+      // Populate Profile
+      const nameDisplay = document.getElementById('cust-name-display');
+      const phoneDisplay = document.getElementById('cust-phone-display');
+      const emailDisplay = document.getElementById('cust-email-display');
+      const avatar = document.getElementById('cust-avatar');
+
+      if (nameDisplay) nameDisplay.textContent = customer.fullName || 'Satvastones Patron';
+      if (phoneDisplay) phoneDisplay.innerHTML = `<span>+91 ${customer.phone || '9016703180'}</span>`;
+      if (emailDisplay) emailDisplay.innerHTML = `<span>${customer.email || ''}</span>`;
+      if (avatar && customer.fullName) avatar.textContent = customer.fullName.charAt(0).toUpperCase();
+
+      // Populate Address Fields
+      const editAddr = document.getElementById('edit-address') as HTMLInputElement;
+      const editCity = document.getElementById('edit-city') as HTMLInputElement;
+      const editState = document.getElementById('edit-state') as HTMLInputElement;
+      const editPin = document.getElementById('edit-pincode') as HTMLInputElement;
+
+      if (editAddr) editAddr.value = customer.address || '';
+      if (editCity) editCity.value = customer.city || '';
+      if (editState) editState.value = customer.state || '';
+      if (editPin) editPin.value = customer.pincode || '';
+
+      // Load Orders
+      loadCustomerOrders();
+    }
+
+    // 5. UPDATE ADDRESS
+    formAddressUpdate?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const token = localStorage.getItem(CUST_TOKEN_KEY);
+      const address = (document.getElementById('edit-address') as HTMLInputElement)?.value.trim();
+      const city = (document.getElementById('edit-city') as HTMLInputElement)?.value.trim();
+      const state = (document.getElementById('edit-state') as HTMLInputElement)?.value.trim();
+      const pincode = (document.getElementById('edit-pincode') as HTMLInputElement)?.value.trim();
+      const saveBtn = document.getElementById('btn-save-address') as HTMLButtonElement;
+
+      if (saveBtn) {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving Changes...';
+      }
+
+      try {
+        const res = await fetch('/api/customer/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ address, city, state, pincode })
+        });
+        const data = await res.json() as any;
+
+        if (res.ok && data.success) {
+          localStorage.setItem(CUST_USER_KEY, JSON.stringify(data.customer));
+          if (addressAlert) {
+            addressAlert.textContent = 'Saved delivery address updated! It will auto-fill your checkout details.';
+            addressAlert.className = 'p-3 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200';
+            addressAlert.classList.remove('hidden');
+            setTimeout(() => addressAlert?.classList.add('hidden'), 5000);
+          }
+        }
+      } catch (err) {
+        alert('Failed to update address.');
+      } finally {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save Address Changes';
+        }
+      }
+    });
+
+    // 6. FETCH REAL ORDERS FROM CLOUDFLARE D1
+    async function loadCustomerOrders() {
+      const token = localStorage.getItem(CUST_TOKEN_KEY);
+      const container = document.getElementById('orders-container');
+      if (!container) return;
+
+      try {
+        const res = await fetch('/api/customer/orders', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json() as any;
+
+        if (res.ok && data.success && Array.isArray(data.orders) && data.orders.length > 0) {
+          container.innerHTML = data.orders.map((order: any) => {
+            const dateStr = new Date(order.createdAt).toLocaleDateString('en-IN', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric'
+            });
+
+            const statusColors: Record<string, string> = {
+              'VERIFIED': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+              'DISPATCHED_FROM_VAPI': 'bg-blue-50 text-blue-700 border-blue-200',
+              'IN_TRANSIT': 'bg-amber-50 text-amber-700 border-amber-200',
+              'DELIVERED': 'bg-green-50 text-green-700 border-green-200'
+            };
+
+            const statusClass = statusColors[order.fulfillmentStatus] || 'bg-gray-100 text-gray-700 border-gray-200';
+
+            return `
+              <div class="bg-white border border-gray-200 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
+                  <div>
+                    <span class="text-xs font-extrabold text-gray-900">${order.orderNumber}</span>
+                    <p class="text-[11px] text-gray-500">Placed on ${dateStr} • Courier: ${order.courierPartner}</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-full border ${statusClass}">
+                      ${order.fulfillmentStatus.replace(/_/g, ' ')}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Purchased Items -->
+                <div class="space-y-3">
+                  ${(order.items || []).map((item: any) => `
+                    <div class="flex items-center gap-3.5 text-xs">
+                      <img src="${item.image || '/images/satvastones-logo.png'}" alt="${item.title || item.name}" class="w-12 h-14 object-cover rounded-xl bg-gray-50 border border-gray-100 shrink-0" />
+                      <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-gray-900 truncate">${item.title || item.name}</h4>
+                        <p class="text-[11px] text-gray-500">Qty: ${item.quantity || 1}</p>
+                        <p class="font-extrabold text-xs text-[#f2707f] pt-0.5">₹${((item.pricePaise || 0) / 100).toLocaleString('en-IN')}</p>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <!-- Footer Summary & Actions -->
+                <div class="pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div>
+                    <span class="text-[11px] text-gray-500">Total Paid:</span>
+                    <span class="font-extrabold text-sm text-gray-900 ml-1">₹${((order.totalPaise || 0) / 100).toLocaleString('en-IN')}</span>
+                  </div>
+
+                  <div class="flex items-center gap-2">
+                    <a href="/track-order?ref=${encodeURIComponent(order.orderNumber)}" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl text-xs transition-colors">
+                      Track Live Courier →
+                    </a>
+                    <button type="button" class="view-invoice-btn px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-[#a1505a] font-bold rounded-xl text-xs transition-colors cursor-pointer" data-order='${JSON.stringify(order).replace(/'/g, "&apos;")}'>
+                      GST Tax Invoice 📄
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          // Attach Invoice Modal Handlers
+          document.querySelectorAll('.view-invoice-btn').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+              const target = e.currentTarget as HTMLElement;
+              const orderData = JSON.parse(target.getAttribute('data-order') || '{}');
+              window.dispatchEvent(new CustomEvent('satvastones:open_invoice', { detail: orderData }));
+            });
+          });
+
+        } else {
+          container.innerHTML = `
+            <div class="p-8 text-center bg-white rounded-3xl border border-dashed border-gray-300 space-y-3">
+              <div class="w-12 h-12 rounded-full bg-rose-50 text-[#f2707f] flex items-center justify-center mx-auto text-xl font-bold">
+                💍
+              </div>
+              <h3 class="text-sm font-bold text-gray-900">No Orders Placed Yet</h3>
+              <p class="text-xs text-gray-500 max-w-sm mx-auto">When you purchase anti-tarnish waterproof jewellery from our collection, your orders and tracking numbers will appear right here.</p>
+              <a href="/shop" class="inline-block bg-[#111111] hover:bg-black text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-xs">
+                Explore Jewellery Atelier →
+              </a>
+            </div>
+          `;
+        }
+      } catch (err) {
+        container.innerHTML = `<div class="p-4 text-xs text-red-600 bg-red-50 rounded-2xl">Could not retrieve live order history. Please try again.</div>`;
+      }
+    }
+
+    // Auto-check on Page Load
+    const savedToken = localStorage.getItem(CUST_TOKEN_KEY);
+    const savedUser = localStorage.getItem(CUST_USER_KEY);
+
+    if (savedToken && savedUser) {
+      try {
+        const parsed = JSON.parse(savedUser);
+        initDashboard(parsed);
+      } catch {
+        showSignInTab();
+      }
+    } else {
+      showSignInTab();
+    }
+  </script>
 </BaseLayout>

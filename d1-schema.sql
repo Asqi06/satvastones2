@@ -146,6 +146,25 @@ CREATE INDEX IF NOT EXISTS idx_privacy_ticket ON privacy_requests(ticket_number)
 CREATE INDEX IF NOT EXISTS idx_privacy_email ON privacy_requests(patron_email);
 CREATE INDEX IF NOT EXISTS idx_privacy_status ON privacy_requests(status);
 
+-- 9. CUSTOMERS TABLE (Secure Personal Accounts & Address Book)
+CREATE TABLE IF NOT EXISTS customers (
+    id TEXT PRIMARY KEY,
+    full_name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    phone TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    salt TEXT NOT NULL,
+    address TEXT,
+    city TEXT,
+    state TEXT,
+    pincode TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'utc')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now', 'utc'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_customers_email ON customers(email);
+CREATE INDEX IF NOT EXISTS idx_customers_phone ON customers(phone);
+
 -- ==============================================================================
 -- INITIAL SEED DATA
 -- ==============================================================================

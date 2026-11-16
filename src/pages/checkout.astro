@@ -46,7 +46,6 @@ import DPDPNotice from '../components/DPDPNotice';
                   required
                   placeholder="e.g. Priya Sharma"
                   id="checkout-name"
-                  value="Priya Sharma"
                   class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
                 />
               </div>
@@ -57,7 +56,6 @@ import DPDPNotice from '../components/DPDPNotice';
                   required
                   placeholder="+91 90167 03180"
                   id="checkout-phone"
-                  value="+91 90167 03180"
                   class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
                 />
               </div>
@@ -66,9 +64,8 @@ import DPDPNotice from '../components/DPDPNotice';
                 <input
                   type="email"
                   required
-                  placeholder="priya@example.com"
+                  placeholder="name@example.com"
                   id="checkout-email"
-                  value="priya.sharma@gmail.com"
                   class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
                 />
               </div>
@@ -93,7 +90,6 @@ import DPDPNotice from '../components/DPDPNotice';
                   required
                   placeholder="e.g. Flat 304, Green Heights"
                   id="checkout-addr1"
-                  value="Flat 402, Green Glen Layout, Bellandur"
                   class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
                 />
               </div>
@@ -103,7 +99,6 @@ import DPDPNotice from '../components/DPDPNotice';
                   type="text"
                   placeholder="e.g. Near Outer Ring Road"
                   id="checkout-addr2"
-                  value="Near Outer Ring Road"
                   class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
                 />
               </div>
@@ -114,9 +109,8 @@ import DPDPNotice from '../components/DPDPNotice';
                     type="text"
                     required
                     maxlength="6"
-                    placeholder="560103"
+                    placeholder="396191"
                     id="checkout-pin"
-                    value="560103"
                     class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
                   />
                 </div>
@@ -125,9 +119,8 @@ import DPDPNotice from '../components/DPDPNotice';
                   <input
                     type="text"
                     required
-                    placeholder="Bengaluru"
+                    placeholder="Vapi"
                     id="checkout-city"
-                    value="Bengaluru"
                     class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
                   />
                 </div>
@@ -136,9 +129,8 @@ import DPDPNotice from '../components/DPDPNotice';
                   <input
                     type="text"
                     required
-                    placeholder="Karnataka"
+                    placeholder="Gujarat"
                     id="checkout-state"
-                    value="Karnataka"
                     class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
                   />
                 </div>
@@ -404,6 +396,29 @@ import DPDPNotice from '../components/DPDPNotice';
     if (subtotalEl) subtotalEl.textContent = formatINR(subtotalPaise);
     if (shippingEl) shippingEl.textContent = shippingPaise === 0 ? 'FREE' : formatINR(shippingPaise);
     if (totalEl) totalEl.textContent = formatINR(totalPaise);
+
+    // Auto-prefill details if personal customer account is logged in
+    const savedCustomerStr = localStorage.getItem('satva_customer_user');
+    if (savedCustomerStr) {
+      try {
+        const cust = JSON.parse(savedCustomerStr);
+        const nameInput = document.getElementById('checkout-name') as HTMLInputElement;
+        const emailInput = document.getElementById('checkout-email') as HTMLInputElement;
+        const phoneInput = document.getElementById('checkout-phone') as HTMLInputElement;
+        const addr1Input = document.getElementById('checkout-addr1') as HTMLInputElement;
+        const cityInput = document.getElementById('checkout-city') as HTMLInputElement;
+        const stateInput = document.getElementById('checkout-state') as HTMLInputElement;
+        const pinInput = document.getElementById('checkout-pin') as HTMLInputElement;
+
+        if (nameInput && cust.fullName) nameInput.value = cust.fullName;
+        if (emailInput && cust.email) emailInput.value = cust.email;
+        if (phoneInput && cust.phone) phoneInput.value = `+91 ${cust.phone}`;
+        if (addr1Input && cust.address) addr1Input.value = cust.address;
+        if (cityInput && cust.city) cityInput.value = cust.city;
+        if (stateInput && cust.state) stateInput.value = cust.state;
+        if (pinInput && cust.pincode) pinInput.value = cust.pincode;
+      } catch {}
+    }
 
     const finalizeOrder = (paymentId: string) => {
       const nameInput = document.getElementById('checkout-name') as HTMLInputElement;

@@ -5,6 +5,7 @@ import * as consentHandler from '../functions/api/consent';
 import * as privacyHandler from '../functions/api/privacy-requests';
 import * as settingsHandler from '../functions/api/settings';
 import * as adminAuthHandler from '../functions/api/admin-auth';
+import * as customerHandler from '../functions/api/customer';
 
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -34,6 +35,11 @@ export default {
         next: () => env.ASSETS.fetch(request),
         data: {}
       };
+
+      if (url.pathname.startsWith('/api/customer/')) {
+        if (request.method === 'OPTIONS') return customerHandler.onRequestOptions();
+        return customerHandler.handleCustomerRequest(request, env);
+      }
 
       if (url.pathname === '/api/admin/auth') {
         if (request.method === 'OPTIONS') return adminAuthHandler.onRequestOptions();
