@@ -524,14 +524,25 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                     <svg class="w-5 h-5 text-[#f2707f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                     </svg>
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-900">Cloudinary Image CDN &amp; Optimization Engine</h3>
+                    <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-gray-900">Cloudinary Global Media CDN &amp; Upload Engine</h3>
                   </div>
-                  <span class="text-[10px] bg-rose-100 text-[#a1505a] font-bold px-2.5 py-0.5 rounded-full border border-rose-200">Auto WebP / AVIF</span>
+                  <span class="text-[10px] bg-rose-100 text-[#a1505a] font-bold px-2.5 py-0.5 rounded-full border border-rose-200">Zero-Lag Media Pipeline</span>
                 </div>
 
                 <p class="text-xs text-gray-600 leading-relaxed">
-                  Enter your Cloudinary Cloud Name and Upload Preset below. Once configured, clicking <strong>"Upload via Cloudinary"</strong> anywhere on this admin terminal lets you upload jewellery images directly with automatic luxury 3:4 cropping and responsive compression.
+                  Enter your Cloudinary Cloud Name and Upload Preset below. Once configured, clicking <strong>"Upload"</strong> anywhere on this admin terminal lets you upload jewellery images directly with automatic compression and CDN delivery.
                 </p>
+
+                <!-- Crucial Setup Guide Alert -->
+                <div class="p-3 bg-amber-50/80 border border-amber-200 rounded-xl text-xs text-amber-900 space-y-1">
+                  <p class="font-bold flex items-center gap-1.5 text-amber-950">
+                    <span>⚠️</span>
+                    <span>Important: Upload Preset must be set to "Unsigned"</span>
+                  </p>
+                  <p class="text-[11px] text-amber-800 leading-relaxed">
+                    In your Cloudinary Console, go to <strong>Settings (Gear Icon) → Upload → Upload Presets</strong>. Ensure your preset's <strong>Signing Mode</strong> is set to <strong>Unsigned</strong>. If set to <em>Signed</em>, browser uploads will be blocked.
+                  </p>
+                </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
@@ -544,7 +555,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                     />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">Upload Preset (Unsigned)</label>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Upload Preset (Must be Unsigned)</label>
                     <input
                       id="setting-cloudinary-preset"
                       type="text"
@@ -554,7 +565,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                   </div>
                 </div>
 
-                <div class="pt-1 flex items-center gap-3">
+                <div class="pt-1 flex flex-wrap items-center gap-3">
                   <button
                     id="save-cloudinary-config-btn"
                     type="button"
@@ -562,10 +573,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                   >
                     Save Cloudinary Credentials
                   </button>
+                  <button
+                    id="test-cloudinary-conn-btn"
+                    type="button"
+                    class="bg-white hover:bg-gray-50 border border-gray-300 text-gray-800 px-3.5 py-2 text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
+                  >
+                    <svg class="w-3.5 h-3.5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                    <span>Test Connection</span>
+                  </button>
                   <span id="cloudinary-config-feedback" class="text-xs font-bold text-emerald-700 hidden">
-                    Credentials saved! One-click uploads active.
+                    ✓ Credentials saved! One-click uploads active.
                   </span>
                 </div>
+
+                <!-- Test Connection Feedback Message Box -->
+                <div id="cloudinary-test-feedback" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
               </div>
 
               <!-- Cloudflare Native Edge Stack: D1 Database + R2 Storage -->
@@ -1050,7 +1072,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     type SiteSettings,
     type CategoryDetail
   } from '../../stores/adminStore';
-  import { openCloudinaryWidget, optimizeCloudinaryUrl } from '../../utils/cloudinary';
+  import { openCloudinaryWidget, optimizeCloudinaryUrl, testCloudinaryConnection, uploadToCloudinaryDirect } from '../../utils/cloudinary';
   import {
     fetchAllOrdersFromCloudflare,
     updateOrderStatusInCloudflare,
@@ -1860,6 +1882,56 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     if (feedback) {
       feedback.classList.remove('hidden');
       setTimeout(() => feedback.classList.add('hidden'), 3000);
+    }
+  });
+
+  // Cloudinary Connection Test Handler
+  document.getElementById('test-cloudinary-conn-btn')?.addEventListener('click', async () => {
+    const cloudNameInput = document.getElementById('setting-cloudinary-cloud-name') as HTMLInputElement;
+    const presetInput = document.getElementById('setting-cloudinary-preset') as HTMLInputElement;
+    const testFeedback = document.getElementById('cloudinary-test-feedback');
+    const testBtn = document.getElementById('test-cloudinary-conn-btn') as HTMLButtonElement;
+
+    const cloud = cloudNameInput?.value.trim() || '';
+    const preset = presetInput?.value.trim() || '';
+
+    if (!cloud || !preset) {
+      if (testFeedback) {
+        testFeedback.className = 'p-3 rounded-xl text-xs font-semibold bg-red-50 text-red-700 border border-red-200';
+        testFeedback.textContent = 'Please enter both Cloud Name and Upload Preset before testing.';
+        testFeedback.classList.remove('hidden');
+      }
+      return;
+    }
+
+    if (testBtn) {
+      testBtn.disabled = true;
+      testBtn.innerHTML = `<span>Testing connection...</span>`;
+    }
+
+    try {
+      const res = await testCloudinaryConnection(cloud, preset);
+      if (testFeedback) {
+        testFeedback.className = res.success
+          ? 'p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200'
+          : 'p-3 rounded-xl text-xs font-semibold bg-red-50 text-red-700 border border-red-200';
+        testFeedback.textContent = res.message;
+        testFeedback.classList.remove('hidden');
+      }
+    } catch (e: any) {
+      if (testFeedback) {
+        testFeedback.className = 'p-3 rounded-xl text-xs font-semibold bg-red-50 text-red-700 border border-red-200';
+        testFeedback.textContent = e.message || 'Connection test failed.';
+        testFeedback.classList.remove('hidden');
+      }
+    } finally {
+      if (testBtn) {
+        testBtn.disabled = false;
+        testBtn.innerHTML = `
+          <svg class="w-3.5 h-3.5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+          <span>Test Connection</span>
+        `;
+      }
     }
   });
 
