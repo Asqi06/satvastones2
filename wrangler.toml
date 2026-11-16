@@ -8,7 +8,7 @@ directory = "./dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "satvastones-db"
-database_id = "local-d1-placeholder"
+database_id = "ffa03bf8-6cf8-453d-b6da-fc8ca71b4603"
 
 [[r2_buckets]]
 binding = "R2_BUCKET"
