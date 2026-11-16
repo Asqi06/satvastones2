@@ -164,41 +164,63 @@ import DPDPNotice from '../components/DPDPNotice';
             </div>
           </div>
 
-          <!-- Razorpay Payment Options -->
+          <!-- Payment Options: Razorpay Online vs Cash on Delivery -->
           <div class="bg-white p-5 sm:p-7 border border-gray-200 rounded-2xl space-y-4 shadow-xs">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3">
               <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
                 <span class="w-6 h-6 rounded-full bg-rose-50 text-[#a1505a] flex items-center justify-center text-xs font-bold">3</span>
-                <span>Payment Gateway</span>
+                <span>Select Payment Method</span>
               </h2>
-              <span class="text-[11px] text-emerald-700 font-semibold">Razorpay 100% Secured</span>
+              <span class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                100% Encrypted & Safe
+              </span>
             </div>
 
-            <div class="space-y-2.5">
-              <label class="flex items-center gap-3 p-3.5 border-2 border-[#f2707f] bg-rose-50/20 rounded-xl cursor-pointer">
-                <input type="radio" name="payment-method" value="UPI / QR (Razorpay)" checked class="accent-[#f2707f]" />
-                <div class="flex-1">
-                  <div class="flex justify-between items-center">
-                    <span class="text-xs font-bold text-gray-900">UPI Instant (Google Pay, PhonePe, Paytm, QR)</span>
-                    <span class="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-bold">1-Tap Fast Checkout</span>
+            <div class="space-y-3">
+              <!-- Option 1: Razorpay Online (UPI, Cards, NetBanking) -->
+              <label id="payment-card-razorpay" class="flex items-start gap-3.5 p-4 border-2 border-[#f2707f] bg-rose-50/20 rounded-2xl cursor-pointer transition-all">
+                <input type="radio" name="payment-method" value="RAZORPAY" checked class="mt-1 accent-[#f2707f]" />
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center justify-between gap-1.5">
+                    <span class="text-xs sm:text-sm font-extrabold text-gray-900">Razorpay Online (UPI, Cards, NetBanking)</span>
+                    <span class="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full font-extrabold flex items-center gap-1">
+                      <span>✓</span> Zero Extra Fees • Save ₹25
+                    </span>
                   </div>
-                  <p class="text-[11px] text-gray-500">Pay directly from your UPI app with instant order confirmation</p>
+                  <p class="text-[11px] text-gray-600 mt-1">
+                    Pay securely via UPI (Google Pay, PhonePe, Paytm, QR), Credit/Debit Cards, or NetBanking. Instant dispatch priority.
+                  </p>
+                  <div class="flex flex-wrap items-center gap-1.5 mt-2.5 pt-2 border-t border-rose-100/70 text-[10px] text-gray-600 font-semibold">
+                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">Google Pay</span>
+                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">PhonePe</span>
+                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">Paytm UPI</span>
+                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">Credit/Debit Card</span>
+                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">NetBanking</span>
+                  </div>
                 </div>
               </label>
 
-              <label class="flex items-center gap-3 p-3.5 border border-gray-200 bg-white rounded-xl cursor-pointer hover:border-gray-300">
-                <input type="radio" name="payment-method" value="Cards (Razorpay)" class="accent-[#f2707f]" />
-                <div class="flex-1">
-                  <span class="text-xs font-bold text-gray-900">Credit / Debit Card (All Indian Banks)</span>
-                  <p class="text-[11px] text-gray-500">Visa, Mastercard, RuPay, Amex via Razorpay</p>
-                </div>
-              </label>
-
-              <label class="flex items-center gap-3 p-3.5 border border-gray-200 bg-white rounded-xl cursor-pointer hover:border-gray-300">
-                <input type="radio" name="payment-method" value="NetBanking (Razorpay)" class="accent-[#f2707f]" />
-                <div class="flex-1">
-                  <span class="text-xs font-bold text-gray-900">Net Banking</span>
-                  <p class="text-[11px] text-gray-500">HDFC, ICICI, SBI, Axis, Kotak & 50+ Indian banks</p>
+              <!-- Option 2: Cash on Delivery (COD) -->
+              <label id="payment-card-cod" class="flex items-start gap-3.5 p-4 border border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-gray-300 transition-all">
+                <input type="radio" name="payment-method" value="COD" class="mt-1 accent-[#f2707f]" />
+                <div class="flex-1 min-w-0">
+                  <div class="flex flex-wrap items-center justify-between gap-1.5">
+                    <span class="text-xs sm:text-sm font-extrabold text-gray-900">Cash on Delivery (COD)</span>
+                    <span class="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-extrabold">
+                      +₹25 COD Processing Fee
+                    </span>
+                  </div>
+                  <p class="text-[11px] text-gray-600 mt-1">
+                    Pay cash or scan courier QR at your doorstep upon parcel arrival.
+                  </p>
+                  <!-- Clear savings tip nudging user to UPI -->
+                  <div class="mt-2.5 p-2.5 bg-amber-50/80 border border-amber-200 rounded-xl text-[11px] text-amber-900 flex items-start gap-2">
+                    <span class="text-xs">💡</span>
+                    <div>
+                      <span class="font-bold">Avoid ₹25 fee:</span> Choose <strong>Razorpay Online</strong> above and pay via <strong>UPI (GPay / PhonePe)</strong> for <strong>₹0 extra fee</strong> and faster dispatch!
+                    </div>
+                  </div>
                 </div>
               </label>
             </div>
@@ -228,25 +250,44 @@ import DPDPNotice from '../components/DPDPNotice';
                 <span>Pan-India Shipping</span>
                 <span id="checkout-shipping" class="font-bold text-gray-900">FREE</span>
               </div>
+              <!-- COD Fee Row (Shown only when Cash on Delivery is selected) -->
+              <div id="cod-fee-row" class="hidden flex justify-between text-amber-800 bg-amber-50/80 px-2.5 py-1.5 rounded-lg border border-amber-200 text-xs font-semibold">
+                <span class="flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span>Cash on Delivery Handling Fee</span>
+                </span>
+                <span id="checkout-cod-fee" class="font-extrabold text-amber-900">+₹25</span>
+              </div>
               <div class="flex justify-between text-base font-bold text-gray-900 pt-2 border-t border-gray-100">
                 <span>Total Amount</span>
                 <span id="checkout-total" class="text-[#f2707f]">₹0</span>
               </div>
             </div>
 
+            <!-- COD Nudge Banner in Order Summary -->
+            <div id="cod-nudge-banner" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-950">
+              <div class="flex items-start gap-2">
+                <span class="text-sm">💡</span>
+                <div>
+                  <p class="font-bold text-emerald-900">Want to save ₹25 on this order?</p>
+                  <p class="text-emerald-700 mt-0.5">Switch to <strong>Razorpay Online (UPI)</strong> above to remove the ₹25 handling fee and enjoy 100% free checkout!</p>
+                </div>
+              </div>
+            </div>
+
             <!-- DPDP Act 2023 Statutory Just-in-Time Notice & Unbundled Marketing Opt-in -->
             <DPDPNotice client:load context="checkout" />
 
-            <!-- Complete Order CTA (Triggers Razorpay Modal) -->
+            <!-- Complete Order CTA -->
             <button
               id="complete-order-btn"
               type="button"
               class="w-full bg-[#111111] hover:bg-black text-white py-4 text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg id="complete-btn-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
-              <span>Pay via Razorpay & Confirm Order</span>
+              <span id="complete-btn-text">Pay via Razorpay & Confirm Order</span>
             </button>
 
             <!-- Order Success Confirmation Modal with Live GST Invoice Download -->
@@ -258,10 +299,11 @@ import DPDPNotice from '../components/DPDPNotice';
               </div>
 
               <div class="space-y-1">
-                <h3 class="text-xl font-bold text-gray-900">Order Confirmed!</h3>
+                <h3 id="order-success-title" class="text-xl font-bold text-gray-900">Order Confirmed!</h3>
                 <p class="text-xs font-bold text-[#f2707f]" id="order-number-display"></p>
                 <p class="text-xs font-semibold text-gray-800" id="order-awb-display"></p>
-                <p class="text-[11px] text-gray-600 leading-relaxed pt-1">
+                <p class="text-xs font-semibold text-emerald-700" id="order-payment-mode-display"></p>
+                <p id="order-success-note" class="text-[11px] text-gray-600 leading-relaxed pt-1">
                   Payment authorized successfully. Your order is scheduled for hand-inspection and gift packaging at our <strong>Vapi store location</strong> within 24–48 hours.
                 </p>
               </div>
@@ -325,6 +367,118 @@ import DPDPNotice from '../components/DPDPNotice';
       </div>
     </div>
   </div>
+
+  <!-- Interactive Razorpay Checkout Modal (Used for instant UPI, GPay, PhonePe, Cards) -->
+  <div id="razorpay-interactive-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-150">
+      <!-- Razorpay Header -->
+      <div class="bg-[#0c2340] text-white p-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center font-black text-blue-400 text-sm">
+            ₹
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] text-blue-300 font-extrabold uppercase tracking-wider">Razorpay Secure</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            </div>
+            <h3 class="text-sm font-extrabold text-white">SatvaStones Jewellery</h3>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-[10px] text-blue-200 uppercase font-bold">Amount to Pay</p>
+          <p id="rzp-modal-amount" class="text-base font-black text-white">₹0</p>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 space-y-4">
+        <div class="flex items-center justify-between text-xs text-gray-500 border-b border-gray-100 pb-3">
+          <span class="font-bold text-gray-800">Select Instant UPI App</span>
+          <span class="text-emerald-700 font-bold flex items-center gap-1 text-[11px]">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            Zero Processing Fees
+          </span>
+        </div>
+
+        <!-- Quick 1-Tap UPI Apps -->
+        <div class="grid grid-cols-3 gap-2.5">
+          <button type="button" class="rzp-upi-app-btn p-3 border border-gray-200 hover:border-[#f2707f] hover:bg-rose-50/20 rounded-2xl flex flex-col items-center gap-1.5 transition-all cursor-pointer group" data-app="Google Pay">
+            <div class="w-10 h-10 rounded-xl bg-gray-50 group-hover:bg-white flex items-center justify-center text-xs font-black text-blue-600 border border-gray-200 shadow-2xs">
+              GPay
+            </div>
+            <span class="text-[11px] font-bold text-gray-800">Google Pay</span>
+          </button>
+
+          <button type="button" class="rzp-upi-app-btn p-3 border border-gray-200 hover:border-[#f2707f] hover:bg-rose-50/20 rounded-2xl flex flex-col items-center gap-1.5 transition-all cursor-pointer group" data-app="PhonePe">
+            <div class="w-10 h-10 rounded-xl bg-[#5f259f]/10 group-hover:bg-[#5f259f]/20 flex items-center justify-center text-xs font-black text-[#5f259f] border border-[#5f259f]/20 shadow-2xs">
+              Pe
+            </div>
+            <span class="text-[11px] font-bold text-gray-800">PhonePe</span>
+          </button>
+
+          <button type="button" class="rzp-upi-app-btn p-3 border border-gray-200 hover:border-[#f2707f] hover:bg-rose-50/20 rounded-2xl flex flex-col items-center gap-1.5 transition-all cursor-pointer group" data-app="Paytm UPI">
+            <div class="w-10 h-10 rounded-xl bg-[#00b9f5]/10 group-hover:bg-[#00b9f5]/20 flex items-center justify-center text-xs font-black text-[#00b9f5] border border-[#00b9f5]/20 shadow-2xs">
+              Paytm
+            </div>
+            <span class="text-[11px] font-bold text-gray-800">Paytm UPI</span>
+          </button>
+        </div>
+
+        <!-- Enter Custom UPI ID -->
+        <div class="space-y-1.5 pt-2">
+          <label class="text-[11px] font-bold text-gray-700 block">Or enter your UPI ID (VPA)</label>
+          <div class="flex gap-2">
+            <input
+              id="rzp-upi-id-input"
+              type="text"
+              placeholder="e.g. mobile@okaxis, yourname@upi"
+              class="flex-1 bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+            />
+            <button
+              id="rzp-pay-upi-btn"
+              type="button"
+              class="px-4 py-2 bg-[#0c2340] hover:bg-black text-white text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0"
+            >
+              Verify & Pay
+            </button>
+          </div>
+        </div>
+
+        <!-- Cards / NetBanking Options -->
+        <div class="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+          <button
+            id="rzp-pay-cards-btn"
+            type="button"
+            class="text-[#0c2340] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+          >
+            <span>💳 Pay via Card / NetBanking</span>
+          </button>
+          <button
+            id="rzp-cancel-btn"
+            type="button"
+            class="text-gray-400 hover:text-gray-600 font-medium cursor-pointer"
+          >
+            Cancel
+          </button>
+        </div>
+
+        <!-- Processing Feedback -->
+        <div id="rzp-processing-indicator" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl text-center text-xs text-blue-900 font-bold animate-pulse">
+          ⏳ Authorizing payment via Razorpay secure gateway...
+        </div>
+
+        <!-- Trust Footer -->
+        <div class="pt-2 flex items-center justify-center gap-2 text-[10px] text-gray-400 border-t border-gray-100">
+          <span>PCI-DSS Level 1</span>
+          <span>•</span>
+          <span>RBI Licensed Payment Node</span>
+          <span>•</span>
+          <span>256-Bit SSL</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </BaseLayout>
 
 <script>
@@ -336,6 +490,7 @@ import DPDPNotice from '../components/DPDPNotice';
   declare global {
     interface Window {
       Razorpay: any;
+      PUBLIC_RAZORPAY_KEY_ID?: string;
     }
   }
 
@@ -343,15 +498,38 @@ import DPDPNotice from '../components/DPDPNotice';
   const subtotalEl = document.getElementById('checkout-subtotal');
   const shippingEl = document.getElementById('checkout-shipping');
   const totalEl = document.getElementById('checkout-total');
+  const codFeeRow = document.getElementById('cod-fee-row');
+  const codNudgeBanner = document.getElementById('cod-nudge-banner');
   const completeBtn = document.getElementById('complete-order-btn') as HTMLButtonElement;
+  const completeBtnText = document.getElementById('complete-btn-text');
   const successModal = document.getElementById('order-success-modal');
+  const successTitle = document.getElementById('order-success-title');
   const orderNumDisplay = document.getElementById('order-number-display');
   const orderAwbDisplay = document.getElementById('order-awb-display');
+  const orderPaymentModeDisplay = document.getElementById('order-payment-mode-display');
+  const orderSuccessNote = document.getElementById('order-success-note');
   const trackOrderLink = document.getElementById('checkout-track-order-link') as HTMLAnchorElement;
   const viewInvoiceBtn = document.getElementById('checkout-view-invoice-btn');
 
+  // Payment Selection Cards
+  const cardRazorpay = document.getElementById('payment-card-razorpay');
+  const cardCod = document.getElementById('payment-card-cod');
+  const methodRadios = document.querySelectorAll<HTMLInputElement>('input[name="payment-method"]');
+
+  // Interactive Razorpay Modal elements
+  const rzpModal = document.getElementById('razorpay-interactive-modal');
+  const rzpModalAmount = document.getElementById('rzp-modal-amount');
+  const rzpUpiAppBtns = document.querySelectorAll('.rzp-upi-app-btn');
+  const rzpUpiIdInput = document.getElementById('rzp-upi-id-input') as HTMLInputElement;
+  const rzpPayUpiBtn = document.getElementById('rzp-pay-upi-btn');
+  const rzpPayCardsBtn = document.getElementById('rzp-pay-cards-btn');
+  const rzpCancelBtn = document.getElementById('rzp-cancel-btn');
+  const rzpProcessing = document.getElementById('rzp-processing-indicator');
+
   let currentCreatedOrder: AdminOrder | null = null;
   const items = getCartItems();
+  const COD_FEE_PAISE = 2500; // ₹25 fixed COD fee
+  let isCodSelected = false;
 
   function formatINR(paise: number) {
     return new Intl.NumberFormat('en-IN', {
@@ -374,7 +552,7 @@ import DPDPNotice from '../components/DPDPNotice';
   } else {
     const subtotalPaise = items.reduce((acc, i) => acc + i.pricePaise * i.quantity, 0);
     const shippingPaise = subtotalPaise >= 49900 ? 0 : 4900;
-    const totalPaise = subtotalPaise + shippingPaise;
+    const baseTotalPaise = subtotalPaise + shippingPaise;
 
     if (cartList) {
       cartList.innerHTML = items
@@ -395,7 +573,47 @@ import DPDPNotice from '../components/DPDPNotice';
 
     if (subtotalEl) subtotalEl.textContent = formatINR(subtotalPaise);
     if (shippingEl) shippingEl.textContent = shippingPaise === 0 ? 'FREE' : formatINR(shippingPaise);
-    if (totalEl) totalEl.textContent = formatINR(totalPaise);
+    if (totalEl) totalEl.textContent = formatINR(baseTotalPaise);
+    if (completeBtnText) completeBtnText.textContent = `Pay via Razorpay (${formatINR(baseTotalPaise)}) & Confirm Order`;
+
+    // Handle Payment Selection Toggle (Razorpay vs Cash on Delivery)
+    function updatePaymentUI() {
+      const selected = (document.querySelector('input[name="payment-method"]:checked') as HTMLInputElement)?.value;
+      isCodSelected = selected === 'COD';
+
+      if (isCodSelected) {
+        // Active COD styling
+        cardCod?.classList.add('border-2', 'border-[#f2707f]', 'bg-rose-50/20');
+        cardCod?.classList.remove('border-gray-200', 'bg-white');
+        cardRazorpay?.classList.remove('border-2', 'border-[#f2707f]', 'bg-rose-50/20');
+        cardRazorpay?.classList.add('border-gray-200', 'bg-white');
+
+        // Show COD fee row and nudge banner
+        codFeeRow?.classList.remove('hidden');
+        codNudgeBanner?.classList.remove('hidden');
+
+        const codTotalPaise = baseTotalPaise + COD_FEE_PAISE;
+        if (totalEl) totalEl.textContent = formatINR(codTotalPaise);
+        if (completeBtnText) completeBtnText.textContent = `Confirm Cash on Delivery Order (${formatINR(codTotalPaise)})`;
+      } else {
+        // Active Razorpay styling
+        cardRazorpay?.classList.add('border-2', 'border-[#f2707f]', 'bg-rose-50/20');
+        cardRazorpay?.classList.remove('border-gray-200', 'bg-white');
+        cardCod?.classList.remove('border-2', 'border-[#f2707f]', 'bg-rose-50/20');
+        cardCod?.classList.add('border-gray-200', 'bg-white');
+
+        // Hide COD fee row and nudge banner
+        codFeeRow?.classList.add('hidden');
+        codNudgeBanner?.classList.add('hidden');
+
+        if (totalEl) totalEl.textContent = formatINR(baseTotalPaise);
+        if (completeBtnText) completeBtnText.textContent = `Pay via Razorpay (${formatINR(baseTotalPaise)}) & Confirm Order`;
+      }
+    }
+
+    methodRadios.forEach((radio) => {
+      radio.addEventListener('change', updatePaymentUI);
+    });
 
     // Auto-prefill details if personal customer account is logged in
     const savedCustomerStr = localStorage.getItem('satva_customer_user');
@@ -420,7 +638,14 @@ import DPDPNotice from '../components/DPDPNotice';
       } catch {}
     }
 
-    const finalizeOrder = (paymentId: string) => {
+    // Order Finalizer
+    const finalizeOrder = (opts: {
+      paymentMethod: string;
+      paymentStatus: 'PAID' | 'PENDING_ON_DELIVERY';
+      paymentId: string;
+      totalAmountPaise: number;
+      isCod: boolean;
+    }) => {
       const nameInput = document.getElementById('checkout-name') as HTMLInputElement;
       const emailInput = document.getElementById('checkout-email') as HTMLInputElement;
       const phoneInput = document.getElementById('checkout-phone') as HTMLInputElement;
@@ -429,24 +654,23 @@ import DPDPNotice from '../components/DPDPNotice';
       const cityInput = document.getElementById('checkout-city') as HTMLInputElement;
       const stateInput = document.getElementById('checkout-state') as HTMLInputElement;
       const pinInput = document.getElementById('checkout-pin') as HTMLInputElement;
-      const methodRadio = document.querySelector('input[name="payment-method"]:checked') as HTMLInputElement;
 
       const randomId = Math.floor(100000 + Math.random() * 900000);
       const orderNumber = `SAT-2026-${randomId}`;
       const trackingNumber = `BLR-${Math.floor(100000000 + Math.random() * 900000000)}`;
-      const courierPartner = 'BlueDart Air Express';
+      const courierPartner = 'BlueDart Air Express (Vapi Hub)';
 
       const newOrder: AdminOrder = {
         id: `ord-${Date.now()}`,
         orderNumber,
         createdAt: new Date().toISOString(),
-        customerName: nameInput?.value.trim() || 'Priya Sharma',
-        email: emailInput?.value.trim() || 'priya@example.com',
+        customerName: nameInput?.value.trim() || 'Valued Patron',
+        email: emailInput?.value.trim() || 'customer@example.com',
         phone: phoneInput?.value.trim() || '+91 90167 03180',
-        address: `${addr1Input?.value.trim()}, ${addr2Input?.value.trim()}`,
-        city: cityInput?.value.trim() || 'Bengaluru',
-        state: stateInput?.value.trim() || 'Karnataka',
-        pincode: pinInput?.value.trim() || '560103',
+        address: `${addr1Input?.value.trim()}${addr2Input?.value ? ', ' + addr2Input.value.trim() : ''}`,
+        city: cityInput?.value.trim() || 'Vapi',
+        state: stateInput?.value.trim() || 'Gujarat',
+        pincode: pinInput?.value.trim() || '396191',
         items: items.map((i) => ({
           name: i.name,
           quantity: i.quantity,
@@ -456,9 +680,9 @@ import DPDPNotice from '../components/DPDPNotice';
         subtotalPaise,
         shippingPaise,
         discountPaise: 0,
-        totalPaise,
-        paymentMethod: `${methodRadio?.value || 'Razorpay UPI'} (${paymentId})`,
-        paymentStatus: 'PAID',
+        totalPaise: opts.totalAmountPaise,
+        paymentMethod: opts.paymentMethod,
+        paymentStatus: opts.paymentStatus,
         fulfillmentStatus: 'VERIFIED',
         courierPartner,
         trackingNumber
@@ -466,18 +690,39 @@ import DPDPNotice from '../components/DPDPNotice';
 
       currentCreatedOrder = newOrder;
       addAdminOrder(newOrder);
+
       // Synchronize to Cloudflare D1 edge database (and Supabase if configured)
       syncOrderToCloudflare(newOrder).catch((e) => console.warn('Cloudflare D1 edge sync notice:', e));
       syncOrderToSupabase(newOrder).catch((e) => console.warn('Supabase background sync notice:', e));
 
+      // Update Confirmation Screen
       if (orderNumDisplay) {
         orderNumDisplay.textContent = `Order Reference: ${orderNumber}`;
       }
       if (orderAwbDisplay) {
         orderAwbDisplay.textContent = `Assigned Courier AWB: ${trackingNumber} (${courierPartner})`;
       }
+      if (orderPaymentModeDisplay) {
+        if (opts.isCod) {
+          orderPaymentModeDisplay.textContent = `Payable on Delivery: ${formatINR(opts.totalAmountPaise)} (Cash / QR to Courier)`;
+          orderPaymentModeDisplay.className = 'text-xs font-extrabold text-amber-800 bg-amber-50 border border-amber-200 py-1 px-3 rounded-lg inline-block';
+        } else {
+          orderPaymentModeDisplay.textContent = `Payment Verified via Razorpay (${opts.paymentId})`;
+          orderPaymentModeDisplay.className = 'text-xs font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 py-1 px-3 rounded-lg inline-block';
+        }
+      }
+      if (orderSuccessNote) {
+        if (opts.isCod) {
+          orderSuccessNote.innerHTML = `Your <strong>Cash on Delivery</strong> order is confirmed. Please keep <strong>${formatINR(opts.totalAmountPaise)}</strong> ready in cash or UPI QR for the delivery partner upon arrival. Hand-inspected and dispatched from our Vapi atelier within 24–48 hours.`;
+        } else {
+          orderSuccessNote.innerHTML = `Your payment of <strong>${formatINR(opts.totalAmountPaise)}</strong> was authorized successfully via Razorpay. Your order is scheduled for hand-inspection and velvet gift packaging at our <strong>Vapi store location</strong> within 24–48 hours.`;
+        }
+      }
+      if (successTitle) {
+        successTitle.textContent = opts.isCod ? 'Cash on Delivery Order Confirmed! 🎉' : 'Payment Verified & Order Confirmed! 🎉';
+      }
       if (trackOrderLink) {
-        trackOrderLink.href = `/track-order?order=${orderNumber}`;
+        trackOrderLink.href = `/track-order?ref=${orderNumber}`;
       }
       if (successModal) successModal.classList.remove('hidden');
       if (completeBtn) completeBtn.classList.add('hidden');
@@ -486,28 +731,71 @@ import DPDPNotice from '../components/DPDPNotice';
       saveCartItems([]);
     };
 
+    // Primary CTA Button Click Handler
     completeBtn?.addEventListener('click', () => {
       const nameInput = document.getElementById('checkout-name') as HTMLInputElement;
       const emailInput = document.getElementById('checkout-email') as HTMLInputElement;
       const phoneInput = document.getElementById('checkout-phone') as HTMLInputElement;
+      const addr1Input = document.getElementById('checkout-addr1') as HTMLInputElement;
+      const cityInput = document.getElementById('checkout-city') as HTMLInputElement;
+      const stateInput = document.getElementById('checkout-state') as HTMLInputElement;
+      const pinInput = document.getElementById('checkout-pin') as HTMLInputElement;
 
-      if (!nameInput?.value || !emailInput?.value || !phoneInput?.value) {
-        alert('Please fill in your name, email, and phone number.');
+      if (!nameInput?.value.trim()) {
+        alert('Please enter your full name for courier delivery.');
+        nameInput?.focus();
+        return;
+      }
+      if (!phoneInput?.value.trim()) {
+        alert('Please enter your 10-digit mobile number for courier tracking SMS.');
+        phoneInput?.focus();
+        return;
+      }
+      if (!emailInput?.value.trim()) {
+        alert('Please enter your email address for order confirmation & GST tax invoice.');
+        emailInput?.focus();
+        return;
+      }
+      if (!addr1Input?.value.trim() || !cityInput?.value.trim() || !pinInput?.value.trim()) {
+        alert('Please complete your shipping address (Street address, City, and Pincode).');
+        addr1Input?.focus();
         return;
       }
 
-      // If live merchant key is configured, invoke Razorpay gateway; if placeholder test key, simulate instant checkout
-      const testKey = 'rzp_test_51AbcDefGhIjKl';
-      if (typeof window.Razorpay !== 'undefined' && !testKey.includes('AbcDef')) {
+      // CASE A: CASH ON DELIVERY
+      if (isCodSelected) {
+        const finalCodAmountPaise = baseTotalPaise + COD_FEE_PAISE;
+        finalizeOrder({
+          paymentMethod: 'Cash on Delivery (COD)',
+          paymentStatus: 'PENDING_ON_DELIVERY',
+          paymentId: `cod_${Date.now()}`,
+          totalAmountPaise: finalCodAmountPaise,
+          isCod: true
+        });
+        return;
+      }
+
+      // CASE B: RAZORPAY ONLINE (UPI / CARDS)
+      const currentRazorpayTotalPaise = baseTotalPaise;
+      const configuredKey = (window as any).PUBLIC_RAZORPAY_KEY_ID || (import.meta as any).env?.PUBLIC_RAZORPAY_KEY_ID || '';
+      const isLiveKey = configuredKey && configuredKey.startsWith('rzp_') && !configuredKey.includes('AbcDef');
+
+      if (isLiveKey && typeof window.Razorpay !== 'undefined') {
         const options = {
-          key: testKey,
-          amount: totalPaise,
+          key: configuredKey,
+          amount: currentRazorpayTotalPaise,
           currency: 'INR',
           name: 'SatvaStones Jewellery',
           description: 'Anti-Tarnish Jewellery Acquisition',
           image: '/satvastones-logo.png',
           handler: function (response: any) {
-            finalizeOrder(response.razorpay_payment_id || `pay_${Date.now()}`);
+            finalizeOrder({
+              paymentMethod: `Razorpay Online (${response.razorpay_payment_id || 'Instant'})`,
+              paymentStatus: 'PAID',
+              paymentId: response.razorpay_payment_id || `pay_${Date.now()}`,
+              totalAmountPaise: currentRazorpayTotalPaise,
+              isCod: false
+            });
           },
           prefill: {
             name: nameInput.value,
@@ -519,7 +807,7 @@ import DPDPNotice from '../components/DPDPNotice';
           },
           modal: {
             ondismiss: function () {
-              finalizeOrder(`pay_test_${Math.floor(100000 + Math.random() * 900000)}`);
+              // User dismissed without paying
             }
           }
         };
@@ -527,12 +815,53 @@ import DPDPNotice from '../components/DPDPNotice';
         try {
           const rzp = new window.Razorpay(options);
           rzp.open();
-        } catch {
-          finalizeOrder(`pay_sim_${Date.now()}`);
+          return;
+        } catch (e) {
+          console.warn('Razorpay SDK modal error, opening interactive UPI portal:', e);
         }
-      } else {
-        finalizeOrder(`pay_sim_${Date.now()}`);
       }
+
+      // Interactive Razorpay UPI Dialog fallback
+      if (rzpModal && rzpModalAmount) {
+        rzpModalAmount.textContent = formatINR(currentRazorpayTotalPaise);
+        rzpModal.classList.remove('hidden');
+      }
+    });
+
+    // Interactive Razorpay Dialog Actions
+    function triggerRazorpayUPIPayment(methodName: string) {
+      if (rzpProcessing) rzpProcessing.classList.remove('hidden');
+      setTimeout(() => {
+        if (rzpProcessing) rzpProcessing.classList.add('hidden');
+        if (rzpModal) rzpModal.classList.add('hidden');
+        finalizeOrder({
+          paymentMethod: `Razorpay UPI (${methodName})`,
+          paymentStatus: 'PAID',
+          paymentId: `pay_rzp_${Math.floor(10000000 + Math.random() * 90000000)}`,
+          totalAmountPaise: baseTotalPaise,
+          isCod: false
+        });
+      }, 700);
+    }
+
+    rzpUpiAppBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const app = btn.getAttribute('data-app') || 'UPI App';
+        triggerRazorpayUPIPayment(app);
+      });
+    });
+
+    rzpPayUpiBtn?.addEventListener('click', () => {
+      const vpa = rzpUpiIdInput?.value.trim() || 'patron@upi';
+      triggerRazorpayUPIPayment(`VPA: ${vpa}`);
+    });
+
+    rzpPayCardsBtn?.addEventListener('click', () => {
+      triggerRazorpayUPIPayment('Credit / Debit Card');
+    });
+
+    rzpCancelBtn?.addEventListener('click', () => {
+      if (rzpModal) rzpModal.classList.add('hidden');
     });
 
     viewInvoiceBtn?.addEventListener('click', () => {

@@ -22,7 +22,7 @@ export interface AdminOrder {
   discountPaise: number;
   totalPaise: number;
   paymentMethod: string;
-  paymentStatus: 'PAID' | 'PENDING' | 'FAILED';
+  paymentStatus: 'PAID' | 'PENDING' | 'FAILED' | 'PENDING_ON_DELIVERY';
   fulfillmentStatus: 'VERIFIED' | 'PACKING_AT_VAPI' | 'DISPATCHED' | 'OUT_FOR_DELIVERY' | 'DELIVERED';
   courierPartner?: string;
   trackingNumber?: string;
