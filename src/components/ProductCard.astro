@@ -29,25 +29,25 @@ const discountPercent = product.compareAtPricePaise
   : 0;
 ---
 
-<div class="product-card group relative flex flex-col bg-white border border-[#eeeeee] rounded-[18px] overflow-hidden transition-all duration-300 hover:shadow-[0_8px_25px_rgba(242,112,127,0.12)] hover:border-[#f2707f]/50">
+<div class="product-card group relative flex flex-col bg-white border border-[#eae4dc] rounded-[18px] overflow-hidden transition-all duration-300 hover:shadow-[0_12px_28px_rgba(23,21,19,0.06)] hover:border-[#c5a059]/40">
   
   <!-- Image Container (Jewelsmars 3:4 Aspect Ratio with Squircle Curves) -->
-  <a href={`/products/${product.slug}`} class="relative block aspect-[3/4] overflow-hidden bg-[#fafafa] rounded-t-[18px]" aria-label={product.name}>
+  <a href={`/products/${product.slug}`} class="relative block aspect-[3/4] overflow-hidden bg-[#faf8f5] rounded-t-[18px]" aria-label={product.name}>
     
     <!-- Top-Left Badges (Jewelsmars Signature Mauve #a1505a) -->
     <div class="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
       {product.isBestseller && (
-        <span class="bg-[#a1505a] text-white text-[9.5px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full shadow-xs">
+        <span class="bg-[#9f4553] text-white text-[9px] font-semibold uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full shadow-2xs">
           Hot Selling
         </span>
       )}
       {discountPercent > 0 && (
-        <span class="bg-[#f2707f] text-white text-[9.5px] font-bold px-2 py-0.5 rounded-full shadow-xs">
+        <span class="bg-[#171513] text-[#fbf8f5] text-[9px] font-bold px-2 py-0.5 rounded-full shadow-2xs">
           -{discountPercent}%
         </span>
       )}
       {product.isNewArrival && !product.isBestseller && (
-        <span class="bg-[#111111] text-white text-[9.5px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs">
+        <span class="bg-[#c5a059] text-white text-[9px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded-full shadow-2xs">
           New
         </span>
       )}
@@ -61,7 +61,7 @@ const discountPercent = product.compareAtPricePaise
       data-wishlist-slug={product.slug}
       data-wishlist-price={product.pricePaise}
       data-wishlist-image={primaryImage}
-      class="card-wishlist-btn absolute bottom-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 hover:bg-white text-[#111111] hover:text-[#f2707f] border border-[#eeeeee] flex items-center justify-center transition-all shadow-md cursor-pointer"
+      class="card-wishlist-btn absolute bottom-2.5 right-2.5 z-10 w-8 h-8 rounded-full bg-white/95 hover:bg-white text-[#171513] hover:text-[#9f4553] border border-[#eae4dc] flex items-center justify-center transition-all shadow-xs hover:shadow-md cursor-pointer hover:scale-105 active:scale-95"
       title="Save to wishlist"
       aria-label={`Save ${product.name} to wishlist`}
     >
@@ -114,7 +114,7 @@ const discountPercent = product.compareAtPricePaise
       </div>
 
       <!-- Title (2-line clamp) -->
-      <h3 class="text-[13px] sm:text-[14px] font-bold text-[#111111] leading-snug line-clamp-2 hover:text-[#f2707f] transition-colors">
+      <h3 class="text-[13px] sm:text-[14px] font-medium text-[#171513] leading-snug line-clamp-2 hover:text-[#9f4553] transition-colors">
         <a href={`/products/${product.slug}`}>
           {product.name}
         </a>
@@ -128,11 +128,11 @@ const discountPercent = product.compareAtPricePaise
     <!-- Pricing & Full-Width Jewelsmars "ADD TO CART" Button -->
     <div class="space-y-2.5 pt-1">
       <div class="flex items-baseline gap-2">
-        <span class="font-extrabold text-base sm:text-lg text-[#f2707f]">
+        <span class="font-bold text-base sm:text-lg text-[#171513]">
           {formatPrice(product.pricePaise)}
         </span>
         {product.compareAtPricePaise && (
-          <span class="text-xs text-[#8d979e] line-through font-normal">
+          <span class="text-xs text-[#99918b] line-through font-normal">
             {formatPrice(product.compareAtPricePaise)}
           </span>
         )}
@@ -147,7 +147,7 @@ const discountPercent = product.compareAtPricePaise
         data-product-price={product.pricePaise}
         data-product-image={primaryImage}
         aria-label={`Add ${product.name} to cart`}
-        class="quick-add-btn w-full bg-[#f2707f] hover:bg-[#e05e6d] text-white py-2.5 rounded-[10px] text-xs font-bold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+        class="quick-add-btn w-full bg-[#171513] hover:bg-[#9f4553] text-white py-2.5 rounded-[10px] text-[11px] font-bold uppercase tracking-[0.08em] transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.99]"
       >
         <span>ADD TO CART</span>
       </button>
@@ -163,7 +163,7 @@ const discountPercent = product.compareAtPricePaise
     const el = btn as HTMLElement;
     const id = el.dataset.wishlistId || '';
     if (id && isInWishlist(id)) {
-      el.classList.add('text-[#f2707f]', 'bg-[#ffe7e9]', 'border-[#f2707f]');
+      el.classList.add('text-[#9f4553]', 'bg-[#faf4f2]', 'border-[#9f4553]');
     }
 
     btn.addEventListener('click', (e) => {
@@ -188,9 +188,9 @@ const discountPercent = product.compareAtPricePaise
         inStock: true
       });
       if (isSaved) {
-        el.classList.add('text-[#f2707f]', 'bg-[#ffe7e9]', 'border-[#f2707f]');
+        el.classList.add('text-[#9f4553]', 'bg-[#faf4f2]', 'border-[#9f4553]');
       } else {
-        el.classList.remove('text-[#f2707f]', 'bg-[#ffe7e9]', 'border-[#f2707f]');
+        el.classList.remove('text-[#9f4553]', 'bg-[#faf4f2]', 'border-[#9f4553]');
       }
     });
   });

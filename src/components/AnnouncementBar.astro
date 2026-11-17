@@ -1,27 +1,27 @@
 ---
-// AnnouncementBar.astro - Editorial Marquee Ticker (Clean Luxury)
+// AnnouncementBar.astro - High-Jewellery Atelier Marquee Ticker
 const marqueeItems = [
-  'BIRTHDAY ATELIER EVENT — UPTO 60% PRIVILEGE SAVINGS',
-  'COMPLIMENTARY EXPRESS SHIPPING ON ORDERS ABOVE ₹499',
-  'HAND-INSPECTED & DISPATCHED FROM VAPI ATELIER IN 24–48 HOURS',
-  '100% WATERPROOF & SWEAT-PROOF ANTI-TARNISH 18K GOLD PVD',
-  'USE CODE FIRSTBUY FOR ₹200 OFF YOUR FIRST ATELIER SUITE',
-  'FREE REPLACEMENT ASSURANCE FOR TRANSIT DAMAGE WITH 360° UNBOXING VIDEO'
+  'ATELIER PRIVILEGE EVENT — UPTO 60% OFF CURATED SUITES',
+  'COMPLIMENTARY EXPRESS AIR DELIVERY ON ORDERS ABOVE ₹499',
+  'HAND-INSPECTED & DISPATCHED FROM OUR VAPI ATELIER IN 24–48 HOURS',
+  '100% WATERPROOF & SWEAT-RESISTANT · 18K VACUUM GOLD PVD',
+  'USE CODE FIRSTBUY FOR ₹200 OFF YOUR FIRST ORDER',
+  'CERTIFIED 316L SURGICAL GRADE STEEL · NICKEL-FREE & HYPOALLERGENIC'
 ];
 ---
 
-<div class="bg-black text-white py-2 overflow-hidden border-b border-black text-xs font-medium tracking-[0.08em] uppercase select-none relative z-50">
-  <div class="animate-marquee whitespace-nowrap flex items-center gap-8">
+<div class="bg-[#171513] text-[#faf6f0] py-2 overflow-hidden border-b border-[#2a2624] text-[11px] font-medium tracking-[0.14em] uppercase select-none relative z-50">
+  <div class="animate-marquee whitespace-nowrap flex items-center gap-10">
     {marqueeItems.map((item) => (
-      <span class="inline-flex items-center gap-4 text-[11px] sm:text-xs">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#f2707f]"></span>
-        <span>{item}</span>
+      <span class="inline-flex items-center gap-3.5">
+        <span class="text-[#c5a059] text-[9px] select-none">✦</span>
+        <span class="text-white/90 font-medium">{item}</span>
       </span>
     ))}
     {marqueeItems.map((item) => (
-      <span class="inline-flex items-center gap-4 text-[11px] sm:text-xs">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#f2707f]"></span>
-        <span>{item}</span>
+      <span class="inline-flex items-center gap-3.5">
+        <span class="text-[#c5a059] text-[9px] select-none">✦</span>
+        <span class="text-white/90 font-medium">{item}</span>
       </span>
     ))}
   </div>

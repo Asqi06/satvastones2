@@ -1,23 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-pink: #f2707f;
-  --color-brand-pink-hover: #e05e6d;
-  --color-brand-mauve: #a1505a;
-  --color-blush-tint: #ffe7e9;
-  --color-promo-bg: #f9d8dc;
-  --color-urgency-bg: #e6f9f0;
-  --color-urgency-text: #007c52;
-  --color-marquee-bg: #000000;
+  --color-brand-pink: #d87280;
+  --color-brand-pink-hover: #c45d6c;
+  --color-brand-mauve: #9f4553;
+  --color-brand-gold: #c5a059;
+  --color-brand-gold-hover: #b38d45;
+  --color-blush-tint: #faf4f2;
+  --color-promo-bg: #f7ebe9;
+  --color-urgency-bg: #eef8f3;
+  --color-urgency-text: #1b6d48;
+  --color-marquee-bg: #141211;
   
-  --color-text-main: #111111;
-  --color-text-muted: #666666;
-  --color-price-old: #8d979e;
-  --color-border-subtle: #eeeeee;
-  --color-border-light: #e5e5e5;
+  --color-canvas: #fcfbf9;
+  --color-surface: #f7f4ef;
+  --color-surface-hover: #f1ede6;
+  --color-text-main: #171513;
+  --color-text-body: #332f2c;
+  --color-text-muted: #6e6863;
+  --color-price-old: #99918b;
+  --color-border-subtle: #eae4dc;
+  --color-border-light: #dfd8cf;
 
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: 'Cormorant Garamond', Garamond, Georgia, "Times New Roman", serif;
 
   --max-w-standard: 1280px;
   --max-w-luxury: 1440px;
@@ -25,35 +31,50 @@
 
 @layer base {
   :root {
-    --color-primary: #f2707f;
-    --color-primary-hover: #e05e6d;
-    --color-badge-sale: #a1505a;
-    --color-card-tint: #ffe7e9;
-    --color-promo-bg: #f9d8dc;
-    --color-urgency-bg: #e6f9f0;
-    --color-urgency-text: #007c52;
-    --color-text-main: #111111;
-    --color-text-muted: #666666;
-    --color-price-old: #8d979e;
+    --color-primary: #9f4553;
+    --color-primary-hover: #863643;
+    --color-badge-sale: #9f4553;
+    --color-card-tint: #faf4f2;
+    --color-promo-bg: #f7ebe9;
+    --color-urgency-bg: #eef8f3;
+    --color-urgency-text: #1b6d48;
+    --color-text-main: #171513;
+    --color-text-body: #332f2c;
+    --color-text-muted: #6e6863;
+    --color-price-old: #99918b;
   }
 
   html {
     font-size: 82%; /* Proportionally reduces typography, spacing, and rem dimensions by ~18-20% */
     font-family: var(--font-sans);
     background-color: #ffffff;
-    color: #111111;
+    color: #171513;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: #f2707f;
-    color: #ffffff;
+    background-color: #f7ebe9;
+    color: #9f4553;
   }
 }
 
-/* Infinite Marquee Animation for Black Announcement Bar */
+/* Typography Utility Classes */
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-editorial {
+  font-family: var(--font-serif);
+  letter-spacing: -0.015em;
+}
+
+/* Infinite Marquee Animation for Announcement Bar */
 @keyframes marquee-scroll {
   0% {
     transform: translateX(0%);
@@ -66,63 +87,71 @@
 .animate-marquee {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 24s linear infinite;
+  animation: marquee-scroll 28s linear infinite;
 }
 
 .animate-marquee:hover {
   animation-play-state: paused;
 }
 
-/* Jewelsmars Squircle Card Shape */
-.squircle-card {
-  border-radius: 20px;
+/* Subtle Shimmer & Border Beam Effects (Magic UI Inspired) */
+@keyframes shimmer-move {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.shimmer-badge {
+  position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shimmer-badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transform: translateX(-100%);
+  animation: shimmer-move 3.5s infinite;
+}
+
+/* Luxury Squircle Card Shape */
+.squircle-card {
+  border-radius: 18px;
+  overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .squircle-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(242, 112, 127, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(23, 21, 19, 0.07);
 }
 
 /* Category Story Bubble / Squircle */
 .category-squircle {
   border-radius: 20px;
-  background-color: #ffe7e9;
-  transition: all 0.25s ease-out;
+  background-color: #faf4f2;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .category-squircle:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 18px rgba(242, 112, 127, 0.18);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 20px rgba(159, 69, 83, 0.12);
 }
 
 /* Product Card Image Zoom */
 .product-card-image {
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
 }
 
 .product-card:hover .product-card-image {
-  transform: scale(1.04);
-}
-
-/* Jewelsmars Scrolled Header State */
-.header-scrolled {
-  background-color: #f2707f !important;
-  color: #ffffff !important;
-  box-shadow: 0 4px 20px rgba(242, 112, 127, 0.25);
-}
-
-.header-scrolled svg {
-  color: #ffffff !important;
-}
-
-.header-scrolled .brand-logo-text {
-  color: #ffffff !important;
-}
-
-.header-scrolled a {
-  color: #ffffff !important;
+  transform: scale(1.035);
 }
 
 /* Hide scrollbar for clean horizontal story strip */
