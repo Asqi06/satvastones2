@@ -45,7 +45,7 @@
   }
 
   html {
-    font-size: 82%; /* Proportionally reduces typography, spacing, and rem dimensions by ~18-20% */
+    font-size: 100%; /* Restored standard 16px baseline for balanced optical hierarchy, readability & accessibility */
     font-family: var(--font-sans);
     background-color: #ffffff;
     color: #171513;
@@ -152,6 +152,45 @@
 
 .product-card:hover .product-card-image {
   transform: scale(1.035);
+}
+
+/* Luxury Tactile Card */
+.atelier-card {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+}
+
+.atelier-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(23, 21, 19, 0.08);
+}
+
+/* Shimmer Button (Magic UI / Luxury CTA) */
+.shimmer-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+  transform: rotate(25deg) translateX(-150%);
+  transition: transform 0.8s ease;
+}
+
+.shimmer-btn:hover::after {
+  transform: rotate(25deg) translateX(150%);
+}
+
+/* Accordion Marker Reset */
+details summary::-webkit-details-marker,
+details summary::marker {
+  display: none;
+  content: "";
 }
 
 /* Hide scrollbar for clean horizontal story strip */
