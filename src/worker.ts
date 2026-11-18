@@ -171,11 +171,17 @@ export default {
               html = html.replace(/data-product-price="[^"]*"/g, `data-product-price="${pricePaise}"`);
               html = html.replace(/data-product-image="[^"]*"/g, `data-product-image="${imageUrl}"`);
 
+              // Replace Category Breadcrumb
+              if (row.category) {
+                html = html.replace(/\/collections\/necklaces/g, `/collections/${row.category}`);
+              }
+
               return new Response(html, {
                 status: 200,
                 headers: {
                   'Content-Type': 'text/html; charset=utf-8',
-                  'Cache-Control': 'public, max-age=120'
+                  'Cache-Control': 'no-cache, no-store, must-revalidate',
+                  'Cloudflare-CDN-Cache-Control': 'no-cache'
                 }
               });
           }
@@ -187,7 +193,18 @@ export default {
 
     // Serve all static pages via Cloudflare Assets
     try {
-      return await env.ASSETS.fetch(request);
+      const assetRes = await env.ASSETS.fetch(request);
+      if (assetRes.status === 404) {
+        const resHeaders = new Headers(assetRes.headers);
+        resHeaders.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        resHeaders.set('Cloudflare-CDN-Cache-Control', 'no-cache');
+        return new Response(assetRes.body, {
+          status: 404,
+          statusText: assetRes.statusText,
+          headers: resHeaders
+        });
+      }
+      return assetRes;
     } catch (err: any) {
       return new Response(`Worker Asset Error: ${err.message}\n${err.stack}`, { status: 500 });
     }
