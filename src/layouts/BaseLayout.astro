@@ -55,7 +55,7 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/index';
     <Header overlay={isHome} />
 
     <!-- Main Content Slot (with mobile dock clearance) -->
-    <main id="main-content" class="flex-1 pb-16 lg:pb-0" tabindex="-1">
+    <main id="main-content" class="flex-1" tabindex="-1">
       <slot />
     </main>
 
