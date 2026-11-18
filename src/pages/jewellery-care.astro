@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -9,192 +10,258 @@ const breadcrumbs = [
 const howToSchema = {
   '@context': 'https://schema.org',
   '@type': 'HowTo',
-  'name': 'How to Clean Gold and Anti-Tarnish Jewellery at Home',
-  'description': 'A safe, step-by-step DIY cleaning ritual for solid gold, 18K gold PVD, and 316L stainless steel jewellery without abrasive scratching.',
-  'totalTime': 'PT15M',
-  'supply': [
-    { '@type': 'HowToSupply', 'name': 'Lukewarm water' },
-    { '@type': 'HowToSupply', 'name': 'Mild liquid dish soap or baby shampoo' },
-    { '@type': 'HowToSupply', 'name': 'Microfiber polishing cloth or velvet pouch' }
+  name: 'How to Clean Gold and Anti-Tarnish Jewellery at Home',
+  description:
+    'A safe, step-by-step DIY cleaning ritual for solid gold, 18K gold PVD, and 316L stainless steel jewellery without abrasive scratching.',
+  totalTime: 'PT15M',
+  supply: [
+    { '@type': 'HowToSupply', name: 'Lukewarm water' },
+    { '@type': 'HowToSupply', name: 'Mild liquid dish soap or baby shampoo' },
+    { '@type': 'HowToSupply', name: 'Microfiber polishing cloth or velvet pouch' }
   ],
-  'tool': [
-    { '@type': 'HowToTool', 'name': 'Ultra-soft baby toothbrush' }
-  ],
-  'step': [
+  tool: [{ '@type': 'HowToTool', name: 'Ultra-soft baby toothbrush' }],
+  step: [
     {
       '@type': 'HowToStep',
-      'name': 'Warm Soapy Soak',
-      'text': 'Submerge jewellery in a bowl of lukewarm water with 2-3 drops of mild baby shampoo or dish soap for 10-15 minutes.',
-      'position': 1
+      name: 'Warm Soapy Soak',
+      text: 'Submerge jewellery in a bowl of lukewarm water with 2-3 drops of mild baby shampoo or dish soap for 10-15 minutes.',
+      position: 1
     },
     {
       '@type': 'HowToStep',
-      'name': 'Gentle Soft-Bristle Clean',
-      'text': 'Use an ultra-soft baby toothbrush to gently remove lotion and sweat buildup around crevices and clasps without scrubbing harshly.',
-      'position': 2
+      name: 'Gentle Soft-Bristle Clean',
+      text: 'Use an ultra-soft baby toothbrush to gently remove lotion and sweat buildup around crevices and clasps without scrubbing harshly.',
+      position: 2
     },
     {
       '@type': 'HowToStep',
-      'name': 'Fresh Water Rinse',
-      'text': 'Rinse thoroughly under running lukewarm water to eliminate all soap residue.',
-      'position': 3
+      name: 'Fresh Water Rinse',
+      text: 'Rinse thoroughly under running lukewarm water to eliminate all soap residue.',
+      position: 3
     },
     {
       '@type': 'HowToStep',
-      'name': 'Microfiber Pat Dry',
-      'text': 'Gently pat dry with a lint-free microfiber cloth or your Satvastones velvet pouch before wearing or storing.',
-      'position': 4
+      name: 'Microfiber Pat Dry',
+      text: 'Gently pat dry with a lint-free microfiber cloth or your Satvastones velvet pouch before wearing or storing.',
+      position: 4
     }
   ]
 };
+
+const steps = [
+  {
+    title: 'Lukewarm soapy soak',
+    body: 'Mix lukewarm water with two or three drops of mild, ammonia-free dish soap or baby shampoo. Soak for 10–15 minutes to loosen daily oils, sweat and cosmetics.'
+  },
+  {
+    title: 'Soft-bristle clean',
+    body: 'Use an ultra-soft baby toothbrush to reach prong settings, clasps and chain links. Gentle circles only — no scrubbing at the surface.'
+  },
+  {
+    title: 'Fresh water rinse',
+    body: 'Hold each piece under gentle running lukewarm water until every trace of soap film is gone. Cover the drain with a strainer first.'
+  },
+  {
+    title: 'Microfibre pat dry',
+    body: 'Pat dry with the velvet pouch or a lint-free microfibre cloth. Make sure the piece is completely dry before you wear or store it.'
+  }
+];
+
+const rules = [
+  {
+    title: 'Last on, first off',
+    body: 'Apply perfume, moisturiser, hairspray and sanitiser before putting jewellery on, and remove it before bed. Let lotions absorb fully so nothing sits on the surface overnight.'
+  },
+  {
+    title: 'Rinse after pool or ocean',
+    body: '316L handles showers and sweat easily, but pool chlorine and sea salt leave dried mineral deposits. A quick fresh-water rinse and pat dry resets the finish.'
+  },
+  {
+    title: 'Store it dry, separately',
+    body: 'Keep pieces in the pouch or a lined box, not loose in a bowl. Chains scratch against rings, and humidity trapped in a closed bathroom cabinet does nobody favours.'
+  }
+];
 ---
 
 <BaseLayout
   title="How to Clean Gold Jewellery at Home & Care Ritual | Satvastones"
-  description="Learn how to clean gold and anti-tarnish jewellery safely at home using mild soap and microfiber. Understand why 316L PVD gold resists fading."
+  description="Learn how to clean gold and anti-tarnish jewellery safely at home using mild soap and microfibre. Understand why 316L PVD gold resists fading."
   schema={howToSchema}
   breadcrumbs={breadcrumbs}
 >
-  <!-- Jewelsmars Clean Header -->
-  <div class="bg-white border-b border-gray-100 py-8 sm:py-12">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
-      <span class="inline-block bg-[#ffe7e9] text-[#a1505a] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-        Longevity &amp; Care Ritual
-      </span>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-        How to Clean Gold Jewellery at Home
-      </h1>
-      <p class="text-xs sm:text-sm text-gray-500 max-w-lg mx-auto leading-relaxed">
-        Satvastones jewellery is engineered with 316L surgical stainless steel and 18K Gold PVD coating. Follow this simple ritual to maintain brilliant golden luster for years.
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <PageIntro
+      eyebrow="Longevity & care"
+      title="Keep the gold, lose the upkeep."
+      lede="316L surgical steel under an 18K gold PVD shell. This is the whole ritual — fifteen minutes, once a month, plus two habits worth keeping."
+      crumbs={breadcrumbs}
+    >
+      <p class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+        <span>15 minutes</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>4 steps</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>No specialist tools</span>
       </p>
+    </PageIntro>
+
+    <!-- Full-bleed image -->
+    <div class="media-frame grain relative aspect-[16/10] w-full overflow-hidden bg-[#f1ece3] sm:aspect-[21/9]">
+      <img
+        src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1800&q=80&fm=webp"
+        alt="Gold jewellery being cleaned and cared for at home"
+        width="1800"
+        height="900"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+        class="h-full w-full object-cover"
+      />
     </div>
-  </div>
 
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
-    <div class="max-w-3xl mx-auto space-y-12">
-      
-      <!-- Visual Banner -->
-      <div class="aspect-[16/9] bg-gray-50 rounded-[24px] overflow-hidden border border-gray-100 shadow-sm">
-        <img
-          src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=80"
-          alt="Satvastones jewellery care and cleaning at home"
-          class="w-full h-full object-cover"
-        />
-      </div>
-
-      <!-- Step-by-Step DIY Cleaning Guide -->
-      <div class="bg-white p-6 sm:p-8 border border-gray-200 rounded-[22px] space-y-6 shadow-2xs">
-        <div class="border-b border-gray-100 pb-3">
-          <span class="text-xs font-bold text-[#a1505a] uppercase tracking-wider">Step-by-Step DIY Guide</span>
-          <h2 class="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
-            4 Simple Steps to Clean Gold &amp; Anti-Tarnish Jewellery
+    <!-- The ritual -->
+    <section class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10" aria-labelledby="ritual-title">
+      <div class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-4 lg:sticky lg:top-24 lg:self-start">
+          <p class="eyebrow text-[#8d3f3d]">The ritual</p>
+          <h2 id="ritual-title" class="font-display mt-2 text-[2.1rem] leading-[1.02] sm:text-[2.9rem]">
+            Four steps,<br />once a month.
           </h2>
-          <p class="text-xs text-gray-500 mt-1">
-            Safe for 18K gold PVD, solid gold, cubic zirconia, and stainless steel.
+          <p class="mt-3 max-w-xs text-[12.5px] leading-relaxed text-[#5f5851]">
+            Safe for 18K gold PVD, solid gold, cubic zirconia and stainless steel. Nothing here needs a jeweller.
           </p>
+          <p class="mt-5 text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">You will need</p>
+          <ul class="mt-2 space-y-1.5 text-[12px] leading-relaxed text-[#4a443f]">
+            <li>Lukewarm water</li>
+            <li>Mild, ammonia-free soap</li>
+            <li>An ultra-soft baby toothbrush</li>
+            <li>A microfibre cloth or velvet pouch</li>
+          </ul>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="p-4 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
-            <span class="w-7 h-7 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-xs">
-              1
-            </span>
-            <h3 class="font-bold text-sm text-gray-900">Lukewarm Soapy Soak</h3>
-            <p class="text-xs text-gray-600 leading-relaxed">
-              Mix lukewarm water with 2–3 drops of mild, ammonia-free liquid dish soap or baby shampoo. Soak for 10–15 minutes to loosen daily oils, sweat, and cosmetics.
-            </p>
-          </div>
-
-          <div class="p-4 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
-            <span class="w-7 h-7 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-xs">
-              2
-            </span>
-            <h3 class="font-bold text-sm text-gray-900">Soft-Bristle Gentle Cleaning</h3>
-            <p class="text-xs text-gray-600 leading-relaxed">
-              Use an ultra-soft baby toothbrush or gentle cosmetic brush to delicately clean around prong settings, clasps, and chain links without harsh scrubbing.
-            </p>
-          </div>
-
-          <div class="p-4 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
-            <span class="w-7 h-7 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-xs">
-              3
-            </span>
-            <h3 class="font-bold text-sm text-gray-900">Warm Running Water Rinse</h3>
-            <p class="text-xs text-gray-600 leading-relaxed">
-              Hold your pieces under gentle running lukewarm water to rinse away all loosened soap films. Remember to cover your sink drain with a strainer plug.
-            </p>
-          </div>
-
-          <div class="p-4 bg-gray-50 rounded-xl space-y-2 border border-gray-100">
-            <span class="w-7 h-7 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-xs">
-              4
-            </span>
-            <h3 class="font-bold text-sm text-gray-900">Microfiber Pat Dry</h3>
-            <p class="text-xs text-gray-600 leading-relaxed">
-              Gently pat dry using the complimentary Satvastones velvet pouch or a clean lint-free microfiber cloth. Ensure the piece is completely dry before wearing.
-            </p>
-          </div>
-        </div>
-
-        <!-- Warning Callout -->
-        <div class="p-4 bg-rose-50/60 rounded-xl border border-rose-100 text-xs text-rose-900 space-y-1">
-          <strong class="font-bold flex items-center gap-1.5">
-            <svg class="w-4 h-4 text-rose-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-            </svg>
-            <span>What NOT to use on gold and PVD jewellery:</span>
-          </strong>
-          <p class="text-rose-800 leading-relaxed pl-5.5">
-            Never use toothpaste, baking soda pastes, chemical silver dips, vinegar, or industrial chlorine bleach. These substances contain abrasive micro-granules or acidic chemicals that will abrade and degrade the smooth 18K gold luster.
-          </p>
-        </div>
+        <ol class="grid grid-cols-1 gap-px bg-[#ded5c7] sm:grid-cols-2 lg:col-span-8">
+          {steps.map((step, i) => (
+            <li class="bg-[#fbf9f5] px-6 py-7 sm:px-7">
+              <span class="font-display text-[1.5rem] leading-none text-[#c5a059]">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="font-display mt-2 text-[1.3rem] leading-tight">{step.title}</h3>
+              <p class="mt-2 text-[12px] leading-relaxed text-[#5f5851]">{step.body}</p>
+            </li>
+          ))}
+        </ol>
       </div>
+    </section>
 
-      <!-- Core Care Rules -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-        <div class="bg-white p-6 border border-gray-200 rounded-[20px] space-y-2.5 shadow-2xs">
-          <div class="w-9 h-9 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-sm">
-            1
-          </div>
-          <h3 class="text-base font-bold text-gray-900">The "Last On, First Off" Rule</h3>
-          <p class="text-xs text-gray-600 leading-relaxed">
-            Apply perfumes, moisturizers, hair sprays, and sanitizers <em>before</em> putting on your jewellery. Allow lotions to absorb completely so propellant chemicals do not leave surface residue.
-          </p>
+    <!-- What not to use -->
+    <section class="bg-[#14110f] text-[#f6f1e8]" aria-labelledby="avoid-title">
+      <div class="mx-auto grid max-w-[1440px] gap-10 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-12 lg:gap-16 lg:px-10">
+        <div class="lg:col-span-4">
+          <p class="eyebrow text-[#c5a059]">Do not use</p>
+          <h2 id="avoid-title" class="font-display mt-2 text-[2.1rem] leading-[1.02] sm:text-[3rem]">
+            Five things<br class="hidden sm:block" /> that dull gold.
+          </h2>
         </div>
 
-        <div class="bg-white p-6 border border-gray-200 rounded-[20px] space-y-2.5 shadow-2xs">
-          <div class="w-9 h-9 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center font-bold text-sm">
-            2
-          </div>
-          <h3 class="text-base font-bold text-gray-900">Post-Pool &amp; Ocean Fresh Rinse</h3>
-          <p class="text-xs text-gray-600 leading-relaxed">
-            While our 316L steel handles regular shower water and sweat with ease, pool chlorine and ocean salt can leave dried mineral deposits. Rinse with fresh water and pat dry.
+        <div class="lg:col-span-8">
+          <ul class="grid grid-cols-1 gap-px bg-white/10 sm:grid-cols-2">
+            {[
+              'Toothpaste — abrasive micro-granules scratch the finish',
+              'Baking soda paste — mildly alkaline, dulls the sheen',
+              'Silver dip — formulated for silver, not gold PVD',
+              'Vinegar and lemon — acidic, attacks the coating edge',
+              'Chlorine bleach — the fastest way to pit stainless steel'
+            ].map((item, i) => (
+              <li class="flex items-start gap-3 bg-[#14110f] px-5 py-4">
+                <span class="font-display text-[1rem] leading-none text-[#c5a059]">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span class="text-[12px] leading-relaxed text-[#d9d2c7]">{item}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-4 max-w-xl text-[11.5px] leading-relaxed text-[#b9b1a7]">
+            Everything above strips either the lacquer layer or the top of the PVD shell. Warm water and mild soap do the same cleaning job without the damage.
           </p>
         </div>
       </div>
+    </section>
 
-      <!-- Honest Shine Disclosure Card -->
-      <div class="p-6 bg-rose-50/40 border border-rose-100 rounded-2xl space-y-2">
-        <h4 class="text-sm font-bold text-gray-900 flex items-center gap-2">
-          <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-          </svg>
-          <span>Does Anti-Tarnish Jewellery Fade? Our Honest Policy</span>
-        </h4>
-        <p class="text-xs text-gray-600 leading-relaxed">
-          We pride ourselves on 100% transparency. Medical-grade 316L surgical stainless steel itself will never rust, turn black, or oxidize green. Our 18K vacuum PVD coating is atom-bonded and up to 10 times more durable than conventional flash plating, resisting showers, sweat, and daily wear for years. While no physical object is immune to heavy chemical scrubbing or abrasive sanding, standard mindful wear guarantees years of radiant golden luster.
-        </p>
+    <!-- Habits -->
+    <section class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10" aria-labelledby="habits-title">
+      <div class="max-w-2xl">
+        <p class="eyebrow text-[#8d3f3d]">Daily habits</p>
+        <h2 id="habits-title" class="font-display mt-2 text-[2.1rem] leading-[1.02] sm:text-[3rem]">
+          Three rules that do the most work.
+        </h2>
       </div>
 
-      <div class="text-center pt-2">
-        <a
-          href="/shop"
-          class="inline-block bg-[#f2707f] hover:bg-[#e05e6d] text-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg shadow-[#f2707f]/25 transition-all"
-        >
-          Shop Waterproof Jewellery &rarr;
-        </a>
+      <div class="mt-8 grid grid-cols-1 gap-px bg-[#ded5c7] sm:grid-cols-3">
+        {rules.map((rule, i) => (
+          <div class="bg-[#fbf9f5] px-6 py-7">
+            <span class="text-[9px] uppercase tracking-[0.24em] text-[#c5a059]">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3 class="font-display mt-2 text-[1.35rem] leading-tight">{rule.title}</h3>
+            <p class="mt-2 text-[12px] leading-relaxed text-[#5f5851]">{rule.body}</p>
+          </div>
+        ))}
       </div>
+    </section>
 
-    </div>
+    <!-- Honest disclosure -->
+    <section class="mx-auto max-w-[1440px] px-5 pb-16 sm:px-8 sm:pb-20 lg:px-10" aria-labelledby="fade-title">
+      <div class="border border-[#e0d7c9] bg-[#f4efe7] p-6 sm:p-9">
+        <div class="grid gap-6 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-4">
+            <p class="eyebrow text-[#8d3f3d]">The honest answer</p>
+            <h2 id="fade-title" class="font-display mt-2 text-[1.7rem] leading-tight sm:text-[2.1rem]">
+              Does it fade?
+            </h2>
+          </div>
+          <div class="space-y-3 text-[12.5px] leading-relaxed text-[#4a443f] lg:col-span-8">
+            <p>
+              316L surgical stainless steel will never rust, turn black or oxidise green. The 18K vacuum PVD coating is atom-bonded and up to ten times more durable than conventional flash plating, resisting showers, sweat and daily wear for years.
+            </p>
+            <p>
+              No physical object is immune to heavy chemical scrubbing or abrasive sanding. Standard mindful wear — the ritual above, and the three habits — is what keeps the colour. If a piece ever fails within 180 days of normal wear, write to us and we will replace it.
+            </p>
+            <p>
+              <a href="/materials" class="underline decoration-[#c5a059] underline-offset-4 hover:text-[#8d3f3d]">
+                Read the full metallurgy
+              </a>{' '}
+              or{' '}
+              <a href="/refund-policy" class="underline decoration-[#c5a059] underline-offset-4 hover:text-[#8d3f3d]">
+                see the 180-day colour warranty
+              </a>
+              .
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="border-t border-[#e5ded3] bg-[#f4efe7]" aria-labelledby="care-cta-title">
+      <div class="mx-auto grid max-w-[1440px] items-center gap-8 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-12 lg:px-10">
+        <div class="lg:col-span-7">
+          <p class="eyebrow text-[#8d3f3d]">Wear it daily</p>
+          <h2 id="care-cta-title" class="font-display mt-2 text-[2.1rem] leading-[1.02] sm:text-[3rem]">
+            Waterproof pieces,<br class="hidden sm:block" /> built for the ritual.
+          </h2>
+          <p class="mt-3 max-w-md text-[13px] leading-relaxed text-[#5f5851]">
+            Every piece ships with a velvet pouch and care certificate. Start with a bestseller, or build a stack of three and save 15%.
+          </p>
+        </div>
+        <div class="flex flex-col gap-3 sm:flex-row lg:col-span-5 lg:justify-end">
+          <a href="/shop" class="inline-flex items-center justify-center gap-2 bg-[#14110f] px-7 py-4 text-[10px] uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]">
+            Shop waterproof jewellery <span aria-hidden="true">→</span>
+          </a>
+          <a href="/collections/bestsellers" class="inline-flex items-center justify-center gap-2 border border-[#14110f] px-7 py-4 text-[10px] uppercase tracking-[0.16em] text-[#14110f] transition-colors hover:bg-[#fbf9f5]">
+            Bestsellers
+          </a>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>

@@ -22,16 +22,40 @@ const discountPercent = product.compareAtPricePaise
   ? Math.round(((product.compareAtPricePaise - product.pricePaise) / product.compareAtPricePaise) * 100)
   : 0;
 
-// Curate 2 complementary pieces for the "Complete the Look" Bundle Engine
-const complementaryProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 2);
+// Curate two complementary pieces from different categories so the bundle
+// actually reads as a stack rather than three variations of the same thing.
+const bundleCandidates = PRODUCTS.filter((p) => p.id !== product.id);
+const usedCategories = new Set<string>([product.category]);
+const complementaryProducts: Product[] = [];
+
+for (const candidate of bundleCandidates) {
+  if (complementaryProducts.length >= 2) break;
+  if (usedCategories.has(candidate.category)) continue;
+  usedCategories.add(candidate.category);
+  complementaryProducts.push(candidate);
+}
+
+for (const candidate of bundleCandidates) {
+  if (complementaryProducts.length >= 2) break;
+  if (complementaryProducts.some((p) => p.id === candidate.id)) continue;
+  complementaryProducts.push(candidate);
+}
+
 const bundleItems = [product, ...complementaryProducts];
 const bundleRawSumPaise = bundleItems.reduce((acc, p) => acc + p.pricePaise, 0);
-const bundleDiscountPaise = Math.round(bundleRawSumPaise * 0.15); // 15% Bundle Savings
+const bundleDiscountPaise = Math.round(bundleRawSumPaise * 0.15);
 const bundleFinalPaise = bundleRawSumPaise - bundleDiscountPaise;
+
+const stackPartner = complementaryProducts[0];
 
 // Recommendations
 const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
 const fallbackRelated = relatedProducts.length >= 2 ? relatedProducts : PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
+
+const showSizeGuide = ['rings', 'bangles', 'bracelets'].includes(product.category);
+
+const freeShippingThresholdPaise = 49900;
+const freeShippingRemainingPaise = Math.max(0, freeShippingThresholdPaise - product.pricePaise);
 
 const productBreadcrumbs = [
   { name: 'Home', url: '/' },
@@ -125,601 +149,620 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
   schema={productSchema}
   breadcrumbs={productBreadcrumbs}
 >
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-    
-    <!-- Breadcrumbs in Jewelsmars clean style -->
-    <nav class="flex items-center gap-1.5 text-xs text-gray-500 mb-4 sm:mb-6 overflow-x-auto whitespace-nowrap">
-      <a href="/" class="hover:text-black">Home</a>
-      <span>/</span>
-      <a href="/shop" class="hover:text-black">Shop</a>
-      <span>/</span>
-      <a href={`/collections/${product.category}`} class="capitalize hover:text-black">{product.category}</a>
-      <span>/</span>
-      <span class="text-gray-900 font-medium truncate max-w-[180px] sm:max-w-xs">{product.name}</span>
-    </nav>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <!-- Breadcrumb rail -->
+    <div class="mx-auto max-w-[1440px] px-5 pt-5 sm:px-8 sm:pt-7 lg:px-10">
+      <nav aria-label="Breadcrumb" class="overflow-x-auto scrollbar-none">
+        <ol class="flex items-center gap-2 whitespace-nowrap text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
+          <li><a href="/" class="transition-colors hover:text-[#14110f]">Home</a></li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li><a href="/shop" class="transition-colors hover:text-[#14110f]">Shop</a></li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li>
+            <a href={`/collections/${product.category}`} class="capitalize transition-colors hover:text-[#14110f]">
+              {product.category.replace(/-/g, ' ')}
+            </a>
+          </li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li aria-current="page" class="max-w-[180px] truncate text-[#14110f] sm:max-w-xs">{product.name}</li>
+        </ol>
+      </nav>
+    </div>
 
-    <!-- Main PDP Grid: Mobile-first Stack -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12" id="pdp-hero-box">
-      
-      <!-- Left Column: Gallery (Jewelsmars 3:4 Portrait style) -->
-      <div class="lg:col-span-7 space-y-3 sm:space-y-4">
-        <!-- Main Image Container -->
-        <div class="aspect-[3/4] bg-[#f9f9f9] rounded-[22px] overflow-hidden border border-gray-100 relative group shadow-sm">
-          <img
-            id="pdp-main-image"
-            src={product.images[0]?.url}
-            alt={product.images[0]?.alt || `${product.name} - Anti Tarnish Waterproof 18K Gold Jewellery India`}
-            width="800"
-            height="1066"
-            loading="eager"
-            fetchpriority="high"
-            decoding="async"
-            class="w-full h-full object-cover transition-opacity duration-300"
-          />
+    <!-- Product hero -->
+    <section
+      id="pdp-hero-box"
+      class="mx-auto grid max-w-[1440px] grid-cols-1 gap-10 px-5 pb-16 pt-6 sm:px-8 sm:pt-8 lg:grid-cols-12 lg:gap-16 lg:px-10 lg:pb-24"
+      aria-labelledby="pdp-title"
+    >
+      <!-- Gallery -->
+      <div class="lg:col-span-7">
+        <div class="lg:sticky lg:top-24">
+          <div class="media-frame relative aspect-square overflow-hidden bg-[#f1ece3] sm:aspect-[4/5]">
+            <img
+              id="pdp-main-image"
+              src={product.images[0]?.url}
+              alt={product.images[0]?.alt || `${product.name} — anti-tarnish waterproof 18K gold jewellery India`}
+              width="1000"
+              height="1250"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              class="h-full w-full object-cover"
+            />
 
-          <!-- Atelier Discount Tag -->
-          {discountPercent > 0 && (
-            <span class="absolute top-3.5 left-3.5 bg-[#9f4553] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
-              SAVE {discountPercent}%
-            </span>
-          )}
+            {/* Sale label — editorial, not a sticker */}
+            {discountPercent > 0 && (
+              <span class="absolute left-4 top-4 z-10 bg-[#14110f] px-3 py-1.5 text-[9px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8]">
+                Save {discountPercent}%
+              </span>
+            )}
 
-          <!-- 18K Anti-Tarnish Pill -->
-          <span class="absolute top-3.5 right-3.5 bg-white/95 backdrop-blur-xs text-[#171513] text-[10px] font-bold px-2.5 py-1 rounded-full border border-[#eae4dc] shadow-2xs">
-            ✦ Waterproof 18K Gold
-          </span>
-
-          <!-- Floating Wishlist Heart -->
-          <button
-            id="pdp-wishlist-heart"
-            type="button"
-            class="absolute bottom-3.5 right-3.5 w-10 h-10 rounded-full bg-white/95 backdrop-blur-xs shadow-md border border-[#eae4dc] flex items-center justify-center text-[#99918b] hover:text-[#9f4553] transition-all cursor-pointer"
-            aria-label="Save to Wishlist"
-          >
-            <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-            </svg>
-          </button>
-        </div>
-
-        <!-- Thumbnails Strip -->
-        <div class="grid grid-cols-4 sm:grid-cols-5 gap-2.5 sm:gap-3">
-          {product.images.map((img, idx) => (
             <button
+              id="pdp-wishlist-heart"
               type="button"
-              data-img-src={img.url}
-              data-img-alt={img.alt}
-              class={`aspect-[3/4] rounded-[14px] overflow-hidden border-2 transition-all pdp-thumb-btn ${idx === 0 ? 'border-[#171513] shadow-xs' : 'border-[#eae4dc] hover:border-[#c5a059]'}`}
+              data-saved="false"
+              class="pdp-wishlist absolute right-4 top-4 z-10 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[#14110f]/10 bg-[#fbf9f5]/90 text-[#14110f] backdrop-blur-sm transition-all hover:bg-white hover:text-[#8d3f3d]"
+              aria-label={`Save ${product.name} to wishlist`}
+              aria-pressed="false"
             >
-              <img
-                src={img.url}
-                alt={img.alt || `${product.name} thumbnail`}
-                width="160"
-                height="213"
-                loading="lazy"
-                decoding="async"
-                class="w-full h-full object-cover"
-              />
+              <svg class="h-[18px] w-[18px] stroke-[1.4]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+              </svg>
             </button>
-          ))}
+
+            <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between bg-gradient-to-t from-black/45 to-transparent p-4 pt-16">
+              <span class="text-[9px] uppercase tracking-[0.2em] text-white/85">Waterproof 18K PVD</span>
+              <span class="text-[9px] uppercase tracking-[0.2em] text-white/60">
+                {String(1).padStart(2, '0')} / {String(product.images.length).padStart(2, '0')}
+              </span>
+            </div>
+          </div>
+
+          {/* Thumbnails */}
+          <div class="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-5">
+            {product.images.map((img, idx) => (
+              <button
+                type="button"
+                data-img-src={img.url}
+                data-img-alt={img.alt}
+                data-active={idx === 0 ? 'true' : 'false'}
+                class="pdp-thumb aspect-[4/5] cursor-pointer overflow-hidden border border-transparent bg-[#f1ece3] transition-opacity hover:opacity-80"
+                aria-label={`View image ${idx + 1} of ${product.name}`}
+              >
+                <img
+                  src={img.url}
+                  alt={img.alt || `${product.name} thumbnail`}
+                  width="200"
+                  height="250"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-[#e5ded3] pt-4 text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
+            <span>Hand-inspected in Vapi, Gujarat</span>
+            <a href="/materials" class="link-line text-[#14110f]">Our materials</a>
+          </div>
         </div>
       </div>
 
-      <!-- Right Column: Buy Box & Product Info -->
-      <div class="lg:col-span-5 flex flex-col justify-between space-y-5">
-        <div class="space-y-4">
-          
-          <!-- Category & Title -->
-          <div class="space-y-1">
-            <span class="text-[11px] uppercase font-bold tracking-[0.14em] text-[#9f4553] flex items-center gap-1.5">
-              <span class="text-[#c5a059]">✦</span>
-              <span>Anti-Tarnish Daily Atelier</span>
+      <!-- Buy box -->
+      <div class="lg:col-span-5">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="bg-[#f4efe7] px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-[#8d3f3d]">
+            ✦ Anti-tarnish atelier
+          </span>
+          {product.isBestseller && (
+            <span class="border border-[#e5ded3] px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-[#5f5851]">
+              Bestseller
             </span>
-            <h1 class="font-serif text-2xl sm:text-4xl font-normal text-[#171513] tracking-tight leading-tight">
-              {product.name}
-            </h1>
-            <p class="text-[11px] text-[#99918b]">SKU: {product.sku}</p>
-          </div>
+          )}
+        </div>
 
-          <!-- Review Stars Rating -->
-          <div class="flex items-center gap-2 text-xs">
-            <div class="flex text-[#c5a059] gap-0.5">
+        <h1 id="pdp-title" class="font-display mt-4 text-[2.35rem] leading-[1.02] tracking-[-0.03em] text-[#14110f] sm:text-[3rem]">
+          {product.name}
+        </h1>
+
+        <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-[#6f675f]">
+          <a href="#reviews" class="flex items-center gap-1.5" aria-label="Read verified customer reviews">
+            <span class="flex gap-0.5 text-[#c5a059]">
               {Array.from({ length: 5 }).map((_, i) => (
-                <svg class={`w-3.5 h-3.5 ${i < Math.round(product.rating) ? 'fill-current' : 'text-gray-200 fill-current'}`} viewBox="0 0 20 20">
+                <svg class={`h-3 w-3 ${i < Math.round(product.rating) ? 'fill-current' : 'fill-[#ddd5c9]'}`} viewBox="0 0 20 20" aria-hidden="true">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                 </svg>
               ))}
-            </div>
-            <span class="font-bold text-[#171513]">{product.rating}</span>
-            <span class="text-[#6e6863]">({product.reviewCount} verified reviews)</span>
-          </div>
-
-          <!-- Price Display (Atelier Obsidian + MRP Strikethrough) -->
-          <div class="flex items-baseline gap-3 pt-1 border-y border-[#eae4dc] py-3">
-            <span class="text-3xl sm:text-4xl font-bold text-[#171513]">
-              {formatPrice(product.pricePaise)}
             </span>
-            {product.compareAtPricePaise && (
-              <span class="text-base text-[#99918b] line-through">
-                {formatPrice(product.compareAtPricePaise)}
-              </span>
-            )}
-            {discountPercent > 0 && (
-              <span class="text-xs bg-[#171513] text-[#fbf8f5] font-bold px-2.5 py-1 rounded-full shadow-2xs">
-                {discountPercent}% OFF
-              </span>
-            )}
-            <span class="text-xs text-[#6e6863] ml-auto font-medium">
-              Inclusive of all taxes
-            </span>
-          </div>
+            <span class="font-medium text-[#14110f]">{product.rating}</span>
+            <span class="underline decoration-[#d8d0c4] underline-offset-2">({product.reviewCount} reviews)</span>
+          </a>
+          <span class="hidden h-3 w-px bg-[#d8d0c4] sm:block" aria-hidden="true"></span>
+          <span class="text-[10px] uppercase tracking-[0.14em]">SKU {product.sku}</span>
+        </div>
 
-          <!-- Atelier Urgency Pill -->
-          <div class="flex items-center gap-2.5 py-2.5 px-3.5 bg-[#eef8f3] border border-[#c4e8d3] rounded-xl text-xs text-[#1b6d48] font-semibold">
-            <span class="w-2 h-2 rounded-full bg-[#1b6d48] animate-pulse shrink-0"></span>
-            <span>
-              Direct Atelier Pricing • Only <strong>3 pieces remaining</strong> for today's Vapi dispatch
-            </span>
-          </div>
+        <div class="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1 border-y border-[#e5ded3] py-4">
+          <span class="text-[1.75rem] font-medium tracking-tight text-[#14110f] sm:text-[2rem]">
+            {formatPrice(product.pricePaise)}
+          </span>
+          {product.compareAtPricePaise && (
+            <span class="text-sm text-[#9a938b] line-through">{formatPrice(product.compareAtPricePaise)}</span>
+          )}
+          {discountPercent > 0 && (
+            <span class="text-[11px] font-medium uppercase tracking-[0.12em] text-[#8d3f3d]">{discountPercent}% off</span>
+          )}
+          <span class="ml-auto text-[10px] uppercase tracking-[0.12em] text-[#8a8279]">Incl. all taxes</span>
+        </div>
 
-          <!-- Dynamic Live Dispatch Countdown -->
-          <div class="flex items-center justify-between text-xs text-[#171513] bg-[#faf8f5] border border-[#eae4dc] px-3.5 py-2 rounded-xl">
-            <span class="flex items-center gap-1.5">
-              <span class="text-[#c5a059]">✦</span>
-              <span>Order in next <strong id="pdp-dispatch-countdown" class="text-[#9f4553] font-bold">3h 14m 20s</strong> for today's dispatch!</span>
-            </span>
-            <span class="text-[10px] text-[#6e6863] font-bold uppercase tracking-wider">Vapi Atelier Hub</span>
-          </div>
+        <p class="mt-5 text-[14px] leading-relaxed text-[#4a443f]">{product.headline}</p>
 
-          <!-- Headline Description -->
-          <p class="text-xs sm:text-sm text-[#4a443f] leading-relaxed">
-            {product.headline}
+        <!-- Honest dispatch urgency -->
+        <div class="mt-5 flex items-start gap-2.5 border-l-2 border-[#c5a059] pl-3.5 text-[11px] leading-relaxed text-[#5f5851]">
+          <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#2f7d5a]" aria-hidden="true"></span>
+          <p>
+            Order within <strong id="pdp-dispatch-countdown" class="font-semibold text-[#8d3f3d]">3h 14m 20s</strong>
+            for same-day dispatch from our Vapi atelier.{' '}
+            <span class="text-[#8a8279]">Delivered in 2–4 business days.</span>
           </p>
+        </div>
 
-          <!-- Interactive Size Guide Trigger -->
-          <div class="flex items-center justify-between text-xs py-1.5 border-y border-[#eae4dc]">
-            <span class="text-[#6e6863]">Unsure about your ring or bangle measurements?</span>
+        <!-- Stacking nudge -->
+        {stackPartner && (
+          <a
+            href="#complete-the-stack"
+            class="group mt-6 flex items-center gap-4 border border-[#e0d7c9] bg-[#f4efe7] p-3 transition-colors hover:border-[#c5a059]"
+          >
+            <img
+              src={stackPartner.images[0]?.url}
+              alt={stackPartner.name}
+              width="64"
+              height="80"
+              loading="lazy"
+              class="h-16 w-14 shrink-0 object-cover"
+            />
+            <div class="min-w-0 flex-1">
+              <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">The stacking edit</p>
+              <p class="mt-0.5 truncate text-[13px] text-[#14110f]">Add {stackPartner.name}</p>
+              <p class="text-[11px] text-[#6f675f]">Stack any two pieces and save 15%</p>
+            </div>
+            <span class="text-[#14110f] transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+          </a>
+        )}
+
+        {showSizeGuide && (
+          <div class="mt-5 flex flex-wrap items-center justify-between gap-2 border-y border-[#e5ded3] py-3 text-[11px]">
+            <span class="text-[#6f675f]">Not sure of your size?</span>
             <button
               id="pdp-ring-sizer-trigger"
               type="button"
-              class="text-[#9f4553] font-bold underline flex items-center gap-1.5 hover:text-[#171513] cursor-pointer"
+              class="flex cursor-pointer items-center gap-1.5 font-medium text-[#8d3f3d] underline decoration-[#d8c3a6] underline-offset-4 transition-colors hover:text-[#14110f]"
             >
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m-3-3h6" />
+              Open size calculator
+              <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        )}
+
+        <!-- Quantity + add -->
+        <div class="mt-6">
+          <div class="flex items-stretch gap-3">
+            <div class="flex items-center border border-[#d8d0c4] bg-[#fbf9f5]">
+              <button
+                id="pdp-qty-minus"
+                type="button"
+                class="flex h-12 w-10 cursor-pointer items-center justify-center text-lg text-[#14110f] transition-colors hover:bg-[#f1ece3]"
+                aria-label="Decrease quantity"
+              >−</button>
+              <span id="pdp-qty-val" class="w-8 text-center text-sm font-medium text-[#14110f]" aria-live="polite">1</span>
+              <button
+                id="pdp-qty-plus"
+                type="button"
+                class="flex h-12 w-10 cursor-pointer items-center justify-center text-lg text-[#14110f] transition-colors hover:bg-[#f1ece3]"
+                aria-label="Increase quantity"
+              >+</button>
+            </div>
+
+            <button
+              id="pdp-add-to-cart"
+              data-product-id={product.id}
+              data-product-name={product.name}
+              data-product-slug={product.slug}
+              data-product-price={product.pricePaise}
+              data-product-image={product.images[0]?.url}
+              class="flex h-12 flex-1 cursor-pointer items-center justify-center gap-2.5 bg-[#14110f] px-4 text-[11px] font-medium uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d] sm:text-xs"
+            >
+              <svg class="h-4 w-4 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007z" />
               </svg>
-              <span>Open Size Calculator</span>
+              Add to bag
             </button>
           </div>
 
-          <!-- Stacked Luxury Privilege Cards -->
-          <div class="space-y-2 pt-1">
-            <div class="flex items-center gap-3 p-3 bg-[#faf8f5] border border-[#eae4dc] rounded-[14px] text-xs text-[#171513]">
-              <span class="text-[#c5a059] text-base shrink-0">✦</span>
-              <div>
-                <p class="font-bold text-[#171513]">FREE Pan-India Express Delivery on orders above ₹499</p>
-                <p class="text-[11px] text-[#6e6863]">Hand-inspected & dispatched from Vapi atelier (Gujarat) in 24–48 hours</p>
-              </div>
-            </div>
+          <a
+            id="pdp-buy-now"
+            href="/checkout"
+            class="mt-3 flex h-12 w-full items-center justify-center border border-[#14110f] px-4 text-[11px] font-medium uppercase tracking-[0.16em] text-[#14110f] transition-colors hover:bg-[#f1ece3]"
+          >
+            Buy it now — express checkout
+          </a>
 
-            <div class="flex items-center gap-3 p-3 bg-[#faf8f5] border border-[#eae4dc] rounded-[14px] text-xs text-[#171513]">
-              <span class="text-[#c5a059] text-base shrink-0">✦</span>
-              <div>
-                <p class="font-bold text-[#171513]">Complimentary Velvet Keepsake Pouch Included</p>
-                <p class="text-[11px] text-[#6e6863]">Anti-tarnish packaging & care certificate with every single order</p>
-              </div>
-            </div>
+          <p class="mt-3 text-center text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+            {freeShippingRemainingPaise === 0
+              ? 'Free express shipping unlocked'
+              : `Add ${formatPrice(freeShippingRemainingPaise)} for free express shipping`}
+            <span class="mx-1.5 text-[#c5a059]">·</span>
+            7-day returns
+            <span class="mx-1.5 text-[#c5a059]">·</span>
+            Gift pouch included
+          </p>
+        </div>
 
-            <div class="flex items-center gap-3 p-3 bg-[#faf8f5] border border-[#eae4dc] rounded-[14px] text-xs text-[#171513]">
-              <span class="text-[#c5a059] text-base shrink-0">✦</span>
-              <div>
-                <p class="font-bold text-[#171513]">Extra ₹200 OFF on orders above ₹2,499</p>
-                <p class="text-[11px] text-[#6e6863]">Use privilege code <span class="font-bold text-[#9f4553]">FIRSTBUY</span> at checkout</p>
-              </div>
-            </div>
-          </div>
+        <!-- Trust list -->
+        <ul class="mt-7 grid grid-cols-2 gap-x-5 gap-y-4 border-y border-[#e5ded3] py-5 text-[11px]">
+          <li class="flex gap-2.5">
+            <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
+            <span><strong class="block font-medium text-[#14110f]">18K PVD gold</strong>Waterproof daily shine</span>
+          </li>
+          <li class="flex gap-2.5">
+            <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+            <span><strong class="block font-medium text-[#14110f]">Hypoallergenic 316L</strong>Nickel &amp; lead free</span>
+          </li>
+          <li class="flex gap-2.5">
+            <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+            </svg>
+            <span><strong class="block font-medium text-[#14110f]">Free express shipping</strong>On orders over ₹499</span>
+          </li>
+          <li class="flex gap-2.5">
+            <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+            </svg>
+            <span><strong class="block font-medium text-[#14110f]">7-day returns</strong>Easy size exchanges</span>
+          </li>
+        </ul>
 
-          <!-- Quantity Stepper & Add to Bag -->
-          <div class="space-y-3 pt-2">
-            <div class="flex items-center gap-3">
-              <!-- Quantity Stepper -->
-              <div class="flex items-center border border-[#eae4dc] rounded-xl bg-[#faf8f5] p-1">
-                <button
-                  id="pdp-qty-minus"
-                  type="button"
-                  class="w-9 h-9 rounded-lg bg-white border border-[#eae4dc] flex items-center justify-center font-bold text-[#171513] hover:bg-[#eae4dc] transition-colors cursor-pointer"
-                  aria-label="Decrease quantity"
-                >
-                  −
-                </button>
-                <span id="pdp-qty-val" class="w-10 text-center font-bold text-sm text-[#171513]">1</span>
-                <button
-                  id="pdp-qty-plus"
-                  type="button"
-                  class="w-9 h-9 rounded-lg bg-white border border-[#eae4dc] flex items-center justify-center font-bold text-[#171513] hover:bg-[#eae4dc] transition-colors cursor-pointer"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
-
-              <!-- Primary Obsidian ADD TO CART Button -->
-              <button
-                id="pdp-add-to-cart"
-                data-product-id={product.id}
-                data-product-name={product.name}
-                data-product-slug={product.slug}
-                data-product-price={product.pricePaise}
-                data-product-image={product.images[0]?.url}
-                class="flex-1 bg-[#171513] hover:bg-[#9f4553] text-white py-3.5 sm:py-4 px-6 text-xs sm:text-sm font-bold uppercase tracking-[0.1em] rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                </svg>
-                <span>Add to Shopping Bag</span>
-              </button>
-            </div>
-
-            <!-- Instant BUY NOW Button -->
-            <a
-              id="pdp-buy-now"
-              href="/checkout"
-              class="block w-full text-center bg-[#faf8f5] hover:bg-[#171513] text-[#171513] hover:text-white border-2 border-[#171513] py-3.5 sm:py-4 text-xs sm:text-sm font-bold uppercase tracking-[0.1em] rounded-xl shadow-xs transition-all cursor-pointer"
+        <!-- PIN checker -->
+        <div class="mt-6">
+          <label for="pincode-input" class="mb-2 block text-[10px] uppercase tracking-[0.16em] text-[#6f675f]">
+            Check delivery to your PIN code
+          </label>
+          <div class="flex gap-2">
+            <input
+              id="pincode-input"
+              type="text"
+              inputmode="numeric"
+              maxlength="6"
+              placeholder="6-digit PIN code"
+              class="h-11 flex-1 border border-[#d8d0c4] bg-transparent px-3.5 text-xs text-[#14110f] placeholder:text-[#9a938b] focus:border-[#14110f] focus:outline-none"
+            />
+            <button
+              id="check-pincode-btn"
+              type="button"
+              class="h-11 cursor-pointer border border-[#14110f] px-5 text-[10px] font-medium uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:bg-[#14110f] hover:text-[#f6f1e8]"
             >
-              Instant 1-Click Checkout →
-            </a>
+              Check
+            </button>
           </div>
+          <p id="pincode-msg" class="mt-2 hidden text-[11px] font-medium" role="status"></p>
+        </div>
 
-          <!-- Mandatory Consumer Protection (E-Commerce) Rules Badges -->
-          <div class="p-3.5 bg-gray-50 border border-gray-200 rounded-2xl space-y-2 text-xs">
-            <div class="flex items-center justify-between">
-              <span class="inline-flex items-center gap-1.5 font-bold text-gray-900">
-                <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
-                <span>Country of Origin: India</span>
-              </span>
-              <span class="text-[10px] font-bold bg-white text-gray-700 px-2.5 py-0.5 rounded-full border border-gray-200 uppercase tracking-wider">
-                Vapi Atelier
-              </span>
-            </div>
-            
-            <div class="flex items-start gap-2 pt-1 border-t border-gray-200/80 text-[11px] text-gray-600">
-              <svg class="w-4 h-4 text-[#a1505a] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" />
-              </svg>
-              <div>
-                <strong class="text-gray-900 block font-semibold">Return & Replacement Eligibility:</strong>
-                <span>100% Free replacement against transit damages with continuous 360° unboxing video proof submitted within 48h of delivery. Sealed hygienic packaging.</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- PIN Code Delivery Checker -->
-          <div class="pt-2">
-            <label class="block text-xs font-bold text-gray-800 mb-1.5 uppercase tracking-wide">
-              Check Express Delivery to PIN Code
-            </label>
-            <div class="flex gap-2">
-              <input
-                id="pincode-input"
-                type="text"
-                maxlength="6"
-                placeholder="Enter 6-digit Indian PIN code"
-                class="bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl flex-1 focus:outline-none focus:border-[#f2707f]"
-              />
-              <button
-                id="check-pincode-btn"
-                type="button"
-                class="bg-gray-900 hover:bg-black text-white px-5 py-2.5 text-xs font-bold rounded-xl uppercase tracking-wider transition-colors cursor-pointer"
-              >
-                Check
-              </button>
-            </div>
-            <p id="pincode-msg" class="text-xs mt-1.5 hidden font-medium"></p>
-          </div>
-
-          <!-- Trust Badges Strip -->
-          <div class="grid grid-cols-3 gap-2 pt-3 border-t border-gray-100 text-center">
-            <div class="p-2 bg-gray-50 rounded-xl flex flex-col items-center">
-              <svg class="w-4 h-4 text-[#a1505a] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-              </svg>
-              <span class="text-[10px] font-bold text-gray-800">18K PVD Gold</span>
-              <p class="text-[9px] text-gray-500">Waterproof Daily</p>
-            </div>
-            <div class="p-2 bg-gray-50 rounded-xl flex flex-col items-center">
-              <svg class="w-4 h-4 text-[#a1505a] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-              </svg>
-              <span class="text-[10px] font-bold text-gray-800">Hypoallergenic</span>
-              <p class="text-[9px] text-gray-500">Nickel-Free 316L</p>
-            </div>
-            <div class="p-2 bg-gray-50 rounded-xl flex flex-col items-center">
-              <svg class="w-4 h-4 text-[#a1505a] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-              </svg>
-              <span class="text-[10px] font-bold text-gray-800">Vapi Store</span>
-              <p class="text-[9px] text-gray-500">24–48h Dispatch</p>
-            </div>
-          </div>
-
+        <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[#e5ded3] pt-4 text-[10px] uppercase tracking-[0.12em] text-[#8a8279]">
+          <span>Secure checkout</span>
+          <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+          <span>UPI · Cards · Netbanking</span>
+          <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+          <span>GST invoice available</span>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Complete The Look / Frequently Bought Together Bundle Builder (High AOV Engine) -->
-    <div class="mt-14 sm:mt-16 bg-[#faf8f5] border border-[#eae4dc] rounded-[24px] p-5 sm:p-8 shadow-2xs">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-5 border-b border-[#eae4dc] gap-2">
-        <div>
-          <span class="text-xs uppercase tracking-[0.14em] text-[#9f4553] font-bold flex items-center gap-1.5">
-            <span class="text-[#c5a059]">✦</span>
-            <span>CURATED ATELIER PAIRINGS</span>
+    <!-- Complete the stack -->
+    <section id="complete-the-stack" class="border-y border-[#e5ded3] bg-[#f1ece3]" aria-labelledby="stack-title">
+      <div class="mx-auto max-w-[1440px] px-5 py-14 sm:px-8 sm:py-16 lg:px-10">
+        <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <p class="eyebrow text-[#8d3f3d]">The stacking edit</p>
+            <h2 id="stack-title" class="font-display mt-2 text-[2rem] leading-tight sm:text-[2.6rem]">Complete the stack.</h2>
+            <p class="mt-2 max-w-md text-[13px] leading-relaxed text-[#5f5851]">
+              Three pieces, one considered look. Choose any two or all three and we take 15% off the set — automatically.
+            </p>
+          </div>
+          <span class="self-start bg-[#14110f] px-3.5 py-2 text-[9px] uppercase tracking-[0.18em] text-[#f6f1e8] sm:self-auto">
+            Save 15% on 2+ pieces
           </span>
-          <h2 class="font-serif text-xl sm:text-3xl font-normal text-[#171513] tracking-tight mt-0.5">
-            Frequently Stacked Together
-          </h2>
         </div>
-        <span class="bg-[#171513] text-[#fbf8f5] text-xs font-bold px-3.5 py-1.5 rounded-full self-start sm:self-auto shadow-2xs">
-          Automatic 15% Bundle Savings
-        </span>
-      </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-        <!-- Bundle Products Selection -->
-        <div class="lg:col-span-8 flex flex-col sm:flex-row items-center gap-3">
+        <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {bundleItems.map((item, idx) => (
-            <div class="flex items-center gap-3 w-full sm:w-auto">
-              <div class="bg-white border border-[#eae4dc] p-3 rounded-[16px] flex items-center gap-3 w-full sm:w-56 shadow-2xs">
-                <input
-                  type="checkbox"
-                  checked
-                  disabled={idx === 0}
-                  class="bundle-item-check accent-[#171513] w-4 h-4 rounded cursor-pointer"
-                  data-item-id={item.id}
-                  data-item-name={item.name}
-                  data-item-slug={item.slug}
-                  data-item-price={item.pricePaise}
-                  data-item-image={item.images[0]?.url}
-                />
-                <img
-                  src={item.images[0]?.url}
-                  alt={item.name}
-                  class="w-14 h-18 object-cover rounded-[10px] bg-[#faf8f5] border border-[#eae4dc]"
-                />
-                <div class="min-w-0 flex-1">
-                  <p class="text-xs font-bold text-[#171513] truncate">{item.name}</p>
-                  <p class="font-bold text-xs text-[#171513] mt-0.5">{formatPrice(item.pricePaise)}</p>
-                  {idx === 0 && <span class="text-[9px] text-[#9f4553] font-bold uppercase tracking-wider">Active Piece</span>}
-                </div>
+            <label class="group relative flex cursor-pointer items-center gap-4 border border-[#ded5c7] bg-[#fbf9f5] p-3 transition-colors has-[:checked]:border-[#14110f]">
+              <input
+                type="checkbox"
+                checked
+                disabled={idx === 0}
+                class="bundle-item-check h-4 w-4 shrink-0 accent-[#14110f]"
+                data-item-id={item.id}
+                data-item-name={item.name}
+                data-item-slug={item.slug}
+                data-item-price={item.pricePaise}
+                data-item-image={item.images[0]?.url}
+                aria-label={`Include ${item.name} in the bundle`}
+              />
+              <img
+                src={item.images[0]?.url}
+                alt={item.name}
+                width="80"
+                height="100"
+                loading="lazy"
+                class="h-[84px] w-[68px] shrink-0 object-cover"
+              />
+              <div class="min-w-0 flex-1">
+                <p class="text-[9px] uppercase tracking-[0.16em] text-[#8d3f3d]">
+                  {idx === 0 ? 'This piece' : 'Pairs with'}
+                </p>
+                <p class="mt-0.5 line-clamp-2 text-[12px] leading-snug text-[#14110f]">{item.name}</p>
+                <p class="mt-1 text-[12px] font-medium">{formatPrice(item.pricePaise)}</p>
               </div>
-              {idx < bundleItems.length - 1 && (
-                <span class="text-[#c5a059] font-bold text-lg hidden sm:inline">+</span>
-              )}
-            </div>
+            </label>
           ))}
         </div>
 
-        <!-- Bundle Pricing & 1-Click CTA -->
-        <div class="lg:col-span-4 bg-white p-5 rounded-[20px] border border-[#eae4dc] space-y-3 shadow-2xs">
-          <div class="space-y-1">
-            <div id="bundle-raw-row" class="flex justify-between items-baseline text-xs text-[#6e6863]">
-              <span>Combined Value:</span>
+        <div class="mt-6 flex flex-col items-start justify-between gap-5 border-t border-[#ded5c7] pt-6 sm:flex-row sm:items-center">
+          <div class="text-[12px]">
+            <div id="bundle-raw-row" class="flex gap-3 text-[#6f675f]">
+              <span>Combined value</span>
               <span id="bundle-raw-val" class="line-through">{formatPrice(bundleRawSumPaise)}</span>
             </div>
-            <div id="bundle-savings-row" class="flex justify-between items-baseline text-xs text-[#1b6d48] font-bold">
-              <span id="bundle-savings-label">Bundle Savings (15% OFF):</span>
+            <div id="bundle-savings-row" class="mt-1 flex gap-3 font-medium text-[#2f7d5a]">
+              <span id="bundle-savings-label">Bundle savings (15% off)</span>
               <span id="bundle-savings-val">− {formatPrice(bundleDiscountPaise)}</span>
             </div>
-            <div class="flex justify-between items-baseline text-base font-bold text-[#171513] pt-1 border-t border-[#eae4dc]">
-              <span id="bundle-price-label">Suite Price:</span>
-              <span id="bundle-final-val" class="text-xl font-bold text-[#171513]">{formatPrice(bundleFinalPaise)}</span>
+            <div class="mt-2 flex items-baseline gap-3 border-t border-[#ded5c7] pt-2 text-[#14110f]">
+              <span id="bundle-price-label" class="text-[11px] uppercase tracking-[0.14em]">Suite price</span>
+              <span id="bundle-final-val" class="font-display text-[1.8rem] leading-none">{formatPrice(bundleFinalPaise)}</span>
             </div>
           </div>
 
-          <button
-            id="bundle-add-btn"
-            type="button"
-            class="w-full bg-[#171513] hover:bg-[#9f4553] text-white py-3 px-4 text-xs font-bold uppercase tracking-[0.08em] rounded-xl shadow-md transition-all cursor-pointer"
-          >
-            Add Full Suite to Bag (15% OFF) →
-          </button>
-          <p class="text-[10px] text-[#6e6863] text-center font-medium">
-            Free Express Delivery &amp; Complimentary Keepsake Velvet Box Included
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Jewelsmars Clean Accordions (Product Details & Policies) -->
-    <div class="mt-14 max-w-3xl mx-auto space-y-3">
-      
-      <!-- Accordion 1: Description & Styling -->
-      <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors">
-        <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-            </svg>
-            <span>Product Description & Styling Guide</span>
-          </span>
-          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-        </summary>
-        <div class="pt-4 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-4 space-y-2">
-          <p>{product.description}</p>
-          <p class="text-gray-500 text-xs">
-            Hand-curated for daily wear, whether you are dressing up for a coffee run, work meeting, or evening celebration.
-          </p>
-        </div>
-      </details>
-
-      <!-- Accordion 2: Materials & Craftsmanship -->
-      <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors">
-        <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-            </svg>
-            <span>Material & Craftsmanship Specifications</span>
-          </span>
-          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-        </summary>
-        <div class="pt-4 text-xs sm:text-sm text-gray-600 border-t border-gray-100 mt-4 space-y-2">
-          <ul class="space-y-1.5">
-            <li><strong class="text-gray-900">Core Metal:</strong> {product.material}</li>
-            <li><strong class="text-gray-900">Finish:</strong> {product.finish}</li>
-            {product.dimensions && <li><strong class="text-gray-900">Dimensions:</strong> {product.dimensions}</li>}
-            {product.weightGrams && <li><strong class="text-gray-900">Weight:</strong> {product.weightGrams} grams</li>}
-            <li><strong class="text-gray-900">Skin Compatibility:</strong> 100% Nickel-free, Lead-free, Hypoallergenic</li>
-          </ul>
-          <div class="p-3 bg-[#ffe7e9]/50 rounded-xl mt-3 text-xs text-gray-700">
-            <strong>Honest Shine Policy:</strong> While our 316L Stainless Steel and 18K PVD Gold plating are highly water and sweat resistant, we do not promise permanent infinite shine under harsh chemicals or bleach. Following basic care preserves its brilliant luster for years.
+          <div class="w-full sm:w-auto">
+            <button
+              id="bundle-add-btn"
+              type="button"
+              class="w-full cursor-pointer bg-[#14110f] px-8 py-4 text-[11px] font-medium uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d] sm:w-auto"
+            >
+              Add all 3 to bag — 15% off
+            </button>
+            <p class="mt-2 text-center text-[10px] uppercase tracking-[0.12em] text-[#8a8279] sm:text-left">
+              Free express shipping · Gift pouch included
+            </p>
           </div>
         </div>
-      </details>
+      </div>
+    </section>
 
-      <!-- Accordion 3: Shipping & Vapi Dispatch Policy -->
-      <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors">
-        <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-            </svg>
-            <span>Vapi Store Shipping & Replacement Policy</span>
-          </span>
-          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-        </summary>
-        <div class="pt-4 text-xs sm:text-sm text-gray-600 border-t border-gray-100 mt-4 space-y-2.5 leading-relaxed">
-          <p>
-            <strong>Dispatch from Vapi Store:</strong> All orders are received, quality-inspected, and dispatched directly from our <strong>Vapi store location (Gujarat, India)</strong> within <strong>24–48 hours</strong> via BlueDart, Delhivery, or Xpressbees.
+    <!-- Details -->
+    <section class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10" aria-labelledby="details-title" data-reveal>
+      <div class="grid gap-10 lg:grid-cols-[minmax(0,340px)_minmax(0,1fr)] lg:gap-16">
+        <div>
+          <p class="eyebrow text-[#8d3f3d]">The finer points</p>
+          <h2 id="details-title" class="font-display mt-2 text-[2rem] leading-tight sm:text-[2.6rem]">
+            Details, care<br class="hidden sm:block" /> &amp; delivery.
+          </h2>
+          <p class="mt-4 max-w-xs text-[13px] leading-relaxed text-[#5f5851]">
+            Everything we make is designed for real life — water, workouts, and everyday wear included.
           </p>
-          <p>
-            <strong>Free Shipping:</strong> Shipping is completely free on all orders above <strong>₹499</strong> (nominal flat ₹49 on orders below ₹499).
-          </p>
-          <p>
-            <strong>Cancellation Policy:</strong> You can cancel your order anytime before dispatch happens from our Vapi store. Once dispatched, cancellation is strictly not possible.
-          </p>
-          <p>
-            <strong>No Cash Refunds & Damaged Goods Proof:</strong> We do not offer cash refunds. If your jewellery arrives in a damaged condition, you must provide an <strong>unedited 360-degree unboxing video proof</strong> showing the sealed parcel opening. This allows our team to promptly verify and send you a free replacement.
-          </p>
-          <p class="text-xs text-gray-500">
-            Customer Support: <a href="mailto:support@satvastones.in" class="text-[#f2707f] font-semibold underline">support@satvastones.in</a>
-          </p>
-        </div>
-      </details>
-
-      <!-- Accordion 4: Jewellery Care Guide -->
-      <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors">
-        <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
-            </svg>
-            <span>Jewellery Care Tips</span>
-          </span>
-          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-        </summary>
-        <div class="pt-4 text-xs sm:text-sm text-gray-600 border-t border-gray-100 mt-4 space-y-2">
-          <ul class="list-disc list-inside space-y-1">
-            {product.careInstructions.map((tip) => (
-              <li>{tip}</li>
-            ))}
-          </ul>
-        </div>
-      </details>
-
-      <!-- Accordion 5: Mandatory Statutory Disclosures (Consumer Protection Rules, 2020) -->
-      <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors">
-        <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
-          <span class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span>Mandatory Statutory Disclosures (Consumer Protection Act)</span>
-          </span>
-          <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-        </summary>
-        <div class="pt-4 text-xs text-gray-600 border-t border-gray-100 mt-4 space-y-2">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-            <p><strong class="text-gray-900">Country of Origin:</strong> India</p>
-            <p><strong class="text-gray-900">Commodity:</strong> Anti-Tarnish Fashion Jewellery</p>
-            <p><strong class="text-gray-900">Net Quantity:</strong> 1 Unit (Includes Jewellery Piece, Velvet Pouch &amp; Authenticity Card)</p>
-            <p><strong class="text-gray-900">Shelf Life / Expiry:</strong> N/A (Non-perishable surgical steel / vacuum PVD gold)</p>
-            <p><strong class="text-gray-900">Manufactured, Packed &amp; Marketed by:</strong> Anirudh A Verma (SatvaStones Jewellery), Chala, Vapi, Gujarat - 396191, India</p>
-            <p><strong class="text-gray-900">GSTIN:</strong> 24DDAPV4074H1ZF</p>
-            <p class="sm:col-span-2"><strong class="text-gray-900">Consumer Care &amp; Grievance Redressal:</strong> Anirudh A Verma (Grievance Officer), Email: support@satvastones.in / grievance@satvastonesjewellery.in, Helpline: +91 98201 44521</p>
+          <div class="mt-5 flex flex-col gap-2 text-[11px] uppercase tracking-[0.14em]">
+            <a href="/materials" class="link-line self-start text-[#14110f]">Our materials</a>
+            <a href="/jewellery-care" class="link-line self-start text-[#14110f]">Jewellery care guide</a>
+            <a href={`/collections/${product.category}`} class="link-line self-start capitalize text-[#14110f]">
+              All {product.category.replace(/-/g, ' ')}
+            </a>
           </div>
         </div>
-      </details>
 
+        <div class="border-t border-[#e5ded3]">
+          <details class="group border-b border-[#e5ded3] py-5 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <h3 class="font-display text-[1.15rem] leading-snug text-[#14110f]">Description &amp; styling</h3>
+              <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <div class="pt-3 text-[13px] leading-relaxed text-[#5f5851]">
+              <p>{product.description}</p>
+              <p class="mt-2">
+                Hand-curated for daily wear — a coffee run, a work meeting, or an evening celebration.
+              </p>
+            </div>
+          </details>
+
+          <details class="group border-b border-[#e5ded3] py-5 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <h3 class="font-display text-[1.15rem] leading-snug text-[#14110f]">Material &amp; craftsmanship</h3>
+              <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <div class="pt-3 text-[13px] leading-relaxed text-[#5f5851]">
+              <ul class="space-y-1.5">
+                <li><strong class="font-medium text-[#14110f]">Core metal:</strong> {product.material}</li>
+                <li><strong class="font-medium text-[#14110f]">Finish:</strong> {product.finish}</li>
+                {product.dimensions && <li><strong class="font-medium text-[#14110f]">Dimensions:</strong> {product.dimensions}</li>}
+                {product.weightGrams && <li><strong class="font-medium text-[#14110f]">Weight:</strong> {product.weightGrams} grams</li>}
+                <li><strong class="font-medium text-[#14110f]">Skin compatibility:</strong> Nickel-free, lead-free, hypoallergenic</li>
+              </ul>
+              <p class="mt-3 border-l-2 border-[#e0d7c9] pl-3 text-[11px] text-[#6f675f]">
+                <strong class="font-medium text-[#14110f]">Our honest shine policy:</strong> 316L steel and 18K PVD gold resist water and sweat, but no plated piece is invincible against harsh chemicals. Basic care keeps its lustre for years.
+              </p>
+            </div>
+          </details>
+
+          <details class="group border-b border-[#e5ded3] py-5 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <h3 class="font-display text-[1.15rem] leading-snug text-[#14110f]">Shipping &amp; Vapi dispatch</h3>
+              <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <div class="space-y-2.5 pt-3 text-[13px] leading-relaxed text-[#5f5851]">
+              <p>
+                <strong class="font-medium text-[#14110f]">Dispatch:</strong> Every order is quality-inspected and dispatched from our Vapi atelier (Gujarat, India) within 24–48 hours via BlueDart, Delhivery, or Xpressbees.
+              </p>
+              <p>
+                <strong class="font-medium text-[#14110f]">Free shipping:</strong> Free on orders above ₹499; a flat ₹49 applies below that.
+              </p>
+              <p>
+                <strong class="font-medium text-[#14110f]">Cancellation:</strong> Cancel any time before dispatch. Once dispatched, cancellation is not possible.
+              </p>
+              <p>
+                <strong class="font-medium text-[#14110f]">Damaged goods:</strong> We do not offer cash refunds. If a piece arrives damaged, share an unedited 360° unboxing video within 48 hours and we will verify and replace it free of charge.
+              </p>
+              <p class="text-[11px]">
+                Support: <a href="mailto:support@satvastones.in" class="underline decoration-[#d8c3a6] underline-offset-4">support@satvastones.in</a>
+              </p>
+            </div>
+          </details>
+
+          <details class="group border-b border-[#e5ded3] py-5 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <h3 class="font-display text-[1.15rem] leading-snug text-[#14110f]">Jewellery care</h3>
+              <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <ul class="list-disc space-y-1.5 pt-3 pl-4 text-[13px] leading-relaxed text-[#5f5851]">
+              {product.careInstructions.map((tip) => (
+                <li>{tip}</li>
+              ))}
+            </ul>
+          </details>
+
+          <details class="group border-b border-[#e5ded3] py-5 [&_summary::-webkit-details-marker]:hidden">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+              <h3 class="font-display text-[1.15rem] leading-snug text-[#14110f]">Statutory disclosures</h3>
+              <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <div class="grid grid-cols-1 gap-2 pt-3 text-[12px] leading-relaxed text-[#5f5851] sm:grid-cols-2">
+              <p><strong class="font-medium text-[#14110f]">Country of origin:</strong> India</p>
+              <p><strong class="font-medium text-[#14110f]">Commodity:</strong> Anti-tarnish fashion jewellery</p>
+              <p><strong class="font-medium text-[#14110f]">Net quantity:</strong> 1 unit (piece, velvet pouch &amp; authenticity card)</p>
+              <p><strong class="font-medium text-[#14110f]">Shelf life:</strong> Not applicable</p>
+              <p class="sm:col-span-2"><strong class="font-medium text-[#14110f]">Manufactured, packed &amp; marketed by:</strong> Anirudh A Verma (SatvaStones Jewellery), Chala, Vapi, Gujarat – 396191, India</p>
+              <p><strong class="font-medium text-[#14110f]">GSTIN:</strong> 24DDAPV4074H1ZF</p>
+              <p class="sm:col-span-2"><strong class="font-medium text-[#14110f]">Consumer care:</strong> Anirudh A Verma (Grievance Officer) · support@satvastones.in · grievance@satvastonesjewellery.in · +91 98201 44521</p>
+            </div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- Proof strip -->
+    <section class="border-y border-[#e5ded3] bg-[#14110f] text-[#f6f1e8]" aria-label="The Satvastones promise">
+      <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-px bg-white/10 sm:grid-cols-3">
+        {[
+          { kicker: '01', title: 'Waterproof by design', copy: 'Wear it in the shower, the gym, the sea. 18K PVD over 316L steel.' },
+          { kicker: '02', title: 'Skin-safe, always', copy: 'Nickel-free and lead-free. Made for sensitive ears and everyday wrists.' },
+          { kicker: '03', title: 'Direct from the atelier', copy: 'Hand-inspected in Vapi and dispatched within 24–48 hours.' }
+        ].map((item) => (
+          <div class="bg-[#14110f] px-6 py-8 sm:px-8 sm:py-10">
+            <span class="text-[9px] uppercase tracking-[0.24em] text-[#c5a059]">{item.kicker}</span>
+            <h2 class="font-display mt-2 text-[1.35rem] leading-tight">{item.title}</h2>
+            <p class="mt-2 max-w-xs text-[12px] leading-relaxed text-[#b9b1a7]">{item.copy}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <div id="reviews" class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
+      <ProductReviews
+        client:visible
+        productId={product.id}
+        productName={product.name}
+        averageRating={product.rating}
+        totalReviewCount={product.reviewCount}
+      />
     </div>
 
-    <!-- Verified Customer Reviews & Real Review Submission Box -->
-    <ProductReviews
-      client:visible
-      productId={product.id}
-      productName={product.name}
-      averageRating={product.rating}
-      totalReviewCount={product.reviewCount}
-    />
-
-    <!-- Related Products Grid (Atelier Pairings) -->
-    <div class="mt-16 sm:mt-20">
-      <div class="text-center mb-8">
-        <span class="text-xs font-bold uppercase tracking-[0.14em] text-[#9f4553]">
-          <span class="text-[#c5a059]">✦</span> MORE TO ADORN
-        </span>
-        <h2 class="font-serif text-2xl sm:text-3xl font-normal text-[#171513] mt-1">You May Also Love</h2>
+    <!-- Related -->
+    <section class="mx-auto max-w-[1440px] px-5 pb-20 sm:px-8 lg:px-10" aria-labelledby="related-title" data-reveal>
+      <div class="flex flex-wrap items-end justify-between gap-4 border-t border-[#e5ded3] pt-8">
+        <div>
+          <p class="eyebrow text-[#8d3f3d]">Continue the collection</p>
+          <h2 id="related-title" class="font-display mt-2 text-[2rem] leading-tight sm:text-[2.6rem]">You may also love.</h2>
+        </div>
+        <a href={`/collections/${product.category}`} class="link-line text-[10px] uppercase tracking-[0.16em] text-[#14110f]">
+          View all
+        </a>
       </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
+      <div class="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-6">
         {fallbackRelated.map((rel) => (
           <ProductCard product={rel} />
         ))}
       </div>
-    </div>
-
+    </section>
   </div>
 
-  <!-- Floating Mobile Sticky Add to Cart Bar (Atelier High-Conversion UX) -->
+  <!-- Mobile sticky buy bar -->
   <div
     id="pdp-sticky-bar"
-    class="fixed bottom-14 lg:bottom-0 inset-x-0 bg-[#fcfbf9]/95 backdrop-blur-md border-t border-[#eae4dc] p-3 z-40 transform translate-y-full transition-transform duration-300 shadow-xl"
+    class="fixed inset-x-0 bottom-14 z-40 border-t border-[#e5ded3] bg-[#fbf9f5]/95 p-3 shadow-[0_-10px_30px_rgba(20,17,15,0.08)] backdrop-blur-md transition-transform duration-300 lg:bottom-0"
+    aria-hidden="true"
   >
-    <div class="max-w-[1240px] mx-auto flex items-center justify-between gap-3">
-      <div class="flex items-center gap-2.5 min-w-0">
+    <div class="mx-auto flex max-w-[1440px] items-center justify-between gap-3">
+      <div class="flex min-w-0 items-center gap-3">
         <img
           src={product.images[0]?.url}
           alt={product.name}
-          class="w-10 h-12 object-cover rounded-[10px] bg-[#faf8f5] border border-[#eae4dc] shrink-0"
+          width="40"
+          height="50"
+          class="h-[50px] w-10 shrink-0 object-cover"
         />
         <div class="min-w-0">
-          <h4 class="text-xs font-semibold text-[#171513] truncate">{product.name}</h4>
-          <p class="text-xs font-bold text-[#171513]">{formatPrice(product.pricePaise)}</p>
+          <p class="truncate text-[12px] text-[#14110f]">{product.name}</p>
+          <p class="text-[12px] font-medium text-[#14110f]">{formatPrice(product.pricePaise)}</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2 shrink-0">
-        <button
-          id="sticky-add-btn"
-          type="button"
-          class="bg-[#171513] hover:bg-[#9f4553] text-white px-5 sm:px-7 py-2.5 text-xs font-bold uppercase tracking-[0.08em] rounded-xl shadow-md transition-all cursor-pointer whitespace-nowrap"
-        >
-          Add to Bag
-        </button>
-      </div>
+      <button
+        id="sticky-add-btn"
+        type="button"
+        class="shrink-0 cursor-pointer bg-[#14110f] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d] sm:px-7"
+      >
+        Add to bag
+      </button>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  /* The bar stays out of the way until consent is resolved, then mobile shows it immediately. */
+  #pdp-sticky-bar {
+    transform: translateY(100%);
+  }
+
+  #pdp-sticky-bar.is-shown {
+    transform: translateY(0);
+  }
+
+  .pdp-thumb[data-active='true'] {
+    border-color: #14110f;
+  }
+
+  .pdp-wishlist[data-saved='true'] {
+    color: #8d3f3d;
+  }
+
+  .pdp-wishlist[data-saved='true'] svg {
+    fill: currentColor;
+  }
+</style>
 
 <script>
   import { addToCart, addMultipleToCart } from '../../stores/cartStore';
   import { toggleWishlist, isInWishlist } from '../../stores/wishlistStore';
   import { getSiteSettings } from '../../stores/adminStore';
 
-  // Thumbnail Switcher
+  // Thumbnail switcher
   const mainImage = document.getElementById('pdp-main-image') as HTMLImageElement;
-  const thumbBtns = document.querySelectorAll('.pdp-thumb-btn');
+  const thumbBtns = document.querySelectorAll('.pdp-thumb');
 
   thumbBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
@@ -730,14 +773,12 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
         mainImage.src = src;
         if (alt) mainImage.alt = alt;
       }
-      thumbBtns.forEach((b) => b.classList.remove('border-[#171513]', 'shadow-xs'));
-      thumbBtns.forEach((b) => b.classList.add('border-[#eae4dc]'));
-      el.classList.remove('border-[#eae4dc]');
-      el.classList.add('border-[#171513]', 'shadow-xs');
+      thumbBtns.forEach((b) => b.setAttribute('data-active', 'false'));
+      el.setAttribute('data-active', 'true');
     });
   });
 
-  // Quantity Stepper
+  // Quantity stepper
   let currentQty = 1;
   const qtyVal = document.getElementById('pdp-qty-val');
   const qtyMinus = document.getElementById('pdp-qty-minus');
@@ -757,7 +798,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
     }
   });
 
-  // Add to Cart
+  // Add to cart
   const addBtn = document.getElementById('pdp-add-to-cart');
   const stickyAddBtn = document.getElementById('sticky-add-btn');
 
@@ -775,13 +816,11 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
   addBtn?.addEventListener('click', handleAddCurrent);
   stickyAddBtn?.addEventListener('click', handleAddCurrent);
 
-  // Buy Now Button
+  // Buy now
   const buyBtn = document.getElementById('pdp-buy-now');
   buyBtn?.addEventListener('click', handleAddCurrent);
 
-  // ==========================================
-  // Frequently Paired Together Dynamic Bundle Engine
-  // ==========================================
+  // Bundle engine
   const bundleCheckboxes = document.querySelectorAll('.bundle-item-check') as NodeListOf<HTMLInputElement>;
   const bundleAddBtn = document.getElementById('bundle-add-btn') as HTMLButtonElement | null;
   const bundleRawRow = document.getElementById('bundle-raw-row');
@@ -817,7 +856,6 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
     const rawSumPaise = checked.reduce((acc, cb) => acc + parseInt(cb.dataset.itemPrice || '0', 10), 0);
 
     if (count >= 2) {
-      // 2 or more items: bundle discount applies!
       const discountPaise = Math.round(rawSumPaise * discountRate);
       const finalPaise = rawSumPaise - discountPaise;
 
@@ -825,35 +863,33 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
       if (bundleRawVal) bundleRawVal.textContent = formatBundleINR(rawSumPaise);
 
       if (bundleSavingsRow) bundleSavingsRow.classList.remove('hidden');
-      if (bundleSavingsLabel) bundleSavingsLabel.textContent = `Bundle Savings (${settingsDiscount}% OFF):`;
+      if (bundleSavingsLabel) bundleSavingsLabel.textContent = `Bundle savings (${settingsDiscount}% off)`;
       if (bundleSavingsVal) bundleSavingsVal.textContent = `− ${formatBundleINR(discountPaise)}`;
 
-      if (bundlePriceLabel) bundlePriceLabel.textContent = 'Bundle Price:';
+      if (bundlePriceLabel) bundlePriceLabel.textContent = 'Suite price';
       if (bundleFinalVal) bundleFinalVal.textContent = formatBundleINR(finalPaise);
 
       if (bundleAddBtn) {
         bundleAddBtn.disabled = false;
-        bundleAddBtn.textContent = `Add All ${count} to Cart (${settingsDiscount}% OFF) →`;
+        bundleAddBtn.textContent = `Add all ${count} to bag — ${settingsDiscount}% off`;
         bundleAddBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       }
     } else if (count === 1) {
-      // Only 1 item selected: no bundle discount
       if (bundleRawRow) bundleRawRow.classList.add('hidden');
       if (bundleSavingsRow) bundleSavingsRow.classList.add('hidden');
-      if (bundlePriceLabel) bundlePriceLabel.textContent = 'Single Item Price:';
+      if (bundlePriceLabel) bundlePriceLabel.textContent = 'Single piece';
       if (bundleFinalVal) bundleFinalVal.textContent = formatBundleINR(rawSumPaise);
 
       if (bundleAddBtn) {
         bundleAddBtn.disabled = false;
-        bundleAddBtn.textContent = 'Add 1 Item to Cart →';
+        bundleAddBtn.textContent = 'Add 1 piece to bag';
         bundleAddBtn.classList.remove('opacity-50', 'cursor-not-allowed');
       }
     } else {
-      // 0 items
       if (bundleFinalVal) bundleFinalVal.textContent = '₹0';
       if (bundleAddBtn) {
         bundleAddBtn.disabled = true;
-        bundleAddBtn.textContent = 'Select an item to add';
+        bundleAddBtn.textContent = 'Select a piece to add';
         bundleAddBtn.classList.add('opacity-50', 'cursor-not-allowed');
       }
     }
@@ -869,9 +905,8 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
 
     const settingsDiscount = getActiveBundleDiscount();
     const isBundle = checked.length >= 2;
-    const discountMultiplier = isBundle ? (1 - settingsDiscount / 100) : 1;
+    const discountMultiplier = isBundle ? 1 - settingsDiscount / 100 : 1;
 
-    // Calculate discounted prices so the sum of items in cart matches the bundle price exactly
     const itemsToAdd = checked.map((cb) => {
       const originalPrice = parseInt(cb.dataset.itemPrice || '0', 10);
       const discountedPrice = Math.round(originalPrice * discountMultiplier);
@@ -891,17 +926,22 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
     addMultipleToCart(itemsToAdd);
   });
 
-  // Wishlist Button
+  // Wishlist
   const wishlistHeart = document.getElementById('pdp-wishlist-heart');
   const prodId = addBtn?.dataset.productId || '';
+
   if (wishlistHeart && prodId) {
-    if (isInWishlist(prodId)) {
-      wishlistHeart.classList.add('text-[#9f4553]');
-      wishlistHeart.querySelector('svg')?.classList.add('fill-[#9f4553]');
-    }
+    const setSaved = (saved: boolean) => {
+      wishlistHeart.setAttribute('data-saved', String(saved));
+      wishlistHeart.setAttribute('aria-pressed', String(saved));
+      wishlistHeart.setAttribute('aria-label', saved ? 'Remove from wishlist' : 'Save to wishlist');
+    };
+
+    setSaved(isInWishlist(prodId));
+
     wishlistHeart.addEventListener('click', () => {
       const isSaved = toggleWishlist({
-        id: addBtn?.dataset.productId || '',
+        id: prodId,
         name: addBtn?.dataset.productName || '',
         slug: addBtn?.dataset.productSlug || '',
         sku: '',
@@ -918,48 +958,47 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
         images: [{ url: addBtn?.dataset.productImage || '', alt: addBtn?.dataset.productName || '' }],
         inStock: true
       });
-      if (isSaved) {
-        wishlistHeart.classList.add('text-[#9f4553]');
-        wishlistHeart.querySelector('svg')?.classList.add('fill-[#9f4553]');
-      } else {
-        wishlistHeart.classList.remove('text-[#9f4553]');
-        wishlistHeart.querySelector('svg')?.classList.remove('fill-[#9f4553]');
-      }
+      setSaved(isSaved);
     });
   }
 
-  // PIN Code Checker
+  // PIN code checker
   const pinBtn = document.getElementById('check-pincode-btn');
-  const pinInput = document.getElementById('pincode-input') as HTMLInputElement;
+  const pinInput = document.getElementById('pincode-input') as HTMLInputElement | null;
   const pinMsg = document.getElementById('pincode-msg');
 
-  pinBtn?.addEventListener('click', () => {
+  const checkPincode = () => {
     const code = pinInput?.value.trim();
-    if (code && code.length === 6 && /^\d+$/.test(code)) {
-      if (pinMsg) {
-        pinMsg.textContent = `Express Delivery available to PIN ${code} (2-4 business days from Vapi dispatch)`;
-        pinMsg.className = 'text-xs mt-2 text-emerald-700 font-medium block';
-      }
-    } else {
-      if (pinMsg) {
+    if (pinMsg) {
+      if (code && code.length === 6 && /^\d+$/.test(code)) {
+        pinMsg.textContent = `Express delivery available to PIN ${code} — 2–4 business days from Vapi.`;
+        pinMsg.className = 'mt-2 block text-[11px] font-medium text-[#2f7d5a]';
+      } else {
         pinMsg.textContent = 'Please enter a valid 6-digit Indian PIN code.';
-        pinMsg.className = 'text-xs mt-2 text-red-600 font-medium block';
+        pinMsg.className = 'mt-2 block text-[11px] font-medium text-[#8d3f3d]';
       }
+    }
+  };
+
+  pinBtn?.addEventListener('click', checkPincode);
+  pinInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      checkPincode();
     }
   });
 
-  // Ring Sizer Modal Trigger
+  // Size calculator
   const ringSizerPdpBtn = document.getElementById('pdp-ring-sizer-trigger');
   ringSizerPdpBtn?.addEventListener('click', () => {
     window.dispatchEvent(new CustomEvent('satvastones:open_ring_sizer'));
   });
 
-  // Dynamic Vapi Dispatch Countdown Timer
+  // Dispatch countdown (4 PM IST cutoff)
   const countdownEl = document.getElementById('pdp-dispatch-countdown');
   if (countdownEl) {
     const updateCountdown = () => {
       const now = new Date();
-      // Target: 4:00 PM Vapi dispatch cutoff
       const cutoff = new Date();
       cutoff.setHours(16, 0, 0, 0);
       if (now > cutoff) {
@@ -975,21 +1014,39 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
     setInterval(updateCountdown, 1000);
   }
 
-  // Sticky Bar Scroll Observer
+  // Sticky bar: mobile keeps a buy action within reach; desktop reveals it after the buy box.
   const heroBox = document.getElementById('pdp-hero-box');
   const stickyBar = document.getElementById('pdp-sticky-bar');
 
   if (heroBox && stickyBar) {
+    let heroPassed = false;
+
+    const consentResolved = () => {
+      try {
+        return Boolean(localStorage.getItem('satvastones_dpdp_consent'));
+      } catch {
+        return true;
+      }
+    };
+
+    const syncStickyBar = () => {
+      const isMobile = window.matchMedia('(max-width: 1023px)').matches;
+      const show = consentResolved() && (heroPassed || isMobile);
+      stickyBar.classList.toggle('is-shown', show);
+      stickyBar.setAttribute('aria-hidden', String(!show));
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-          stickyBar.classList.remove('translate-y-full');
-        } else {
-          stickyBar.classList.add('translate-y-full');
-        }
+        heroPassed = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+        syncStickyBar();
       },
       { threshold: 0.1 }
     );
+
     observer.observe(heroBox);
+    window.addEventListener('satvastones:consent_changed', syncStickyBar);
+    window.addEventListener('resize', syncStickyBar);
+    syncStickyBar();
   }
 </script>

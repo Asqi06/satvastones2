@@ -1,28 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { PRODUCTS, formatPrice } from '../data/products';
-import { getAllCatalogProducts, syncCatalogFromCloudflare } from '../stores/catalogStore';
+import { formatPrice } from '../data/products';
+import { getAllCatalogProducts } from '../stores/catalogStore';
 import type { Product } from '../types/ecommerce';
+
+const POPULAR = ['Waterproof necklace', 'Snake chain', 'Croissant ring', 'Kada bangle', 'Baroque pearl', 'Gift set'];
 
 export default function SearchModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Product[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const lastFocused = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleOpen = () => {
+      lastFocused.current = document.activeElement as HTMLElement | null;
       setIsOpen(true);
       setTimeout(() => inputRef.current?.focus(), 60);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         setIsOpen((prev) => !prev);
       }
-      if (e.key === 'Escape') {
-        setIsOpen(false);
-      }
+      if (e.key === 'Escape') setIsOpen(false);
     };
 
     window.addEventListener('satvastones:open_search', handleOpen);
@@ -34,6 +37,41 @@ export default function SearchModal() {
     };
   }, []);
 
+  // Lock background scroll while open, restore focus on close
+  useEffect(() => {
+    if (!isOpen) {
+      setQuery('');
+      lastFocused.current?.focus?.();
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const trap = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab' || !panelRef.current) return;
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', trap);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', trap);
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     const q = query.trim().toLowerCase();
     if (!q) {
@@ -41,8 +79,7 @@ export default function SearchModal() {
       return;
     }
 
-    const all = getAllCatalogProducts();
-    const filtered = all.filter(
+    const filtered = getAllCatalogProducts().filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
@@ -50,74 +87,73 @@ export default function SearchModal() {
         p.material.toLowerCase().includes(q) ||
         p.headline.toLowerCase().includes(q)
     );
-    setResults(filtered);
+    setResults(filtered.slice(0, 8));
   }, [query]);
 
   if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-4 bg-[#171513]/60 backdrop-blur-sm transition-opacity duration-200"
+      className="fixed inset-0 z-50 flex items-start justify-center bg-[#14110f]/60 px-4 pt-12 backdrop-blur-sm sm:pt-20"
       onClick={() => setIsOpen(false)}
       role="dialog"
       aria-modal="true"
       aria-label="Search Satvastones Jewellery"
     >
       <div
-        className="w-full max-w-2xl bg-[#fcfbf9] rounded-[24px] shadow-2xl border border-[#eae4dc] overflow-hidden flex flex-col max-h-[82vh] animate-in fade-in zoom-in-95 duration-200"
+        ref={panelRef}
+        className="flex max-h-[82vh] w-full max-w-2xl flex-col overflow-hidden border border-[#e5ded3] bg-[#fbf9f5] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Search Header */}
-        <div className="p-4 sm:p-5 border-b border-[#eae4dc] flex items-center gap-3 bg-white">
-          <svg className="w-5 h-5 text-[#9f4553] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        {/* Search header */}
+        <div className="flex items-center gap-3 border-b border-[#e5ded3] bg-white px-4 py-3.5 sm:px-5">
+          <svg
+            className="h-4 w-4 shrink-0 text-[#c5a059]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.6}
+            aria-hidden="true"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search anti-tarnish rings, chains, bracelets, earrings..."
+            placeholder="Search rings, chains, bracelets, earrings…"
             aria-label="Search jewellery collections"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-transparent text-sm sm:text-base text-[#171513] placeholder:text-[#99918b] focus:outline-none font-medium"
+            className="w-full bg-transparent text-[13.5px] text-[#14110f] placeholder:text-[#9a938b] focus:outline-none"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="text-xs text-[#99918b] hover:text-[#171513] p-1 cursor-pointer"
+              className="cursor-pointer px-1 text-[11px] uppercase tracking-[0.1em] text-[#8a8279] transition-colors hover:text-[#14110f]"
               aria-label="Clear search"
             >
-              ✕
+              Clear
             </button>
           )}
           <button
             onClick={() => setIsOpen(false)}
-            aria-label="Close search modal"
-            className="text-[11px] bg-[#faf8f5] hover:bg-[#eae4dc] text-[#6e6863] px-2.5 py-1 rounded-lg uppercase tracking-wider font-bold transition-colors cursor-pointer border border-[#eae4dc]"
+            aria-label="Close search"
+            className="shrink-0 cursor-pointer border border-[#e5ded3] bg-[#fbf9f5] px-2 py-1 text-[9px] uppercase tracking-[0.12em] text-[#6f675f] transition-colors hover:border-[#14110f] hover:text-[#14110f]"
           >
-            ESC
+            Esc
           </button>
         </div>
 
-        {/* Quick Suggestion Pills */}
+        {/* Suggestions */}
         {!query && (
-          <div className="p-4 sm:p-5 bg-[#faf8f5] border-b border-[#eae4dc] text-xs">
-            <span className="text-[#99918b] font-bold uppercase tracking-[0.14em] text-[10px] block mb-2.5">
-              Popular Searches
-            </span>
+          <div className="border-b border-[#e5ded3] bg-[#f4efe7] px-4 py-4 sm:px-5">
+            <span className="mb-2.5 block text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">Popular searches</span>
             <div className="flex flex-wrap gap-2">
-              {[
-                'Waterproof Necklace',
-                'Snake Chain',
-                'Croissant Ring',
-                'Kada Bangle',
-                'Baroque Pearl',
-                'Gift Set'
-              ].map((tag) => (
+              {POPULAR.map((tag) => (
                 <button
                   key={tag}
                   onClick={() => setQuery(tag)}
-                  className="bg-white hover:bg-[#faf4f2] text-[#332f2c] hover:text-[#9f4553] border border-[#eae4dc] hover:border-[#9f4553]/40 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer shadow-2xs"
+                  className="cursor-pointer border border-[#ded5c7] bg-[#fbf9f5] px-3 py-1.5 text-[10.5px] text-[#4a443f] transition-colors hover:border-[#14110f] hover:text-[#14110f]"
                 >
                   {tag}
                 </button>
@@ -126,64 +162,71 @@ export default function SearchModal() {
           </div>
         )}
 
-        {/* Search Results */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 divide-y divide-[#eae4dc]">
+        {/* Results */}
+        <div className="flex-1 overflow-y-auto">
           {query && results.length === 0 ? (
-            <div className="text-center py-12 space-y-2">
-              <div className="w-12 h-12 mx-auto rounded-full bg-[#faf4f2] flex items-center justify-center text-[#9f4553]">
-                <svg className="w-6 h-6 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-              <p className="text-sm font-bold text-[#171513]">No matching atelier pieces found</p>
-              <p className="text-xs text-[#6e6863]">Try searching for "necklace", "ring", "bangle", or "18K gold".</p>
+            <div className="px-5 py-14 text-center">
+              <p className="font-display text-[1.3rem] text-[#14110f]">Nothing matched “{query}”.</p>
+              <p className="mx-auto mt-1.5 max-w-xs text-[11.5px] leading-relaxed text-[#6f675f]">
+                Try a category like necklace, ring or bangle — or browse the full collection.
+              </p>
+              <a
+                href="/shop"
+                onClick={() => setIsOpen(false)}
+                className="mt-5 inline-flex items-center gap-2 bg-[#14110f] px-5 py-2.5 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8]"
+              >
+                Shop all pieces <span aria-hidden="true">→</span>
+              </a>
             </div>
           ) : (
-            results.map((product) => (
-              <a
-                key={product.id}
-                href={`/products/${product.slug}`}
-                onClick={() => setIsOpen(false)}
-                className="py-3 flex items-center gap-3.5 hover:bg-[#faf8f5] p-2.5 rounded-[16px] transition-colors group"
-              >
-                <img
-                  src={product.images[0]?.url}
-                  alt={product.name}
-                  className="w-13 h-16 object-cover rounded-[12px] bg-[#faf8f5] border border-[#eae4dc] shrink-0"
-                />
-                <div className="flex-1 min-w-0">
-                  <span className="text-[10px] uppercase font-bold text-[#9f4553] tracking-wider block">
-                    {product.category}
-                  </span>
-                  <h4 className="text-xs sm:text-sm font-semibold text-[#171513] truncate group-hover:text-[#9f4553] transition-colors">
-                    {product.name}
-                  </h4>
-                  <p className="text-[11px] text-[#6e6863] truncate">
-                    {product.material}
-                  </p>
-                </div>
-                <div className="text-right shrink-0">
-                  <span className="text-sm font-bold text-[#171513]">
-                    {formatPrice(product.pricePaise)}
-                  </span>
-                  {product.compareAtPricePaise && (
-                    <span className="block text-[11px] text-[#99918b] line-through">
-                      {formatPrice(product.compareAtPricePaise)}
-                    </span>
-                  )}
-                </div>
-              </a>
-            ))
+            <ul className="divide-y divide-[#e5ded3]">
+              {results.map((product) => (
+                <li key={product.id}>
+                  <a
+                    href={`/products/${product.slug}`}
+                    onClick={() => setIsOpen(false)}
+                    className="group flex items-center gap-3.5 px-4 py-3 transition-colors hover:bg-[#f4efe7] sm:px-5"
+                  >
+                    <img
+                      src={product.images[0]?.url}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="h-16 w-[3.25rem] shrink-0 border border-[#e5ded3] bg-[#f1ece3] object-cover"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <span className="block text-[8.5px] uppercase tracking-[0.16em] text-[#8a8279]">
+                        {product.category}
+                      </span>
+                      <h4 className="mt-0.5 truncate text-[12.5px] text-[#14110f] transition-colors group-hover:text-[#8d3f3d]">
+                        {product.name}
+                      </h4>
+                      <p className="mt-0.5 truncate text-[10.5px] text-[#8a8279]">{product.material}</p>
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <span className="text-[12.5px] font-medium text-[#14110f]">
+                        {formatPrice(product.pricePaise)}
+                      </span>
+                      {product.compareAtPricePaise && (
+                        <span className="block text-[10px] text-[#9a938b] line-through">
+                          {formatPrice(product.compareAtPricePaise)}
+                        </span>
+                      )}
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
 
-        {/* Search Footer */}
-        <div className="p-3.5 bg-[#faf8f5] border-t border-[#eae4dc] flex items-center justify-between text-[11px] text-[#6e6863] px-5">
+        {/* Footer */}
+        <div className="flex items-center justify-between gap-3 border-t border-[#e5ded3] bg-[#f4efe7] px-4 py-3 text-[9px] uppercase tracking-[0.12em] text-[#6f675f] sm:px-5">
           <span className="flex items-center gap-1.5">
-            <span className="text-[#c5a059]">✦</span>
-            <span>Free Express Pan-India Delivery &gt; ₹499</span>
+            <span className="text-[#c5a059]" aria-hidden="true">✦</span>
+            Free express delivery over ₹499
           </span>
-          <span className="font-medium text-[#171513]">Direct from Vapi Atelier</span>
+          <span className="hidden sm:inline">Dispatched from Vapi</span>
         </div>
       </div>
     </div>

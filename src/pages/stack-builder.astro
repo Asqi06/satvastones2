@@ -1,218 +1,225 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
 import { PRODUCTS, formatPrice } from '../data/products';
 
 const necklaces = PRODUCTS.filter((p) => p.category === 'necklaces');
 const rings = PRODUCTS.filter((p) => p.category === 'rings');
 const earrings = PRODUCTS.filter((p) => p.category === 'earrings');
-const bracelets = PRODUCTS.filter((p) => p.category === 'bracelets' || p.category === 'bangles');
+const bracelets = PRODUCTS.filter((p) => p.category === 'bracelets' || p.category === 'bangles').slice(0, 4);
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Stack Studio', url: '/stack-builder' }
+];
+
+const pageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Stack Studio — build a 15% off jewellery set',
+  description:
+    'Build a three-piece anti-tarnish jewellery stack and save 15%. Waterproof 18K gold PVD over 316L surgical steel, dispatched from Vapi, Gujarat.',
+  url: 'https://www.satvastones.in/stack-builder',
+  isPartOf: { '@type': 'WebSite', name: 'Satvastones Jewellery', url: 'https://www.satvastones.in' }
+};
+
+const steps = [
+  { key: 'necklace', label: 'Necklace', title: 'Choose your necklace', note: '18K vacuum PVD', items: necklaces },
+  { key: 'ring', label: 'Ring', title: 'Choose your ring', note: 'Comfort-fit band', items: rings },
+  { key: 'earring', label: 'Earring', title: 'Choose your earrings', note: 'Zero ear irritation', items: earrings }
+];
 ---
 
 <BaseLayout
-  title="Mix & Match Stack Studio | Satvastones Anti-Tarnish Jewellery"
-  description="Build your personalized jewellery stack. Combine necklaces, rings, huggies, and bracelets with an instant 15% VIP discount."
+  title="Stack Studio — Build a 15% Off Jewellery Set | Satvastones"
+  description="Build your own anti-tarnish jewellery stack: pick a necklace, ring and earrings, then save 15% instantly. Waterproof 18K gold PVD, free India delivery over ₹499."
+  schema={pageSchema}
+  breadcrumbs={breadcrumbs}
 >
-  <!-- Clean Header -->
-  <div class="bg-white border-b border-gray-100 py-6 sm:py-10">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1">
-      <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#a1505a] bg-[#ffe7e9] px-3 py-1 rounded-full">
-        <svg class="w-3.5 h-3.5 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-        </svg>
-        <span>Interactive Atelier Studio</span>
-        <span>•</span>
-        <span>Save 15% on Sets</span>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <!-- Header -->
+    <header class="mx-auto max-w-[1440px] px-5 pb-8 pt-6 sm:px-8 sm:pb-10 sm:pt-8 lg:px-10">
+      <nav aria-label="Breadcrumb" class="mb-8">
+        <ol class="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
+          <li><a href="/" class="transition-colors hover:text-[#14110f]">Home</a></li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li aria-current="page" class="text-[#14110f]">Stack Studio</li>
+        </ol>
+      </nav>
+
+      <div class="grid gap-6 lg:grid-cols-12 lg:items-end">
+        <div class="lg:col-span-8">
+          <p class="eyebrow text-[#8d3f3d]">The stacking edit</p>
+          <h1 class="font-display mt-3 text-[2.75rem] leading-[0.95] tracking-[-0.035em] sm:text-[4.25rem] lg:text-[5.25rem]">
+            Build your stack.
+          </h1>
+        </div>
+        <div class="lg:col-span-4 lg:pb-2">
+          <p class="max-w-sm text-[13px] leading-relaxed text-[#5f5851]">
+            Three pieces, one considered look. Pick a necklace, a ring and a pair of earrings — we take 15% off the set automatically.
+          </p>
+          <p class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+            <span>15% off the set</span>
+            <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+            <span>Free delivery over ₹499</span>
+            <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+            <span>24–48h dispatch</span>
+          </p>
+        </div>
       </div>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Curate Your Daily Stack</h1>
-      <p class="text-xs sm:text-sm text-gray-500 max-w-lg mx-auto">
-        Mix and match 18K gold PVD waterproof essentials. Hand-inspected and dispatched from our Vapi store in 24–48 hours.
-      </p>
-    </div>
-  </div>
+    </header>
 
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      
-      <!-- Left Column: Curate Stack Categories Selection -->
-      <div class="lg:col-span-7 space-y-8">
-        
-        <!-- Step 1: Choose Necklace -->
-        <div class="bg-white p-5 sm:p-6 border border-gray-200 rounded-[22px] space-y-3 shadow-xs">
-          <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
-            <h2 class="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center text-xs font-bold">1</span>
-              <span>Select Statement Necklace</span>
-            </h2>
-            <span class="text-xs text-gray-400">18K Vacuum PVD</span>
-          </div>
+    <div class="mx-auto max-w-[1440px] px-5 pb-16 sm:px-8 lg:px-10">
+      <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-12 lg:gap-12">
+        <!-- Steps -->
+        <div class="space-y-4 lg:col-span-7">
+          {steps.map((step, stepIndex) => (
+            <section
+              class="border border-[#e5ded3] bg-white p-5 sm:p-6"
+              aria-labelledby={`stack-step-${step.key}`}
+            >
+              <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#e5ded3] pb-3">
+                <h2 id={`stack-step-${step.key}`} class="flex items-baseline gap-3">
+                  <span class="font-display text-[1.35rem] leading-none text-[#c5a059]">
+                    {String(stepIndex + 1).padStart(2, '0')}
+                  </span>
+                  <span class="font-display text-[1.25rem] leading-none">{step.title}</span>
+                </h2>
+                <span class="text-[9px] uppercase tracking-[0.14em] text-[#8a8279]">{step.note}</span>
+              </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {necklaces.map((item, idx) => (
-              <label class="stack-option-card relative border-2 border-gray-100 rounded-[16px] p-2.5 flex flex-col justify-between cursor-pointer hover:border-[#f9d8dc] transition-all bg-white has-[:checked]:border-[#f2707f] has-[:checked]:bg-[#fffafb]">
-                <input
-                  type="radio"
-                  name="stack-necklace"
-                  value={item.id}
-                  checked={idx === 0}
-                  data-name={item.name}
-                  data-price={item.pricePaise}
-                  data-image={item.images[0]?.url}
-                  data-slug={item.slug}
-                  class="sr-only stack-radio"
-                />
-                <img src={item.images[0]?.url} alt={item.name} class="aspect-square object-cover rounded-[10px] bg-gray-50 mb-2" />
+              <div class="mt-4 grid grid-cols-2 gap-2.5 sm:grid-cols-3">
+                {step.items.map((item, idx) => (
+                  <label class="stack-option-card group relative flex cursor-pointer flex-col border border-[#ded5c7] bg-[#fbf9f5] p-2 transition-colors hover:border-[#b9ae9f] has-[:checked]:border-[#14110f] has-[:checked]:bg-[#f4efe7]">
+                    <input
+                      type="radio"
+                      name={`stack-${step.key}`}
+                      value={item.id}
+                      checked={idx === 0}
+                      data-name={item.name}
+                      data-price={item.pricePaise}
+                      data-image={item.images[0]?.url}
+                      data-slug={item.slug}
+                      class="sr-only stack-radio"
+                      aria-label={`${item.name} — ${formatPrice(item.pricePaise)}`}
+                    />
+                    <img
+                      src={item.images[0]?.url}
+                      alt={item.name}
+                      width="300"
+                      height="300"
+                      loading={stepIndex === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                      class="aspect-square w-full bg-[#f1ece3] object-cover transition-opacity group-hover:opacity-90"
+                    />
+                    <div class="mt-2 min-w-0">
+                      <p class="line-clamp-1 text-[11px] leading-snug text-[#14110f]">{item.name}</p>
+                      <p class="mt-0.5 text-[11px] font-medium text-[#8d3f3d]">{formatPrice(item.pricePaise)}</p>
+                    </div>
+                    <span class="selected-check absolute right-2 top-2 hidden h-5 w-5 items-center justify-center bg-[#14110f] text-[#f6f1e8]">
+                      <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          <!-- Extra AOV: bracelets -->
+          {bracelets.length > 0 && (
+            <section class="border border-[#e0d7c9] bg-[#f4efe7] p-5 sm:p-6" aria-labelledby="stack-bracelet-title">
+              <div class="flex flex-wrap items-baseline justify-between gap-2">
                 <div>
-                  <p class="text-xs font-bold text-gray-900 line-clamp-1">{item.name}</p>
-                  <p class="text-xs font-extrabold text-[#f2707f] mt-0.5">{formatPrice(item.pricePaise)}</p>
+                  <p class="eyebrow text-[#8d3f3d]">One more layer</p>
+                  <h2 id="stack-bracelet-title" class="font-display mt-1.5 text-[1.4rem] leading-none">
+                    Finish with a bracelet.
+                  </h2>
                 </div>
-                <span class="selected-check hidden absolute top-2 right-2 w-5 h-5 bg-[#f2707f] text-white rounded-full items-center justify-center">
-                  <svg class="w-3 h-3 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                </span>
-              </label>
-            ))}
-          </div>
+                <a href="/collections/bracelets" class="link-line text-[10px] uppercase tracking-[0.14em] text-[#14110f]">
+                  All bracelets
+                </a>
+              </div>
+              <p class="mt-2 max-w-md text-[12px] leading-relaxed text-[#5f5851]">
+                Stack a second piece on the same wrist — or pair a kada with the set. Every extra piece still counts toward the 15%.
+              </p>
+              <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {bracelets.map((item) => (
+                  <ProductCard product={item} />
+                ))}
+              </div>
+            </section>
+          )}
         </div>
 
-        <!-- Step 2: Choose Ring -->
-        <div class="bg-white p-5 sm:p-6 border border-gray-200 rounded-[22px] space-y-3 shadow-xs">
-          <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
-            <h2 class="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center text-xs font-bold">2</span>
-              <span>Select Everyday Ring</span>
-            </h2>
-            <span class="text-xs text-gray-400">Comfort-fit band</span>
-          </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {rings.map((item, idx) => (
-              <label class="stack-option-card relative border-2 border-gray-100 rounded-[16px] p-2.5 flex flex-col justify-between cursor-pointer hover:border-[#f9d8dc] transition-all bg-white has-[:checked]:border-[#f2707f] has-[:checked]:bg-[#fffafb]">
-                <input
-                  type="radio"
-                  name="stack-ring"
-                  value={item.id}
-                  checked={idx === 0}
-                  data-name={item.name}
-                  data-price={item.pricePaise}
-                  data-image={item.images[0]?.url}
-                  data-slug={item.slug}
-                  class="sr-only stack-radio"
-                />
-                <img src={item.images[0]?.url} alt={item.name} class="aspect-square object-cover rounded-[10px] bg-gray-50 mb-2" />
-                <div>
-                  <p class="text-xs font-bold text-gray-900 line-clamp-1">{item.name}</p>
-                  <p class="text-xs font-extrabold text-[#f2707f] mt-0.5">{formatPrice(item.pricePaise)}</p>
-                </div>
-                <span class="selected-check hidden absolute top-2 right-2 w-5 h-5 bg-[#f2707f] text-white rounded-full items-center justify-center">
-                  <svg class="w-3 h-3 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <!-- Step 3: Choose Earrings / Huggies -->
-        <div class="bg-white p-5 sm:p-6 border border-gray-200 rounded-[22px] space-y-3 shadow-xs">
-          <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
-            <h2 class="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
-              <span class="w-6 h-6 rounded-full bg-[#ffe7e9] text-[#a1505a] flex items-center justify-center text-xs font-bold">3</span>
-              <span>Select Huggies or Earrings</span>
-            </h2>
-            <span class="text-xs text-gray-400">Zero ear irritation</span>
-          </div>
-
-          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            {earrings.map((item, idx) => (
-              <label class="stack-option-card relative border-2 border-gray-100 rounded-[16px] p-2.5 flex flex-col justify-between cursor-pointer hover:border-[#f9d8dc] transition-all bg-white has-[:checked]:border-[#f2707f] has-[:checked]:bg-[#fffafb]">
-                <input
-                  type="radio"
-                  name="stack-earring"
-                  value={item.id}
-                  checked={idx === 0}
-                  data-name={item.name}
-                  data-price={item.pricePaise}
-                  data-image={item.images[0]?.url}
-                  data-slug={item.slug}
-                  class="sr-only stack-radio"
-                />
-                <img src={item.images[0]?.url} alt={item.name} class="aspect-square object-cover rounded-[10px] bg-gray-50 mb-2" />
-                <div>
-                  <p class="text-xs font-bold text-gray-900 line-clamp-1">{item.name}</p>
-                  <p class="text-xs font-extrabold text-[#f2707f] mt-0.5">{formatPrice(item.pricePaise)}</p>
-                </div>
-                <span class="selected-check hidden absolute top-2 right-2 w-5 h-5 bg-[#f2707f] text-white rounded-full items-center justify-center">
-                  <svg class="w-3 h-3 stroke-[3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Right Column: Live Stack Preview & 1-Click Acquisition Box (Sticky) -->
-      <div class="lg:col-span-5 sticky top-24 space-y-4">
-        <div class="bg-white p-6 sm:p-7 border border-[#f9d8dc] rounded-[24px] shadow-sm space-y-5">
-          <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-            <div>
-              <span class="text-[10px] uppercase font-bold text-[#a1505a] tracking-wider">Atelier Set Privilege</span>
-              <h3 class="text-lg font-extrabold text-gray-900">Your Custom 3-Piece Stack</h3>
+        <!-- Summary -->
+        <div class="lg:col-span-5 lg:sticky lg:top-24">
+          <div class="border border-[#e0d7c9] bg-[#f4efe7] p-5 sm:p-6">
+            <div class="flex items-baseline justify-between gap-3 border-b border-[#ded5c7] pb-3.5">
+              <div>
+                <p class="eyebrow text-[#8d3f3d]">Atelier set privilege</p>
+                <h2 class="font-display mt-1.5 text-[1.6rem] leading-none">Your three-piece stack</h2>
+              </div>
+              <span class="bg-[#14110f] px-2.5 py-1 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8]">
+                Save 15%
+              </span>
             </div>
-            <span class="text-xs bg-[#e6f9f0] text-[#007c52] font-bold px-2.5 py-1 rounded-full">
-              Save 15%
-            </span>
-          </div>
 
-          <!-- Preview Items Strip -->
-          <div id="stack-summary-list" class="space-y-2.5 divide-y divide-gray-50 text-xs"></div>
+            <div id="stack-summary-list" class="divide-y divide-[#ded5c7] text-[11px]"></div>
 
-          <!-- Price Calculation -->
-          <div class="space-y-1.5 text-xs text-gray-600 pt-3 border-t border-gray-100">
-            <div class="flex justify-between">
-              <span>Individual Items Value:</span>
-              <span id="stack-raw-sum" class="line-through text-gray-400">₹0</span>
+            <div class="space-y-2 border-t border-[#ded5c7] pt-4 text-[11px] text-[#6f675f]">
+              <div class="flex justify-between">
+                <span>Individual value</span>
+                <span id="stack-raw-sum" class="text-[#9a938b] line-through">₹0</span>
+              </div>
+              <div class="flex justify-between font-medium text-[#2f7d5a]">
+                <span id="stack-savings-label">Stack savings (15% off)</span>
+                <span id="stack-savings">− ₹0</span>
+              </div>
+              <div class="flex items-baseline justify-between border-t border-[#ded5c7] pt-3 text-[#14110f]">
+                <span class="text-[10px] uppercase tracking-[0.16em]">Set price</span>
+                <span id="stack-final-price" class="font-display text-[1.85rem] leading-none">₹0</span>
+              </div>
             </div>
-            <div class="flex justify-between text-emerald-700 font-bold">
-              <span>Stack Privilege Savings (15% OFF):</span>
-              <span id="stack-savings">− ₹0</span>
-            </div>
-            <div class="flex justify-between text-base font-extrabold text-gray-900 pt-2 border-t-2 border-gray-900">
-              <span>Bundled Set Price:</span>
-              <span id="stack-final-price" class="text-xl text-[#f2707f]">₹0</span>
-            </div>
-          </div>
 
-          <!-- 1-Click Add Stack to Bag Button -->
-          <button
-            id="add-stack-to-bag-btn"
-            type="button"
-            class="w-full bg-[#111111] hover:bg-black text-white py-4 text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
-          >
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-            </svg>
-            <span>Add Complete Stack to Bag</span>
-          </button>
+            <button
+              id="add-stack-to-bag-btn"
+              type="button"
+              class="mt-4 flex w-full cursor-pointer items-center justify-center gap-2 bg-[#14110f] py-4 text-[10px] font-medium uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+            >
+              <span id="add-stack-btn-text">Add stack to bag — 15% off</span>
+            </button>
 
-          <!-- Free Shipping & Gifting Reassurance -->
-          <div class="p-3 bg-rose-50/30 border border-rose-100 rounded-xl text-[11px] text-gray-600 space-y-1">
-            <p class="flex items-center gap-1.5 font-bold text-gray-900">
-              <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-              </svg>
-              <span>Complimentary Luxury Velvet Box Included</span>
+            <p class="mt-2.5 text-center text-[9px] uppercase tracking-[0.1em] text-[#8a8279]">
+              Free express shipping · velvet pouch · 7-day returns
             </p>
-            <p>• 100% Free Express Pan-India Air Delivery</p>
-            <p>• Dispatched from our Vapi store location in 24–48 hours</p>
+
+            <ul class="mt-5 space-y-2.5 border-t border-[#ded5c7] pt-4 text-[11px] leading-relaxed text-[#5f5851]">
+              <li class="flex items-start gap-2.5">
+                <span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span>
+                <span><strong class="font-medium text-[#14110f]">Waterproof by design.</strong> 18K gold PVD over 316L surgical steel — shower, gym and monsoon safe.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span>
+                <span><strong class="font-medium text-[#14110f]">Gift-ready.</strong> Velvet box, anti-tarnish pouch and care certificate included free.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span>
+                <span><strong class="font-medium text-[#14110f]">Direct from the atelier.</strong> Hand-inspected in Vapi and dispatched within 24–48 hours.</span>
+              </li>
+            </ul>
           </div>
+
+          <a
+            href="/materials"
+            class="mt-3 flex items-center justify-between border border-[#e5ded3] bg-[#fbf9f5] px-4 py-3 text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#c5a059]"
+          >
+            <span>What is 18K gold PVD?</span>
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
       </div>
-
     </div>
   </div>
 </BaseLayout>
@@ -230,7 +237,11 @@ const bracelets = PRODUCTS.filter((p) => p.category === 'bracelets' || p.categor
   }
 
   const settings = getSiteSettings();
-  const discountPercent = settings.stackDiscountPercent || 15;
+  const discountPercent =
+    typeof settings.stackDiscountPercent === 'number' ? settings.stackDiscountPercent : 15;
+
+  const savingsLabel = document.getElementById('stack-savings-label');
+  if (savingsLabel) savingsLabel.textContent = `Stack savings (${discountPercent}% off)`;
 
   // Filter client-side based on admin curation
   if (settings.stackStudioEnabledProducts && settings.stackStudioEnabledProducts.length > 0) {
@@ -238,7 +249,6 @@ const bracelets = PRODUCTS.filter((p) => p.category === 'bracelets' || p.categor
     document.querySelectorAll('.stack-option-card').forEach((card) => {
       const input = card.querySelector('.stack-radio') as HTMLInputElement;
       if (input && !enabled.includes(input.value) && !enabled.includes(input.dataset.slug || '')) {
-        // If unselected, hide it
         if (!input.checked) {
           (card as HTMLElement).style.display = 'none';
         }
@@ -273,13 +283,13 @@ const bracelets = PRODUCTS.filter((p) => p.category === 'bracelets' || p.categor
       listEl.innerHTML = items
         .map(
           (item) => `
-        <div class="flex items-center gap-3 pt-2">
-          <img src="${item.image}" alt="${item.name}" class="w-11 h-13 object-cover rounded-[10px] bg-gray-50 border border-gray-100 shrink-0" />
-          <div class="flex-1 min-w-0">
-            <p class="font-bold text-gray-900 truncate">${item.name}</p>
-            <p class="text-[10px] text-gray-400">18K Vacuum PVD Gold</p>
+        <div class="flex items-center gap-3 py-2.5">
+          <img src="${item.image}" alt="${item.name}" class="h-14 w-12 shrink-0 border border-[#ded5c7] bg-[#fbf9f5] object-cover" />
+          <div class="min-w-0 flex-1">
+            <p class="truncate text-[12px] leading-snug text-[#14110f]">${item.name}</p>
+            <p class="mt-0.5 text-[9px] uppercase tracking-[0.12em] text-[#8a8279]">18K gold PVD</p>
           </div>
-          <span class="font-extrabold text-[#f2707f]">${formatINR(item.pricePaise)}</span>
+          <span class="shrink-0 text-[12px] text-[#14110f]">${formatINR(item.pricePaise)}</span>
         </div>
       `
         )
@@ -291,7 +301,7 @@ const bracelets = PRODUCTS.filter((p) => p.category === 'bracelets' || p.categor
     if (finalPriceEl) finalPriceEl.textContent = formatINR(finalTotal);
   }
 
-  // Update check icon visuals and recalculate
+  // Update check icons and recalculate
   document.querySelectorAll('.stack-radio').forEach((radio) => {
     radio.addEventListener('change', () => {
       document.querySelectorAll('.stack-option-card').forEach((card) => {
@@ -309,7 +319,7 @@ const bracelets = PRODUCTS.filter((p) => p.category === 'bracelets' || p.categor
     });
   });
 
-  // Initial trigger for checks
+  // Initial state
   document.querySelectorAll('.stack-option-card').forEach((card) => {
     const input = card.querySelector('.stack-radio') as HTMLInputElement;
     const check = card.querySelector('.selected-check');
@@ -321,16 +331,31 @@ const bracelets = PRODUCTS.filter((p) => p.category === 'bracelets' || p.categor
 
   updateStackSummary();
 
-  // Add stack to cart
-  const addBtn = document.getElementById('add-stack-to-bag-btn');
+  // Add the stack with the same discount the page promises.
+  const addBtn = document.getElementById('add-stack-to-bag-btn') as HTMLButtonElement | null;
+  const addBtnText = document.getElementById('add-stack-btn-text');
+  const defaultBtnLabel = `Add stack to bag — ${discountPercent}% off`;
+
   addBtn?.addEventListener('click', () => {
     const items = getSelectedStack();
-    if (items.length > 0) {
-      addMultipleToCart(items);
-      addBtn.textContent = 'Stack Added to Bag!';
-      setTimeout(() => {
-        addBtn.textContent = 'Add Complete Stack to Bag';
-      }, 1500);
-    }
+    if (items.length === 0) return;
+
+    const multiplier = 1 - discountPercent / 100;
+    const discountedItems = items.map((item) => ({
+      ...item,
+      variantId: `stack-${discountPercent}off`,
+      name: `${item.name} (Stack ${discountPercent}% off)`,
+      pricePaise: Math.round(item.pricePaise * multiplier)
+    }));
+
+    addMultipleToCart(discountedItems);
+
+    if (addBtnText) addBtnText.textContent = 'Stack added to bag';
+    if (addBtn) addBtn.disabled = true;
+
+    setTimeout(() => {
+      if (addBtnText) addBtnText.textContent = defaultBtnLabel;
+      if (addBtn) addBtn.disabled = false;
+    }, 1800);
   });
 </script>

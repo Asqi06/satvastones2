@@ -174,7 +174,7 @@ export function openCloudinaryWidget(
       const progressToast = document.createElement('div');
       progressToast.className = 'fixed bottom-6 right-6 z-50 bg-[#111111] text-white text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-gray-700 animate-in fade-in slide-in-from-bottom-2';
       progressToast.innerHTML = `
-        <svg class="animate-spin h-4 w-4 text-[#f2707f]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <svg class="animate-spin h-4 w-4 text-[#8d3f3d]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
         </svg>

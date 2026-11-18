@@ -47,7 +47,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 required
                 autocomplete="username"
                 placeholder="Enter admin ID"
-                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
               />
             </div>
 
@@ -62,7 +62,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                   required
                   autocomplete="current-password"
                   placeholder="••••••••••••"
-                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f] pr-10"
+                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d] pr-10"
                 />
                 <button
                   type="button"
@@ -156,7 +156,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
           <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
             <span class="text-[10px] uppercase font-bold text-gray-400">Total Orders</span>
-            <p id="metric-orders" class="text-2xl font-bold text-[#f2707f]">0</p>
+            <p id="metric-orders" class="text-2xl font-bold text-[#8d3f3d]">0</p>
             <p class="text-[11px] text-gray-500">Pan-India Dispatched</p>
           </div>
 
@@ -178,7 +178,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           
           <!-- Navigation Tabs -->
           <div class="flex border-b border-gray-200 bg-gray-50/70 text-xs font-bold overflow-x-auto whitespace-nowrap">
-            <button id="tab-btn-orders" class="admin-tab-btn py-3.5 px-6 text-[#f2707f] border-b-2 border-[#f2707f] bg-white cursor-pointer flex items-center gap-2">
+            <button id="tab-btn-orders" class="admin-tab-btn py-3.5 px-6 text-[#8d3f3d] border-b-2 border-[#8d3f3d] bg-white cursor-pointer flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
               </svg>
@@ -251,7 +251,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                   id="order-search-input"
                   type="text"
                   placeholder="Search by Order, Name or City..."
-                  class="bg-gray-50 border border-gray-200 px-3.5 py-1.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f] w-64"
+                  class="bg-gray-50 border border-gray-200 px-3.5 py-1.5 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d] w-64"
                 />
               </div>
             </div>
@@ -290,7 +290,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                   id="product-search-input"
                   type="text"
                   placeholder="Search products or SKU..."
-                  class="bg-gray-50 border border-gray-200 px-3.5 py-1.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  class="bg-gray-50 border border-gray-200 px-3.5 py-1.5 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                 />
                 <button
                   id="add-product-btn"
@@ -356,7 +356,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                       type="number"
                       required
                       min="0"
-                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                     />
                     <p class="text-[10px] text-gray-400 mt-1">Charged on orders below free shipping threshold</p>
                   </div>
@@ -368,7 +368,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                       type="number"
                       required
                       min="0"
-                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                     />
                     <p class="text-[10px] text-gray-400 mt-1">Default ₹499 across all India orders</p>
                   </div>
@@ -381,7 +381,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                       required
                       min="1"
                       max="90"
-                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                     />
                     <p class="text-[10px] text-gray-400 mt-1">Discount when patrons stack 2+ items</p>
                   </div>
@@ -396,7 +396,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                   <textarea
                     id="setting-announcement-text"
                     rows="3"
-                    class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                   ></textarea>
                 </div>
               </div>
@@ -411,7 +411,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                       id="setting-hero-headline"
                       type="text"
                       required
-                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                     />
                   </div>
                   <div>
@@ -420,7 +420,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                       id="setting-hero-tagline"
                       type="text"
                       required
-                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                     />
                   </div>
                   <div>
@@ -436,7 +436,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                           type="url"
                           required
                           placeholder="https://images.unsplash.com/..."
-                          class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                          class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                         />
                         <div class="flex gap-2 shrink-0">
                           <!-- Local File Upload Button -->
@@ -451,7 +451,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                           <!-- Cloudinary Upload Button -->
                           <button
                             type="button"
-                            class="cloudinary-upload-btn bg-rose-50 hover:bg-rose-100 text-[#a1505a] border border-[#f9d8dc] px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+                            class="cloudinary-upload-btn bg-[#f4efe7] hover:bg-[#f0e6d8] text-[#8d3f3d] border border-[#e5ded3] px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
                             data-target="setting-hero-image"
                             data-preview="hero-img-preview"
                           >
@@ -468,21 +468,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                         <span class="text-[10px] text-gray-500 font-bold uppercase tracking-wider">Quick Presets:</span>
                         <button
                           type="button"
-                          class="hero-preset-btn bg-white hover:bg-rose-50 text-gray-700 hover:text-[#a1505a] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+                          class="hero-preset-btn bg-white hover:bg-[#f4efe7] text-gray-700 hover:text-[#8d3f3d] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
                           data-url="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=2000&q=85"
                         >
                           ✨ Baroque Gold &amp; Pearls
                         </button>
                         <button
                           type="button"
-                          class="hero-preset-btn bg-white hover:bg-rose-50 text-gray-700 hover:text-[#a1505a] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+                          class="hero-preset-btn bg-white hover:bg-[#f4efe7] text-gray-700 hover:text-[#8d3f3d] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
                           data-url="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=2000&q=85"
                         >
                           ✨ Liquid Gold Snake Chain
                         </button>
                         <button
                           type="button"
-                          class="hero-preset-btn bg-white hover:bg-rose-50 text-gray-700 hover:text-[#a1505a] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+                          class="hero-preset-btn bg-white hover:bg-[#f4efe7] text-gray-700 hover:text-[#8d3f3d] border border-gray-200 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
                           data-url="https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=2000&q=85"
                         >
                           ✨ Sculptural Gold Signets
@@ -499,7 +499,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                         />
                         <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex items-center p-4 pointer-events-none">
                           <div class="text-white space-y-1">
-                            <span class="text-[9px] font-bold bg-[#f2707f] text-white px-2 py-0.5 rounded-full uppercase">Live Preview</span>
+                            <span class="text-[9px] font-bold bg-[#8d3f3d] text-white px-2 py-0.5 rounded-full uppercase">Live Preview</span>
                             <p class="text-sm font-extrabold" id="hero-preview-title">Jewellery that feels like you.</p>
                           </div>
                         </div>
@@ -513,7 +513,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                       <input
                         type="checkbox"
                         id="setting-social-proof-toast"
-                        class="w-4 h-4 text-[#f2707f] rounded border-gray-300 focus:ring-[#f2707f] cursor-pointer"
+                        class="w-4 h-4 text-[#8d3f3d] rounded border-gray-300 focus:ring-[#14110f] cursor-pointer"
                       />
                       <div>
                         <span class="text-xs font-bold text-gray-900 block">Enable Verified Purchase Toasts</span>
@@ -525,15 +525,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               </div>
 
               <!-- Cloudinary CDN & Image Optimization Configuration Card -->
-              <div class="bg-gradient-to-r from-rose-50/50 via-[#fffafb] to-white p-5 rounded-2xl border border-[#f9d8dc] space-y-3.5">
+              <div class="bg-gradient-to-r from-rose-50/50 via-[#fffafb] to-white p-5 rounded-2xl border border-[#e5ded3] space-y-3.5">
                 <div class="flex items-center justify-between">
                   <div class="flex items-center gap-2">
-                    <svg class="w-5 h-5 text-[#f2707f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg class="w-5 h-5 text-[#8d3f3d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                     </svg>
                     <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-gray-900">Cloudinary Global Media CDN &amp; Upload Engine</h3>
                   </div>
-                  <span class="text-[10px] bg-rose-100 text-[#a1505a] font-bold px-2.5 py-0.5 rounded-full border border-rose-200">Zero-Lag Media Pipeline</span>
+                  <span class="text-[10px] bg-[#f0e6d8] text-[#8d3f3d] font-bold px-2.5 py-0.5 rounded-full border border-[#e5ded3]">Zero-Lag Media Pipeline</span>
                 </div>
 
                 <p class="text-xs text-gray-600 leading-relaxed">
@@ -558,7 +558,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                       id="setting-cloudinary-cloud-name"
                       type="text"
                       placeholder="e.g. satvastones"
-                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                     />
                   </div>
                   <div>
@@ -567,7 +567,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                       id="setting-cloudinary-preset"
                       type="text"
                       placeholder="e.g. satvastones_preset"
-                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
                     />
                   </div>
                 </div>
@@ -782,7 +782,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-4">
                 <div class="flex items-center justify-between">
                   <h3 class="text-xs font-bold uppercase tracking-wider text-gray-700">Category Grid Quick Images</h3>
-                  <a href="#tab-btn-categories" class="text-xs text-[#a1505a] font-bold hover:underline">Full Category Editor &rarr;</a>
+                  <a href="#tab-btn-categories" class="text-xs text-[#8d3f3d] font-bold hover:underline">Full Category Editor &rarr;</a>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   <div>
@@ -974,13 +974,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Product Name *</label>
-          <input id="prod-name" type="text" required placeholder="e.g. Elysian Croissant Dome Ring" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+          <input id="prod-name" type="text" required placeholder="e.g. Elysian Croissant Dome Ring" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">Category *</label>
-            <select id="prod-category" required class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]">
+            <select id="prod-category" required class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]">
               <option value="rings">Rings</option>
               <option value="necklaces">Necklaces</option>
               <option value="bracelets">Bracelets</option>
@@ -993,28 +993,28 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">SKU *</label>
-            <input id="prod-sku" type="text" required placeholder="e.g. SAT-RNG-001" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+            <input id="prod-sku" type="text" required placeholder="e.g. SAT-RNG-001" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">Price in INR (₹) *</label>
-            <input id="prod-price" type="number" required min="1" placeholder="1299" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+            <input id="prod-price" type="number" required min="1" placeholder="1299" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">Compare at Price (₹)</label>
-            <input id="prod-compare-price" type="number" min="1" placeholder="2499" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+            <input id="prod-compare-price" type="number" min="1" placeholder="2499" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Product Image URL *</label>
           <div class="flex gap-2">
-            <input id="prod-image" type="url" required placeholder="https://images.unsplash.com/..." class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+            <input id="prod-image" type="url" required placeholder="https://images.unsplash.com/..." class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
             <button
               type="button"
-              class="cloudinary-upload-btn shrink-0 bg-rose-50 hover:bg-rose-100 text-[#a1505a] border border-[#f9d8dc] px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+              class="cloudinary-upload-btn shrink-0 bg-[#f4efe7] hover:bg-[#f0e6d8] text-[#8d3f3d] border border-[#e5ded3] px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
               data-target="prod-image"
               data-preview="prod-img-preview"
             >
@@ -1029,7 +1029,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Short Headline / Catchphrase</label>
-          <input id="prod-headline" type="text" placeholder="Sculptural statement band with French twist" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]" />
+          <input id="prod-headline" type="text" placeholder="Sculptural statement band with French twist" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -1044,7 +1044,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
 
         <div class="flex items-center gap-2 pt-1">
-          <input id="prod-stock" type="checkbox" checked class="w-4 h-4 accent-[#f2707f] rounded" />
+          <input id="prod-stock" type="checkbox" checked class="w-4 h-4 accent-[#8d3f3d] rounded" />
           <label for="prod-stock" class="text-xs font-bold text-gray-800">In Stock at Vapi Atelier</label>
         </div>
 
@@ -1075,7 +1075,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Coupon Code *</label>
-          <input id="coupon-code" type="text" required uppercase placeholder="e.g. LUXURY20" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs uppercase tracking-wider rounded-xl focus:outline-none focus:border-[#f2707f]" />
+          <input id="coupon-code" type="text" required uppercase placeholder="e.g. LUXURY20" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs uppercase tracking-wider rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -1103,7 +1103,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
 
         <div class="flex items-center gap-2 pt-1">
-          <input id="coupon-active" type="checkbox" checked class="w-4 h-4 accent-[#f2707f] rounded" />
+          <input id="coupon-active" type="checkbox" checked class="w-4 h-4 accent-[#8d3f3d] rounded" />
           <label for="coupon-active" class="text-xs font-bold text-gray-800">Coupon Active</label>
         </div>
 
@@ -1164,7 +1164,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             type="text"
             required
             placeholder="e.g. BLR-892147321"
-            class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs uppercase tracking-wider rounded-xl focus:outline-none focus:border-[#f2707f]"
+            class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs uppercase tracking-wider rounded-xl focus:outline-none focus:border-[#8d3f3d]"
           />
           <p class="text-[10px] text-gray-400 mt-1">Patron can track live with this number on /track-order</p>
         </div>
@@ -1415,11 +1415,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       const panel = document.getElementById(`panel-${tab}`);
       btn?.addEventListener('click', () => {
         tabs.forEach((t) => {
-          document.getElementById(`tab-btn-${t}`)?.classList.remove('text-[#f2707f]', 'border-b-2', 'border-[#f2707f]', 'bg-white');
+          document.getElementById(`tab-btn-${t}`)?.classList.remove('text-[#8d3f3d]', 'border-b-2', 'border-[#8d3f3d]', 'bg-white');
           document.getElementById(`tab-btn-${t}`)?.classList.add('text-gray-500');
           document.getElementById(`panel-${t}`)?.classList.add('hidden');
         });
-        btn.classList.add('text-[#f2707f]', 'border-b-2', 'border-[#f2707f]', 'bg-white');
+        btn.classList.add('text-[#8d3f3d]', 'border-b-2', 'border-[#8d3f3d]', 'bg-white');
         btn.classList.remove('text-gray-500');
         panel?.classList.remove('hidden');
       });
@@ -1522,7 +1522,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <td class="py-3 px-3.5">
               ${o.items.map((i) => `<p class="truncate max-w-[150px] text-gray-800">${i.name} (×${i.quantity})</p>`).join('')}
             </td>
-            <td class="py-3 px-3.5 text-right font-bold text-[#f2707f]">${formatINR(o.totalPaise)}</td>
+            <td class="py-3 px-3.5 text-right font-bold text-[#8d3f3d]">${formatINR(o.totalPaise)}</td>
             <td class="py-3 px-3.5 text-center">${statusBadge}</td>
             <td class="py-3 px-3.5">
               <p class="font-semibold text-gray-800 text-[11px]">${o.courierPartner || 'Pending Assignment'}</p>
@@ -1536,7 +1536,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 Invoice
               </button>
               <button
-                class="dispatch-action-btn bg-rose-50 hover:bg-rose-100 text-[#f2707f] border border-rose-200 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer"
+                class="dispatch-action-btn bg-[#f4efe7] hover:bg-[#f0e6d8] text-[#8d3f3d] border border-[#e5ded3] px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer"
                 data-order-num="${o.orderNumber}"
               >
                 Fulfill
@@ -1664,7 +1664,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <div>
             <p class="text-xs font-bold text-gray-900 truncate" title="${p.name}">${p.name}</p>
             <div class="flex items-baseline gap-2 mt-0.5">
-              <span class="text-xs font-bold text-[#f2707f]">${formatINR(p.pricePaise)}</span>
+              <span class="text-xs font-bold text-[#8d3f3d]">${formatINR(p.pricePaise)}</span>
               ${p.compareAtPricePaise ? `<span class="text-[10px] text-gray-400 line-through">${formatINR(p.compareAtPricePaise)}</span>` : ''}
             </div>
           </div>
@@ -1842,7 +1842,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div class="p-4 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span class="font-bold text-xs uppercase tracking-wider text-rose-700 bg-rose-50 border border-rose-200 px-2.5 py-0.5 rounded-lg">
+              <span class="font-bold text-xs uppercase tracking-wider text-[#8d3f3d] bg-[#f4efe7] border border-[#e5ded3] px-2.5 py-0.5 rounded-lg">
                 ${c.code}
               </span>
               <span class="text-[11px] font-bold ${c.isActive ? 'text-emerald-700' : 'text-gray-400'}">
@@ -2200,7 +2200,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 space-y-4">
         <div class="flex items-center justify-between border-b border-gray-200 pb-2.5">
           <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#f2707f]"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-[#8d3f3d]"></span>
             <h3 class="font-bold text-sm text-gray-900">${cat.name}</h3>
             <span class="text-[10px] font-mono text-gray-500 bg-white px-2 py-0.5 rounded border border-gray-200">/collections/${cat.slug}</span>
           </div>
@@ -2228,7 +2228,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <input id="cat-image-${cat.slug}" type="url" value="${cat.image || ''}" class="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs rounded-xl" />
               <button
                 type="button"
-                class="cloudinary-upload-btn shrink-0 bg-rose-50 hover:bg-rose-100 text-[#a1505a] border border-[#f9d8dc] px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer"
+                class="cloudinary-upload-btn shrink-0 bg-[#f4efe7] hover:bg-[#f0e6d8] text-[#8d3f3d] border border-[#e5ded3] px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer"
                 data-target="cat-image-${cat.slug}"
                 data-preview="cat-preview-${cat.slug}"
               >
@@ -2323,7 +2323,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               .map((p) => {
                 const isChecked = enabledIds.includes(p.id) || enabledIds.includes(p.slug);
                 return `
-              <label class="bg-white p-3 rounded-xl border border-gray-200 flex items-center justify-between gap-3 cursor-pointer hover:border-[#f9d8dc] transition-all">
+              <label class="bg-white p-3 rounded-xl border border-gray-200 flex items-center justify-between gap-3 cursor-pointer hover:border-[#e5ded3] transition-all">
                 <div class="flex items-center gap-2.5 min-w-0">
                   <img src="${p.image}" alt="${p.name}" class="w-10 h-12 object-cover rounded-lg border border-gray-100 shrink-0" />
                   <div class="min-w-0">
@@ -2333,7 +2333,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 </div>
                 <input
                   type="checkbox"
-                  class="stack-item-toggle w-4 h-4 accent-[#f2707f] rounded shrink-0 cursor-pointer"
+                  class="stack-item-toggle w-4 h-4 accent-[#8d3f3d] rounded shrink-0 cursor-pointer"
                   data-prod-id="${p.id}"
                   ${isChecked ? 'checked' : ''}
                 />
@@ -2516,7 +2516,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </div>
           <p class="text-xs text-gray-800">Patron: <strong>${c.customerName}</strong> (${c.phone})</p>
           <p class="text-xs text-gray-600">${c.description}</p>
-          <a href="${c.videoProofUrl}" target="_blank" class="inline-flex items-center gap-1 text-xs text-[#f2707f] font-bold hover:underline">
+          <a href="${c.videoProofUrl}" target="_blank" class="inline-flex items-center gap-1 text-xs text-[#8d3f3d] font-bold hover:underline">
             View 360° Unboxing Video Proof →
           </a>
         </div>

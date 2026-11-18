@@ -1,0 +1,40 @@
+---
+export interface Props {
+  eyebrow: string;
+  title: string;
+  lede?: string;
+  crumbs: { name: string; url: string }[];
+}
+
+const { eyebrow, title, lede, crumbs } = Astro.props;
+---
+
+<header class="mx-auto max-w-[1440px] px-5 pt-6 sm:px-8 sm:pt-8 lg:px-10">
+  <nav aria-label="Breadcrumb" class="mb-8">
+    <ol class="scrollbar-none flex items-center gap-2 overflow-x-auto whitespace-nowrap text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
+      {crumbs.map((crumb, idx) => (
+        <li class="flex items-center gap-2">
+          {idx > 0 && <span aria-hidden="true" class="text-[#c5a059]">/</span>}
+          {idx === crumbs.length - 1 ? (
+            <span aria-current="page" class="text-[#14110f]">{crumb.name}</span>
+          ) : (
+            <a href={crumb.url} class="transition-colors hover:text-[#14110f]">{crumb.name}</a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
+
+  <div class="pb-9 sm:pb-12">
+    <p class="eyebrow text-[#8d3f3d]">{eyebrow}</p>
+    <h1 class="font-display mt-3 max-w-4xl text-[2.75rem] leading-[0.95] tracking-[-0.035em] text-[#14110f] sm:text-[4.25rem] lg:text-[5rem]">
+      {title}
+    </h1>
+    {lede && (
+      <p class="mt-5 max-w-xl text-[13px] leading-relaxed text-[#5f5851] sm:text-[14px]">
+        {lede}
+      </p>
+    )}
+    <slot />
+  </div>
+</header>

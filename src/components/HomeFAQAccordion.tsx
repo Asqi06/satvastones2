@@ -52,7 +52,7 @@ export default function HomeFAQAccordion() {
         
         {/* Header */}
         <div className="text-center space-y-2">
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#9f4553] bg-[#faf4f2] px-3.5 py-1 rounded-full border border-[#eae4dc]">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-[#8d3f3d] bg-[#f4efe7] px-3.5 py-1 border border-[#e5ded3]">
             <span className="text-[#c5a059]">✦</span>
             <span>CUSTOMER CONCIERGE &amp; CLARITY</span>
           </span>
@@ -71,8 +71,8 @@ export default function HomeFAQAccordion() {
             return (
               <div
                 key={idx}
-                className={`border rounded-2xl transition-all duration-200 overflow-hidden ${
-                  isOpen ? 'bg-[#faf8f5] border-[#c5a059]/60 shadow-xs' : 'bg-white border-[#eae4dc] hover:border-[#dfd8cf]'
+                className={`border  transition-all duration-200 overflow-hidden ${
+                  isOpen ? 'bg-[#faf8f5] border-[#c5a059]/60 ' : 'bg-white border-[#e5ded3] hover:border-[#dfd8cf]'
                 }`}
               >
                 <button
@@ -86,16 +86,16 @@ export default function HomeFAQAccordion() {
                       {faq.question}
                     </span>
                     {faq.badge && (
-                      <span className="hidden sm:inline-block text-[9px] font-bold uppercase tracking-wider text-[#9f4553] bg-[#faf4f2] px-2 py-0.5 rounded-full border border-[#eae4dc] shrink-0">
+                      <span className="hidden sm:inline-block text-[9px] font-bold uppercase tracking-wider text-[#8d3f3d] bg-[#f4efe7] px-2 py-0.5 border border-[#e5ded3] shrink-0">
                         {faq.badge}
                       </span>
                     )}
                   </div>
                   <div
-                    className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 border transition-transform duration-200 ${
+                    className={`w-6 h-6  flex items-center justify-center shrink-0 border transition-transform duration-200 ${
                       isOpen
                         ? 'bg-[#171513] text-white border-[#171513] rotate-180'
-                        : 'bg-[#faf8f5] text-[#171513] border-[#eae4dc]'
+                        : 'bg-[#faf8f5] text-[#171513] border-[#e5ded3]'
                     }`}
                   >
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -105,7 +105,7 @@ export default function HomeFAQAccordion() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-4 sm:px-5 pb-5 pt-1 text-xs sm:text-sm text-[#4a443f] leading-relaxed border-t border-[#eae4dc]/60 animate-in fade-in duration-200">
+                  <div className="px-4 sm:px-5 pb-5 pt-1 text-xs sm:text-sm text-[#4a443f] leading-relaxed border-t border-[#e5ded3]/60 animate-in fade-in duration-200">
                     <p>{faq.answer}</p>
                   </div>
                 )}
@@ -115,7 +115,7 @@ export default function HomeFAQAccordion() {
         </div>
 
         {/* Help Desk Footer Callout */}
-        <div className="p-4 rounded-2xl bg-[#faf4f2] border border-[#eae4dc] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+        <div className="p-4 bg-[#f4efe7] border border-[#e5ded3] flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <div>
             <h4 className="text-xs font-bold text-[#171513]">Still have a specific query or custom sizing question?</h4>
             <p className="text-[11px] text-[#6e6863]">Our Vapi jewellery concierge is available on WhatsApp daily from 10 AM to 8 PM IST.</p>
@@ -124,7 +124,7 @@ export default function HomeFAQAccordion() {
             href="https://wa.me/919016703180?text=Hi%20Satvastones,%20I%20have%20a%20question%20about%20your%20jewellery"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white px-4 py-2 rounded-full text-xs font-bold transition-all shadow-2xs hover:shadow-sm shrink-0"
+            className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white px-4 py-2 text-xs font-bold transition-all hover:shadow-sm shrink-0"
           >
             <span>Chat on WhatsApp</span>
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

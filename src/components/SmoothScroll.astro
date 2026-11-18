@@ -1,0 +1,50 @@
+---
+// SmoothScroll.astro — Lenis-powered inertial scrolling.
+// Skips entirely for reduced-motion users and when the body is scroll-locked
+// (cart drawer, search modal, mobile nav) so overlays keep native behaviour.
+---
+
+<script>
+  import Lenis from 'lenis';
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const lenis = new Lenis({
+      duration: 1.15,
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.5,
+      anchors: true
+    });
+
+    let frame = 0;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      frame = requestAnimationFrame(raf);
+    };
+    frame = requestAnimationFrame(raf);
+
+    // Pause Lenis whenever a modal locks the body via overflow: hidden.
+    const syncLock = () => {
+      const locked = document.body.style.overflow === 'hidden';
+      if (locked) {
+        lenis.stop();
+      } else {
+        lenis.start();
+      }
+    };
+
+    const bodyObserver = new MutationObserver(syncLock);
+    bodyObserver.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+    syncLock();
+
+    const cleanup = () => {
+      cancelAnimationFrame(frame);
+      bodyObserver.disconnect();
+      lenis.destroy();
+    };
+
+    window.addEventListener('pagehide', cleanup, { once: true });
+  }
+</script>

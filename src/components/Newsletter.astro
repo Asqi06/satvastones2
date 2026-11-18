@@ -1,47 +1,68 @@
 ---
-// Newsletter.astro - Jewelsmars VIP Discount Callout Box
+// Newsletter.astro — editorial signup band.
 ---
 
-<section class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-  <div class="bg-[#ffe7e9] rounded-[24px] p-8 sm:p-14 text-center max-w-3xl mx-auto space-y-4 border border-[#f9d8dc] shadow-xs">
-    <span class="inline-block bg-[#f2707f] text-white text-[11px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">
-      VIP PRIVILEGE CLUB
-    </span>
-    
-    <h2 class="text-2xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
-      Get ₹200 OFF Your First Order
-    </h2>
+<section class="border-t border-[#e3dcd1] bg-[#f4efe7]">
+  <div class="mx-auto grid max-w-[1440px] items-end gap-10 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-2 lg:gap-16 lg:px-10">
+    <div data-reveal>
+      <p class="eyebrow text-[#8b837a]">The Satvastones Circle</p>
+      <h2 class="mt-4 max-w-md font-display text-[2.6rem] leading-[0.98] text-[#14110f] sm:text-6xl">
+        ₹200 toward your first piece.
+      </h2>
+    </div>
 
-    <p class="text-xs sm:text-sm text-[#555555] max-w-md mx-auto leading-relaxed">
-      Subscribe for exclusive weekly capsule drops from our Vapi atelier and instant VIP secret sales.
-    </p>
+    <div class="max-w-md lg:justify-self-end" data-reveal style="--reveal-delay: 100ms">
+      <p class="text-sm leading-relaxed text-[#5a524a]">
+        Early access to capsule drops, atelier stories and quiet offers. One thoughtful email at a time — never spam.
+      </p>
 
-    <form class="max-w-md mx-auto flex flex-col sm:flex-row gap-2 pt-2" id="newsletter-form">
-      <input
-        type="email"
-        placeholder="Enter your email address"
-        required
-        class="flex-1 bg-white border border-[#e5e5e5] text-[#111111] placeholder-gray-400 px-4 py-3 text-xs rounded-[10px] focus:outline-none focus:border-[#f2707f]"
-      />
-      <button
-        type="submit"
-        class="bg-[#f2707f] hover:bg-[#e05e6d] text-white px-7 py-3 text-xs uppercase tracking-wider font-bold rounded-[10px] transition-all shadow-sm cursor-pointer whitespace-nowrap"
-      >
-        CLAIM ₹200
-      </button>
-    </form>
-
-    <p class="text-[11px] text-[#777777] pt-1">
-      Use coupon code <strong class="text-[#f2707f]">FIRSTBUY</strong> at checkout. No spam ever.
-    </p>
+      <form id="newsletter-form" class="mt-7">
+        <label for="newsletter-email" class="sr-only">Email address</label>
+        <div class="flex items-center border-b border-[#14110f]/30 transition-colors focus-within:border-[#14110f]">
+          <input
+            id="newsletter-email"
+            type="email"
+            name="email"
+            autocomplete="email"
+            placeholder="Your email address"
+            required
+            class="w-full bg-transparent py-3 text-sm text-[#14110f] placeholder:text-[#9c9389] focus:outline-none"
+          />
+          <button
+            type="submit"
+            class="shrink-0 cursor-pointer py-3 pl-5 text-[10px] uppercase tracking-[0.2em] text-[#14110f] transition-opacity hover:opacity-60"
+          >
+            Join
+          </button>
+        </div>
+        <p class="mt-3 text-[10px] uppercase tracking-[0.14em] text-[#9c9389]">
+          Use code FIRSTBUY · Unsubscribe anytime
+        </p>
+        <p id="newsletter-status" class="mt-3 text-xs text-[#1b6d48]" role="status" aria-live="polite"></p>
+      </form>
+    </div>
   </div>
 </section>
 
 <script>
-  const form = document.getElementById('newsletter-form');
-  form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    alert('Congratulations! Code FIRSTBUY is active for ₹200 off your order.');
-    (form as HTMLFormElement).reset();
+  const form = document.getElementById('newsletter-form') as HTMLFormElement | null;
+  const status = document.getElementById('newsletter-status');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const email = (form.querySelector('input[type="email"]') as HTMLInputElement | null)?.value.trim();
+
+    if (!email) return;
+
+    try {
+      localStorage.setItem('satvastones_newsletter', JSON.stringify({ email, joinedAt: new Date().toISOString() }));
+    } catch {
+      // Storage can be unavailable in private browsing — the welcome message still matters.
+    }
+
+    if (status) {
+      status.textContent = 'You are in. Use FIRSTBUY for ₹200 off your first order.';
+    }
+    form.reset();
   });
 </script>

@@ -1,40 +1,40 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: "Privacy Policy", url: '/privacy-policy' }
+];
 ---
 
 <BaseLayout
   title="Privacy Policy | SatvaStones Fine Anti-Tarnish Jewellery"
   description="Official Privacy Policy compliant with the Digital Personal Data Protection (DPDP) Act 2023, DPDP Rules 2025, and Information Technology Act 2000. Data fiduciary: Anirudh A Verma."
+  breadcrumbs={breadcrumbs}
 >
-  <!-- Minimalist Legal Header -->
-  <div class="bg-white border-b border-gray-100 py-10 sm:py-14">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
-      <div class="inline-flex items-center gap-2 px-3 py-1 bg-rose-50 border border-rose-200 rounded-full text-xs font-bold text-[#a1505a]">
-        <span>Digital Personal Data Protection Act, 2023 Compliant</span>
-      </div>
-      <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">Privacy Policy</h1>
-      <p class="text-xs sm:text-sm text-gray-500 max-w-2xl mx-auto leading-relaxed">
-        <strong>Data Fiduciary:</strong> Anirudh A Verma (Sole Proprietor of SatvaStones Jewellery) • GSTIN: 24DDAPV4074H1ZF • Registered Atelier: Chala, Vapi, Gujarat - 396191, India.
-      </p>
-      <p class="text-[11px] text-gray-400">
-        Effective Date: 1st March 2026 | Policy Version: 2026.1-DPDP | Last Reviewed: November 2026
-      </p>
-    </div>
-  </div>
+  <PageIntro
+    eyebrow="DPDP Act 2023 · Compliance"
+    title="Privacy policy."
+    lede="Data fiduciary: Anirudh A Verma, sole proprietor of SatvaStones Jewellery · GSTIN 24DDAPV4074H1ZF · Chala, Vapi, Gujarat 396191."
+    crumbs={breadcrumbs}
+  >
+    <p class="mt-6 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">Effective 1 March 2026 · Version 2026.1-DPDP · Reviewed November 2026</p>
+  </PageIntro>
 
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-    <div class="max-w-4xl mx-auto space-y-10 bg-white p-6 sm:p-12 border border-gray-200 rounded-[26px] shadow-xs text-xs sm:text-sm text-gray-700 leading-relaxed">
+  <div class="bg-[#fbf9f5] pb-20 pt-4 sm:pt-8">
+    <div class="policy-body mx-auto max-w-3xl space-y-8 px-5 sm:px-8">
 
       <!-- Executive Overview -->
-      <section class="space-y-3 bg-gray-50 p-5 rounded-2xl border border-gray-200">
-        <h2 class="text-sm font-bold uppercase tracking-wider text-gray-900 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-[#f2707f]"></span>
+      <section class="space-y-3 bg-[#f4efe7] p-5 border border-[#e5ded3]">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-[#14110f] flex items-center gap-2">
+          <span class="w-2 h-2 bg-[#8d3f3d]"></span>
           <span>1. Legislative Scope & Commitment</span>
         </h2>
         <p>
           SatvaStones Fine Jewellery ("SatvaStones", "we", "our", or "us") operates the e-commerce storefront <strong>www.satvastones.in</strong> (and <strong>satvastones.in</strong>). We are committed to safeguarding the digital personal data of our patrons ("Data Principals") in strict accordance with:
         </p>
-        <ul class="list-disc list-inside space-y-1 pl-2 text-gray-600">
+        <ul class="list-disc list-inside space-y-1 pl-2 text-[#5f5851]">
           <li><strong>The Digital Personal Data Protection Act, 2023 (DPDP Act)</strong> and the <strong>DPDP Rules, 2025</strong>;</li>
           <li><strong>The Information Technology Act, 2000</strong> and the <strong>IT (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011 (SPDI Rules)</strong>; and</li>
           <li><strong>The Consumer Protection (E-Commerce) Rules, 2020</strong>.</li>
@@ -46,7 +46,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <!-- Itemized Data Collection & Purpose -->
       <section class="space-y-4">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900 border-b border-gray-100 pb-2">
+        <h2 class="text-base sm:text-lg font-bold text-[#14110f] border-b border-[#e5ded3] pb-2">
           2. Personal Data We Collect & Specific Grounds of Processing
         </h2>
         <p>
@@ -54,37 +54,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         </p>
 
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs border border-gray-200 rounded-xl overflow-hidden">
-            <thead class="bg-gray-100 text-gray-800 font-bold uppercase text-[10px] tracking-wider">
+          <table class="w-full text-left text-xs border border-[#e5ded3] overflow-hidden">
+            <thead class="bg-[#f0ece5] text-[#4a443f] font-bold uppercase text-[10px] tracking-wider">
               <tr>
-                <th class="p-3 border-b border-gray-200">Personal Data Element</th>
-                <th class="p-3 border-b border-gray-200">Specified Business Purpose</th>
-                <th class="p-3 border-b border-gray-200">Legal Ground (DPDP Act)</th>
+                <th class="p-3 border-b border-[#e5ded3]">Personal Data Element</th>
+                <th class="p-3 border-b border-[#e5ded3]">Specified Business Purpose</th>
+                <th class="p-3 border-b border-[#e5ded3]">Legal Ground (DPDP Act)</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
               <tr>
-                <td class="p-3 font-semibold text-gray-900">Full Name, Phone Number, Delivery Address</td>
+                <td class="p-3 font-semibold text-[#14110f]">Full Name, Phone Number, Delivery Address</td>
                 <td class="p-3">Order dispatch from Vapi atelier, AWB generation, doorstep courier handover, and delivery SMS updates.</td>
                 <td class="p-3 text-emerald-800 font-medium">Contract Performance & Consent</td>
               </tr>
               <tr>
-                <td class="p-3 font-semibold text-gray-900">Email Address</td>
+                <td class="p-3 font-semibold text-[#14110f]">Email Address</td>
                 <td class="p-3">Issuance of statutory GST Tax Invoices, tracking link dispatch, and customer support communications.</td>
                 <td class="p-3 text-emerald-800 font-medium">Legal Obligation (CGST Act) & Consent</td>
               </tr>
               <tr>
-                <td class="p-3 font-semibold text-gray-900">Payment Transaction ID & Gateway Token</td>
+                <td class="p-3 font-semibold text-[#14110f]">Payment Transaction ID & Gateway Token</td>
                 <td class="p-3">Authorization of payments via RBI-licensed gateway (Razorpay). <em>Note: Card numbers, CVV, and UPI MPIN are never handled or stored on our servers.</em></td>
                 <td class="p-3 text-emerald-800 font-medium">Contract Performance & Payment Security</td>
               </tr>
               <tr>
-                <td class="p-3 font-semibold text-gray-900">360° Unboxing Video Footage</td>
+                <td class="p-3 font-semibold text-[#14110f]">360° Unboxing Video Footage</td>
                 <td class="p-3">Verification of transit damage or missing item claims for free replacement dispatch from Vapi.</td>
                 <td class="p-3 text-emerald-800 font-medium">Explicit Consent / Warranty Verification</td>
               </tr>
               <tr>
-                <td class="p-3 font-semibold text-gray-900">IP Address, Device Type & Consent Timestamp</td>
+                <td class="p-3 font-semibold text-[#14110f]">IP Address, Device Type & Consent Timestamp</td>
                 <td class="p-3">Fraud detection, DDoS mitigation via Cloudflare Edge, and mandatory DPDP Rule 4 consent logging.</td>
                 <td class="p-3 text-emerald-800 font-medium">Security & Statutory Audit Compliance</td>
               </tr>
@@ -95,35 +95,35 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <!-- Third-Party Processors -->
       <section class="space-y-3">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900 border-b border-gray-100 pb-2">
+        <h2 class="text-base sm:text-lg font-bold text-[#14110f] border-b border-[#e5ded3] pb-2">
           3. Authorized Data Processors & Sub-Processors
         </h2>
         <p>
           We engage certified Data Processors under strict Data Processing Agreements ensuring equal or higher data protection standards:
         </p>
         <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-          <li class="p-3 bg-gray-50 rounded-xl border border-gray-200">
-            <strong class="text-gray-900 block">Razorpay Software Pvt. Ltd.</strong>
-            <span class="text-gray-600 text-[11px]">Payment Gateway (RBI regulated, PCI-DSS Level 1 certified). Processes UPI, Credit/Debit Cards, and NetBanking.</span>
+          <li class="p-3 bg-[#f4efe7] border border-[#e5ded3]">
+            <strong class="text-[#14110f] block">Razorpay Software Pvt. Ltd.</strong>
+            <span class="text-[#5f5851] text-[11px]">Payment Gateway (RBI regulated, PCI-DSS Level 1 certified). Processes UPI, Credit/Debit Cards, and NetBanking.</span>
           </li>
-          <li class="p-3 bg-gray-50 rounded-xl border border-gray-200">
-            <strong class="text-gray-900 block">BlueDart Express & Delhivery Prime</strong>
-            <span class="text-gray-600 text-[11px]">Logistics Partners. Receives shipping address and phone number strictly for domestic delivery execution.</span>
+          <li class="p-3 bg-[#f4efe7] border border-[#e5ded3]">
+            <strong class="text-[#14110f] block">BlueDart Express & Delhivery Prime</strong>
+            <span class="text-[#5f5851] text-[11px]">Logistics Partners. Receives shipping address and phone number strictly for domestic delivery execution.</span>
           </li>
-          <li class="p-3 bg-gray-50 rounded-xl border border-gray-200">
-            <strong class="text-gray-900 block">Cloudflare, Inc.</strong>
-            <span class="text-gray-600 text-[11px]">Edge Hosting, Cloudflare D1 database, and R2 storage with edge nodes in India (Mumbai, Chennai, Delhi, Bengaluru, Hyderabad).</span>
+          <li class="p-3 bg-[#f4efe7] border border-[#e5ded3]">
+            <strong class="text-[#14110f] block">Cloudflare, Inc.</strong>
+            <span class="text-[#5f5851] text-[11px]">Edge Hosting, Cloudflare D1 database, and R2 storage with edge nodes in India (Mumbai, Chennai, Delhi, Bengaluru, Hyderabad).</span>
           </li>
-          <li class="p-3 bg-gray-50 rounded-xl border border-gray-200">
-            <strong class="text-gray-900 block">Cloudinary Ltd.</strong>
-            <span class="text-gray-600 text-[11px]">Secure media CDN hosting product catalog photography and optimized digital assets.</span>
+          <li class="p-3 bg-[#f4efe7] border border-[#e5ded3]">
+            <strong class="text-[#14110f] block">Cloudinary Ltd.</strong>
+            <span class="text-[#5f5851] text-[11px]">Secure media CDN hosting product catalog photography and optimized digital assets.</span>
           </li>
         </ul>
       </section>
 
       <!-- Data Retention Schedule -->
       <section class="space-y-3">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900 border-b border-gray-100 pb-2">
+        <h2 class="text-base sm:text-lg font-bold text-[#14110f] border-b border-[#e5ded3] pb-2">
           4. Statutory Data Retention Schedule
         </h2>
         <p>
@@ -139,7 +139,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <!-- Security Measures -->
       <section class="space-y-3">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900 border-b border-gray-100 pb-2">
+        <h2 class="text-base sm:text-lg font-bold text-[#14110f] border-b border-[#e5ded3] pb-2">
           5. Reasonable Security Practices & Safeguards
         </h2>
         <p>
@@ -154,33 +154,33 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </section>
 
       <!-- Rights of Data Principals -->
-      <section class="space-y-4 bg-rose-50/40 p-5 sm:p-6 rounded-2xl border border-rose-200">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900">
+      <section class="space-y-4 bg-[#f4efe7] p-5 sm:p-6 border border-[#e5ded3]">
+        <h2 class="text-base sm:text-lg font-bold text-[#14110f]">
           6. Your Statutory Rights Under the DPDP Act, 2023
         </h2>
         <p class="text-xs">
-          As a Data Principal, you are entitled to exercise the following rights directly via our self-serve <a href="/privacy-rights" class="text-[#a1505a] font-bold underline">Privacy Rights Portal</a>:
+          As a Data Principal, you are entitled to exercise the following rights directly via our self-serve <a href="/privacy-rights" class="text-[#8d3f3d] font-bold underline">Privacy Rights Portal</a>:
         </p>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-          <div class="bg-white p-3.5 rounded-xl border border-rose-100">
-            <strong class="text-gray-900 block mb-1">A. Right to Access (Section 11)</strong>
+          <div class="bg-white p-3.5 border border-[#e5ded3]">
+            <strong class="text-[#14110f] block mb-1">A. Right to Access (Section 11)</strong>
             <span>Obtain a summary of personal data being processed and identities of all Data Processors who received your data.</span>
           </div>
-          <div class="bg-white p-3.5 rounded-xl border border-rose-100">
-            <strong class="text-gray-900 block mb-1">B. Right to Correction & Updation (Section 12)</strong>
+          <div class="bg-white p-3.5 border border-[#e5ded3]">
+            <strong class="text-[#14110f] block mb-1">B. Right to Correction & Updation (Section 12)</strong>
             <span>Request correction of inaccurate or incomplete shipping addresses, phone numbers, or profile information.</span>
           </div>
-          <div class="bg-white p-3.5 rounded-xl border border-rose-100">
-            <strong class="text-gray-900 block mb-1">C. Right to Erasure / "To Be Forgotten"</strong>
+          <div class="bg-white p-3.5 border border-[#e5ded3]">
+            <strong class="text-[#14110f] block mb-1">C. Right to Erasure / "To Be Forgotten"</strong>
             <span>Request deletion of personal data no longer necessary for the original purpose (subject to mandatory 8-year GST tax invoice laws).</span>
           </div>
-          <div class="bg-white p-3.5 rounded-xl border border-rose-100">
-            <strong class="text-gray-900 block mb-1">D. Right to Withdraw Consent</strong>
+          <div class="bg-white p-3.5 border border-[#e5ded3]">
+            <strong class="text-[#14110f] block mb-1">D. Right to Withdraw Consent</strong>
             <span>Revoke marketing or non-essential cookie consent at any time with 1 click without affecting prior lawful processing.</span>
           </div>
-          <div class="bg-white p-3.5 rounded-xl border border-rose-100 sm:col-span-2">
-            <strong class="text-gray-900 block mb-1">E. Right to Nominate (Section 14)</strong>
+          <div class="bg-white p-3.5 border border-[#e5ded3] sm:col-span-2">
+            <strong class="text-[#14110f] block mb-1">E. Right to Nominate (Section 14)</strong>
             <span>Nominate any designated individual who shall exercise your data rights in the unfortunate event of death or incapacity.</span>
           </div>
         </div>
@@ -188,7 +188,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <!-- Protection of Children -->
       <section class="space-y-3">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900 border-b border-gray-100 pb-2">
+        <h2 class="text-base sm:text-lg font-bold text-[#14110f] border-b border-[#e5ded3] pb-2">
           7. Protection of Children & Minors (Section 9)
         </h2>
         <p>
@@ -197,22 +197,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </section>
 
       <!-- Grievance Redressal Officer -->
-      <section class="space-y-3 bg-gray-50 p-5 rounded-2xl border border-gray-200">
-        <h2 class="text-base font-bold text-gray-900">
+      <section class="space-y-3 bg-[#f4efe7] p-5 border border-[#e5ded3]">
+        <h2 class="text-base font-bold text-[#14110f]">
           8. Grievance Officer & Statutory Redressal Mechanism
         </h2>
         <p>
           In compliance with Rule 5(9) of the IT SPDI Rules 2011, the Consumer Protection (E-Commerce) Rules 2020, and Section 13 of the DPDP Act 2023, our designated Grievance Officer is:
         </p>
-        <div class="space-y-1 text-xs text-gray-800 bg-white p-4 rounded-xl border border-gray-200">
+        <div class="space-y-1 text-xs text-[#4a443f] bg-white p-4 border border-[#e5ded3]">
           <p><strong>Name:</strong> Anirudh A Verma</p>
           <p><strong>Designation:</strong> Grievance Officer & Proprietor</p>
           <p><strong>Entity Name:</strong> SatvaStones Jewellery</p>
           <p><strong>Physical Address:</strong> Chala, Vapi, Gujarat - 396191, India</p>
-          <p><strong>Official Grievance Email:</strong> <a href="mailto:grievance@satvastones.in" class="text-[#f2707f] font-bold underline">grievance@satvastones.in</a> (CC: <a href="mailto:support@satvastones.in" class="text-[#f2707f] font-bold underline">support@satvastones.in</a>)</p>
-          <p><strong>Customer Care Helpline / Call & WhatsApp:</strong> <a href="tel:+919016703180" class="text-[#f2707f] font-bold underline">+91 90167 03180</a> (Mon–Sat, 10:00 AM – 7:00 PM IST)</p>
+          <p><strong>Official Grievance Email:</strong> <a href="mailto:grievance@satvastones.in" class="text-[#8d3f3d] font-bold underline">grievance@satvastones.in</a> (CC: <a href="mailto:support@satvastones.in" class="text-[#8d3f3d] font-bold underline">support@satvastones.in</a>)</p>
+          <p><strong>Customer Care Helpline / Call & WhatsApp:</strong> <a href="tel:+919016703180" class="text-[#8d3f3d] font-bold underline">+91 90167 03180</a> (Mon–Sat, 10:00 AM – 7:00 PM IST)</p>
         </div>
-        <p class="text-xs text-gray-600 pt-1">
+        <p class="text-xs text-[#5f5851] pt-1">
           <strong>Statutory SLA:</strong> All privacy grievances will be acknowledged within <strong>48 hours</strong> and resolved within <strong>1 month (30 days)</strong> from the date of receipt. If unresolved, you may lodge a complaint with the <strong>Data Protection Board of India (DPBI)</strong>.
         </p>
       </section>

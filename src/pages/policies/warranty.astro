@@ -1,59 +1,115 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageIntro from '../../components/PageIntro.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Quality Standards', url: '/policies/warranty' }
+];
 ---
 
 <BaseLayout
   title="Quality & Durability Standards | Satvastones Anti-Tarnish Jewellery"
-  description="Transparent quality & anti-tarnish durability standards for Satvastones Jewellery."
+  description="Transparent quality and anti-tarnish durability standards for Satvastones jewellery: 316L surgical steel, 18K gold PVD, and honest replacement coverage."
+  breadcrumbs={breadcrumbs}
 >
-  <!-- Jewelsmars Clean Header -->
-  <div class="bg-white border-b border-gray-100 py-8 sm:py-12">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1">
-      <span class="text-xs font-bold uppercase tracking-widest text-[#a1505a]">Integrity & Standards</span>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">Quality & Durability Standards</h1>
-      <p class="text-xs sm:text-sm text-gray-500 max-w-md mx-auto">
-        Honest, grounded craftsmanship without inflated marketing claims.
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <PageIntro
+      eyebrow="Integrity & standards"
+      title="Quality & durability."
+      lede="Honest, grounded craftsmanship without inflated marketing claims — what the materials are, what they survive, and exactly what replacement coverage means."
+      crumbs={breadcrumbs}
+    >
+      <p class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+        <span>Last updated November 2026</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>316L surgical steel</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>18K gold PVD</span>
       </p>
-    </div>
-  </div>
+    </PageIntro>
 
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
-    <div class="max-w-3xl mx-auto space-y-6">
-      
-      <!-- Section 1: Honest Quality Statement -->
-      <div class="bg-[#fffafb] p-6 sm:p-8 border border-[#f9d8dc] rounded-[22px] space-y-3">
-        <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Uncompromising Truth</span>
-        <h2 class="text-lg sm:text-xl font-bold text-gray-900">1. An Honest Quality Statement</h2>
-        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-          At Satvastones, we refuse to make misleading promises that our jewellery will "never ever lose its shine under any circumstance," because no metal surface subjected to daily abrasion, harsh detergents, or bleach can remain 100% immune to natural environmental wear.
-        </p>
-        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-          However, <strong>the quality and durability of our products are exceptionally high</strong>. By bonding real 18K gold to surgical-grade 316L stainless steel via vacuum Physical Vapor Deposition (PVD), our pieces provide vastly superior resistance to rust, sweat, water, and discoloration compared to standard brass or alloy jewellery.
-        </p>
+    <div class="pb-20 pt-4 sm:pt-8">
+      <div class="policy-body mx-auto max-w-3xl space-y-8 px-5 sm:px-8">
+        <section class="space-y-3">
+          <h2>1. An honest quality statement</h2>
+          <p>
+            At Satvastones, we refuse to make misleading promises that our jewellery will
+            <strong>never, ever lose its shine under any circumstance</strong>, because no metal
+            surface subjected to daily abrasion, harsh detergents or bleach can remain 100% immune
+            to natural environmental wear.
+          </p>
+          <p>
+            However, <strong>the quality and durability of our products are exceptionally
+            high</strong>. By bonding real 18K gold to surgical-grade 316L stainless steel via
+            vacuum Physical Vapor Deposition (PVD), our pieces provide vastly superior resistance to
+            rust, sweat, water and discolouration compared with standard brass or alloy jewellery.
+          </p>
+        </section>
+
+        <section class="space-y-3">
+          <h2>2. Craftsmanship specifications</h2>
+          <ul>
+            <li>
+              <strong>Substrate:</strong> 316L surgical-grade stainless steel — 100% hypoallergenic,
+              nickel-free and lead-free.
+            </li>
+            <li>
+              <strong>Gold coating:</strong> genuine 18K gold applied via high-vacuum PVD technology.
+            </li>
+            <li>
+              <strong>Water resistance:</strong> suitable for daily showers, workouts and sweat.
+            </li>
+            <li>
+              <strong>Dispatch verification:</strong> hand-inspected and dispatched from our Vapi
+              atelier within 24–48 hours.
+            </li>
+          </ul>
+        </section>
+
+        <section class="space-y-3">
+          <h2>3. Replacement guidelines for damaged pieces</h2>
+          <p>
+            We do not offer cash refunds. In the rare event that your jewellery arrives damaged due
+            to courier mishandling during transit, we provide an immediate free replacement upon
+            receiving an <strong>unedited 360-degree unboxing video proof</strong>.
+          </p>
+          <p>
+            For warranty inquiries, contact our customer team at{' '}
+            <a href="mailto:support@satvastones.in">support@satvastones.in</a> or message{' '}
+            <a href="https://wa.me/919016703180" target="_blank" rel="noopener noreferrer">
+              +91 90167 03180
+            </a>
+            . The full transit and replacement process is set out in the{' '}
+            <a href="/refund-policy">return and refund policy</a>.
+          </p>
+        </section>
+
+        <div class="border border-[#e0d7c9] bg-[#f4efe7] p-5 sm:p-6">
+          <p class="eyebrow text-[#8d3f3d]">Still deciding?</p>
+          <p class="font-display mt-1.5 text-[1.4rem] leading-tight text-[#14110f]">
+            Read the metallurgy before you buy.
+          </p>
+          <p class="mt-1.5 text-[12px] leading-relaxed text-[#5f5851]">
+            The full materials science — why 316L steel and 18K vacuum PVD resist tarnish — is
+            written out in plain language.
+          </p>
+          <div class="mt-4 flex flex-wrap gap-3">
+            <a
+              href="/materials"
+              class="inline-flex items-center gap-2 bg-[#14110f] px-5 py-3 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8] no-underline transition-colors hover:bg-[#8d3f3d]"
+            >
+              Materials &amp; metallurgy <span aria-hidden="true">→</span>
+            </a>
+            <a
+              href="/jewellery-care"
+              class="inline-flex items-center gap-2 border border-[#14110f] px-5 py-3 text-[9px] uppercase tracking-[0.14em] text-[#14110f] no-underline transition-colors hover:bg-[#fbf9f5]"
+            >
+              Care ritual
+            </a>
+          </div>
+        </div>
       </div>
-
-      <!-- Section 2: Material Specifications -->
-      <div class="bg-white p-6 sm:p-8 border border-gray-200 rounded-[22px] space-y-3">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900">2. Craftsmanship Specifications</h2>
-        <ul class="list-disc list-inside space-y-2 text-xs sm:text-sm text-gray-600">
-          <li><strong>Substrate:</strong> 316L Surgical-Grade Stainless Steel (100% hypoallergenic, nickel-free, lead-free).</li>
-          <li><strong>Gold Coating:</strong> Genuine 18K Gold applied via high-vacuum PVD technology.</li>
-          <li><strong>Water Resistance:</strong> Suitable for daily showers, workouts, and sweat.</li>
-          <li><strong>Dispatch Verification:</strong> Hand-inspected and dispatched from our Vapi store location in 24–48 hours.</li>
-        </ul>
-      </div>
-
-      <!-- Section 3: Replacement Coverage -->
-      <div class="bg-white p-6 sm:p-8 border border-gray-200 rounded-[22px] space-y-3">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900">3. Replacement Guidelines for Damaged Pieces</h2>
-        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
-          We do not offer cash refunds. In the rare event that your jewellery arrives damaged due to courier mishandling during transit, we provide an immediate free replacement upon receiving an <strong>unedited 360-degree unboxing video proof</strong>.
-        </p>
-        <p class="text-xs text-gray-500">
-          For warranty inquiries, contact our customer team at <a href="mailto:support@satvastones.in" class="text-[#f2707f] font-bold underline">support@satvastones.in</a>.
-        </p>
-      </div>
-
     </div>
   </div>
 </BaseLayout>

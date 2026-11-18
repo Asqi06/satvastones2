@@ -1,113 +1,113 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: "Grievance Redressal", url: '/grievance-redressal' }
+];
 ---
 
 <BaseLayout
   title="Grievance Redressal & Legal Disclosures | SatvaStones Jewellery"
   description="Mandatory statutory disclosures under Consumer Protection (E-Commerce) Rules 2020 and DPDP Act 2023. Grievance Officer: Anirudh A Verma, Vapi, Gujarat."
+  breadcrumbs={breadcrumbs}
 >
-  <!-- Minimalist Legal Header -->
-  <div class="bg-white border-b border-gray-100 py-10 sm:py-14">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
-      <div class="inline-flex items-center gap-2 px-3 py-1 bg-rose-50 border border-rose-200 rounded-full text-xs font-bold text-[#a1505a]">
-        <span>Rule 5(1) &amp; Rule 6, Consumer Protection (E-Commerce) Rules, 2020</span>
-      </div>
-      <h1 class="text-3xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">Grievance Redressal &amp; Disclosures</h1>
-      <p class="text-xs sm:text-sm text-gray-500 max-w-2xl mx-auto leading-relaxed">
-        Official statutory disclosures for <strong>SatvaStones Jewellery</strong> • Operated as an Indian Sole Proprietorship under the registered name of <strong>Anirudh A Verma</strong>.
-      </p>
-      <p class="text-[11px] text-gray-400">
-        Statutory SLA: Acknowledged within 48 Hours | Redressed within 1 Month
-      </p>
-    </div>
-  </div>
+  <PageIntro
+    eyebrow="Rule 5(1) & Rule 6 · E-Commerce Rules 2020"
+    title="Grievance redressal."
+    lede="Statutory business disclosures and the escalation path for SatvaStones Jewellery, operated by Anirudh A Verma."
+    crumbs={breadcrumbs}
+  >
+    <p class="mt-6 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">Acknowledged within 48 hours · Resolved within 1 month</p>
+  </PageIntro>
 
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-    <div class="max-w-4xl mx-auto space-y-8 bg-white p-6 sm:p-12 border border-gray-200 rounded-[26px] shadow-xs text-xs sm:text-sm text-gray-700 leading-relaxed">
+  <div class="bg-[#fbf9f5] pb-20 pt-4 sm:pt-8">
+    <div class="policy-body mx-auto max-w-3xl space-y-8 px-5 sm:px-8">
 
       <!-- Statutory Entity Profile Card -->
-      <section class="space-y-4 bg-gray-50 p-6 rounded-2xl border border-gray-200">
-        <h2 class="text-sm font-bold uppercase tracking-wider text-gray-900 flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-[#f2707f]"></span>
+      <section class="space-y-4 bg-[#f4efe7] p-6 border border-[#e5ded3]">
+        <h2 class="text-sm font-bold uppercase tracking-wider text-[#14110f] flex items-center gap-2">
+          <span class="w-2 h-2 bg-[#8d3f3d]"></span>
           <span>1. Mandatory Business Disclosures (Rule 4 &amp; 5)</span>
         </h2>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-          <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-1">
-            <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Brand / Trading Name</span>
-            <span class="font-extrabold text-gray-900 text-sm block">SatvaStones Fine Jewellery</span>
-            <span class="text-gray-500 text-[11px]">Online fine anti-tarnish everyday jewellery store</span>
+          <div class="bg-white p-4 border border-[#e5ded3] space-y-1">
+            <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Brand / Trading Name</span>
+            <span class="font-extrabold text-[#14110f] text-sm block">SatvaStones Fine Jewellery</span>
+            <span class="text-[#6f675f] text-[11px]">Online fine anti-tarnish everyday jewellery store</span>
           </div>
 
-          <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-1">
-            <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Registered Legal Entity Name</span>
-            <span class="font-extrabold text-gray-900 text-sm block">Anirudh A Verma (Sole Proprietorship)</span>
-            <span class="text-gray-500 text-[11px]">Registered under Indian Proprietorship Laws</span>
+          <div class="bg-white p-4 border border-[#e5ded3] space-y-1">
+            <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Registered Legal Entity Name</span>
+            <span class="font-extrabold text-[#14110f] text-sm block">Anirudh A Verma (Sole Proprietorship)</span>
+            <span class="text-[#6f675f] text-[11px]">Registered under Indian Proprietorship Laws</span>
           </div>
 
-          <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-1">
-            <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">GSTIN (Goods &amp; Services Tax)</span>
-            <span class="font-extrabold text-gray-900 font-mono text-sm block">24DDAPV4074H1ZF</span>
-            <span class="text-gray-500 text-[11px]">State of Gujarat, India (Tax Assessment Zone: Vapi)</span>
+          <div class="bg-white p-4 border border-[#e5ded3] space-y-1">
+            <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">GSTIN (Goods &amp; Services Tax)</span>
+            <span class="font-extrabold text-[#14110f] font-mono text-sm block">24DDAPV4074H1ZF</span>
+            <span class="text-[#6f675f] text-[11px]">State of Gujarat, India (Tax Assessment Zone: Vapi)</span>
           </div>
 
-          <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-1">
-            <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Business Type &amp; Inventory Model</span>
-            <span class="font-extrabold text-gray-900 text-sm block">Inventory-Based Single-Brand Store</span>
-            <span class="text-gray-500 text-[11px]">100% owned &amp; dispatched from our Vapi atelier</span>
+          <div class="bg-white p-4 border border-[#e5ded3] space-y-1">
+            <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Business Type &amp; Inventory Model</span>
+            <span class="font-extrabold text-[#14110f] text-sm block">Inventory-Based Single-Brand Store</span>
+            <span class="text-[#6f675f] text-[11px]">100% owned &amp; dispatched from our Vapi atelier</span>
           </div>
 
-          <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-1 sm:col-span-2">
-            <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Registered Physical Address &amp; Atelier Hub</span>
-            <span class="font-extrabold text-gray-900 text-sm block">Chala, Vapi, Gujarat - 396191, India</span>
-            <span class="text-gray-500 text-[11px]">Primary headquarters, quality inspection center, and dispatch facility</span>
+          <div class="bg-white p-4 border border-[#e5ded3] space-y-1 sm:col-span-2">
+            <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Registered Physical Address &amp; Atelier Hub</span>
+            <span class="font-extrabold text-[#14110f] text-sm block">Chala, Vapi, Gujarat - 396191, India</span>
+            <span class="text-[#6f675f] text-[11px]">Primary headquarters, quality inspection center, and dispatch facility</span>
           </div>
         </div>
       </section>
 
       <!-- Grievance Officer Formal Designation -->
-      <section class="space-y-4 bg-rose-50/40 p-6 rounded-2xl border border-rose-200">
+      <section class="space-y-4 bg-[#f4efe7] p-6 border border-[#e5ded3]">
         <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 text-[#f2707f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <svg class="w-5 h-5 text-[#8d3f3d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" />
           </svg>
-          <h2 class="text-base sm:text-lg font-bold text-gray-900">
+          <h2 class="text-base sm:text-lg font-bold text-[#14110f]">
             2. Designated Statutory Grievance Officer
           </h2>
         </div>
-        <p class="text-xs text-gray-700 leading-relaxed">
+        <p class="text-xs text-[#4a443f] leading-relaxed">
           Pursuant to <strong>Rule 5(1)(l) of the Consumer Protection (E-Commerce) Rules, 2020</strong>, <strong>Rule 5(9) of the IT SPDI Rules, 2011</strong>, and <strong>Section 13 of the Digital Personal Data Protection Act, 2023</strong>, the details of our Grievance Officer are set forth below:
         </p>
 
-        <div class="bg-white p-5 rounded-xl border border-rose-200 space-y-2 text-xs">
+        <div class="bg-white p-5 border border-[#e5ded3] space-y-2 text-xs">
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Name of Officer</span>
-              <strong class="text-gray-900 text-sm">Anirudh A Verma</strong>
+              <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Name of Officer</span>
+              <strong class="text-[#14110f] text-sm">Anirudh A Verma</strong>
             </div>
             <div>
-              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Official Designation</span>
-              <strong class="text-gray-900 text-sm">Grievance Officer &amp; Proprietor</strong>
+              <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Official Designation</span>
+              <strong class="text-[#14110f] text-sm">Grievance Officer &amp; Proprietor</strong>
             </div>
             <div>
-              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Official Grievance Email</span>
-              <a href="mailto:grievance@satvastones.in" class="text-[#f2707f] font-bold underline text-sm">grievance@satvastones.in</a>
-              <span class="text-gray-500 text-[11px] block">(CC: support@satvastones.in)</span>
+              <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Official Grievance Email</span>
+              <a href="mailto:grievance@satvastones.in" class="text-[#8d3f3d] font-bold underline text-sm">grievance@satvastones.in</a>
+              <span class="text-[#6f675f] text-[11px] block">(CC: support@satvastones.in)</span>
             </div>
             <div>
-              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Direct Telephone / Helpline</span>
-              <strong class="text-gray-900 text-sm"><a href="tel:+919016703180" class="hover:text-[#f2707f]">+91 90167 03180</a></strong>
-              <span class="text-gray-500 text-[11px] block">Mon–Sat (10:00 AM – 7:00 PM IST)</span>
+              <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Direct Telephone / Helpline</span>
+              <strong class="text-[#14110f] text-sm"><a href="tel:+919016703180" class="hover:text-[#8d3f3d]">+91 90167 03180</a></strong>
+              <span class="text-[#6f675f] text-[11px] block">Mon–Sat (10:00 AM – 7:00 PM IST)</span>
             </div>
             <div class="sm:col-span-2">
-              <span class="text-gray-400 text-[10px] font-bold uppercase tracking-wider block">Physical Service of Notices</span>
-              <span class="text-gray-800 text-xs">Chala, Vapi, Gujarat - 396191, India</span>
+              <span class="text-[#8a8279] text-[10px] font-bold uppercase tracking-wider block">Physical Service of Notices</span>
+              <span class="text-[#4a443f] text-xs">Chala, Vapi, Gujarat - 396191, India</span>
             </div>
           </div>
         </div>
 
         <!-- Statutory SLA Highlight Banner -->
-        <div class="bg-rose-100/60 p-4 rounded-xl border border-rose-300 text-xs text-rose-950 space-y-1">
+        <div class="bg-[#f4efe7] p-4 border border-[#e5ded3] text-xs text-[#4a443f] space-y-1">
           <p class="font-extrabold uppercase tracking-wide flex items-center gap-2">
             <span>Mandatory Statutory SLA (Service Level Agreement):</span>
           </p>
@@ -120,37 +120,37 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <!-- Step-by-Step Grievance Filing Process -->
       <section class="space-y-3">
-        <h2 class="text-base sm:text-lg font-bold text-gray-900 border-b border-gray-100 pb-2">
+        <h2 class="text-base sm:text-lg font-bold text-[#14110f] border-b border-[#e5ded3] pb-2">
           3. How to Submit a Formal Grievance
         </h2>
         <p>
           If you have encountered any issue concerning order delivery, product quality, transit damage, or personal data rights:
         </p>
-        <ol class="list-decimal list-inside space-y-2 text-xs text-gray-700 pl-2">
-          <li><strong>Step 1 (First Contact):</strong> Email our customer support concierge at <a href="mailto:support@satvastones.in" class="text-[#f2707f] font-bold underline">support@satvastones.in</a> or message us on WhatsApp with your Order ID and concern. Over 95% of issues are resolved within 24 hours.</li>
-          <li><strong>Step 2 (Escalation to Grievance Officer):</strong> If your ticket is not satisfactorily addressed within 48 hours, email <a href="mailto:grievance@satvastones.in" class="text-[#f2707f] font-bold underline">grievance@satvastones.in</a> quoting your original ticket number.</li>
+        <ol class="list-decimal list-inside space-y-2 text-xs text-[#4a443f] pl-2">
+          <li><strong>Step 1 (First Contact):</strong> Email our customer support concierge at <a href="mailto:support@satvastones.in" class="text-[#8d3f3d] font-bold underline">support@satvastones.in</a> or message us on WhatsApp with your Order ID and concern. Over 95% of issues are resolved within 24 hours.</li>
+          <li><strong>Step 2 (Escalation to Grievance Officer):</strong> If your ticket is not satisfactorily addressed within 48 hours, email <a href="mailto:grievance@satvastones.in" class="text-[#8d3f3d] font-bold underline">grievance@satvastones.in</a> quoting your original ticket number.</li>
           <li><strong>Step 3 (Statutory Redressal):</strong> The Grievance Officer will personally review your file, inspect packaging and dispatch logs from our Vapi hub, and provide a formal written resolution within 30 days.</li>
         </ol>
       </section>
 
       <!-- External Statutory Escalation Paths -->
-      <section class="space-y-3 bg-gray-50 p-5 rounded-2xl border border-gray-200">
-        <h2 class="text-base font-bold text-gray-900">
+      <section class="space-y-3 bg-[#f4efe7] p-5 border border-[#e5ded3]">
+        <h2 class="text-base font-bold text-[#14110f]">
           4. External Consumer &amp; Regulatory Recourse
         </h2>
         <p>
           If you remain dissatisfied with the resolution provided by our Grievance Officer, you have the statutory right under Indian law to approach government authorities:
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs">
-          <div class="bg-white p-3.5 rounded-xl border border-gray-200 space-y-1">
-            <strong class="text-gray-900 block">National Consumer Helpline (NCH)</strong>
-            <p class="text-gray-600 text-[11px]">Toll-Free Helpline: <strong>1915</strong> or <strong>1800-11-4000</strong></p>
-            <p class="text-gray-600 text-[11px]">Portal: <a href="https://consumerhelpline.gov.in" target="_blank" rel="noopener noreferrer" class="text-[#a1505a] underline">consumerhelpline.gov.in</a></p>
+          <div class="bg-white p-3.5 border border-[#e5ded3] space-y-1">
+            <strong class="text-[#14110f] block">National Consumer Helpline (NCH)</strong>
+            <p class="text-[#5f5851] text-[11px]">Toll-Free Helpline: <strong>1915</strong> or <strong>1800-11-4000</strong></p>
+            <p class="text-[#5f5851] text-[11px]">Portal: <a href="https://consumerhelpline.gov.in" target="_blank" rel="noopener noreferrer" class="text-[#8d3f3d] underline">consumerhelpline.gov.in</a></p>
           </div>
-          <div class="bg-white p-3.5 rounded-xl border border-gray-200 space-y-1">
-            <strong class="text-gray-900 block">Data Protection Board of India (DPBI)</strong>
-            <p class="text-gray-600 text-[11px]">For personal data breaches or denial of DPDP rights under the DPDP Act, 2023.</p>
-            <p class="text-gray-600 text-[11px]">Official Portal: <span class="font-mono text-gray-700">dpbi.gov.in</span></p>
+          <div class="bg-white p-3.5 border border-[#e5ded3] space-y-1">
+            <strong class="text-[#14110f] block">Data Protection Board of India (DPBI)</strong>
+            <p class="text-[#5f5851] text-[11px]">For personal data breaches or denial of DPDP rights under the DPDP Act, 2023.</p>
+            <p class="text-[#5f5851] text-[11px]">Official Portal: <span class="font-mono text-[#4a443f]">dpbi.gov.in</span></p>
           </div>
         </div>
       </section>

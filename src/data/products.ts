@@ -43,7 +43,7 @@ export const PRODUCTS: Product[] = [
         isPrimary: true
       },
       {
-        url: 'https://images.unsplash.com/photo-1611591475152-47eac9c5bdfa?auto=format&fit=crop&w=1000&q=80',
+        url: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?auto=format&fit=crop&w=1000&q=80',
         alt: 'Aura Herringbone Chain macro clasp and link details'
       }
     ]
@@ -149,7 +149,7 @@ export const PRODUCTS: Product[] = [
     inStock: true,
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1611591475152-47eac9c5bdfa?auto=format&fit=crop&w=1000&q=80',
+        url: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?auto=format&fit=crop&w=1000&q=80',
         alt: 'Solace Chunky Link Chain Bracelet lying on warm stone',
         isPrimary: true
       },
@@ -228,7 +228,7 @@ export const PRODUCTS: Product[] = [
         isPrimary: true
       },
       {
-        url: 'https://images.unsplash.com/photo-1611591475152-47eac9c5bdfa?auto=format&fit=crop&w=1000&q=80',
+        url: 'https://images.unsplash.com/photo-1708222170725-a7bf4149acea?auto=format&fit=crop&w=1000&q=80',
         alt: 'Vesta Kada finial end detail'
       }
     ]
@@ -378,7 +378,7 @@ export const PRODUCTS: Product[] = [
         isPrimary: true
       },
       {
-        url: 'https://images.unsplash.com/photo-1611591475152-47eac9c5bdfa?auto=format&fit=crop&w=1000&q=80',
+        url: 'https://images.unsplash.com/photo-1620656798579-1984d9e87df7?auto=format&fit=crop&w=1000&q=80',
         alt: 'Matching necklace and bracelet details of anti-tarnish jewellery set'
       }
     ]

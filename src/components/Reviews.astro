@@ -3,9 +3,9 @@
 ---
 
 <section id="home-reviews-section" class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-  <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4 border-b border-[#eae4dc] pb-4">
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4 border-b border-[#e5ded3] pb-4">
     <div>
-      <span class="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f4553] flex items-center gap-1.5">
+      <span class="text-xs font-semibold uppercase tracking-[0.16em] text-[#8d3f3d] flex items-center gap-1.5">
         <span class="text-[#c5a059]">✦</span>
         <span>AUTHENTIC PATRON EXPERIENCES</span>
       </span>
@@ -17,7 +17,7 @@
       </p>
     </div>
 
-    <div class="flex items-center gap-3 bg-[#faf8f5] border border-[#eae4dc] px-4 py-2 rounded-full self-start sm:self-auto shadow-2xs">
+    <div class="flex items-center gap-3 bg-[#faf8f5] border border-[#e5ded3] px-4 py-2 self-start sm:self-auto">
       <div class="flex text-[#c5a059] gap-0.5">
         {Array.from({ length: 5 }).map(() => (
           <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
@@ -31,7 +31,7 @@
   </div>
 
   <div id="home-reviews-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
-    <div class="col-span-full bg-white border border-[#eae4dc] rounded-[22px] p-8 text-center space-y-2">
+    <div class="col-span-full bg-white border border-[#e5ded3] rounded-[22px] p-8 text-center space-y-2">
       <p class="font-serif text-base text-[#171513]">Authentic Patron Reviews</p>
       <p class="text-xs text-[#6e6863]">Verified purchase reviews submitted by patrons will appear here automatically.</p>
     </div>
@@ -48,7 +48,7 @@
     const reviews = all || getStoredReviews();
     if (!reviews || reviews.length === 0) {
       grid.innerHTML = `
-        <div class="col-span-full bg-white border border-[#eae4dc] rounded-[22px] p-8 text-center space-y-2">
+        <div class="col-span-full bg-white border border-[#e5ded3] rounded-[22px] p-8 text-center space-y-2">
           <p class="font-serif text-base text-[#171513]">Authentic Patron Reviews</p>
           <p class="text-xs text-[#6e6863]">Verified purchase reviews submitted by patrons will appear here automatically.</p>
         </div>
@@ -67,7 +67,7 @@
           .slice(0, 2);
 
         return `
-        <div class="bg-white border border-[#eae4dc] p-6 rounded-[22px] shadow-2xs hover:shadow-[0_12px_28px_rgba(23,21,19,0.06)] hover:border-[#c5a059]/50 transition-all flex flex-col justify-between space-y-4">
+        <div class="bg-white border border-[#e5ded3] p-6 rounded-[22px] hover:shadow-[0_12px_28px_rgba(23,21,19,0.06)] hover:border-[#c5a059]/50 transition-all flex flex-col justify-between space-y-4">
           <div class="space-y-3">
             <div class="flex items-center justify-between">
               <div class="flex text-[#c5a059] gap-0.5">
@@ -81,7 +81,7 @@
                   )
                   .join('')}
               </div>
-              <span class="inline-flex items-center gap-1 text-[10px] bg-[#eef8f3] text-[#1b6d48] px-2.5 py-0.5 rounded-full font-bold border border-[#c4e8d3]">
+              <span class="inline-flex items-center gap-1 text-[10px] bg-[#eef8f3] text-[#1b6d48] px-2.5 py-0.5 font-bold border border-[#c4e8d3]">
                 <svg class="w-2.5 h-2.5 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
@@ -95,8 +95,8 @@
             </p>
           </div>
 
-          <div class="flex items-center gap-3 pt-4 border-t border-[#eae4dc]">
-            <div class="w-10 h-10 rounded-full bg-[#faf4f2] border border-[#eae4dc] flex items-center justify-center font-bold text-xs text-[#9f4553]">
+          <div class="flex items-center gap-3 pt-4 border-t border-[#e5ded3]">
+            <div class="w-10 h-10 bg-[#f4efe7] border border-[#e5ded3] flex items-center justify-center font-bold text-xs text-[#8d3f3d]">
               ${initials}
             </div>
             <div class="min-w-0 flex-1">

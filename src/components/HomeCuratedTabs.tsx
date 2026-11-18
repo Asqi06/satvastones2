@@ -128,9 +128,9 @@ export default function HomeCuratedTabs() {
   return (
     <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
       {/* Section Header with Dynamic Headline & Tab Pills */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 pb-4 border-b border-[#eae4dc]">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 pb-4 border-b border-[#e5ded3]">
         <div>
-          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#9f4553] flex items-center gap-1.5">
+          <span className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8d3f3d] flex items-center gap-1.5">
             <span className="text-[#c5a059]">✦</span>
             <span>CURATED ATELIER EDIT</span>
           </span>
@@ -150,17 +150,17 @@ export default function HomeCuratedTabs() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`relative px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
+                className={`relative px-4 py-2  text-xs font-semibold whitespace-nowrap transition-all duration-200 cursor-pointer flex items-center gap-1.5 ${
                   isActive
                     ? 'bg-[#171513] text-white shadow-sm'
-                    : 'bg-[#faf8f5] text-[#332f2c] hover:bg-[#f2ece4] border border-[#eae4dc]'
+                    : 'bg-[#faf8f5] text-[#332f2c] hover:bg-[#f2ece4] border border-[#e5ded3]'
                 }`}
               >
                 <span>{tab.label}</span>
                 {tab.badge && (
                   <span
-                    className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold ${
-                      isActive ? 'bg-[#9f4553] text-white' : 'bg-[#eef8f3] text-[#1b6d48]'
+                    className={`text-[9px] px-1.5 py-0.2  font-bold ${
+                      isActive ? 'bg-[#8d3f3d] text-white' : 'bg-[#eef8f3] text-[#1b6d48]'
                     }`}
                   >
                     {tab.badge}
@@ -188,7 +188,7 @@ export default function HomeCuratedTabs() {
           return (
             <div
               key={product.id}
-              className="product-card group relative flex flex-col bg-white border border-[#eae4dc] rounded-[18px] overflow-hidden transition-all duration-300 hover:shadow-[0_12px_28px_rgba(23,21,19,0.06)] hover:border-[#c5a059]/40"
+              className="product-card group relative flex flex-col bg-white border border-[#e5ded3] rounded-[18px] overflow-hidden transition-all duration-300 hover:shadow-[0_12px_28px_rgba(23,21,19,0.06)] hover:border-[#c5a059]/40"
             >
               {/* 3:4 Squircle Aspect Container */}
               <a
@@ -199,17 +199,17 @@ export default function HomeCuratedTabs() {
                 {/* Top Left Badges */}
                 <div className="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
                   {product.isBestseller && (
-                    <span className="bg-[#9f4553] text-white text-[9px] font-semibold uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full shadow-2xs">
+                    <span className="bg-[#8d3f3d] text-white text-[9px] font-semibold uppercase tracking-[0.08em] px-2.5 py-0.5">
                       Hot Selling
                     </span>
                   )}
                   {discount > 0 && (
-                    <span className="bg-[#171513] text-[#fbf8f5] text-[9px] font-bold px-2 py-0.5 rounded-full shadow-2xs">
+                    <span className="bg-[#171513] text-[#fbf8f5] text-[9px] font-bold px-2 py-0.5">
                       -{discount}%
                     </span>
                   )}
                   {product.isNewArrival && !product.isBestseller && (
-                    <span className="bg-[#c5a059] text-white text-[9px] font-bold uppercase tracking-[0.08em] px-2 py-0.5 rounded-full shadow-2xs">
+                    <span className="bg-[#c5a059] text-white text-[9px] font-bold uppercase tracking-[0.08em] px-2 py-0.5">
                       New
                     </span>
                   )}
@@ -219,10 +219,10 @@ export default function HomeCuratedTabs() {
                 <button
                   type="button"
                   onClick={(e) => handleWishlistClick(e, product)}
-                  className={`absolute bottom-2.5 right-2.5 z-10 w-8 h-8 rounded-full border border-[#eae4dc] flex items-center justify-center transition-all shadow-xs hover:shadow-md cursor-pointer hover:scale-105 active:scale-95 ${
+                  className={`absolute bottom-2.5 right-2.5 z-10 w-8 h-8  border border-[#e5ded3] flex items-center justify-center transition-all  hover:shadow-md cursor-pointer hover:scale-105 active:scale-95 ${
                     isSaved
-                      ? 'bg-[#faf4f2] text-[#9f4553] border-[#9f4553]'
-                      : 'bg-white/95 hover:bg-white text-[#171513] hover:text-[#9f4553]'
+                      ? 'bg-[#f4efe7] text-[#8d3f3d] border-[#8d3f3d]'
+                      : 'bg-white/95 hover:bg-white text-[#171513] hover:text-[#8d3f3d]'
                   }`}
                   aria-label={`Save ${product.name} to wishlist`}
                 >
@@ -283,7 +283,7 @@ export default function HomeCuratedTabs() {
                   </div>
 
                   {/* Product Name */}
-                  <h3 className="text-[13px] sm:text-[14px] font-medium text-[#171513] leading-snug line-clamp-2 hover:text-[#9f4553] transition-colors">
+                  <h3 className="text-[13px] sm:text-[14px] font-medium text-[#171513] leading-snug line-clamp-2 hover:text-[#8d3f3d] transition-colors">
                     <a href={`/products/${product.slug}`}>{product.name}</a>
                   </h3>
 
@@ -307,10 +307,10 @@ export default function HomeCuratedTabs() {
                     type="button"
                     onClick={(e) => handleAddToCart(e, product)}
                     aria-label={`Add ${product.name} to cart`}
-                    className={`quick-add-btn w-full py-2.5 rounded-[10px] text-[11px] font-bold uppercase tracking-[0.08em] transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.99] ${
+                    className={`quick-add-btn w-full py-2.5 rounded-[10px] text-[11px] font-bold uppercase tracking-[0.08em] transition-all duration-200  hover:shadow-md cursor-pointer flex items-center justify-center gap-1.5 active:scale-[0.99] ${
                       addedId === product.id
                         ? 'bg-[#1b6d48] text-white'
-                        : 'bg-[#171513] hover:bg-[#9f4553] text-white'
+                        : 'bg-[#171513] hover:bg-[#8d3f3d] text-white'
                     }`}
                   >
                     {addedId === product.id ? (
@@ -344,7 +344,7 @@ export default function HomeCuratedTabs() {
       <div className="mt-10 text-center">
         <a
           href="/shop"
-          className="inline-flex items-center gap-2 bg-[#faf8f5] hover:bg-[#171513] text-[#171513] hover:text-white border border-[#eae4dc] px-8 py-3.5 rounded-full text-xs font-bold uppercase tracking-[0.12em] transition-all duration-200 shadow-2xs hover:shadow-md cursor-pointer"
+          className="inline-flex items-center gap-2 bg-[#faf8f5] hover:bg-[#171513] text-[#171513] hover:text-white border border-[#e5ded3] px-8 py-3.5 text-xs font-bold uppercase tracking-[0.12em] transition-all duration-200 hover:shadow-md cursor-pointer"
         >
           <span>EXPLORE COMPLETE COLLECTION ({PRODUCTS.length} SUITES)</span>
           <svg className="w-4 h-4 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

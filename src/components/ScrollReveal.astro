@@ -1,0 +1,155 @@
+---
+// ScrollReveal.astro — lightweight editorial motion.
+// Splits [data-split] headlines into masked words, reveals [data-reveal]
+// elements with blur/rise, parallaxes [data-parallax] images, and pauses
+// autoplay video when offscreen or when the tab is hidden.
+---
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const supportsIO = 'IntersectionObserver' in window;
+
+  /* ---------------------------------------------------------------
+     Split headlines into words (safe: preserves inline elements)
+     --------------------------------------------------------------- */
+  document.querySelectorAll<HTMLElement>('[data-split]').forEach((el) => {
+    const fragment = document.createDocumentFragment();
+    let index = 0;
+
+    const wrapWords = (text: string) => {
+      const parts = text.split(/(\s+)/);
+      parts.forEach((part) => {
+        if (!part) return;
+        if (!part.trim()) {
+          fragment.appendChild(document.createTextNode(' '));
+          return;
+        }
+        const word = document.createElement('span');
+        word.className = 'word';
+        const inner = document.createElement('span');
+        inner.textContent = part;
+        inner.style.setProperty('--i', String(index));
+        index += 1;
+        word.appendChild(inner);
+        fragment.appendChild(word);
+      });
+    };
+
+    Array.from(el.childNodes).forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        wrapWords(node.textContent || '');
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const word = document.createElement('span');
+        word.className = 'word';
+        const inner = document.createElement('span');
+        inner.style.setProperty('--i', String(index));
+        index += 1;
+        inner.appendChild((node as Element).cloneNode(true));
+        word.appendChild(inner);
+        fragment.appendChild(word);
+        fragment.appendChild(document.createTextNode(' '));
+      }
+    });
+
+    el.replaceChildren(fragment);
+  });
+
+  /* ---------------------------------------------------------------
+     Reveal on scroll
+     --------------------------------------------------------------- */
+  const revealTargets = document.querySelectorAll<HTMLElement>('[data-reveal], [data-split]');
+
+  if (reduceMotion || !supportsIO) {
+    revealTargets.forEach((el) => el.classList.add('is-revealed'));
+  } else {
+    const revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -6% 0px' }
+    );
+
+    revealTargets.forEach((el) => revealObserver.observe(el));
+
+    // Safety net: anything still hidden after 6s becomes visible.
+    window.setTimeout(() => {
+      document.querySelectorAll<HTMLElement>('[data-reveal]:not(.is-revealed), [data-split]:not(.is-revealed)').forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight) el.classList.add('is-revealed');
+      });
+    }, 6000);
+  }
+
+  /* ---------------------------------------------------------------
+     Subtle image parallax
+     --------------------------------------------------------------- */
+  const parallaxImages = Array.from(document.querySelectorAll<HTMLImageElement>('[data-parallax]'));
+
+  if (parallaxImages.length && !reduceMotion && window.matchMedia('(pointer: fine)').matches) {
+    let rafId = 0;
+
+    const update = () => {
+      rafId = 0;
+      const viewport = window.innerHeight;
+      parallaxImages.forEach((img) => {
+        const frame = img.closest('.media-frame') || img.parentElement;
+        if (!frame) return;
+        const rect = frame.getBoundingClientRect();
+        if (rect.bottom < -80 || rect.top > viewport + 80) return;
+        const progress = (rect.top + rect.height / 2 - viewport / 2) / viewport;
+        img.style.transform = `translate3d(0, ${(progress * -6).toFixed(2)}%, 0) scale(1.1)`;
+      });
+    };
+
+    const requestUpdate = () => {
+      if (!rafId) rafId = requestAnimationFrame(update);
+    };
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    update();
+  }
+
+  /* ---------------------------------------------------------------
+     Autoplay video hygiene
+     --------------------------------------------------------------- */
+  const autoplayVideos = Array.from(document.querySelectorAll<HTMLVideoElement>('video[data-autoplay]'));
+
+  autoplayVideos.forEach((video) => {
+    if (reduceMotion) {
+      video.pause();
+      video.removeAttribute('autoplay');
+      return;
+    }
+
+    if (supportsIO) {
+      const videoObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              video.play().catch(() => {});
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.15 }
+      );
+      videoObserver.observe(video);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        video.pause();
+      } else {
+        const rect = video.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) video.play().catch(() => {});
+      }
+    });
+  });
+</script>

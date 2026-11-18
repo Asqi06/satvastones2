@@ -56,7 +56,7 @@ interface Props {
 
 const { category, products } = Astro.props;
 
-// Keyword-targeted SEO Titles & Meta descriptions following Google Best Practices
+// Keyword-targeted SEO titles & meta descriptions
 const seoTitles: Record<string, string> = {
   'bracelets': 'Buy Anti Tarnish Jewellery Bracelets Online in India at Best Prices | Satvastones',
   'jewellery-set': 'Buy Anti Tarnish Jewellery Sets Online in India at Best Prices | Satvastones',
@@ -88,7 +88,6 @@ const pageDescription = seoDescriptions[category.slug] || category.description;
 
 const siteUrl = 'https://www.satvastones.in';
 
-// Structured Data: ItemList Schema & Breadcrumbs
 const breadcrumbs = [
   { name: 'Home', url: '/' },
   { name: 'Shop', url: '/shop' },
@@ -110,7 +109,6 @@ const itemListSchema = {
   }))
 };
 
-// Category Buying Guide & FAQ structured data
 const categoryFaqs = [
   {
     q: `Are Satvastones ${category.name.toLowerCase()} genuinely 100% waterproof and anti-tarnish?`,
@@ -138,6 +136,10 @@ const categoryFaqSchema = {
     }
   }))
 };
+
+const heroImage = category.image.replace(/w=\d+/, 'w=900');
+const staticSignature = products.map((p) => `${p.id}:${p.pricePaise}`).join('|');
+const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug).slice(0, 4);
 ---
 
 <BaseLayout
@@ -146,136 +148,183 @@ const categoryFaqSchema = {
   schema={[itemListSchema, categoryFaqSchema]}
   breadcrumbs={breadcrumbs}
 >
-  <!-- Atelier Header Banner -->
-  <div class="bg-[#faf8f5] border-b border-[#eae4dc] py-8 sm:py-14">
-    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
-      <span id="collection-tagline" class="inline-flex items-center gap-1.5 bg-white text-[#9f4553] text-[11px] font-bold uppercase tracking-[0.16em] px-4 py-1.5 rounded-full border border-[#eae4dc] shadow-2xs">
-        <span class="text-[#c5a059]">✦</span>
-        <span>{category.tagline}</span>
-      </span>
-      <h1 id="collection-title" class="font-serif text-3xl sm:text-5xl font-normal text-[#171513] tracking-tight">
-        {category.name}
-      </h1>
-      <p id="collection-desc" class="text-xs sm:text-sm text-[#6e6863] max-w-xl mx-auto leading-relaxed">
-        {category.description}
-      </p>
-    </div>
-  </div>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <!-- Editorial collection header -->
+    <header class="mx-auto max-w-[1440px] px-5 pt-6 sm:px-8 sm:pt-8 lg:px-10">
+      <nav aria-label="Breadcrumb" class="mb-7">
+        <ol class="flex items-center gap-2 overflow-x-auto whitespace-nowrap text-[10px] uppercase tracking-[0.16em] text-[#8a8279] scrollbar-none">
+          <li><a href="/" class="transition-colors hover:text-[#14110f]">Home</a></li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li><a href="/shop" class="transition-colors hover:text-[#14110f]">Shop</a></li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li aria-current="page" class="text-[#14110f]">{category.name}</li>
+        </ol>
+      </nav>
 
-  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-    <!-- Breadcrumbs -->
-    <nav class="flex items-center gap-2 text-xs text-[#888888] mb-5">
-      <a href="/" class="hover:text-[#171513] transition-colors">Home</a>
-      <span>/</span>
-      <a href="/shop" class="hover:text-[#171513] transition-colors">Shop</a>
-      <span>/</span>
-      <span class="text-[#171513] font-semibold">{category.name}</span>
-    </nav>
+      <div class="grid items-center gap-8 pb-9 lg:grid-cols-12 lg:gap-12 lg:pb-12">
+        <div class="lg:col-span-7">
+          <p id="collection-tagline" class="eyebrow text-[#8d3f3d]">✦ {category.tagline}</p>
+          <h1 id="collection-title" class="font-display mt-3 text-[2.75rem] leading-[0.95] tracking-[-0.035em] sm:text-[4.25rem] lg:text-[5rem]">
+            {category.name}
+          </h1>
+          <p id="collection-desc" class="mt-5 max-w-xl text-[13px] leading-relaxed text-[#5f5851]">
+            {category.description}
+          </p>
+          <p class="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+            <span>{products.length} pieces</span>
+            <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+            <span>Free delivery over ₹499</span>
+            <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+            <span>24–48h dispatch</span>
+          </p>
+        </div>
 
-    <!-- Quick Navigation Category Pills Strip -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none">
-      <a
-        href="/shop"
-        class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors bg-[#faf8f5] text-[#332f2c] border border-[#eae4dc] hover:bg-[#f2ece4]"
-      >
-        All Suites ({PRODUCTS.length})
-      </a>
-      {CATEGORIES.map((cat) => {
-        const isCurrent = cat.slug === category.slug;
-        return (
-          <a
-            href={`/collections/${cat.slug}`}
-            class={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-              isCurrent
-                ? 'bg-[#171513] text-white shadow-sm'
-                : 'bg-[#faf8f5] text-[#332f2c] border border-[#eae4dc] hover:bg-[#f2ece4]'
-            }`}
-          >
-            {cat.name} ({cat.itemCount})
-          </a>
-        );
-      })}
-    </div>
-
-    {products.length === 0 ? (
-      <div class="text-center py-16 space-y-3 bg-[#faf8f5] rounded-[24px] p-8 border border-[#eae4dc]">
-        <h2 class="font-serif text-2xl font-normal text-[#171513]">New Designs In Production</h2>
-        <p class="text-xs sm:text-sm text-[#6e6863] max-w-md mx-auto">
-          Our Vapi atelier is hand-crafting new pieces for this collection. Explore other trending suites in the meantime.
-        </p>
-        <div class="pt-2">
-          <a
-            href="/shop"
-            class="inline-block bg-[#171513] hover:bg-[#9f4553] text-white px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
-          >
-            Browse All Jewellery →
-          </a>
+        <div class="lg:col-span-5">
+          <div class="media-frame aspect-[16/10] overflow-hidden bg-[#f1ece3] sm:aspect-[16/9] lg:aspect-[4/3]">
+            <img
+              src={heroImage}
+              alt={`${category.name} — anti-tarnish waterproof 18K gold jewellery by Satvastones`}
+              width="900"
+              height="675"
+              loading="eager"
+              fetchpriority="high"
+              class="h-full w-full object-cover"
+            />
+          </div>
         </div>
       </div>
-    ) : (
-      <div>
-        <div class="flex items-center justify-between pb-3 mb-6 border-b border-[#eae4dc]">
-          <span id="collection-count-badge" class="text-xs text-[#6e6863] font-medium">
-            Showing {products.length} {category.name} Pieces
-          </span>
-          <span class="text-xs font-semibold text-[#171513] flex items-center gap-1.5">
-            <span class="text-[#c5a059]">✦</span>
-            <span>Free Express Delivery &gt; ₹499 • 24–48h Dispatch</span>
-          </span>
-        </div>
+    </header>
 
-        <!-- 2-Column Mobile Grid / 4-Column Desktop -->
-        <div id="collection-products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {products.map((product) => (
-            <ProductCard product={product} />
+    <!-- Category rail -->
+    <div class="border-y border-[#e5ded3]">
+      <div class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10">
+        <div class="scrollbar-none flex items-center gap-7 overflow-x-auto py-4 text-[10px] uppercase tracking-[0.16em]">
+          <a href="/shop" class="whitespace-nowrap pb-0.5 text-[#7d756c] transition-colors hover:text-[#14110f]">
+            All pieces
+          </a>
+          {CATEGORIES.map((cat) => (
+            <a
+              href={`/collections/${cat.slug}`}
+              aria-current={cat.slug === category.slug ? 'page' : undefined}
+              class={`whitespace-nowrap pb-0.5 transition-colors hover:text-[#14110f] ${
+                cat.slug === category.slug
+                  ? 'border-b border-[#14110f] text-[#14110f]'
+                  : 'text-[#7d756c]'
+              }`}
+            >
+              {cat.name}
+            </a>
           ))}
         </div>
       </div>
-    )}
+    </div>
 
-    <!-- Category Informational SEO, Buying Guide & FAQ Section -->
-    <div class="mt-14 pt-8 bg-[#faf8f5] border border-[#eae4dc] rounded-[24px] p-6 sm:p-10 space-y-6">
-      <div class="space-y-2">
-        <div class="flex items-center gap-2 text-[#9f4553] font-bold text-xs uppercase tracking-[0.14em]">
-          <span class="text-[#c5a059]">✦</span>
-          <span>Atelier Buying Guide: Satvastones {category.name} in India</span>
+    <div class="mx-auto max-w-[1440px] px-5 pb-16 pt-8 sm:px-8 lg:px-10">
+      {products.length === 0 ? (
+        <div class="border border-[#e5ded3] bg-[#f4efe7] px-6 py-16 text-center">
+          <p class="eyebrow text-[#8d3f3d]">In production</p>
+          <h2 class="font-display mt-3 text-[2rem] leading-tight sm:text-[2.6rem]">New designs,<br />almost ready.</h2>
+          <p class="mx-auto mt-3 max-w-md text-[13px] leading-relaxed text-[#5f5851]">
+            Our Vapi atelier is hand-finishing new pieces for this collection. In the meantime, explore the full permanent collection.
+          </p>
+          <a href="/shop" class="mt-6 inline-flex items-center gap-2 bg-[#14110f] px-7 py-3.5 text-[10px] uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]">
+            Browse all jewellery <span aria-hidden="true">→</span>
+          </a>
         </div>
-        <p class="text-xs sm:text-sm text-[#4a443f] leading-relaxed">
-          Every piece in our {category.name.toLowerCase()} collection is engineered from solid 316L surgical stainless steel with authentic 18K gold vacuum PVD coating. They are 100% waterproof, sweat-resistant, shower-safe, and guaranteed never to leave green skin marks. All orders are hand-inspected and dispatched directly from our Vapi store location in Gujarat within 24 to 48 hours.
-        </p>
-      </div>
-
-      <!-- FAQ Accordion for Category -->
-      <div class="space-y-3 pt-2 border-t border-[#eae4dc]">
-        <h3 class="text-xs font-bold text-[#171513] uppercase tracking-wider">
-          Frequently Asked Questions About {category.name}
-        </h3>
-        {categoryFaqs.map((faq, idx) => (
-          <details class="group bg-white rounded-xl border border-[#eae4dc] p-4 [&_summary::-webkit-details-marker]:hidden open:shadow-2xs transition-all">
-            <summary class="flex items-center justify-between cursor-pointer font-semibold text-xs sm:text-sm text-[#171513] select-none">
-              <span class="pr-2">{faq.q}</span>
-              <span class="text-[#99918b] group-open:rotate-180 group-open:text-[#171513] transition-transform duration-200 shrink-0 text-xs">
-                ▼
-              </span>
-            </summary>
-            <p class="pt-2 text-xs sm:text-sm text-[#4a443f] leading-relaxed border-t border-[#eae4dc] mt-2">
-              {faq.a}
+      ) : (
+        <>
+          <!-- Toolbar -->
+          <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <p id="collection-count-badge" class="text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
+              Showing {products.length} pieces
             </p>
-          </details>
-        ))}
-      </div>
+            <label class="flex items-center gap-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+              <span>Sort</span>
+              <select
+                id="collection-sort"
+                class="cursor-pointer border border-[#d8d0c4] bg-transparent py-2 pl-2 pr-6 text-[10px] uppercase tracking-[0.12em] text-[#14110f] focus:border-[#14110f] focus:outline-none"
+              >
+                <option value="curated">Editor's pick</option>
+                <option value="price-asc">Price: low to high</option>
+                <option value="price-desc">Price: high to low</option>
+                <option value="name">Name: A–Z</option>
+              </select>
+            </label>
+          </div>
 
-      <div class="pt-2 flex flex-wrap gap-4 text-xs font-semibold">
-        <a href="/materials" class="text-[#9f4553] hover:text-[#171513] underline transition-colors">
-          Learn about 316L Surgical Steel &rarr;
-        </a>
-        <a href="/faqs#styling-guide" class="text-[#9f4553] hover:text-[#171513] underline transition-colors">
-          How to Style with Saree &rarr;
-        </a>
-        <a href="/track-order" class="text-[#9f4553] hover:text-[#171513] underline transition-colors">
-          Track Your Delivery &rarr;
-        </a>
-      </div>
+          <div
+            id="collection-products-grid"
+            data-static-signature={staticSignature}
+            class="grid grid-cols-2 gap-x-3 gap-y-9 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4 lg:gap-6"
+          >
+            {products.map((product) => (
+              <div class="shop-item" data-price={product.pricePaise} data-name={product.name}>
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+
+          <!-- Stacking nudge -->
+          <a
+            href="/stack-builder"
+            class="group mt-12 flex flex-col justify-between gap-3 border border-[#e0d7c9] bg-[#f4efe7] px-5 py-4 transition-colors hover:border-[#c5a059] sm:flex-row sm:items-center"
+          >
+            <div class="flex flex-wrap items-baseline gap-3">
+              <span class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">The stacking edit</span>
+              <span class="text-[13px] text-[#14110f]">Pair this collection with another — save 15% on two or more.</span>
+            </div>
+            <span class="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[#14110f]">
+              Build your stack
+              <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+            </span>
+          </a>
+        </>
+      )}
+
+      <!-- Buying guide + FAQ -->
+      <section class="mt-16 grid gap-10 border-t border-[#e5ded3] pt-10 lg:grid-cols-12 lg:gap-14" aria-labelledby="collection-guide-title">
+        <div class="lg:col-span-5">
+          <p class="eyebrow text-[#8d3f3d]">The buying guide</p>
+          <h2 id="collection-guide-title" class="font-display mt-2 text-[1.9rem] leading-tight sm:text-[2.4rem]">
+            {category.name},<br class="hidden sm:block" /> explained.
+          </h2>
+          <p class="mt-4 text-[13px] leading-relaxed text-[#5f5851]">
+            Every piece in our {category.name.toLowerCase()} collection is engineered from solid 316L surgical stainless steel with authentic 18K gold vacuum PVD coating. 100% waterproof, sweat-resistant, shower-safe, and guaranteed never to leave green skin marks. All orders are hand-inspected and dispatched from our Vapi store in Gujarat within 24–48 hours.
+          </p>
+
+          <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em]">
+            <a href="/materials" class="link-line text-[#14110f]">316L surgical steel</a>
+            <a href="/jewellery-care" class="link-line text-[#14110f]">Care guide</a>
+            <a href="/faqs" class="link-line text-[#14110f]">Styling FAQ</a>
+          </div>
+
+          <div class="mt-8 border-t border-[#e5ded3] pt-5">
+            <p class="text-[9px] uppercase tracking-[0.2em] text-[#8a8279]">Continue browsing</p>
+            <ul class="mt-3 space-y-2">
+              {siblingCollections.map((cat) => (
+                <li>
+                  <a href={`/collections/${cat.slug}`} class="group flex items-center justify-between gap-3 text-[12px] text-[#14110f]">
+                    <span>{cat.name}</span>
+                    <span class="text-[#8a8279] transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-t border-[#e5ded3] lg:col-span-7">
+          {categoryFaqs.map((faq) => (
+            <details class="group border-b border-[#e5ded3] py-5 [&_summary::-webkit-details-marker]:hidden">
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+                <h3 class="font-display text-[1.1rem] leading-snug text-[#14110f]">{faq.q}</h3>
+                <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="pt-3 text-[13px] leading-relaxed text-[#5f5851]">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
     </div>
   </div>
 
@@ -283,15 +332,19 @@ const categoryFaqSchema = {
     import { getSiteSettings } from '../../stores/adminStore';
     import { getAllCatalogProducts, syncCatalogFromCloudflare } from '../../stores/catalogStore';
 
+    const grid = document.getElementById('collection-products-grid') as HTMLElement | null;
+    const staticSignature = grid?.dataset.staticSignature || '';
+    let lastSignature = '';
+
+    const buildSignature = (items: { id: string; pricePaise: number }[]) =>
+      items.map((p) => `${p.id}:${p.pricePaise}`).join('|');
+
     function renderCollectionProducts() {
       const slug = window.location.pathname.split('/').filter(Boolean).pop();
-      if (!slug) return;
-
-      const grid = document.getElementById('collection-products-grid');
-      if (!grid) return;
+      if (!slug || !grid) return;
 
       const all = getAllCatalogProducts();
-      let matched = [];
+      let matched: typeof all = [];
       if (slug === 'bestsellers') {
         matched = all.filter((p) => p.isBestseller);
       } else if (slug === 'new-arrivals') {
@@ -301,82 +354,77 @@ const categoryFaqSchema = {
       }
 
       const countBadge = document.getElementById('collection-count-badge');
-      if (countBadge) countBadge.textContent = `Showing ${matched.length} Pieces`;
+      if (countBadge) countBadge.textContent = `Showing ${matched.length} pieces`;
+
+      const signature = buildSignature(matched);
+      if (signature === lastSignature) return;
+      lastSignature = signature;
+
+      // Keep the server-rendered editorial cards when the catalogue is unchanged.
+      if (signature === staticSignature) return;
 
       if (matched.length === 0) {
         grid.innerHTML = `
-          <div class="col-span-full py-16 text-center space-y-3">
-            <p class="font-serif text-xl sm:text-2xl text-[#171513]">No suites currently in this collection.</p>
-            <p class="text-xs text-[#8c827a]">Explore our full permanent collection in the Atelier Shop.</p>
-            <a href="/shop" class="inline-block mt-3 px-6 py-2.5 bg-[#171513] text-white rounded-full text-xs font-bold uppercase tracking-wider">Explore Shop</a>
-          </div>
-        `;
+          <div class="col-span-full py-16 text-center">
+            <p class="font-display text-2xl text-[#14110f]">No pieces in this collection right now.</p>
+            <p class="mt-2 text-xs text-[#8a8279]">Explore the full permanent collection in the atelier shop.</p>
+            <a href="/shop" class="mt-5 inline-block bg-[#14110f] px-6 py-3 text-[10px] uppercase tracking-[0.16em] text-[#f6f1e8]">Explore shop</a>
+          </div>`;
         return;
       }
 
-      grid.innerHTML = matched.map((product) => {
-        const discountPercent = product.compareAtPricePaise
-          ? Math.round(((product.compareAtPricePaise - product.pricePaise) / product.compareAtPricePaise) * 100)
-          : 0;
+      grid.innerHTML = matched
+        .map((product) => {
+          const discountPercent = product.compareAtPricePaise
+            ? Math.round(((product.compareAtPricePaise - product.pricePaise) / product.compareAtPricePaise) * 100)
+            : 0;
+          const primaryImage =
+            product.images?.[0]?.url ||
+            'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=450&q=80';
+          const priceRupees = Math.round(product.pricePaise / 100);
+          const compareRupees = product.compareAtPricePaise ? Math.round(product.compareAtPricePaise / 100) : null;
 
-        const primaryImage = product.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=450&q=80';
-        const priceRupees = Math.round(product.pricePaise / 100);
-        const compareRupees = product.compareAtPricePaise ? Math.round(product.compareAtPricePaise / 100) : null;
-
-        return `
-          <div class="product-card group relative flex flex-col bg-white border border-[#eae4dc] rounded-[18px] overflow-hidden transition-all duration-300 hover:shadow-[0_12px_28px_rgba(23,21,19,0.06)] hover:border-[#c5a059]/40">
-            <a href="/products/${product.slug}" class="relative block aspect-[3/4] overflow-hidden bg-[#faf8f5] rounded-t-[18px]" aria-label="${product.name}">
-              <div class="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
-                ${product.isBestseller ? `<span class="bg-[#9f4553] text-white text-[9px] font-bold uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full shadow-2xs">Bestseller</span>` : ''}
-                ${product.isNewArrival && !product.isBestseller ? `<span class="bg-[#c5a059] text-white text-[9px] font-bold uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full shadow-2xs">New</span>` : ''}
-                ${discountPercent > 0 ? `<span class="bg-[#171513] text-[#fbf8f5] text-[9px] font-bold px-2 py-0.5 rounded-full shadow-2xs">-${discountPercent}%</span>` : ''}
-              </div>
-              <img
-                src="${primaryImage}"
-                alt="${product.name}"
-                class="product-card-image absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-            </a>
-
-            <div class="p-3 sm:p-4 flex flex-col flex-1 justify-between bg-white space-y-2.5">
-              <div>
-                <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#9f4553]">
-                  ${product.category || 'Atelier Fine Suite'}
-                </p>
-                <h3 class="font-serif text-xs sm:text-sm font-semibold text-[#171513] mt-0.5 line-clamp-1 hover:text-[#9f4553]">
-                  <a href="/products/${product.slug}">${product.name}</a>
-                </h3>
-              </div>
-
-              <div class="pt-2 border-t border-[#f0eae1] flex items-center justify-between">
-                <div class="flex items-baseline gap-1.5">
-                  <span class="font-serif font-bold text-sm sm:text-base text-[#171513]">
-                    ₹${priceRupees.toLocaleString('en-IN')}
-                  </span>
-                  ${compareRupees ? `<span class="text-[11px] text-[#8c827a] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>` : ''}
+          return `
+            <div class="shop-item" data-price="${product.pricePaise}" data-name="${product.name}">
+              <div class="product-card group relative flex flex-col">
+                <a href="/products/${product.slug}" class="relative block aspect-[3/4] overflow-hidden bg-[#f1ece3]" aria-label="${product.name}">
+                  <div class="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">
+                    ${product.isBestseller ? `<span class="bg-[#14110f] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8]">Bestseller</span>` : ''}
+                    ${product.isNewArrival && !product.isBestseller ? `<span class="bg-[#f6f1e8] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-[#14110f]">New</span>` : ''}
+                    ${discountPercent > 0 ? `<span class="bg-[#c5a059] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-white">−${discountPercent}%</span>` : ''}
+                  </div>
+                  <img src="${primaryImage}" alt="${product.name}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                </a>
+                <div class="flex flex-1 flex-col gap-2.5 pt-3.5">
+                  <div class="min-w-0">
+                    <h3 class="font-serif text-[15px] leading-snug text-[#14110f] sm:text-base">
+                      <a href="/products/${product.slug}">${product.name}</a>
+                    </h3>
+                    <p class="mt-1 line-clamp-1 text-[9px] uppercase tracking-[0.14em] text-[#8b837a]">${product.material || product.category || '18K gold PVD'}</p>
+                  </div>
+                  <div class="mt-auto space-y-2.5">
+                    <div class="flex items-baseline gap-2">
+                      <span class="text-sm font-medium text-[#14110f] sm:text-[15px]">₹${priceRupees.toLocaleString('en-IN')}</span>
+                      ${compareRupees ? `<span class="text-[11px] text-[#a39a91] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>` : ''}
+                    </div>
+                    <button
+                      type="button"
+                      data-add-to-bag="${product.id}"
+                      data-name="${product.name}"
+                      data-slug="${product.slug}"
+                      data-price="${product.pricePaise}"
+                      data-image="${primaryImage}"
+                      class="custom-add-to-bag w-full cursor-pointer border border-[#14110f]/25 py-2.5 text-[9px] font-medium uppercase tracking-[0.2em] text-[#14110f] transition-colors duration-300 hover:border-[#14110f] hover:bg-[#14110f] hover:text-[#f6f1e8]"
+                    >
+                      Add to bag
+                    </button>
+                  </div>
                 </div>
-                <button
-                  type="button"
-                  data-add-to-bag="${product.id}"
-                  data-name="${product.name}"
-                  data-slug="${product.slug}"
-                  data-price="${product.pricePaise}"
-                  data-image="${primaryImage}"
-                  class="custom-add-to-bag w-8 h-8 rounded-full bg-[#171513] hover:bg-[#9f4553] text-white flex items-center justify-center transition-transform hover:scale-110 active:scale-95 shadow-xs cursor-pointer"
-                  title="Add to shopping bag"
-                >
-                  <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-                </button>
               </div>
-            </div>
-          </div>
-        `;
-      }).join('');
+            </div>`;
+        })
+        .join('');
 
-      // Wire Add to Bag buttons
       grid.querySelectorAll('.custom-add-to-bag').forEach((btn) => {
         btn.addEventListener('click', (e) => {
           e.preventDefault();
@@ -407,7 +455,7 @@ const categoryFaqSchema = {
           const descEl = document.getElementById('collection-desc');
 
           if (titleEl && customCat.name) titleEl.textContent = customCat.name;
-          if (taglineEl && customCat.tagline) taglineEl.textContent = customCat.tagline;
+          if (taglineEl && customCat.tagline) taglineEl.textContent = `✦ ${customCat.tagline}`;
           if (descEl && customCat.description) descEl.textContent = customCat.description;
         }
       }
@@ -421,6 +469,24 @@ const categoryFaqSchema = {
     document.addEventListener('astro:page-load', () => {
       renderCollectionProducts();
       syncCatalogFromCloudflare().then(() => renderCollectionProducts());
+    });
+
+    // Sorting
+    const sortSelect = document.getElementById('collection-sort') as HTMLSelectElement | null;
+    sortSelect?.addEventListener('change', () => {
+      if (!grid) return;
+      const items = Array.from(grid.querySelectorAll<HTMLElement>('.shop-item'));
+      const mode = sortSelect.value;
+      const priceOf = (el: HTMLElement) => Number(el.dataset.price || 0);
+      const nameOf = (el: HTMLElement) => (el.dataset.name || '').toLowerCase();
+
+      items.sort((a, b) => {
+        if (mode === 'price-asc') return priceOf(a) - priceOf(b);
+        if (mode === 'price-desc') return priceOf(b) - priceOf(a);
+        if (mode === 'name') return nameOf(a).localeCompare(nameOf(b));
+        return 0;
+      });
+      items.forEach((item) => grid.appendChild(item));
     });
   </script>
 </BaseLayout>

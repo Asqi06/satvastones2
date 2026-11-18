@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
 
 // Structured FAQ data organized by category
 const faqCategories = [
@@ -139,107 +140,151 @@ const breadcrumbs = [
   schema={faqSchema}
   breadcrumbs={breadcrumbs}
 >
-  <!-- Jewelsmars Clean Header -->
-  <div class="bg-white border-b border-gray-100 py-8 sm:py-12">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
-      <span class="inline-block bg-[#ffe7e9] text-[#a1505a] text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">
-        Help &amp; Knowledge Masterclass
-      </span>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-        Frequently Asked Questions &amp; Jewellery Guides
-      </h1>
-      <p class="text-xs sm:text-sm text-gray-500 max-w-xl mx-auto leading-relaxed">
-        Everything you need to know about anti-tarnish metallurgy, saree jewellery styling, home gold cleaning, 24–48h Vapi dispatch, and courier policies.
-      </p>
-    </div>
-  </div>
-
-  <div class="max-w-[960px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-12">
-    
-    <!-- Quick Topic Navigation Pills -->
-    <div class="flex flex-wrap items-center justify-center gap-2 pb-2">
-      <a href="#styling-guide" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
-        Styling &amp; Saree Guide
-      </a>
-      <a href="#cleaning-guide" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
-        Gold Cleaning at Home
-      </a>
-      <a href="#metallurgy-guide" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
-        Anti-Tarnish Metallurgy
-      </a>
-      <a href="#shipping-policy" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
-        Vapi Dispatch &amp; Shipping
-      </a>
-      <a href="#returns-policy" class="text-xs font-semibold px-3.5 py-1.5 rounded-full bg-gray-100 hover:bg-[#ffe7e9] hover:text-[#a1505a] text-gray-700 transition-colors">
-        Unboxing Video &amp; Damage
-      </a>
-    </div>
-
-    {faqCategories.map((cat, catIdx) => (
-      <section class="space-y-4" id={`cat-section-${catIdx}`}>
-        <div class="border-b border-gray-100 pb-2.5">
-          <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-[#f2707f]"></span>
-            <h2 class="text-base sm:text-lg font-bold text-gray-900 tracking-tight">
-              {cat.category}
-            </h2>
-          </div>
-          <p class="text-xs text-gray-400 mt-0.5 ml-4.5">{cat.tagline}</p>
-        </div>
-
-        <div class="space-y-3">
-          {cat.items.map((item, itemIdx) => (
-            <details
-              class="group bg-white border border-gray-200 rounded-[18px] p-4 sm:p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-all duration-200 shadow-2xs"
-              open={catIdx === 0 && itemIdx < 2}
-            >
-              <summary class="flex items-center justify-between cursor-pointer font-bold text-xs sm:text-sm text-gray-900 select-none">
-                <span class="pr-4 leading-snug">{item.q}</span>
-                <span class="text-gray-400 group-open:rotate-180 group-open:text-[#f2707f] transition-transform duration-200 shrink-0 text-xs">
-                  ▼
-                </span>
-              </summary>
-              <div class="pt-3 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-3 whitespace-pre-line">
-                {item.a}
-              </div>
-            </details>
-          ))}
-        </div>
-      </section>
-    ))}
-
-    <!-- Callout Box: Unboxing Video Policy Alert -->
-    <div class="bg-amber-50/70 border border-amber-200 rounded-[20px] p-5 sm:p-6 space-y-2">
-      <div class="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase tracking-wider">
-        <svg class="w-4 h-4 text-amber-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-        </svg>
-        <span>Important Advisory on Transit Damage Claims</span>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <PageIntro
+      eyebrow="Help & knowledge"
+      title="Good questions, straight answers."
+      lede="Metallurgy, saree styling, the cleaning ritual, Vapi dispatch and the unboxing rule — written out in full, without the marketing gloss."
+      crumbs={breadcrumbs}
+    >
+      <div class="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+        <span>{allFaqItems.length} answers</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>5 topics</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>Updated January 2026</span>
       </div>
-      <p class="text-xs text-amber-800 leading-relaxed">
-        Every Satvastones parcel is bubble-wrapped in reinforced tampering-evident envelopes before dispatch from Vapi. If you observe any physical transit damage, <strong>an unedited, continuous 360-degree video proof of the unopened package being cut open</strong> is mandatory to process a free express replacement.
-      </p>
+    </PageIntro>
+
+    <!-- Topic rail -->
+    <div class="border-y border-[#e5ded3] bg-[#f4efe7]">
+      <div class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10">
+        <nav aria-label="FAQ topics" class="scrollbar-none flex gap-x-6 overflow-x-auto whitespace-nowrap py-3.5">
+          {faqCategories.map((cat, i) => (
+            <a
+              href={`#faq-${i}`}
+              class="text-[10px] uppercase tracking-[0.14em] text-[#6f675f] transition-colors hover:text-[#14110f]"
+            >
+              {cat.category.split(' & ')[0]}
+            </a>
+          ))}
+        </nav>
+      </div>
     </div>
 
-    <!-- Help Banner -->
-    <div class="bg-[#fffafb] border border-[#f9d8dc] rounded-[24px] p-6 sm:p-8 text-center space-y-3">
-      <h3 class="text-base sm:text-lg font-bold text-gray-900">Still have a question or need styling advice?</h3>
-      <p class="text-xs sm:text-sm text-gray-500 max-w-md mx-auto">
-        Our customer support team and jewellery stylists are available Monday to Saturday (10 AM to 7 PM IST).
-      </p>
-      <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
-        <a
-          href="mailto:support@satvastones.in"
-          class="inline-block bg-[#f2707f] hover:bg-[#e05e6d] text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all"
-        >
-          Email support@satvastones.in
-        </a>
-        <a
-          href="/track-order"
-          class="inline-block bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all"
-        >
-          Track My Order
-        </a>
+    <div class="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10">
+      <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
+        <!-- Sticky index -->
+        <aside class="hidden lg:col-span-3 lg:block">
+          <div class="sticky top-24">
+            <p class="eyebrow text-[#8d3f3d]">On this page</p>
+            <ol class="mt-4 space-y-3">
+              {faqCategories.map((cat, i) => (
+                <li class="flex gap-3">
+                  <span class="mt-0.5 font-display text-[11px] leading-none text-[#c5a059]">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <a href={`#faq-${i}`} class="text-[11.5px] leading-snug text-[#5f5851] transition-colors hover:text-[#14110f]">
+                    {cat.category}
+                  </a>
+                </li>
+              ))}
+            </ol>
+
+            <div class="mt-8 border-t border-[#e5ded3] pt-5">
+              <p class="text-[11px] leading-relaxed text-[#8a8279]">Still stuck?</p>
+              <a href="/contact" class="link-line mt-2 inline-flex text-[10px] uppercase tracking-[0.14em] text-[#14110f]">
+                Ask us directly
+              </a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Questions -->
+        <div class="space-y-12 lg:col-span-9">
+          {faqCategories.map((cat, catIdx) => (
+            <section id={`faq-${catIdx}`} class="scroll-mt-24" aria-labelledby={`faq-heading-${catIdx}`}>
+              <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#ded5c7] pb-3">
+                <h2 id={`faq-heading-${catIdx}`} class="font-display text-[1.5rem] leading-tight sm:text-[1.9rem]">
+                  {cat.category}
+                </h2>
+                <span class="text-[9px] uppercase tracking-[0.14em] text-[#8a8279]">
+                  {String(catIdx + 1).padStart(2, '0')} / {String(faqCategories.length).padStart(2, '0')}
+                </span>
+              </div>
+              <p class="mt-2 max-w-xl text-[12px] leading-relaxed text-[#8a8279]">{cat.tagline}</p>
+
+              <div class="mt-5 divide-y divide-[#e5ded3] border-y border-[#e5ded3] bg-white">
+                {cat.items.map((item, itemIdx) => (
+                  <details
+                    class="group [&_summary::-webkit-details-marker]:hidden"
+                    open={catIdx === 0 && itemIdx < 2}
+                  >
+                    <summary class="flex cursor-pointer select-none items-start justify-between gap-4 px-4 py-4 transition-colors hover:bg-[#fbf9f5] sm:px-5 sm:py-5">
+                      <span class="text-[13px] leading-snug text-[#14110f] sm:text-[13.5px]">{item.q}</span>
+                      <span
+                        class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border border-[#d8d0c4] text-[#6f675f] transition-transform duration-200 group-open:rotate-45 group-open:border-[#14110f] group-open:text-[#14110f]"
+                        aria-hidden="true"
+                      >
+                        <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                          <path stroke-linecap="round" d="M12 5v14M5 12h14" />
+                        </svg>
+                      </span>
+                    </summary>
+                    <div class="whitespace-pre-line border-t border-[#eee8df] bg-[#fbf9f5] px-4 py-4 text-[12px] leading-relaxed text-[#4a443f] sm:px-5 sm:py-5">
+                      {item.a}
+                    </div>
+                  </details>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          <!-- Advisory -->
+          <section class="border border-[#e6d6bb] bg-[#faf3e6] p-5 sm:p-6" aria-labelledby="faq-advisory-title">
+            <div class="flex items-start gap-3">
+              <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center border border-[#e6d6bb] bg-white text-[#8a5314]" aria-hidden="true">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m0 3h.008M12 3l9 16.5H3L12 3z" />
+                </svg>
+              </span>
+              <div>
+                <h2 id="faq-advisory-title" class="text-[10px] font-medium uppercase tracking-[0.16em] text-[#8a5314]">
+                  Transit damage claims
+                </h2>
+                <p class="mt-2 text-[12px] leading-relaxed text-[#6b4a1c]">
+                  Every parcel is bubble-wrapped in tamper-evident packaging before dispatch from Vapi. If it arrives damaged, an unedited, continuous 360° video of the sealed package being cut open is mandatory for a free express replacement.
+                </p>
+                <a href="/refund-policy" class="link-line mt-3 inline-flex text-[10px] uppercase tracking-[0.14em] text-[#6b4a1c]">
+                  Read the full policy
+                </a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Help -->
+          <section class="border border-[#e0d7c9] bg-[#f4efe7] p-6 sm:p-8" aria-labelledby="faq-help-title">
+            <div class="grid items-center gap-6 sm:grid-cols-12">
+              <div class="sm:col-span-7">
+                <p class="eyebrow text-[#8d3f3d]">Still need a human</p>
+                <h2 id="faq-help-title" class="font-display mt-2 text-[1.7rem] leading-tight sm:text-[2.1rem]">
+                  Ask us directly.
+                </h2>
+                <p class="mt-2 max-w-sm text-[12px] leading-relaxed text-[#5f5851]">
+                  Support and styling advice, Monday to Saturday, 10 AM to 7 PM IST. WhatsApp is fastest.
+                </p>
+              </div>
+              <div class="flex flex-col gap-2.5 sm:col-span-5">
+                <a href="https://wa.me/919016703180" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 bg-[#14110f] px-5 py-3.5 text-[10px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors hover:bg-[#2f7d5a]">
+                  WhatsApp support <span aria-hidden="true">→</span>
+                </a>
+                <a href="/track-order" class="flex items-center justify-center gap-2 border border-[#14110f] px-5 py-3.5 text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:bg-[#fbf9f5]">
+                  Track my order
+                </a>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   </div>

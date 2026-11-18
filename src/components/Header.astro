@@ -1,5 +1,11 @@
 ---
-// Header.astro - Premium Editorial Minimalist Header (Mejuri / COS inspired)
+// Header.astro - Editorial transparency on the homepage, solid cream elsewhere.
+export interface Props {
+  overlay?: boolean;
+}
+
+const { overlay = false } = Astro.props;
+
 const navLinks = [
   { name: 'New In', href: '/collections/new-arrivals' },
   { name: 'Rings', href: '/collections/rings' },
@@ -11,69 +17,86 @@ const navLinks = [
 ];
 ---
 
-<header id="main-site-header" class="sticky top-0 z-40 bg-[#fcfbf9]/95 backdrop-blur-md border-b border-[#eae4dc] transition-all duration-300 shadow-[0_2px_15px_rgba(23,21,19,0.03)]">
-  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between">
-    
+<header
+  id="main-site-header"
+  class:list={[
+    'site-header z-40 w-full border-b',
+    overlay
+      ? 'site-header--overlay fixed inset-x-0 top-0 border-transparent'
+      : 'sticky top-0 border-[#eae4dc] bg-[#fcfbf9]/95 backdrop-blur-md'
+  ]}
+  data-overlay={overlay ? 'true' : 'false'}
+>
+  <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-6">
+
     <!-- Left: Mobile Hamburger & Search -->
     <div class="flex items-center gap-1 lg:hidden">
       <button
         id="mobile-menu-toggle"
-        class="p-2 -ml-2 text-[#171513] hover:text-[#9f4553] transition-colors focus:outline-none cursor-pointer"
+        class="p-2 -ml-2 opacity-90 hover:opacity-100 transition-opacity focus:outline-none cursor-pointer"
         aria-label="Open navigation menu"
       >
-        <svg class="w-6 h-6 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-6 h-6 stroke-[1.25]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
         </svg>
       </button>
 
       <button
         id="mobile-search-btn"
-        class="p-2 text-[#171513] hover:text-[#9f4553] transition-colors focus:outline-none cursor-pointer"
+        class="p-2 opacity-90 hover:opacity-100 transition-opacity focus:outline-none cursor-pointer"
         aria-label="Search fine jewellery"
       >
-        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-5 h-5 stroke-[1.25]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
         </svg>
       </button>
     </div>
 
-    <!-- Center/Left Logo: Authentic SatvaStones Cursive Script -->
+    <!-- Logo: dark script on cream, white script over the hero film -->
     <div class="flex items-center">
-      <a href="/" class="flex items-center group py-2" aria-label="Satvastones Fine Jewellery Homepage">
+      <a href="/" class="header-logo group relative flex items-center py-2" aria-label="Satvastones Fine Jewellery Homepage">
         <img
           id="header-logo-img"
           src="/satvastones-logo.png"
           alt="Satvastones Fine Jewellery"
           width="150"
           height="46"
-          class="h-8 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+          class="header-logo-dark h-8 sm:h-10 w-auto object-contain transition-all duration-300 group-hover:scale-[1.02]"
+        />
+        <img
+          src="/satvastones-logo-white.png"
+          alt=""
+          aria-hidden="true"
+          width="150"
+          height="46"
+          class="header-logo-light absolute inset-0 m-auto h-8 sm:h-10 w-auto object-contain opacity-0 transition-all duration-300"
         />
       </a>
     </div>
 
-    <!-- Center Navigation (Desktop): Editorial Spacing & Refined Typography -->
+    <!-- Center Navigation (Desktop) -->
     <nav class="hidden lg:flex items-center space-x-7 xl:space-x-9">
       {navLinks.map((link) => (
         <a
           href={link.href}
-          class="text-[13px] font-medium tracking-[0.04em] text-[#2b2725] hover:text-[#9f4553] transition-colors relative py-1.5 group/nav"
+          class="group/nav relative py-1.5 text-[11px] font-medium uppercase tracking-[0.14em] opacity-75 transition-opacity hover:opacity-100"
         >
           <span>{link.name}</span>
-          <span class="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#9f4553] transition-all duration-200 group-hover/nav:w-full"></span>
+          <span class="absolute bottom-0 left-0 h-px w-0 bg-current transition-all duration-300 group-hover/nav:w-full"></span>
         </a>
       ))}
     </nav>
 
-    <!-- Right Utilities: Clean Minimalist Line Icons -->
+    <!-- Right Utilities -->
     <div class="flex items-center gap-1 sm:gap-2">
       <!-- Desktop Search Icon -->
       <button
         id="desktop-search-btn"
-        class="hidden lg:flex items-center justify-center p-2.5 text-[#2b2725] hover:text-[#9f4553] rounded-full transition-colors cursor-pointer"
+        class="hidden lg:flex items-center justify-center p-2.5 opacity-80 hover:opacity-100 rounded-full transition-opacity cursor-pointer"
         aria-label="Search catalog"
         title="Search (⌘K)"
       >
-        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-5 h-5 stroke-[1.25]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
         </svg>
       </button>
@@ -81,11 +104,11 @@ const navLinks = [
       <!-- Account Icon -->
       <a
         href="/account"
-        class="p-2.5 text-[#2b2725] hover:text-[#9f4553] rounded-full transition-colors"
+        class="p-2.5 opacity-80 hover:opacity-100 rounded-full transition-opacity"
         aria-label="Member Account"
         title="Account"
       >
-        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-5 h-5 stroke-[1.25]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
         </svg>
       </a>
@@ -93,16 +116,16 @@ const navLinks = [
       <!-- Wishlist Icon -->
       <a
         href="/wishlist"
-        class="p-2.5 text-[#2b2725] hover:text-[#9f4553] rounded-full transition-colors relative"
+        class="p-2.5 opacity-80 hover:opacity-100 rounded-full transition-opacity relative"
         aria-label="Saved Wishlist"
         title="Wishlist"
       >
-        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-5 h-5 stroke-[1.25]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
         </svg>
         <span
           id="header-wishlist-count"
-          class="absolute top-1.5 right-1.5 w-4 h-4 bg-[#9f4553] text-white text-[9px] font-bold rounded-full flex items-center justify-center opacity-0 transition-opacity"
+          class="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center bg-[#8d3f3d] px-1 text-[8px] font-medium leading-none text-[#f6f1e8] opacity-0 transition-opacity"
         >
           0
         </span>
@@ -111,16 +134,16 @@ const navLinks = [
       <!-- Shopping Bag Icon -->
       <button
         id="header-cart-toggle"
-        class="p-2.5 text-[#2b2725] hover:text-[#9f4553] rounded-full transition-colors relative cursor-pointer"
+        class="p-2.5 opacity-80 hover:opacity-100 rounded-full transition-opacity relative cursor-pointer"
         aria-label="Open Shopping Bag"
         title="Shopping Bag"
       >
-        <svg class="w-5 h-5 stroke-[1.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="w-5 h-5 stroke-[1.25]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
         </svg>
         <span
           id="header-cart-count"
-          class="absolute top-1.5 right-1.5 w-4 h-4 bg-[#9f4553] text-white text-[9px] font-bold rounded-full flex items-center justify-center opacity-0 transition-opacity"
+          class="absolute right-0.5 top-0.5 flex h-4 min-w-4 items-center justify-center bg-[#14110f] px-1 text-[8px] font-medium leading-none text-[#f6f1e8] opacity-0 transition-opacity"
         >
           0
         </span>
@@ -173,15 +196,15 @@ const navLinks = [
     
     <!-- Primary Category Links -->
     <div class="space-y-1">
-      <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">Collections</p>
+      <p class="mb-2 text-[9px] uppercase tracking-[0.18em] text-[#8a8279]">Collections</p>
       {navLinks.map((link) => (
         <a
           href={link.href}
-          class="flex items-center justify-between py-2.5 text-sm font-semibold text-[#111111] hover:text-[#f2707f] transition-colors border-b border-gray-50 group"
+          class="group flex items-center justify-between border-b border-[#eee8df] py-3 text-[13px] text-[#14110f] transition-colors hover:text-[#8d3f3d]"
         >
           <span>{link.name}</span>
-          <svg class="w-4 h-4 text-gray-300 group-hover:text-[#f2707f] group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          <svg class="h-3.5 w-3.5 text-[#c5a059] transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
           </svg>
         </a>
       ))}
@@ -189,73 +212,73 @@ const navLinks = [
 
     <!-- Quick Concierge Tools (Ring Sizer & Order Tracking) -->
     <div class="pt-2 space-y-2">
-      <p class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Atelier Services</p>
-      
+      <p class="text-[9px] uppercase tracking-[0.18em] text-[#8a8279]">Atelier services</p>
+
       <!-- Interactive Ring Sizer Trigger -->
       <button
         id="mobile-ring-sizer-trigger"
         type="button"
-        class="w-full text-left p-3.5 bg-rose-50/50 hover:bg-rose-50 border border-rose-100/60 rounded-xl flex items-center justify-between text-xs font-semibold text-gray-900 transition-colors cursor-pointer"
+        class="flex w-full cursor-pointer items-center justify-between border border-[#e5ded3] bg-[#f4efe7] p-3.5 text-left text-[12px] text-[#14110f] transition-colors hover:border-[#14110f]"
       >
         <span class="flex items-center gap-2.5">
-          <svg class="w-4 h-4 text-[#f2707f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m-3-3h6" />
+          <svg class="h-4 w-4 text-[#8d3f3d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m-3-3h6" />
           </svg>
-          <span>Interactive Ring Sizer</span>
+          <span>Ring size finder</span>
         </span>
-        <span class="text-[#f2707f] text-[11px] font-bold">Open Tool →</span>
+        <span class="text-[9px] uppercase tracking-[0.14em] text-[#8d3f3d]">Open →</span>
       </button>
 
       <!-- Track Vapi Shipment -->
       <a
         href="/track-order"
-        class="w-full text-left p-3.5 bg-gray-50 hover:bg-gray-100 border border-gray-200/60 rounded-xl flex items-center justify-between text-xs font-semibold text-gray-900 transition-colors block"
+        class="flex w-full items-center justify-between border border-[#e5ded3] bg-white p-3.5 text-left text-[12px] text-[#14110f] transition-colors hover:border-[#14110f]"
       >
         <span class="flex items-center gap-2.5">
-          <svg class="w-4 h-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875A1.125 1.125 0 0013.125 3.75H4.5A1.125 1.125 0 003.375 4.875v9.375" />
+          <svg class="h-4 w-4 text-[#6f675f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875A1.125 1.125 0 0013.125 3.75H4.5A1.125 1.125 0 003.375 4.875v9.375" />
           </svg>
-          <span>Track Order & GST Invoice</span>
+          <span>Track order & GST invoice</span>
         </span>
-        <span class="text-gray-500 text-[11px] font-bold">Track →</span>
+        <span class="text-[9px] uppercase tracking-[0.14em] text-[#6f675f]">Track →</span>
       </a>
 
       <!-- Jewellery Care Guide -->
       <a
         href="/jewellery-care"
-        class="w-full text-left p-3.5 bg-gray-50 hover:bg-gray-100 border border-gray-200/60 rounded-xl flex items-center justify-between text-xs font-semibold text-gray-900 transition-colors block"
+        class="flex w-full items-center justify-between border border-[#e5ded3] bg-white p-3.5 text-left text-[12px] text-[#14110f] transition-colors hover:border-[#14110f]"
       >
         <span class="flex items-center gap-2.5">
-          <svg class="w-4 h-4 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+          <svg class="h-4 w-4 text-[#6f675f]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
           </svg>
-          <span>Anti-Tarnish Care Guide</span>
+          <span>Anti-tarnish care guide</span>
         </span>
-        <span class="text-gray-400">→</span>
+        <span class="text-[#c5a059]">→</span>
       </a>
     </div>
 
     <!-- Vapi Store Guarantee Card -->
-    <div class="p-4 bg-gray-50/80 rounded-2xl border border-gray-100 text-[11px] text-gray-600 space-y-2">
-      <p class="font-bold text-gray-900 text-xs flex items-center gap-1.5">
-        <svg class="w-4 h-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <div class="space-y-2 border border-[#e5ded3] bg-[#f4efe7] p-4 text-[11px] leading-relaxed text-[#6f675f]">
+      <p class="flex items-center gap-1.5 text-[9px] uppercase tracking-[0.16em] text-[#c5a059]">
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span>SatvaStones Assurance</span>
+        <span>The Satvastones assurance</span>
       </p>
-      <div class="space-y-1 text-gray-600">
-        <p class="flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span>Dispatched from Vapi store in 24–48 hours</span>
+      <div class="space-y-1.5">
+        <p class="flex items-center gap-2">
+          <span class="h-1 w-1 shrink-0 bg-[#c5a059]"></span>
+          <span>Dispatched from Vapi in 24–48 hours</span>
         </p>
-        <p class="flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span>Free Express Delivery above ₹499</span>
+        <p class="flex items-center gap-2">
+          <span class="h-1 w-1 shrink-0 bg-[#c5a059]"></span>
+          <span>Free express delivery over ₹499</span>
         </p>
-        <p class="flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span>18K Vacuum Gold PVD • 100% Waterproof</span>
+        <p class="flex items-center gap-2">
+          <span class="h-1 w-1 shrink-0 bg-[#c5a059]"></span>
+          <span>18K gold PVD · 316L steel · waterproof</span>
         </p>
       </div>
     </div>
@@ -280,15 +303,20 @@ const navLinks = [
   import { getCartItems } from '../stores/cartStore';
   import { getWishlistItems } from '../stores/wishlistStore';
 
-  // Subtle header shadow on scroll (keeps logo clean and permanent)
+  // Homepage: transparent over the hero, solid cream after the first scroll.
   const header = document.getElementById('main-site-header');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
-      header?.classList.add('shadow-xs');
+  const isOverlayHeader = header?.dataset.overlay === 'true';
+  const syncHeader = () => {
+    if (!header) return;
+    const scrolled = window.scrollY > 32;
+    if (isOverlayHeader) {
+      header.classList.toggle('is-solid', scrolled);
     } else {
-      header?.classList.remove('shadow-xs');
+      header.classList.toggle('shadow-xs', window.scrollY > 20);
     }
-  });
+  };
+  syncHeader();
+  window.addEventListener('scroll', syncHeader, { passive: true });
 
   // Mobile Drawer Open / Close Logic
   const toggleBtn = document.getElementById('mobile-menu-toggle');

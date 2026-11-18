@@ -16,6 +16,12 @@ const RING_SIZES = [
   { indian: '22', us: '11.0', diameterMm: 20.6, circMm: 64.6 }
 ];
 
+const TABS = [
+  { id: 'screen' as const, label: 'Screen sizer' },
+  { id: 'chart' as const, label: 'Ring table' },
+  { id: 'bangle' as const, label: 'Bangle' }
+];
+
 export default function RingSizeModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'screen' | 'chart' | 'bangle'>('screen');
@@ -26,6 +32,21 @@ export default function RingSizeModal() {
     window.addEventListener('satvastones:open_ring_sizer', handleOpen);
     return () => window.removeEventListener('satvastones:open_ring_sizer', handleOpen);
   }, []);
+
+  // Lock the page and allow Escape while the modal is open.
+  useEffect(() => {
+    if (!isOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -38,103 +59,90 @@ export default function RingSizeModal() {
   const pixelDiameter = Math.round(diameterSlider * 5.6);
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6">
-      <div className="bg-white w-full max-w-xl rounded-[24px] shadow-2xl border border-gray-100 overflow-hidden">
-        
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#14110f]/75 p-3 backdrop-blur-sm sm:p-6"
+      onClick={() => setIsOpen(false)}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="ring-sizer-title"
+        className="w-full max-w-xl overflow-hidden border border-[#e5ded3] bg-[#fbf9f5] shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-gray-100 flex items-center justify-between bg-white">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-full bg-rose-50 flex items-center justify-center text-[#f2707f]">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m-3-3h6" />
-              </svg>
-            </div>
-            <div>
-              <h2 className="text-base sm:text-lg font-bold text-gray-900">Interactive Jewellery Size Finder</h2>
-              <p className="text-[11px] text-gray-500">Find your exact Indian ring and bangle measurements</p>
-            </div>
+        <div className="flex items-start justify-between gap-4 border-b border-[#e5ded3] px-5 py-4 sm:px-6">
+          <div>
+            <p className="text-[9px] uppercase tracking-[0.2em] text-[#c5a059]">Fit, measured</p>
+            <h2
+              id="ring-sizer-title"
+              className="font-display mt-1 text-[1.5rem] leading-none text-[#14110f]"
+            >
+              Ring &amp; bangle size finder
+            </h2>
+            <p className="mt-1.5 text-[11px] leading-relaxed text-[#8a8279]">
+              Exact Indian sizing, verified against US diameter and circumference.
+            </p>
           </div>
           <button
+            type="button"
             onClick={() => setIsOpen(false)}
-            className="text-gray-400 hover:text-black p-2 rounded-lg cursor-pointer"
-            aria-label="Close"
+            className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center border border-[#d8d0c4] text-[#6f675f] transition-colors hover:border-[#14110f] hover:text-[#14110f]"
+            aria-label="Close size finder"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex border-b border-gray-100 bg-gray-50 text-xs font-bold">
-          <button
-            onClick={() => setActiveTab('screen')}
-            className={`flex-1 py-3 text-center transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
-              activeTab === 'screen'
-                ? 'bg-white text-[#f2707f] border-b-2 border-[#f2707f]'
-                : 'text-gray-500 hover:text-black'
-            }`}
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
-            </svg>
-            <span>Screen Sizer</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('chart')}
-            className={`flex-1 py-3 text-center transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
-              activeTab === 'chart'
-                ? 'bg-white text-[#f2707f] border-b-2 border-[#f2707f]'
-                : 'text-gray-500 hover:text-black'
-            }`}
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-            <span>Ring Table</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('bangle')}
-            className={`flex-1 py-3 text-center transition-colors cursor-pointer flex items-center justify-center gap-1.5 ${
-              activeTab === 'bangle'
-                ? 'bg-white text-[#f2707f] border-b-2 border-[#f2707f]'
-                : 'text-gray-500 hover:text-black'
-            }`}
-          >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
-            </svg>
-            <span>Bangle Sizer</span>
-          </button>
+        <div className="flex border-b border-[#e5ded3]">
+          {TABS.map((tab) => (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex-1 cursor-pointer border-b-2 px-2 py-3 text-[9px] uppercase tracking-[0.14em] transition-colors sm:text-[10px] ${
+                activeTab === tab.id
+                  ? 'border-[#14110f] text-[#14110f]'
+                  : 'border-transparent text-[#8a8279] hover:text-[#14110f]'
+              }`}
+              aria-pressed={activeTab === tab.id}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
         {/* Tab 1: Screen Ring Placement Tool */}
         {activeTab === 'screen' && (
-          <div className="p-6 space-y-6 text-center">
-            <div className="space-y-1">
-              <span class="text-xs bg-[#ffe7e9] text-[#a1505a] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                Method 1: Direct Screen Matching
-              </span>
-              <p className="text-xs text-gray-600 max-w-sm mx-auto pt-1 leading-relaxed">
-                Place an existing ring flat against your screen on top of the circle below. Drag the slider until the pink circle matches the <strong>inner rim</strong> of your ring.
+          <div className="space-y-6 p-5 text-center sm:p-6">
+            <div>
+              <p className="text-[9px] uppercase tracking-[0.18em] text-[#8d3f3d]">
+                Method 01 — direct screen matching
+              </p>
+              <p className="mx-auto mt-2 max-w-sm text-[11.5px] leading-relaxed text-[#5f5851]">
+                Place an existing ring flat on the screen, over the circle below. Drag until the gold
+                outline matches the <strong className="font-medium text-[#14110f]">inner rim</strong> of
+                your ring.
               </p>
             </div>
 
             {/* Interactive Sizing Target Circle */}
-            <div className="h-44 flex items-center justify-center bg-[#fffafb] border border-[#f9d8dc] rounded-[20px] relative overflow-hidden">
+            <div className="relative flex h-44 items-center justify-center overflow-hidden border border-[#e5ded3] bg-[#f4efe7]">
               <div
-                className="rounded-full border-3 border-[#f2707f] bg-[#ffe7e9]/40 flex items-center justify-center transition-all duration-75 relative shadow-inner"
+                className="relative flex items-center justify-center rounded-full border-2 border-[#c5a059] bg-[#c5a059]/10 transition-all duration-75"
                 style={{ width: `${pixelDiameter}px`, height: `${pixelDiameter}px` }}
               >
-                <span className="text-[10px] font-bold text-[#a1505a]">
+                <span className="text-[10px] font-medium text-[#8a5314]">
                   {diameterSlider.toFixed(1)} mm
                 </span>
               </div>
             </div>
 
             {/* Slider */}
-            <div className="space-y-2 max-w-xs mx-auto">
+            <div className="mx-auto max-w-xs space-y-2">
               <input
                 type="range"
                 min="15.0"
@@ -142,27 +150,35 @@ export default function RingSizeModal() {
                 step="0.1"
                 value={diameterSlider}
                 onChange={(e) => setDiameterSlider(parseFloat(e.target.value))}
-                className="w-full accent-[#f2707f] cursor-pointer"
+                className="w-full cursor-pointer accent-[#14110f]"
+                aria-label="Ring inside diameter in millimetres"
               />
-              <div className="flex justify-between text-[10px] text-gray-400">
-                <span>Smaller (15mm)</span>
-                <span>Larger (21.5mm)</span>
+              <div className="flex justify-between text-[9px] uppercase tracking-[0.12em] text-[#8a8279]">
+                <span>Smaller · 15mm</span>
+                <span>Larger · 21.5mm</span>
               </div>
             </div>
 
             {/* Live Size Match Output Box */}
-            <div className="grid grid-cols-3 gap-3 p-4 bg-gray-50 rounded-[18px] border border-gray-200">
-              <div>
-                <p className="text-[10px] uppercase font-bold text-gray-400">Indian Size</p>
-                <p className="text-xl font-extrabold text-[#f2707f]">Size {closestSize.indian}</p>
+            <div className="grid grid-cols-3 gap-px border border-[#e5ded3] bg-[#e5ded3]">
+              <div className="bg-white px-3 py-3.5">
+                <p className="text-[8.5px] uppercase tracking-[0.14em] text-[#8a8279]">Indian size</p>
+                <p className="font-display mt-1 text-[1.4rem] leading-none text-[#8d3f3d]">
+                  {closestSize.indian}
+                </p>
               </div>
-              <div>
-                <p className="text-[10px] uppercase font-bold text-gray-400">US Standard</p>
-                <p className="text-xl font-extrabold text-gray-900">{closestSize.us}</p>
+              <div className="bg-white px-3 py-3.5">
+                <p className="text-[8.5px] uppercase tracking-[0.14em] text-[#8a8279]">US size</p>
+                <p className="font-display mt-1 text-[1.4rem] leading-none text-[#14110f]">
+                  {closestSize.us}
+                </p>
               </div>
-              <div>
-                <p className="text-[10px] uppercase font-bold text-gray-400">Circumference</p>
-                <p className="text-xl font-extrabold text-gray-900">{closestSize.circMm} mm</p>
+              <div className="bg-white px-3 py-3.5">
+                <p className="text-[8.5px] uppercase tracking-[0.14em] text-[#8a8279]">Circumference</p>
+                <p className="font-display mt-1 text-[1.4rem] leading-none text-[#14110f]">
+                  {closestSize.circMm}
+                  <span className="ml-0.5 text-[10px] tracking-normal text-[#8a8279]">mm</span>
+                </p>
               </div>
             </div>
           </div>
@@ -170,23 +186,37 @@ export default function RingSizeModal() {
 
         {/* Tab 2: Full Ring Chart */}
         {activeTab === 'chart' && (
-          <div className="p-5 max-h-96 overflow-y-auto">
-            <table className="w-full text-xs text-left">
+          <div className="max-h-96 overflow-y-auto p-4 sm:p-5">
+            <table className="w-full border-collapse text-left text-[11.5px]">
               <thead>
-                <tr className="bg-gray-100 text-gray-900 font-bold border-b border-gray-200">
-                  <th className="py-2.5 px-3">Indian Size</th>
-                  <th className="py-2.5 px-3">US Size</th>
-                  <th className="py-2.5 px-3">Inside Diameter (mm)</th>
-                  <th className="py-2.5 px-3">Circumference (mm)</th>
+                <tr>
+                  <th className="border border-[#e5ded3] bg-[#f4efe7] px-3 py-2 text-[8.5px] font-medium uppercase tracking-[0.12em] text-[#6f675f]">
+                    Indian
+                  </th>
+                  <th className="border border-[#e5ded3] bg-[#f4efe7] px-3 py-2 text-[8.5px] font-medium uppercase tracking-[0.12em] text-[#6f675f]">
+                    US
+                  </th>
+                  <th className="border border-[#e5ded3] bg-[#f4efe7] px-3 py-2 text-[8.5px] font-medium uppercase tracking-[0.12em] text-[#6f675f]">
+                    Inside ⌀
+                  </th>
+                  <th className="border border-[#e5ded3] bg-[#f4efe7] px-3 py-2 text-[8.5px] font-medium uppercase tracking-[0.12em] text-[#6f675f]">
+                    Circumference
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-gray-600">
+              <tbody>
                 {RING_SIZES.map((sz) => (
-                  <tr key={sz.indian} className="hover:bg-[#fffafb]">
-                    <td className="py-2.5 px-3 font-bold text-gray-900">Size {sz.indian}</td>
-                    <td className="py-2.5 px-3">{sz.us}</td>
-                    <td className="py-2.5 px-3">{sz.diameterMm} mm</td>
-                    <td className="py-2.5 px-3">{sz.circMm} mm</td>
+                  <tr key={sz.indian} className="transition-colors hover:bg-[#f4efe7]">
+                    <td className="border border-[#e5ded3] px-3 py-2 font-medium text-[#14110f]">
+                      {sz.indian}
+                    </td>
+                    <td className="border border-[#e5ded3] px-3 py-2 text-[#5f5851]">{sz.us}</td>
+                    <td className="border border-[#e5ded3] px-3 py-2 text-[#5f5851]">
+                      {sz.diameterMm} mm
+                    </td>
+                    <td className="border border-[#e5ded3] px-3 py-2 text-[#5f5851]">
+                      {sz.circMm} mm
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -196,48 +226,51 @@ export default function RingSizeModal() {
 
         {/* Tab 3: Bangle Sizing */}
         {activeTab === 'bangle' && (
-          <div className="p-6 space-y-4 text-xs text-gray-600">
-            <h3 className="font-bold text-sm text-gray-900">Standard Indian Bangle & Kada Sizes</h3>
-            <p className="leading-relaxed">
-              To measure your bangle size, tuck your thumb into the palm of your hand (as if slipping a bangle on) and measure around the widest part with a tape measure.
+          <div className="space-y-4 p-5 text-[11.5px] leading-relaxed text-[#5f5851] sm:p-6">
+            <div>
+              <p className="text-[9px] uppercase tracking-[0.18em] text-[#c5a059]">Kada & bangle sizing</p>
+              <h3 className="font-display mt-1 text-[1.25rem] leading-tight text-[#14110f]">
+                Standard Indian sizes.
+              </h3>
+            </div>
+            <p>
+              Tuck your thumb into your palm, as if slipping a bangle on, then measure around the
+              widest part with a tape measure.
             </p>
-            <div className="space-y-2 pt-2">
-              <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl flex justify-between items-center">
-                <div>
-                  <p className="font-bold text-gray-900">Size 2-4 (Small)</p>
-                  <p className="text-[11px] text-gray-500">Inner Diameter: 2.25 inches (57.2 mm)</p>
+
+            <div className="divide-y divide-[#e5ded3] border-y border-[#e5ded3]">
+              {[
+                { name: 'Size 2-4 · Small', dia: '2.25 in (57.2 mm)', fit: 'Petite wrists' },
+                { name: 'Size 2-6 · Medium', dia: '2.375 in (60.3 mm)', fit: 'Most popular' },
+                { name: 'Size 2-8 · Large', dia: '2.5 in (63.5 mm)', fit: 'Relaxed fit' }
+              ].map((item) => (
+                <div key={item.name} className="flex items-center justify-between gap-3 py-3">
+                  <div>
+                    <p className="text-[12px] font-medium text-[#14110f]">{item.name}</p>
+                    <p className="mt-0.5 text-[10.5px] text-[#8a8279]">Inner diameter: {item.dia}</p>
+                  </div>
+                  <span className="shrink-0 border border-[#e6d6bb] bg-[#faf3e6] px-2 py-0.5 text-[8px] uppercase tracking-[0.1em] text-[#8a5314]">
+                    {item.fit}
+                  </span>
                 </div>
-                <span className="text-xs font-bold text-[#f2707f]">Petite Wrists</span>
-              </div>
-              <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl flex justify-between items-center">
-                <div>
-                  <p className="font-bold text-gray-900">Size 2-6 (Medium / Most Popular)</p>
-                  <p className="text-[11px] text-gray-500">Inner Diameter: 2.375 inches (60.3 mm)</p>
-                </div>
-                <span className="text-xs font-bold text-[#007c52]">Universal Fit</span>
-              </div>
-              <div className="p-3 bg-gray-50 border border-gray-200 rounded-xl flex justify-between items-center">
-                <div>
-                  <p className="font-bold text-gray-900">Size 2-8 (Large)</p>
-                  <p className="text-[11px] text-gray-500">Inner Diameter: 2.5 inches (63.5 mm)</p>
-                </div>
-                <span className="text-xs font-bold text-gray-700">Relaxed Fit</span>
-              </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* Footer */}
-        <div className="p-4 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-          <p className="text-[11px] text-gray-500">All SatvaStones rings feature comfort-fit smooth inner bands.</p>
+        <div className="flex flex-col items-start justify-between gap-3 border-t border-[#e5ded3] bg-[#f4efe7] px-5 py-4 sm:flex-row sm:items-center sm:px-6">
+          <p className="text-[10px] leading-relaxed text-[#8a8279]">
+            Every Satvastones ring has a comfort-fit smooth inner band.
+          </p>
           <button
+            type="button"
             onClick={() => setIsOpen(false)}
-            className="bg-[#f2707f] hover:bg-[#e05e6d] text-white px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer"
+            className="cursor-pointer bg-[#14110f] px-6 py-2.5 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
           >
             Done
           </button>
         </div>
-
       </div>
     </div>
   );

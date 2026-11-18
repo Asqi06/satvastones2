@@ -4,40 +4,107 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout
   title="Page Not Found | Satvastones Anti-Tarnish Jewellery"
-  description="The page you are looking for does not exist."
+  description="That page could not be found. Browse anti-tarnish 18K gold PVD jewellery, or track an existing order."
 >
   <!-- Standard 404 Display -->
-  <div id="default-404-view" class="min-h-[70vh] flex items-center justify-center py-16 px-4 text-center bg-white">
-    <div class="max-w-md space-y-5 bg-white p-8 sm:p-10 border border-gray-200 rounded-[24px] shadow-xs">
-      <div class="w-14 h-14 rounded-full bg-rose-50 text-[#f2707f] flex items-center justify-center mx-auto">
-        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-        </svg>
-      </div>
-      <h2 class="text-6xl font-extrabold text-gray-900 tracking-tight">404</h2>
-      
-      <div class="space-y-2">
-        <h1 class="text-xl font-bold text-gray-900">Piece Not Found</h1>
-        <p class="text-xs text-gray-500 leading-relaxed">
-          The piece or suite you are searching for may have been moved or is currently being restocked in our Vapi atelier.
+  <section
+    id="default-404-view"
+    class="relative flex min-h-[78vh] items-center overflow-hidden bg-[#fbf9f5] px-5 py-16 text-[#14110f] sm:px-8 sm:py-24"
+    aria-labelledby="not-found-title"
+  >
+    <div class="dot-grid pointer-events-none absolute inset-0 opacity-[0.35]" aria-hidden="true"></div>
+
+    <div class="relative mx-auto grid w-full max-w-[1440px] gap-10 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-7">
+        <p class="eyebrow text-[#8d3f3d]">Error 404 · Off the shelf</p>
+        <p class="font-display mt-4 text-[5.5rem] leading-[0.82] text-[#14110f] sm:text-[9rem] lg:text-[11rem]">
+          404
         </p>
+        <h1 id="not-found-title" class="font-display mt-4 text-[2.2rem] leading-[1.02] sm:text-[3.1rem]">
+          This piece has left<br class="hidden sm:block" /> the atelier.
+        </h1>
+        <p class="mt-4 max-w-md text-[13px] leading-relaxed text-[#5f5851]">
+          The page or suite you were looking for has moved, sold out, or never existed. Nothing is
+          lost — the full collection is one tap away, and the atelier is still in Vapi.
+        </p>
+
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+          <a
+            href="/shop"
+            class="inline-flex items-center justify-center gap-2 bg-[#14110f] px-7 py-4 text-[10px] uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+          >
+            Shop all pieces <span aria-hidden="true">→</span>
+          </a>
+          <a
+            href="/collections/bestsellers"
+            class="inline-flex items-center justify-center gap-2 border border-[#14110f] px-7 py-4 text-[10px] uppercase tracking-[0.16em] text-[#14110f] transition-colors hover:bg-[#f4efe7]"
+          >
+            Bestsellers
+          </a>
+        </div>
       </div>
 
-      <div class="pt-2">
-        <a
-          href="/shop"
-          class="inline-block bg-[#171513] hover:bg-[#9f4553] text-white px-8 py-3.5 text-xs font-bold uppercase tracking-wider rounded-xl shadow-md transition-all"
-        >
-          Explore All Jewellery →
-        </a>
+      <div class="lg:col-span-5 lg:self-end">
+        <div class="border border-[#e5ded3] bg-white/70 p-5 sm:p-6">
+          <p class="text-[9px] uppercase tracking-[0.18em] text-[#8a8279]">Common next steps</p>
+          <ul class="mt-3 divide-y divide-[#e5ded3] border-y border-[#e5ded3]">
+            {[
+              { href: '/track-order', label: 'Track an order or download a GST invoice' },
+              { href: '/stack-builder', label: 'Build a three-piece stack and save 15%' },
+              { href: '/materials', label: 'Read the metallurgy behind the finish' },
+              { href: '/contact', label: 'Talk to a real person in Vapi' }
+            ].map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  class="group flex items-center justify-between gap-4 py-3 text-[12px] leading-snug text-[#14110f] transition-colors hover:text-[#8d3f3d]"
+                >
+                  <span>{link.label}</span>
+                  <span class="text-[#c5a059] transition-transform group-hover:translate-x-0.5" aria-hidden="true">
+                    →
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p class="mt-4 flex items-start gap-2 text-[10px] leading-relaxed text-[#8a8279]">
+            <span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span>
+            <span>Free express delivery over ₹499 · dispatched in 24–48 hours.</span>
+          </p>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
   <!-- Dynamic Fallback Product Container (Renders Full Luxury PDP Identical to Mock Products) -->
   <div id="dynamic-product-view" class="hidden min-h-screen py-4 sm:py-8 px-4 sm:px-6 lg:px-8 max-w-[1240px] mx-auto">
     <!-- Populated dynamically via script below -->
   </div>
+
+<style is:global>
+  #dynamic-product-view .rounded-full,
+  #dynamic-product-view .rounded-xl,
+  #dynamic-product-view .rounded-2xl,
+  #dynamic-product-view .rounded-lg,
+  #dynamic-product-view .rounded-md,
+  #dynamic-product-view [class*='rounded-['] {
+    border-radius: 0 !important;
+  }
+
+  #dynamic-product-view h1,
+  #dynamic-product-view h2,
+  #dynamic-product-view h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  #dynamic-product-view .shadow-md,
+  #dynamic-product-view .shadow-lg,
+  #dynamic-product-view .shadow-sm {
+    box-shadow: none;
+  }
+</style>
 </BaseLayout>
 
 <script>
@@ -159,7 +226,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             />
 
             ${discountPercent > 0 ? `
-              <span class="absolute top-3.5 left-3.5 bg-[#9f4553] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+              <span class="absolute top-3.5 left-3.5 bg-[#8d3f3d] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                 SAVE ${discountPercent}%
               </span>
             ` : ''}
@@ -171,7 +238,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <button
               id="pdp-wishlist-heart"
               type="button"
-              class="absolute bottom-3.5 right-3.5 w-10 h-10 rounded-full bg-white/95 backdrop-blur-xs shadow-md border border-[#eae4dc] flex items-center justify-center text-[#99918b] hover:text-[#9f4553] transition-all cursor-pointer"
+              class="absolute bottom-3.5 right-3.5 w-10 h-10 rounded-full bg-white/95 backdrop-blur-xs shadow-md border border-[#eae4dc] flex items-center justify-center text-[#99918b] hover:text-[#8d3f3d] transition-all cursor-pointer"
               aria-label="Save to Wishlist"
             >
               <svg class="w-5 h-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
@@ -209,7 +276,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             
             <!-- Category & Title -->
             <div class="space-y-1">
-              <span class="text-[11px] uppercase font-bold tracking-[0.14em] text-[#9f4553] flex items-center gap-1.5">
+              <span class="text-[11px] uppercase font-bold tracking-[0.14em] text-[#8d3f3d] flex items-center gap-1.5">
                 <span class="text-[#c5a059]">✦</span>
                 <span>Anti-Tarnish Daily Atelier</span>
               </span>
@@ -264,7 +331,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <div class="flex items-center justify-between text-xs text-[#171513] bg-[#faf8f5] border border-[#eae4dc] px-3.5 py-2 rounded-xl">
               <span class="flex items-center gap-1.5">
                 <span class="text-[#c5a059]">✦</span>
-                <span>Order in next <strong id="pdp-dispatch-countdown" class="text-[#9f4553] font-bold">3h 14m 20s</strong> for today's dispatch!</span>
+                <span>Order in next <strong id="pdp-dispatch-countdown" class="text-[#8d3f3d] font-bold">3h 14m 20s</strong> for today's dispatch!</span>
               </span>
               <span class="text-[10px] text-[#6e6863] font-bold uppercase tracking-wider">Vapi Atelier Hub</span>
             </div>
@@ -280,7 +347,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <button
                 id="pdp-ring-sizer-trigger"
                 type="button"
-                class="text-[#9f4553] font-bold underline flex items-center gap-1.5 hover:text-[#171513] cursor-pointer"
+                class="text-[#8d3f3d] font-bold underline flex items-center gap-1.5 hover:text-[#171513] cursor-pointer"
               >
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z" />
@@ -312,7 +379,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <span class="text-[#c5a059] text-base shrink-0">✦</span>
                 <div>
                   <p class="font-bold text-[#171513]">Extra ₹200 OFF on orders above ₹2,499</p>
-                  <p class="text-[11px] text-[#6e6863]">Use privilege code <span class="font-bold text-[#9f4553]">FIRSTBUY</span> at checkout</p>
+                  <p class="text-[11px] text-[#6e6863]">Use privilege code <span class="font-bold text-[#8d3f3d]">FIRSTBUY</span> at checkout</p>
                 </div>
               </div>
             </div>
@@ -347,7 +414,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                   data-product-slug="${product.slug}"
                   data-product-price="${product.pricePaise}"
                   data-product-image="${primaryImage}"
-                  class="flex-1 bg-[#171513] hover:bg-[#9f4553] text-white py-3.5 sm:py-4 px-6 text-xs sm:text-sm font-bold uppercase tracking-[0.1em] rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  class="flex-1 bg-[#171513] hover:bg-[#8d3f3d] text-white py-3.5 sm:py-4 px-6 text-xs sm:text-sm font-bold uppercase tracking-[0.1em] rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -378,7 +445,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               </div>
               
               <div class="flex items-start gap-2 pt-1 border-t border-gray-200/80 text-[11px] text-gray-600">
-                <svg class="w-4 h-4 text-[#a1505a] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="w-4 h-4 text-[#8d3f3d] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.249-8.25-3.286zm0 13.036h.008v.008H12v-.008z" />
                 </svg>
                 <div>
@@ -399,7 +466,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                   type="text"
                   maxlength="6"
                   placeholder="Enter 6-digit Indian PIN code"
-                  class="bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl flex-1 focus:outline-none focus:border-[#f2707f]"
+                  class="bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl flex-1 focus:outline-none focus:border-[#8d3f3d]"
                 />
                 <button
                   id="check-pincode-btn"
@@ -415,21 +482,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <!-- Trust Badges Strip -->
             <div class="grid grid-cols-3 gap-2 pt-3 border-t border-gray-100 text-center">
               <div class="p-2 bg-gray-50 rounded-xl flex flex-col items-center">
-                <svg class="w-4 h-4 text-[#a1505a] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <svg class="w-4 h-4 text-[#8d3f3d] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                 </svg>
                 <span class="text-[10px] font-bold text-gray-800">18K PVD Gold</span>
                 <p class="text-[9px] text-gray-500">Waterproof Daily</p>
               </div>
               <div class="p-2 bg-gray-50 rounded-xl flex flex-col items-center">
-                <svg class="w-4 h-4 text-[#a1505a] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <svg class="w-4 h-4 text-[#8d3f3d] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
                 <span class="text-[10px] font-bold text-gray-800">Hypoallergenic</span>
                 <p class="text-[9px] text-gray-500">Nickel-Free 316L</p>
               </div>
               <div class="p-2 bg-gray-50 rounded-xl flex flex-col items-center">
-                <svg class="w-4 h-4 text-[#a1505a] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <svg class="w-4 h-4 text-[#8d3f3d] mb-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                 </svg>
@@ -446,7 +513,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="mt-14 sm:mt-16 bg-[#faf8f5] border border-[#eae4dc] rounded-[24px] p-5 sm:p-8 shadow-2xs">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-5 border-b border-[#eae4dc] gap-2">
           <div>
-            <span class="text-xs uppercase tracking-[0.14em] text-[#9f4553] font-bold flex items-center gap-1.5">
+            <span class="text-xs uppercase tracking-[0.14em] text-[#8d3f3d] font-bold flex items-center gap-1.5">
               <span class="text-[#c5a059]">✦</span>
               <span>CURATED ATELIER PAIRINGS</span>
             </span>
@@ -483,7 +550,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                   <div class="min-w-0 flex-1">
                     <p class="text-xs font-bold text-[#171513] truncate">${item.name}</p>
                     <p class="font-bold text-xs text-[#171513] mt-0.5">${formatPrice(item.pricePaise)}</p>
-                    ${idx === 0 ? '<span class="text-[9px] text-[#9f4553] font-bold uppercase tracking-wider">Active Piece</span>' : ''}
+                    ${idx === 0 ? '<span class="text-[9px] text-[#8d3f3d] font-bold uppercase tracking-wider">Active Piece</span>' : ''}
                   </div>
                 </div>
                 ${idx < bundleItems.length - 1 ? '<span class="text-[#c5a059] font-bold text-lg hidden sm:inline">+</span>' : ''}
@@ -510,7 +577,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <button
               id="bundle-add-btn"
               type="button"
-              class="w-full bg-[#171513] hover:bg-[#9f4553] text-white py-3 px-4 text-xs font-bold uppercase tracking-[0.08em] rounded-xl shadow-md transition-all cursor-pointer"
+              class="w-full bg-[#171513] hover:bg-[#8d3f3d] text-white py-3 px-4 text-xs font-bold uppercase tracking-[0.08em] rounded-xl shadow-md transition-all cursor-pointer"
             >
               Add Full Suite to Bag (15% OFF) →
             </button>
@@ -527,7 +594,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors" open>
           <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
             <span class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <svg class="w-4 h-4 text-[#8d3f3d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
               </svg>
               <span>Product Description &amp; Styling Guide</span>
@@ -546,7 +613,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors">
           <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
             <span class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <svg class="w-4 h-4 text-[#8d3f3d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
               </svg>
               <span>Material &amp; Craftsmanship Specifications</span>
@@ -560,7 +627,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <li><strong class="text-gray-900">Skin Compatibility:</strong> 100% Nickel-free, Lead-free, Hypoallergenic (Zero Green Skin)</li>
               <li><strong class="text-gray-900">Waterproof Standard:</strong> Shower, sweat &amp; perfume safe 24/7</li>
             </ul>
-            <div class="p-3 bg-[#ffe7e9]/50 rounded-xl mt-3 text-xs text-gray-700">
+            <div class="p-3 bg-[#f4efe7] border border-[#e5ded3] mt-3 text-xs text-[#5f5851]">
               <strong>Honest Shine Policy:</strong> While our 316L Stainless Steel and 18K PVD Gold plating are highly water and sweat resistant, following basic care preserves its brilliant luster for years.
             </div>
           </div>
@@ -570,7 +637,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors">
           <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
             <span class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <svg class="w-4 h-4 text-[#8d3f3d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
               </svg>
@@ -595,7 +662,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <details class="group bg-white border border-gray-200 rounded-[18px] p-5 [&_summary::-webkit-details-marker]:hidden open:border-[#f9d8dc] open:bg-[#fffafb] transition-colors">
           <summary class="flex items-center justify-between cursor-pointer font-bold text-sm text-gray-900 select-none">
             <span class="flex items-center gap-2">
-              <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+              <svg class="w-4 h-4 text-[#8d3f3d]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <span>Mandatory Statutory Disclosures (Consumer Protection Act)</span>
@@ -623,7 +690,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <!-- Related Products -->
       <div class="mt-16 sm:mt-20">
         <div class="text-center mb-8">
-          <span class="text-xs font-bold uppercase tracking-[0.14em] text-[#9f4553]">
+          <span class="text-xs font-bold uppercase tracking-[0.14em] text-[#8d3f3d]">
             <span class="text-[#c5a059]">✦</span> MORE TO ADORN
           </span>
           <h2 class="font-serif text-2xl sm:text-3xl font-normal text-[#171513] mt-1">You May Also Love</h2>
@@ -665,7 +732,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <button
             id="sticky-add-btn"
             type="button"
-            class="bg-[#171513] hover:bg-[#9f4553] text-white px-5 sm:px-7 py-2.5 text-xs font-bold uppercase tracking-[0.08em] rounded-xl shadow-md transition-all cursor-pointer whitespace-nowrap"
+            class="bg-[#171513] hover:bg-[#8d3f3d] text-white px-5 sm:px-7 py-2.5 text-xs font-bold uppercase tracking-[0.08em] rounded-xl shadow-md transition-all cursor-pointer whitespace-nowrap"
           >
             Add to Bag
           </button>
@@ -745,17 +812,17 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const wishlistHeart = document.getElementById('pdp-wishlist-heart');
     if (wishlistHeart) {
       if (isInWishlist(product.id)) {
-        wishlistHeart.classList.add('text-[#9f4553]');
-        wishlistHeart.querySelector('svg')?.classList.add('fill-[#9f4553]');
+        wishlistHeart.classList.add('text-[#8d3f3d]');
+        wishlistHeart.querySelector('svg')?.classList.add('fill-[#8d3f3d]');
       }
       wishlistHeart.addEventListener('click', () => {
         const isSaved = toggleWishlist(product!);
         if (isSaved) {
-          wishlistHeart.classList.add('text-[#9f4553]');
-          wishlistHeart.querySelector('svg')?.classList.add('fill-[#9f4553]');
+          wishlistHeart.classList.add('text-[#8d3f3d]');
+          wishlistHeart.querySelector('svg')?.classList.add('fill-[#8d3f3d]');
         } else {
-          wishlistHeart.classList.remove('text-[#9f4553]');
-          wishlistHeart.querySelector('svg')?.classList.remove('fill-[#9f4553]');
+          wishlistHeart.classList.remove('text-[#8d3f3d]');
+          wishlistHeart.querySelector('svg')?.classList.remove('fill-[#8d3f3d]');
         }
       });
     }
@@ -893,7 +960,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <section class="border-t border-[#eae4dc] pt-12 sm:pt-16">
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <span class="text-xs font-bold uppercase tracking-[0.14em] text-[#9f4553] flex items-center gap-1.5">
+            <span class="text-xs font-bold uppercase tracking-[0.14em] text-[#8d3f3d] flex items-center gap-1.5">
               <span class="text-[#c5a059]">✦</span>
               <span>AUTHENTIC PATRON FEEDBACK</span>
             </span>
@@ -905,7 +972,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <button
             id="write-review-toggle-btn"
             type="button"
-            class="bg-[#171513] hover:bg-[#9f4553] text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all self-start md:self-auto cursor-pointer shadow-xs"
+            class="bg-[#171513] hover:bg-[#8d3f3d] text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all self-start md:self-auto cursor-pointer shadow-xs"
           >
             Write a Review ✍️
           </button>
@@ -918,11 +985,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-semibold text-[#171513] mb-1">Your Full Name *</label>
-                <input type="text" id="review-author" required placeholder="e.g. Priya Sharma" class="w-full bg-white border border-[#eae4dc] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#9f4553]" />
+                <input type="text" id="review-author" required placeholder="e.g. Priya Sharma" class="w-full bg-white border border-[#eae4dc] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#8d3f3d]" />
               </div>
               <div>
                 <label class="block text-xs font-semibold text-[#171513] mb-1">City / Location *</label>
-                <input type="text" id="review-city" required placeholder="e.g. Mumbai, Maharashtra" class="w-full bg-white border border-[#eae4dc] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#9f4553]" />
+                <input type="text" id="review-city" required placeholder="e.g. Mumbai, Maharashtra" class="w-full bg-white border border-[#eae4dc] rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#8d3f3d]" />
               </div>
             </div>
 
@@ -938,12 +1005,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
             <div>
               <label class="block text-xs font-semibold text-[#171513] mb-1">Your Review *</label>
-              <textarea id="review-comment" required rows="3" placeholder="Tell other patrons about the finish, weight, waterproof quality, and feel..." class="w-full bg-white border border-[#eae4dc] rounded-xl p-3 text-xs focus:outline-none focus:border-[#9f4553]"></textarea>
+              <textarea id="review-comment" required rows="3" placeholder="Tell other patrons about the finish, weight, waterproof quality, and feel..." class="w-full bg-white border border-[#eae4dc] rounded-xl p-3 text-xs focus:outline-none focus:border-[#8d3f3d]"></textarea>
             </div>
 
             <div class="flex items-center justify-between pt-2">
               <span id="review-submit-status" class="text-xs font-medium text-emerald-700 hidden"></span>
-              <button type="submit" id="submit-review-btn" class="bg-[#171513] hover:bg-[#9f4553] text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-xs ml-auto cursor-pointer">
+              <button type="submit" id="submit-review-btn" class="bg-[#171513] hover:bg-[#8d3f3d] text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-xs ml-auto cursor-pointer">
                 Submit Review
               </button>
             </div>
@@ -956,7 +1023,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <div class="bg-white border border-[#eae4dc] rounded-[18px] p-5 shadow-2xs space-y-2">
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <div class="w-8 h-8 rounded-full bg-[#faf4f2] text-[#9f4553] font-bold text-xs flex items-center justify-center border border-[#eae4dc]">
+                  <div class="w-8 h-8 rounded-full bg-[#f4efe7] text-[#8d3f3d] font-bold text-xs flex items-center justify-center border border-[#eae4dc]">
                     ${(r.authorName || r.author || 'P').charAt(0).toUpperCase()}
                   </div>
                   <div>
@@ -977,7 +1044,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <div class="bg-[#faf8f5] border border-[#eae4dc] rounded-[18px] p-8 text-center space-y-2">
               <p class="font-serif text-lg text-[#171513]">Be the first patron to review ${product.name}</p>
               <p class="text-xs text-[#6e6863] max-w-md mx-auto">Have you adorned this piece? Share your authentic experience regarding its waterproof durability and everyday shine.</p>
-              <button id="be-first-review-btn" type="button" class="mt-2 text-xs font-bold text-[#9f4553] underline cursor-pointer">
+              <button id="be-first-review-btn" type="button" class="mt-2 text-xs font-bold text-[#8d3f3d] underline cursor-pointer">
                 Write a Review Now →
               </button>
             </div>

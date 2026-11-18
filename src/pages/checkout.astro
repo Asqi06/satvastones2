@@ -4,489 +4,527 @@ import DPDPNotice from '../components/DPDPNotice';
 ---
 
 <BaseLayout
-  title="Checkout | Satvastones Anti-Tarnish Jewellery"
-  description="Secure Razorpay checkout for Satvastones fine jewellery. Free express shipping across India on orders above ₹499. Orders dispatched from Vapi in 24-48 hours."
+  title="Secure Checkout | Satvastones Anti-Tarnish Jewellery"
+  description="Secure Razorpay checkout for Satvastones fine jewellery. Free express shipping across India on orders above ₹499. Hand-inspected and dispatched from Vapi in 24–48 hours."
+  noindex={true}
 >
-  <!-- Razorpay Official Checkout SDK (Loaded only on Checkout page) -->
+  <!-- Razorpay Official Checkout SDK (loaded only on checkout) -->
   <script is:inline src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 
-  <!-- Atelier Checkout Header -->
-  <div class="bg-[#faf8f5] border-b border-[#eae4dc] py-6 sm:py-8">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1.5">
-      <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-[#9f4553] bg-white px-3.5 py-1 rounded-full border border-[#eae4dc] shadow-2xs">
-        <svg class="w-3.5 h-3.5 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-        </svg>
-        <span>256-Bit SSL Encrypted • Official Razorpay Gateway</span>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <!-- Checkout header -->
+    <header class="border-b border-[#e5ded3]">
+      <div class="mx-auto flex max-w-[1240px] flex-wrap items-end justify-between gap-5 px-5 py-7 sm:px-8 sm:py-9">
+        <div>
+          <p class="eyebrow text-[#8d3f3d]">Secure checkout</p>
+          <h1 class="font-display mt-2 text-[2rem] leading-none tracking-[-0.03em] sm:text-[2.75rem]">
+            Complete your order.
+          </h1>
+        </div>
+        <div class="flex flex-col gap-2 sm:items-end">
+          <span class="inline-flex items-center gap-2 border border-[#e0d7c9] bg-[#f4efe7] px-3 py-1.5 text-[9px] uppercase tracking-[0.14em] text-[#6f675f]">
+            <svg class="h-3.5 w-3.5 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+            </svg>
+            256-bit SSL · Razorpay secured
+          </span>
+          <a href="/shop" class="text-[10px] uppercase tracking-[0.14em] text-[#6f675f] underline decoration-[#d8c3a6] underline-offset-4 transition-colors hover:text-[#14110f]">
+            ← Continue shopping
+          </a>
+        </div>
       </div>
-      <h1 class="font-serif text-2xl sm:text-4xl font-normal text-[#171513] tracking-tight">Complete Your Order</h1>
-      <p class="text-xs text-[#6e6863]">Complimentary express delivery on orders above ₹499 • Hand-inspected and dispatched from Vapi in 24–48h</p>
-    </div>
-  </div>
+    </header>
 
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-    <div class="max-w-4xl mx-auto">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10">
-        
-        <!-- Form Column (Mobile-first) -->
-        <div class="lg:col-span-7 space-y-6">
-          
-          <!-- Contact Info -->
-          <div class="bg-white p-5 sm:p-7 border border-[#eae4dc] rounded-2xl space-y-4 shadow-2xs">
-            <div class="flex items-center justify-between border-b border-[#eae4dc] pb-3">
-              <h2 class="text-base font-bold text-[#171513] flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-[#171513] text-white flex items-center justify-center text-xs font-bold">1</span>
-                <span>Contact Details</span>
+    <div class="mx-auto max-w-[1240px] px-5 py-7 sm:px-8 sm:py-10">
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+        <!-- Form column -->
+        <div class="space-y-5 lg:col-span-7">
+          <!-- Inline validation -->
+          <div
+            id="checkout-form-error"
+            class="hidden border-l-2 border-[#8d3f3d] bg-[#f8eeee] px-4 py-3 text-[12px] leading-relaxed text-[#8d3f3d]"
+            role="alert"
+            aria-live="polite"
+          ></div>
+
+          <!-- 01 Contact -->
+          <section class="border border-[#e5ded3] bg-white p-5 sm:p-7" aria-labelledby="checkout-contact-title">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#e5ded3] pb-3">
+              <h2 id="checkout-contact-title" class="flex items-baseline gap-3">
+                <span class="font-display text-[1.35rem] leading-none text-[#c5a059]">01</span>
+                <span class="font-display text-[1.3rem] leading-none">Contact details</span>
               </h2>
-              <span class="text-[11px] text-[#6e6863]">For SMS &amp; WhatsApp Tracking</span>
+              <span class="text-[9px] uppercase tracking-[0.14em] text-[#8a8279]">SMS &amp; WhatsApp tracking</span>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div class="sm:col-span-2">
-                <label class="block text-xs font-semibold text-[#171513] mb-1">Full Name *</label>
+                <label for="checkout-name" class="mb-1.5 block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">Full name *</label>
                 <input
                   type="text"
                   required
+                  autocomplete="name"
                   placeholder="e.g. Priya Sharma"
                   id="checkout-name"
-                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
+                  class="checkout-input"
                 />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-[#171513] mb-1">Mobile Number (WhatsApp) *</label>
+                <label for="checkout-phone" class="mb-1.5 block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">Mobile (WhatsApp) *</label>
                 <input
                   type="tel"
                   required
+                  autocomplete="tel"
+                  inputmode="tel"
                   placeholder="+91 90167 03180"
                   id="checkout-phone"
-                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
+                  class="checkout-input"
                 />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-[#171513] mb-1">Email Address (For Tax Invoice) *</label>
+                <label for="checkout-email" class="mb-1.5 block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">Email (tax invoice) *</label>
                 <input
                   type="email"
                   required
+                  autocomplete="email"
                   placeholder="name@example.com"
                   id="checkout-email"
-                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
+                  class="checkout-input"
                 />
               </div>
             </div>
-          </div>
+          </section>
 
-          <!-- Shipping Address -->
-          <div class="bg-white p-5 sm:p-7 border border-[#eae4dc] rounded-2xl space-y-4 shadow-2xs">
-            <div class="flex items-center justify-between border-b border-[#eae4dc] pb-3">
-              <h2 class="text-base font-bold text-[#171513] flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-[#171513] text-white flex items-center justify-center text-xs font-bold">2</span>
-                <span>Shipping Address</span>
+          <!-- 02 Shipping -->
+          <section class="border border-[#e5ded3] bg-white p-5 sm:p-7" aria-labelledby="checkout-shipping-title">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#e5ded3] pb-3">
+              <h2 id="checkout-shipping-title" class="flex items-baseline gap-3">
+                <span class="font-display text-[1.35rem] leading-none text-[#c5a059]">02</span>
+                <span class="font-display text-[1.3rem] leading-none">Shipping address</span>
               </h2>
-              <span class="text-[11px] text-[#6e6863]">Pan-India Express Air</span>
+              <span class="text-[9px] uppercase tracking-[0.14em] text-[#8a8279]">Pan-India express air</span>
             </div>
 
-            <div class="space-y-3.5">
+            <div class="mt-5 space-y-4">
               <div>
-                <label class="block text-xs font-semibold text-[#171513] mb-1">House / Flat / Building *</label>
+                <label for="checkout-addr1" class="mb-1.5 block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">House / flat / building *</label>
                 <input
                   type="text"
                   required
+                  autocomplete="address-line1"
                   placeholder="e.g. Flat 304, Green Heights"
                   id="checkout-addr1"
-                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
+                  class="checkout-input"
                 />
               </div>
               <div>
-                <label class="block text-xs font-semibold text-[#171513] mb-1">Street / Landmark / Area</label>
+                <label for="checkout-addr2" class="mb-1.5 block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">Street / landmark / area</label>
                 <input
                   type="text"
+                  autocomplete="address-line2"
                   placeholder="e.g. Near Outer Ring Road"
                   id="checkout-addr2"
-                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
+                  class="checkout-input"
                 />
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 <div>
-                  <label class="block text-xs font-semibold text-[#171513] mb-1">PIN Code *</label>
+                  <label for="checkout-pin" class="mb-1.5 block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">PIN code *</label>
                   <input
                     type="text"
                     required
                     maxlength="6"
+                    inputmode="numeric"
+                    autocomplete="postal-code"
                     placeholder="396191"
                     id="checkout-pin"
-                    class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
+                    class="checkout-input"
                   />
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-[#171513] mb-1">City *</label>
+                  <label for="checkout-city" class="mb-1.5 block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">City *</label>
                   <input
                     type="text"
                     required
+                    autocomplete="address-level2"
                     placeholder="Vapi"
                     id="checkout-city"
-                    class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
+                    class="checkout-input"
                   />
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-[#171513] mb-1">State *</label>
+                  <label for="checkout-state" class="mb-1.5 block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">State *</label>
                   <input
                     type="text"
                     required
+                    autocomplete="address-level1"
                     placeholder="Gujarat"
                     id="checkout-state"
-                    class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
+                    class="checkout-input"
                   />
                 </div>
               </div>
             </div>
-          </div>
+          </section>
 
-          <!-- Luxury Velvet Gifting Option -->
-          <div class="bg-[#faf8f5] p-5 border border-[#eae4dc] rounded-2xl space-y-3 shadow-2xs">
-            <label class="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" id="gift-packaging-check" checked class="accent-[#171513] w-4 h-4 mt-0.5 rounded cursor-pointer" />
-              <div class="flex-1">
-                <span class="text-xs font-bold text-[#171513] flex items-center gap-1.5">
-                  <span class="text-[#c5a059]">✦</span>
-                  <span>Complimentary Luxury Velvet Box &amp; Handwritten Gift Note (Free)</span>
+          <!-- Gift -->
+          <section class="border border-[#e0d7c9] bg-[#f4efe7] p-5" aria-labelledby="checkout-gift-title">
+            <label class="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                id="gift-packaging-check"
+                checked
+                class="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-[#14110f]"
+              />
+              <span class="flex-1">
+                <span id="checkout-gift-title" class="flex items-center gap-1.5 text-[12px] font-medium text-[#14110f]">
+                  <span class="text-[#c5a059]" aria-hidden="true">✦</span>
+                  Complimentary velvet box &amp; handwritten note
                 </span>
-                <p class="text-[11px] text-[#6e6863] mt-0.5">
-                  Includes anti-tarnish storage pouch, care certificate, and a handwritten card sealed with wax.
-                </p>
-              </div>
+                <span class="mt-1 block text-[11px] leading-relaxed text-[#6f675f]">
+                  Includes an anti-tarnish pouch, care certificate, and a handwritten card sealed with wax — free on every order.
+                </span>
+              </span>
             </label>
-            <div id="gift-message-box" class="pt-2">
+            <div id="gift-message-box" class="mt-3 pl-7">
+              <label for="gift-note-input" class="sr-only">Gift note</label>
               <input
                 type="text"
                 id="gift-note-input"
-                placeholder="Optional gift note (e.g. 'To Rhea, with love on your special day!')"
-                class="w-full bg-white border border-[#eae4dc] px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#c5a059]"
+                placeholder="Optional gift note (e.g. 'To Rhea, with love')"
+                class="checkout-input bg-white"
               />
             </div>
-          </div>
+          </section>
 
-          <!-- Payment Options: Razorpay Online vs Cash on Delivery -->
-          <div class="bg-white p-5 sm:p-7 border border-[#eae4dc] rounded-2xl space-y-4 shadow-2xs">
-            <div class="flex items-center justify-between border-b border-[#eae4dc] pb-3">
-              <h2 class="text-base font-bold text-[#171513] flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-[#171513] text-white flex items-center justify-center text-xs font-bold">3</span>
-                <span>Select Payment Method</span>
+          <!-- 03 Payment -->
+          <section class="border border-[#e5ded3] bg-white p-5 sm:p-7" aria-labelledby="checkout-payment-title">
+            <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-[#e5ded3] pb-3">
+              <h2 id="checkout-payment-title" class="flex items-baseline gap-3">
+                <span class="font-display text-[1.35rem] leading-none text-[#c5a059]">03</span>
+                <span class="font-display text-[1.3rem] leading-none">Payment</span>
               </h2>
-              <span class="text-[11px] text-[#1b6d48] font-semibold flex items-center gap-1">
-                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                100% Encrypted &amp; Safe
+              <span class="flex items-center gap-1.5 text-[9px] uppercase tracking-[0.14em] text-[#2f7d5a]">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Encrypted &amp; safe
               </span>
             </div>
 
-            <div class="space-y-3">
-              <!-- Option 1: Razorpay Online (UPI, Cards, NetBanking) -->
-              <label id="payment-card-razorpay" class="flex items-start gap-3.5 p-4 border-2 border-[#171513] bg-[#faf8f5] rounded-2xl cursor-pointer transition-all">
-                <input type="radio" name="payment-method" value="RAZORPAY" checked class="mt-1 accent-[#171513]" />
-                <div class="flex-1 min-w-0">
-                  <div class="flex flex-wrap items-center justify-between gap-1.5">
-                    <span class="text-xs sm:text-sm font-bold text-[#171513]">Razorpay Online (UPI, Cards, NetBanking)</span>
-                    <span class="text-[10px] text-[#1b6d48] bg-[#eef8f3] border border-[#c4e8d3] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1">
-                      <span>✓</span> Zero Extra Fees • Save ₹25
+            <div class="mt-5 space-y-3">
+              <!-- Razorpay -->
+              <label
+                id="payment-card-razorpay"
+                class="pay-card is-selected flex cursor-pointer items-start gap-3.5 p-4"
+              >
+                <input type="radio" name="payment-method" value="RAZORPAY" checked class="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-[#14110f]" />
+                <span class="min-w-0 flex-1">
+                  <span class="flex flex-wrap items-center justify-between gap-1.5">
+                    <span class="text-[13px] font-medium text-[#14110f]">Razorpay online — UPI, cards, netbanking</span>
+                    <span class="border border-[#cfe3d6] bg-[#f0f7f2] px-2 py-0.5 text-[9px] uppercase tracking-[0.1em] text-[#2f7d5a]">
+                      Zero extra fees · save ₹25
                     </span>
-                  </div>
-                  <p class="text-[11px] text-[#6e6863] mt-1">
-                    Pay securely via UPI (Google Pay, PhonePe, Paytm, QR), Cards, or NetBanking. Priority atelier dispatch.
-                  </p>
-                  <div class="flex flex-wrap items-center gap-1.5 mt-2.5 pt-2 border-t border-[#eae4dc] text-[10px] text-[#6e6863] font-semibold">
-                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">Google Pay</span>
-                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">PhonePe</span>
-                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">Paytm UPI</span>
-                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">Credit/Debit Card</span>
-                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">NetBanking</span>
-                  </div>
-                </div>
+                  </span>
+                  <span class="mt-1 block text-[11px] leading-relaxed text-[#6f675f]">
+                    Pay instantly with Google Pay, PhonePe, Paytm, any card, or netbanking. Priority atelier dispatch.
+                  </span>
+                  <span class="mt-2.5 flex flex-wrap items-center gap-1.5 border-t border-[#e5ded3] pt-2.5 text-[9px] uppercase tracking-[0.08em] text-[#6f675f]">
+                    <span class="border border-[#e5ded3] bg-[#fbf9f5] px-2 py-0.5">Google Pay</span>
+                    <span class="border border-[#e5ded3] bg-[#fbf9f5] px-2 py-0.5">PhonePe</span>
+                    <span class="border border-[#e5ded3] bg-[#fbf9f5] px-2 py-0.5">Paytm</span>
+                    <span class="border border-[#e5ded3] bg-[#fbf9f5] px-2 py-0.5">Cards</span>
+                    <span class="border border-[#e5ded3] bg-[#fbf9f5] px-2 py-0.5">Netbanking</span>
+                  </span>
+                </span>
               </label>
 
-              <!-- Option 2: Cash on Delivery (COD) -->
-              <label id="payment-card-cod" class="flex items-start gap-3.5 p-4 border border-[#eae4dc] bg-white rounded-2xl cursor-pointer hover:border-[#99918b] transition-all">
-                <input type="radio" name="payment-method" value="COD" class="mt-1 accent-[#171513]" />
-                <div class="flex-1 min-w-0">
-                  <div class="flex flex-wrap items-center justify-between gap-1.5">
-                    <span class="text-xs sm:text-sm font-bold text-[#171513]">Cash on Delivery (COD)</span>
-                    <span class="text-[10px] text-[#8a5314] bg-[#fef8ee] border border-[#fae2be] px-2.5 py-0.5 rounded-full font-bold">
-                      +₹25 COD Processing Fee
+              <!-- COD -->
+              <label
+                id="payment-card-cod"
+                class="pay-card flex cursor-pointer items-start gap-3.5 p-4"
+              >
+                <input type="radio" name="payment-method" value="COD" class="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-[#14110f]" />
+                <span class="min-w-0 flex-1">
+                  <span class="flex flex-wrap items-center justify-between gap-1.5">
+                    <span class="text-[13px] font-medium text-[#14110f]">Cash on delivery</span>
+                    <span class="border border-[#e6d6bb] bg-[#faf3e6] px-2 py-0.5 text-[9px] uppercase tracking-[0.1em] text-[#8a5314]">
+                      +₹25 handling fee
                     </span>
-                  </div>
-                  <p class="text-[11px] text-[#6e6863] mt-1">
-                    Pay cash or scan courier QR at your doorstep upon parcel arrival.
-                  </p>
-                  <div class="mt-2.5 p-2.5 bg-[#fef8ee] border border-[#fae2be] rounded-xl text-[11px] text-[#8a5314] flex items-start gap-2">
-                    <span class="text-xs">💡</span>
-                    <div>
-                      <span class="font-bold">Avoid ₹25 fee:</span> Choose <strong>Razorpay Online</strong> above and pay via <strong>UPI (GPay / PhonePe)</strong> for <strong>₹0 extra fee</strong> and faster dispatch!
-                    </div>
-                  </div>
-                </div>
+                  </span>
+                  <span class="mt-1 block text-[11px] leading-relaxed text-[#6f675f]">
+                    Pay cash or scan the courier's QR at your doorstep when the parcel arrives.
+                  </span>
+                  <span class="mt-2.5 flex items-start gap-2 border-t border-[#e5ded3] pt-2.5 text-[11px] leading-relaxed text-[#8a5314]">
+                    <span aria-hidden="true">✦</span>
+                    <span>Skip the ₹25 fee by choosing Razorpay online with UPI — and your order ships sooner.</span>
+                  </span>
+                </span>
               </label>
             </div>
-          </div>
+          </section>
         </div>
 
-        <!-- Order Summary Column -->
+        <!-- Summary column -->
         <div class="lg:col-span-5">
-          <div class="bg-white p-5 sm:p-6 border border-[#eae4dc] rounded-[24px] space-y-5 sticky top-24 shadow-2xs">
-            <div class="flex items-center justify-between border-b border-[#eae4dc] pb-3">
-              <h2 class="font-serif text-lg sm:text-xl font-normal text-[#171513]">
-                Order Summary
-              </h2>
-              <span class="text-[10px] bg-[#faf4f2] text-[#9f4553] font-bold px-2.5 py-0.5 rounded-full border border-[#eae4dc]">
-                Vapi Atelier Dispatch
-              </span>
+          <div class="border border-[#e5ded3] bg-[#f4efe7] p-5 sm:p-6 lg:sticky lg:top-24">
+            <div class="flex items-baseline justify-between gap-3 border-b border-[#ded5c7] pb-3.5">
+              <h2 class="font-display text-[1.6rem] leading-none">Order summary</h2>
+              <span class="text-[9px] uppercase tracking-[0.14em] text-[#8a8279]">Vapi atelier</span>
             </div>
 
-            <div id="checkout-cart-items" class="space-y-3 divide-y divide-[#eae4dc] text-xs">
-              <p class="text-xs text-[#6e6863]">Loading your shopping bag...</p>
+            <div id="checkout-cart-items" class="divide-y divide-[#ded5c7] text-[12px]">
+              <p class="py-4 text-[11px] text-[#6f675f]">Loading your bag…</p>
             </div>
 
-            <div class="space-y-2 text-xs text-[#6e6863] pt-3 border-t border-[#eae4dc]">
+            <div class="space-y-2 border-t border-[#ded5c7] pt-4 text-[11px] text-[#6f675f]">
               <div class="flex justify-between">
                 <span>Subtotal</span>
-                <span id="checkout-subtotal" class="font-bold text-[#171513]">₹0</span>
+                <span id="checkout-subtotal" class="font-medium text-[#14110f]">₹0</span>
               </div>
               <div class="flex justify-between">
-                <span>Pan-India Express Shipping</span>
-                <span id="checkout-shipping" class="font-bold text-[#1b6d48]">FREE</span>
+                <span>Pan-India express shipping</span>
+                <span id="checkout-shipping" class="font-medium text-[#2f7d5a]">FREE</span>
               </div>
-              <!-- Coupon Discount Row -->
-              <div id="checkout-discount-row" class="hidden flex justify-between text-[#9f4553] font-semibold">
-                <span>Promotional Discount (<span id="checkout-coupon-code"></span>)</span>
-                <span id="checkout-discount">−₹0</span>
-              </div>
-              <!-- COD Fee Row (Shown only when Cash on Delivery is selected) -->
-              <div id="cod-fee-row" class="hidden flex justify-between text-[#8a5314] bg-[#fef8ee] px-2.5 py-1.5 rounded-lg border border-[#fae2be] text-xs font-semibold">
-                <span class="flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5 text-[#8a5314]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  <span>Cash on Delivery Handling Fee</span>
-                </span>
-                <span id="checkout-cod-fee" class="font-bold text-[#8a5314]">+₹25</span>
-              </div>
-              <div class="flex justify-between text-base font-bold text-[#171513] pt-2 border-t border-[#eae4dc]">
-                <span>Total Amount</span>
-                <span id="checkout-total" class="text-xl font-bold text-[#171513]">₹0</span>
-              </div>
-            </div>
 
-            <!-- COD Nudge Banner in Order Summary -->
-            <div id="cod-nudge-banner" class="hidden p-3 bg-[#eef8f3] border border-[#c4e8d3] rounded-xl text-[11px] text-[#1b6d48]">
-              <div class="flex items-start gap-2">
-                <span class="text-sm">💡</span>
-                <div>
-                  <p class="font-bold text-[#1b6d48]">Save ₹25 on this order:</p>
-                  <p class="text-[#256f48] mt-0.5">Switch to <strong>Razorpay Online (UPI)</strong> above to remove the ₹25 handling fee and enjoy 100% free checkout!</p>
+              <div id="checkout-discount-row" class="hidden">
+                <div class="flex justify-between font-medium text-[#2f7d5a]">
+                  <span>Privilege discount (<span id="checkout-coupon-code"></span>)</span>
+                  <span id="checkout-discount">−₹0</span>
                 </div>
               </div>
+
+              <div id="cod-fee-row" class="hidden">
+                <div class="flex justify-between border border-[#e6d6bb] bg-[#faf3e6] px-2.5 py-1.5 font-medium text-[#8a5314]">
+                  <span>Cash on delivery handling fee</span>
+                  <span id="checkout-cod-fee">+₹25</span>
+                </div>
+              </div>
+
+              <div class="flex items-baseline justify-between border-t border-[#ded5c7] pt-3 text-[#14110f]">
+                <span class="text-[10px] uppercase tracking-[0.16em]">Total</span>
+                <span id="checkout-total" class="font-display text-[1.85rem] leading-none">₹0</span>
+              </div>
             </div>
 
-            <!-- DPDP Act 2023 Statutory Just-in-Time Notice & Unbundled Marketing Opt-in -->
-            <DPDPNotice client:load context="checkout" />
+            <div id="cod-nudge-banner" class="hidden mt-4 border border-[#cfe3d6] bg-[#f0f7f2] p-3 text-[11px] leading-relaxed text-[#2f7d5a]">
+              <p class="font-medium">Save ₹25 on this order</p>
+              <p class="mt-0.5">Switch to Razorpay online (UPI) to remove the handling fee and check out at 100% of the piece price.</p>
+            </div>
 
-            <!-- Complete Order CTA -->
+            <div class="mt-4">
+              <DPDPNotice client:load context="checkout" />
+            </div>
+
             <button
               id="complete-order-btn"
               type="button"
-              class="w-full bg-[#171513] hover:bg-[#9f4553] text-white py-4 text-xs font-bold uppercase tracking-[0.12em] rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+              class="mt-4 flex w-full cursor-pointer items-center justify-center gap-2 bg-[#14110f] py-4 text-[10px] font-medium uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d] disabled:pointer-events-none disabled:opacity-50"
             >
-              <svg id="complete-btn-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <svg id="complete-btn-icon" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
-              <span id="complete-btn-text">Pay via Razorpay &amp; Confirm Order</span>
+              <span id="complete-btn-text">Pay via Razorpay &amp; confirm order</span>
             </button>
 
-            <!-- Order Success Confirmation Modal with Live GST Invoice Download -->
-            <div id="order-success-modal" class="hidden p-6 bg-[#faf8f5] border-2 border-[#c5a059] rounded-2xl text-center space-y-4 shadow-xl">
-              <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
-                <svg class="w-6 h-6 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <p class="mt-2.5 text-center text-[9px] uppercase tracking-[0.1em] text-[#8a8279]">
+              UPI · Cards · Netbanking · GST invoice
+            </p>
+
+            <!-- Success -->
+            <div id="order-success-modal" class="mt-4 hidden border border-[#c5a059] bg-[#fbf9f5] p-6 text-center">
+              <span class="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#eef6f0] text-[#2f7d5a]">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
-              </div>
+              </span>
 
-              <div class="space-y-1">
-                <h3 id="order-success-title" class="text-xl font-bold text-gray-900">Order Confirmed!</h3>
-                <p class="text-xs font-bold text-[#f2707f]" id="order-number-display"></p>
-                <p class="text-xs font-semibold text-gray-800" id="order-awb-display"></p>
-                <p class="text-xs font-semibold text-emerald-700" id="order-payment-mode-display"></p>
-                <p id="order-success-note" class="text-[11px] text-gray-600 leading-relaxed pt-1">
-                  Payment authorized successfully. Your order is scheduled for hand-inspection and gift packaging at our <strong>Vapi store location</strong> within 24–48 hours.
+              <div class="mt-3 space-y-1">
+                <h3 id="order-success-title" class="font-display text-[1.5rem] leading-tight text-[#14110f]">Order confirmed</h3>
+                <p id="order-number-display" class="text-[11px] font-medium text-[#8d3f3d]"></p>
+                <p id="order-awb-display" class="text-[11px] text-[#4a443f]"></p>
+                <p id="order-payment-mode-display" class="text-[11px] font-medium text-[#2f7d5a]"></p>
+                <p id="order-success-note" class="pt-1.5 text-[11px] leading-relaxed text-[#6f675f]">
+                  Payment authorised. Your order is scheduled for hand-inspection and gift packaging at our Vapi atelier within 24–48 hours.
                 </p>
               </div>
 
-              <!-- Action Buttons: Print GST Invoice & Track Dispatch -->
-              <div class="pt-2 space-y-2">
+              <div class="mt-4 space-y-2">
                 <button
                   id="checkout-view-invoice-btn"
                   type="button"
-                  class="w-full bg-black hover:bg-gray-800 text-white py-3 text-xs uppercase tracking-wider font-bold rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                  class="flex w-full cursor-pointer items-center justify-center gap-2 bg-[#14110f] py-3 text-[10px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
                 >
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
-                  <span>View Official GST Tax Invoice</span>
+                  View GST tax invoice
                 </button>
 
                 <a
                   id="checkout-track-order-link"
                   href="/track-order"
-                  class="block w-full bg-[#171513] hover:bg-[#9f4553] text-white py-3 text-xs uppercase tracking-[0.1em] font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                  class="flex w-full items-center justify-center gap-2 border border-[#14110f] py-3 text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:bg-[#14110f] hover:text-[#f6f1e8]"
                 >
-                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875A1.125 1.125 0 0013.125 3.75H4.5A1.125 1.125 0 003.375 4.875v9.375" />
-                  </svg>
-                  <span>Track Vapi Shipment Live →</span>
+                  Track your shipment
+                  <span aria-hidden="true">→</span>
                 </a>
               </div>
             </div>
 
-            <!-- Mandatory Policies Callout Box -->
-            <div class="space-y-2 text-[11px] text-gray-600 bg-gray-50 p-4 rounded-xl border border-gray-100">
-              <p class="flex items-center gap-2">
-                <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-                <span>Dispatched from our Vapi store location in 24–48 hours</span>
-              </p>
-              <p class="flex items-center gap-2">
-                <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
+            <!-- Policies -->
+            <ul class="mt-5 space-y-2 border-t border-[#ded5c7] pt-4 text-[10px] leading-relaxed text-[#6f675f]">
+              <li class="flex items-start gap-2">
+                <span class="mt-1 text-[#c5a059]" aria-hidden="true">✦</span>
+                <span>Dispatched from our Vapi atelier in 24–48 hours</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1 text-[#c5a059]" aria-hidden="true">✦</span>
                 <span>Free express delivery automatically applied above ₹499</span>
-              </p>
-              <p class="flex items-center gap-2">
-                <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1 text-[#c5a059]" aria-hidden="true">✦</span>
                 <span>Cancellations accepted before dispatch; no cash refunds</span>
-              </p>
-              <p class="flex items-center gap-2">
-                <svg class="w-3.5 h-3.5 text-emerald-700 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-                <span>Uncut 360° unboxing video required for damaged goods verification</span>
-              </p>
-            </div>
-
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="mt-1 text-[#c5a059]" aria-hidden="true">✦</span>
+                <span>Uncut 360° unboxing video required to verify damaged goods</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Interactive Razorpay Checkout Modal (Used for instant UPI, GPay, PhonePe, Cards) -->
-  <div id="razorpay-interactive-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="bg-white max-w-md w-full rounded-3xl shadow-2xl border border-gray-100 overflow-hidden transform transition-all animate-in fade-in zoom-in-95 duration-150">
-      <!-- Razorpay Header -->
-      <div class="bg-[#0c2340] text-white p-5 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-blue-500/20 border border-blue-400/30 flex items-center justify-center font-black text-blue-400 text-sm">
-            ₹
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-[10px] text-blue-300 font-extrabold uppercase tracking-wider">Razorpay Secure</span>
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            </div>
-            <h3 class="text-sm font-extrabold text-white">SatvaStones Jewellery</h3>
-          </div>
+  <!-- Interactive UPI / card dialog (fallback when the live key is absent) -->
+  <div id="razorpay-interactive-modal" class="fixed inset-0 z-50 flex hidden items-center justify-center bg-[#14110f]/70 p-4 backdrop-blur-sm">
+    <div class="w-full max-w-md overflow-hidden border border-[#e5ded3] bg-[#fbf9f5] shadow-2xl">
+      <!-- Header -->
+      <div class="flex items-start justify-between gap-4 bg-[#14110f] p-5 text-[#f6f1e8]">
+        <div>
+          <p class="text-[9px] uppercase tracking-[0.2em] text-[#c5a059]">Satvastones secure payment</p>
+          <h3 class="font-display mt-1 text-[1.35rem] leading-none">Pay by UPI or card</h3>
         </div>
         <div class="text-right">
-          <p class="text-[10px] text-blue-200 uppercase font-bold">Amount to Pay</p>
-          <p id="rzp-modal-amount" class="text-base font-black text-white">₹0</p>
+          <p class="text-[9px] uppercase tracking-[0.14em] text-white/55">Amount</p>
+          <p id="rzp-modal-amount" class="text-base font-medium text-[#f6f1e8]">₹0</p>
         </div>
       </div>
 
-      <!-- Modal Body -->
-      <div class="p-6 space-y-4">
-        <div class="flex items-center justify-between text-xs text-gray-500 border-b border-gray-100 pb-3">
-          <span class="font-bold text-gray-800">Select Instant UPI App</span>
-          <span class="text-emerald-700 font-bold flex items-center gap-1 text-[11px]">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
-            Zero Processing Fees
+      <!-- Body -->
+      <div class="space-y-4 p-5 sm:p-6">
+        <div class="flex items-center justify-between gap-3 border-b border-[#e5ded3] pb-3">
+          <span class="text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">Choose a UPI app</span>
+          <span class="flex items-center gap-1 text-[10px] font-medium text-[#2f7d5a]">
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            Zero processing fees
           </span>
         </div>
 
-        <!-- Quick 1-Tap UPI Apps -->
         <div class="grid grid-cols-3 gap-2.5">
-          <button type="button" class="rzp-upi-app-btn p-3 border border-gray-200 hover:border-[#f2707f] hover:bg-rose-50/20 rounded-2xl flex flex-col items-center gap-1.5 transition-all cursor-pointer group" data-app="Google Pay">
-            <div class="w-10 h-10 rounded-xl bg-gray-50 group-hover:bg-white flex items-center justify-center text-xs font-black text-blue-600 border border-gray-200 shadow-2xs">
-              GPay
-            </div>
-            <span class="text-[11px] font-bold text-gray-800">Google Pay</span>
+          <button type="button" class="rzp-upi-app-btn group flex cursor-pointer flex-col items-center gap-1.5 border border-[#d8d0c4] p-3 transition-colors hover:border-[#14110f]" data-app="Google Pay">
+            <span class="flex h-10 w-10 items-center justify-center border border-[#e5ded3] bg-white text-[11px] font-medium text-[#14110f]">GPay</span>
+            <span class="text-[10px] text-[#14110f]">Google Pay</span>
           </button>
-
-          <button type="button" class="rzp-upi-app-btn p-3 border border-gray-200 hover:border-[#f2707f] hover:bg-rose-50/20 rounded-2xl flex flex-col items-center gap-1.5 transition-all cursor-pointer group" data-app="PhonePe">
-            <div class="w-10 h-10 rounded-xl bg-[#5f259f]/10 group-hover:bg-[#5f259f]/20 flex items-center justify-center text-xs font-black text-[#5f259f] border border-[#5f259f]/20 shadow-2xs">
-              Pe
-            </div>
-            <span class="text-[11px] font-bold text-gray-800">PhonePe</span>
+          <button type="button" class="rzp-upi-app-btn group flex cursor-pointer flex-col items-center gap-1.5 border border-[#d8d0c4] p-3 transition-colors hover:border-[#14110f]" data-app="PhonePe">
+            <span class="flex h-10 w-10 items-center justify-center border border-[#e5ded3] bg-white text-[11px] font-medium text-[#5f259f]">Pe</span>
+            <span class="text-[10px] text-[#14110f]">PhonePe</span>
           </button>
-
-          <button type="button" class="rzp-upi-app-btn p-3 border border-gray-200 hover:border-[#f2707f] hover:bg-rose-50/20 rounded-2xl flex flex-col items-center gap-1.5 transition-all cursor-pointer group" data-app="Paytm UPI">
-            <div class="w-10 h-10 rounded-xl bg-[#00b9f5]/10 group-hover:bg-[#00b9f5]/20 flex items-center justify-center text-xs font-black text-[#00b9f5] border border-[#00b9f5]/20 shadow-2xs">
-              Paytm
-            </div>
-            <span class="text-[11px] font-bold text-gray-800">Paytm UPI</span>
+          <button type="button" class="rzp-upi-app-btn group flex cursor-pointer flex-col items-center gap-1.5 border border-[#d8d0c4] p-3 transition-colors hover:border-[#14110f]" data-app="Paytm UPI">
+            <span class="flex h-10 w-10 items-center justify-center border border-[#e5ded3] bg-white text-[10px] font-medium text-[#00a3d9]">Paytm</span>
+            <span class="text-[10px] text-[#14110f]">Paytm UPI</span>
           </button>
         </div>
 
-        <!-- Enter Custom UPI ID -->
-        <div class="space-y-1.5 pt-2">
-          <label class="text-[11px] font-bold text-gray-700 block">Or enter your UPI ID (VPA)</label>
+        <div class="space-y-1.5 pt-1">
+          <label for="rzp-upi-id-input" class="block text-[10px] uppercase tracking-[0.14em] text-[#6f675f]">Or enter your UPI ID (VPA)</label>
           <div class="flex gap-2">
             <input
               id="rzp-upi-id-input"
               type="text"
-              placeholder="e.g. mobile@okaxis, yourname@upi"
-              class="flex-1 bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+              placeholder="mobile@okaxis"
+              class="checkout-input flex-1"
             />
             <button
               id="rzp-pay-upi-btn"
               type="button"
-              class="px-4 py-2 bg-[#0c2340] hover:bg-black text-white text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0"
+              class="shrink-0 cursor-pointer bg-[#14110f] px-4 text-[9px] font-medium uppercase tracking-[0.12em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
             >
-              Verify & Pay
+              Verify &amp; pay
             </button>
           </div>
         </div>
 
-        <!-- Cards / NetBanking Options -->
-        <div class="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+        <div class="flex items-center justify-between gap-2 border-t border-[#e5ded3] pt-3">
           <button
             id="rzp-pay-cards-btn"
             type="button"
-            class="text-[#0c2340] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+            class="cursor-pointer text-[10px] uppercase tracking-[0.12em] text-[#14110f] underline decoration-[#d8c3a6] underline-offset-4"
           >
-            <span>💳 Pay via Card / NetBanking</span>
+            Pay via card / netbanking
           </button>
           <button
             id="rzp-cancel-btn"
             type="button"
-            class="text-gray-400 hover:text-gray-600 font-medium cursor-pointer"
+            class="cursor-pointer text-[10px] uppercase tracking-[0.12em] text-[#8a8279] transition-colors hover:text-[#14110f]"
           >
             Cancel
           </button>
         </div>
 
-        <!-- Processing Feedback -->
-        <div id="rzp-processing-indicator" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl text-center text-xs text-blue-900 font-bold animate-pulse">
-          ⏳ Authorizing payment via Razorpay secure gateway...
+        <div id="rzp-processing-indicator" class="hidden border border-[#cfe3d6] bg-[#f0f7f2] p-3 text-center text-[11px] font-medium text-[#2f7d5a]">
+          Authorising payment via the secure gateway…
         </div>
 
-        <!-- Trust Footer -->
-        <div class="pt-2 flex items-center justify-center gap-2 text-[10px] text-gray-400 border-t border-gray-100">
-          <span>PCI-DSS Level 1</span>
-          <span>•</span>
-          <span>RBI Licensed Payment Node</span>
-          <span>•</span>
-          <span>256-Bit SSL</span>
-        </div>
+        <p class="border-t border-[#e5ded3] pt-3 text-center text-[9px] uppercase tracking-[0.1em] text-[#8a8279]">
+          PCI-DSS Level 1 · RBI licensed · 256-bit SSL
+        </p>
       </div>
     </div>
   </div>
 </BaseLayout>
+
+<style>
+  .checkout-input {
+    display: block;
+    width: 100%;
+    height: 2.75rem;
+    border: 1px solid #d8d0c4;
+    background-color: #fbf9f5;
+    padding: 0 0.875rem;
+    font-size: 12px;
+    color: #14110f;
+    outline: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .checkout-input::placeholder {
+    color: #9a938b;
+  }
+
+  .checkout-input:focus {
+    border-color: #14110f;
+    background-color: #ffffff;
+  }
+
+  .pay-card {
+    border: 1px solid #d8d0c4;
+    background-color: transparent;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .pay-card:hover {
+    border-color: #b9ae9f;
+  }
+
+  .pay-card.is-selected {
+    border-color: #14110f;
+    background-color: #f4efe7;
+  }
+</style>
 
 <script>
   import { getCartItems, saveCartItems } from '../stores/cartStore';
@@ -517,6 +555,7 @@ import DPDPNotice from '../components/DPDPNotice';
   const orderSuccessNote = document.getElementById('order-success-note');
   const trackOrderLink = document.getElementById('checkout-track-order-link') as HTMLAnchorElement;
   const viewInvoiceBtn = document.getElementById('checkout-view-invoice-btn');
+  const formError = document.getElementById('checkout-form-error');
 
   // Payment Selection Cards
   const cardRazorpay = document.getElementById('payment-card-razorpay');
@@ -549,12 +588,39 @@ import DPDPNotice from '../components/DPDPNotice';
     }).format(Math.round(paise / 100));
   }
 
+  const setFormError = (message: string, field?: HTMLElement | null) => {
+    if (formError) {
+      formError.textContent = message;
+      formError.classList.remove('hidden');
+    }
+    if (field) {
+      field.focus();
+      field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  const clearFormError = () => {
+    if (formError) {
+      formError.textContent = '';
+      formError.classList.add('hidden');
+    }
+  };
+
+  // Gift note visibility
+  const giftCheck = document.getElementById('gift-packaging-check') as HTMLInputElement | null;
+  const giftMessageBox = document.getElementById('gift-message-box');
+  giftCheck?.addEventListener('change', () => {
+    if (!giftMessageBox) return;
+    giftMessageBox.classList.toggle('hidden', !giftCheck.checked);
+  });
+
   if (items.length === 0) {
     if (cartList) {
       cartList.innerHTML = `
-        <div class="text-center py-6">
-          <p class="text-gray-500 mb-3">Your shopping bag is currently empty.</p>
-          <a href="/shop" class="text-xs uppercase font-bold text-[#f2707f] underline">Browse Bestsellers</a>
+        <div class="py-8 text-center">
+          <p class="font-display text-[1.25rem] text-[#14110f]">Your bag is empty.</p>
+          <p class="mx-auto mt-1.5 max-w-[220px] text-[11px] leading-relaxed text-[#6f675f]">Start with the pieces everyone loves — waterproof, 18K gold PVD, made for every day.</p>
+          <a href="/collections/bestsellers" class="mt-4 inline-flex items-center gap-2 bg-[#14110f] px-5 py-2.5 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8]">Shop bestsellers <span aria-hidden="true">→</span></a>
         </div>
       `;
     }
@@ -563,7 +629,7 @@ import DPDPNotice from '../components/DPDPNotice';
     const subtotalPaise = items.reduce((acc, i) => acc + i.pricePaise * i.quantity, 0);
     const shippingPaise = subtotalPaise >= 49900 ? 0 : 4900;
 
-    // Check applied coupon from Cart Drawer
+    // Applied coupon from the cart drawer
     let discountPaise = 0;
     try {
       const storedCoupon = localStorage.getItem('satvastones_applied_coupon');
@@ -587,13 +653,13 @@ import DPDPNotice from '../components/DPDPNotice';
       cartList.innerHTML = items
         .map(
           (item) => `
-          <div class="flex items-center gap-3 pt-2">
-            <img src="${item.image}" alt="${item.name}" class="w-12 h-14 object-cover rounded-lg bg-gray-50 border border-gray-100" />
-            <div class="flex-1 min-w-0">
-              <p class="font-semibold text-[#171513] truncate">${item.name}</p>
-              <p class="text-[#6e6863] text-[11px]">Qty: ${item.quantity}</p>
+          <div class="flex items-center gap-3 py-3">
+            <img src="${item.image}" alt="${item.name}" class="h-14 w-12 shrink-0 border border-[#ded5c7] bg-[#fbf9f5] object-cover" />
+            <div class="min-w-0 flex-1">
+              <p class="truncate text-[12px] leading-snug text-[#14110f]">${item.name}</p>
+              <p class="mt-0.5 text-[10px] uppercase tracking-[0.1em] text-[#8a8279]">Qty ${item.quantity} · 18K gold PVD</p>
             </div>
-            <span class="font-bold text-[#171513]">${formatINR(item.pricePaise * item.quantity)}</span>
+            <span class="shrink-0 text-[12px] font-medium text-[#14110f]">${formatINR(item.pricePaise * item.quantity)}</span>
           </div>
         `
         )
@@ -603,7 +669,7 @@ import DPDPNotice from '../components/DPDPNotice';
     if (subtotalEl) subtotalEl.textContent = formatINR(subtotalPaise);
     if (shippingEl) shippingEl.textContent = shippingPaise === 0 ? 'FREE' : formatINR(shippingPaise);
     if (totalEl) totalEl.textContent = formatINR(baseTotalPaise);
-    if (completeBtnText) completeBtnText.textContent = `Pay via Razorpay (${formatINR(baseTotalPaise)}) & Confirm Order`;
+    if (completeBtnText) completeBtnText.textContent = `Pay via Razorpay (${formatINR(baseTotalPaise)}) & confirm order`;
 
     // Handle Payment Selection Toggle (Razorpay vs Cash on Delivery)
     function updatePaymentUI() {
@@ -611,32 +677,24 @@ import DPDPNotice from '../components/DPDPNotice';
       isCodSelected = selected === 'COD';
 
       if (isCodSelected) {
-        // Active COD styling
-        cardCod?.classList.add('border-2', 'border-[#171513]', 'bg-[#faf8f5]');
-        cardCod?.classList.remove('border-[#eae4dc]', 'bg-white');
-        cardRazorpay?.classList.remove('border-2', 'border-[#171513]', 'bg-[#faf8f5]');
-        cardRazorpay?.classList.add('border-[#eae4dc]', 'bg-white');
+        cardCod?.classList.add('is-selected');
+        cardRazorpay?.classList.remove('is-selected');
 
-        // Show COD fee row and nudge banner
         codFeeRow?.classList.remove('hidden');
         codNudgeBanner?.classList.remove('hidden');
 
         const codTotalPaise = baseTotalPaise + COD_FEE_PAISE;
         if (totalEl) totalEl.textContent = formatINR(codTotalPaise);
-        if (completeBtnText) completeBtnText.textContent = `Confirm Cash on Delivery Order (${formatINR(codTotalPaise)})`;
+        if (completeBtnText) completeBtnText.textContent = `Confirm cash on delivery (${formatINR(codTotalPaise)})`;
       } else {
-        // Active Razorpay styling
-        cardRazorpay?.classList.add('border-2', 'border-[#171513]', 'bg-[#faf8f5]');
-        cardRazorpay?.classList.remove('border-[#eae4dc]', 'bg-white');
-        cardCod?.classList.remove('border-2', 'border-[#171513]', 'bg-[#faf8f5]');
-        cardCod?.classList.add('border-[#eae4dc]', 'bg-white');
+        cardRazorpay?.classList.add('is-selected');
+        cardCod?.classList.remove('is-selected');
 
-        // Hide COD fee row and nudge banner
         codFeeRow?.classList.add('hidden');
         codNudgeBanner?.classList.add('hidden');
 
         if (totalEl) totalEl.textContent = formatINR(baseTotalPaise);
-        if (completeBtnText) completeBtnText.textContent = `Pay via Razorpay (${formatINR(baseTotalPaise)}) & Confirm Order`;
+        if (completeBtnText) completeBtnText.textContent = `Pay via Razorpay (${formatINR(baseTotalPaise)}) & confirm order`;
       }
     }
 
@@ -644,7 +702,7 @@ import DPDPNotice from '../components/DPDPNotice';
       radio.addEventListener('change', updatePaymentUI);
     });
 
-    // Auto-prefill details if personal customer account is logged in
+    // Auto-prefill details if a personal customer account is logged in
     const savedCustomerStr = localStorage.getItem('satva_customer_user');
     if (savedCustomerStr) {
       try {
@@ -726,35 +784,37 @@ import DPDPNotice from '../components/DPDPNotice';
 
       // Update Confirmation Screen
       if (orderNumDisplay) {
-        orderNumDisplay.textContent = `Order Reference: ${orderNumber}`;
+        orderNumDisplay.textContent = `Order reference: ${orderNumber}`;
       }
       if (orderAwbDisplay) {
-        orderAwbDisplay.textContent = `Assigned Courier AWB: ${trackingNumber} (${courierPartner})`;
+        orderAwbDisplay.textContent = `Courier AWB: ${trackingNumber} · ${courierPartner}`;
       }
       if (orderPaymentModeDisplay) {
         if (opts.isCod) {
-          orderPaymentModeDisplay.textContent = `Payable on Delivery: ${formatINR(opts.totalAmountPaise)} (Cash / QR to Courier)`;
-          orderPaymentModeDisplay.className = 'text-xs font-extrabold text-amber-800 bg-amber-50 border border-amber-200 py-1 px-3 rounded-lg inline-block';
+          orderPaymentModeDisplay.textContent = `Payable on delivery: ${formatINR(opts.totalAmountPaise)} (cash / QR to courier)`;
+          orderPaymentModeDisplay.className = 'inline-block border border-[#e6d6bb] bg-[#faf3e6] px-3 py-1 text-[10px] font-medium text-[#8a5314]';
         } else {
-          orderPaymentModeDisplay.textContent = `Payment Verified via Razorpay (${opts.paymentId})`;
-          orderPaymentModeDisplay.className = 'text-xs font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 py-1 px-3 rounded-lg inline-block';
+          orderPaymentModeDisplay.textContent = `Payment verified via Razorpay (${opts.paymentId})`;
+          orderPaymentModeDisplay.className = 'inline-block border border-[#cfe3d6] bg-[#f0f7f2] px-3 py-1 text-[10px] font-medium text-[#2f7d5a]';
         }
       }
       if (orderSuccessNote) {
         if (opts.isCod) {
-          orderSuccessNote.innerHTML = `Your <strong>Cash on Delivery</strong> order is confirmed. Please keep <strong>${formatINR(opts.totalAmountPaise)}</strong> ready in cash or UPI QR for the delivery partner upon arrival. Hand-inspected and dispatched from our Vapi atelier within 24–48 hours.`;
+          orderSuccessNote.innerHTML = `Your <strong class="font-medium">cash on delivery</strong> order is confirmed. Please keep <strong class="font-medium">${formatINR(opts.totalAmountPaise)}</strong> ready in cash or UPI for the delivery partner. Hand-inspected and dispatched from our Vapi atelier within 24–48 hours.`;
         } else {
-          orderSuccessNote.innerHTML = `Your payment of <strong>${formatINR(opts.totalAmountPaise)}</strong> was authorized successfully via Razorpay. Your order is scheduled for hand-inspection and velvet gift packaging at our <strong>Vapi store location</strong> within 24–48 hours.`;
+          orderSuccessNote.innerHTML = `Your payment of <strong class="font-medium">${formatINR(opts.totalAmountPaise)}</strong> was authorised via Razorpay. Your order is scheduled for hand-inspection and velvet gift packaging at our <strong class="font-medium">Vapi atelier</strong> within 24–48 hours.`;
         }
       }
       if (successTitle) {
-        successTitle.textContent = opts.isCod ? 'Cash on Delivery Order Confirmed! 🎉' : 'Payment Verified & Order Confirmed! 🎉';
+        successTitle.textContent = opts.isCod ? 'Cash on delivery confirmed' : 'Payment verified — order confirmed';
       }
       if (trackOrderLink) {
         trackOrderLink.href = `/track-order?ref=${orderNumber}`;
       }
       if (successModal) successModal.classList.remove('hidden');
       if (completeBtn) completeBtn.classList.add('hidden');
+
+      successModal?.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
       // Clear Shopping Bag & Applied Coupon
       saveCartItems([]);
@@ -765,6 +825,8 @@ import DPDPNotice from '../components/DPDPNotice';
 
     // Primary CTA Button Click Handler
     completeBtn?.addEventListener('click', async () => {
+      clearFormError();
+
       const nameInput = document.getElementById('checkout-name') as HTMLInputElement;
       const emailInput = document.getElementById('checkout-email') as HTMLInputElement;
       const phoneInput = document.getElementById('checkout-phone') as HTMLInputElement;
@@ -774,23 +836,19 @@ import DPDPNotice from '../components/DPDPNotice';
       const pinInput = document.getElementById('checkout-pin') as HTMLInputElement;
 
       if (!nameInput?.value.trim()) {
-        alert('Please enter your full name for courier delivery.');
-        nameInput?.focus();
+        setFormError('Please enter your full name for courier delivery.', nameInput);
         return;
       }
       if (!phoneInput?.value.trim()) {
-        alert('Please enter your 10-digit mobile number for courier tracking SMS.');
-        phoneInput?.focus();
+        setFormError('Please enter your 10-digit mobile number so we can send tracking updates.', phoneInput);
         return;
       }
       if (!emailInput?.value.trim()) {
-        alert('Please enter your email address for order confirmation & GST tax invoice.');
-        emailInput?.focus();
+        setFormError('Please enter your email address for the order confirmation and GST invoice.', emailInput);
         return;
       }
       if (!addr1Input?.value.trim() || !cityInput?.value.trim() || !pinInput?.value.trim()) {
-        alert('Please complete your shipping address (Street address, City, and Pincode).');
-        addr1Input?.focus();
+        setFormError('Please complete your shipping address — street address, city, and PIN code.', !addr1Input?.value.trim() ? addr1Input : !cityInput?.value.trim() ? cityInput : pinInput);
         return;
       }
 
@@ -837,7 +895,7 @@ import DPDPNotice from '../components/DPDPNotice';
 
       if (isLiveKey) {
         completeBtn.disabled = true;
-        if (completeBtnText) completeBtnText.textContent = 'Launching Razorpay Gateway...';
+        if (completeBtnText) completeBtnText.textContent = 'Launching Razorpay…';
 
         const sdkReady = await ensureRazorpayLoaded();
         if (sdkReady && typeof (window as any).Razorpay !== 'undefined') {
@@ -876,14 +934,14 @@ import DPDPNotice from '../components/DPDPNotice';
           try {
             const rzp = new (window as any).Razorpay(options);
             rzp.on('payment.failed', function (resp: any) {
-              alert('Payment declined: ' + (resp.error?.description || 'Please try another UPI app or card.'));
+              setFormError('Payment declined: ' + (resp.error?.description || 'please try another UPI app or card.'));
               completeBtn.disabled = false;
               if (completeBtnText) completeBtnText.textContent = 'Pay Now & Place Order';
             });
             rzp.open();
             return;
           } catch (e) {
-            console.warn('Razorpay SDK modal error, opening interactive UPI portal:', e);
+            console.warn('Razorpay SDK modal error, opening the interactive UPI dialog:', e);
             completeBtn.disabled = false;
             if (completeBtnText) completeBtnText.textContent = 'Pay Now & Place Order';
           }
@@ -893,14 +951,14 @@ import DPDPNotice from '../components/DPDPNotice';
         }
       }
 
-      // Interactive Razorpay UPI Dialog fallback
+      // Interactive UPI dialog fallback
       if (rzpModal && rzpModalAmount) {
         rzpModalAmount.textContent = formatINR(currentRazorpayTotalPaise);
         rzpModal.classList.remove('hidden');
       }
     });
 
-    // Interactive Razorpay Dialog Actions
+    // Interactive UPI Dialog Actions
     function triggerRazorpayUPIPayment(methodName: string) {
       if (rzpProcessing) rzpProcessing.classList.remove('hidden');
       setTimeout(() => {

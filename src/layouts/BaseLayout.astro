@@ -11,6 +11,8 @@ import RingSizeModal from '../components/RingSizeModal';
 import GSTInvoiceModal from '../components/GSTInvoiceModal';
 import CookieConsentManager from '../components/CookieConsentManager';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import SmoothScroll from '../components/SmoothScroll.astro';
+import ScrollReveal from '../components/ScrollReveal.astro';
 import '../styles/global.css';
 
 export interface Props {
@@ -24,14 +26,20 @@ export interface Props {
 }
 
 const props = Astro.props;
+const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/index';
 ---
 
 <!doctype html>
 <html lang="en-IN">
   <head>
     <SEOHead {...props} />
+    <script is:inline>
+      if ('IntersectionObserver' in window) {
+        document.documentElement.classList.add('has-js');
+      }
+    </script>
   </head>
-  <body class="min-h-screen flex flex-col bg-white text-[#111111] selection:bg-[#f2707f] selection:text-white">
+  <body class="min-h-screen flex flex-col bg-white text-[#111111] selection:bg-[#c5a059] selection:text-[#14110f]">
     <!-- Accessible Skip to Main Content Link for Screen Readers & Keyboard Users -->
     <a
       href="#main-content"
@@ -40,11 +48,11 @@ const props = Astro.props;
       Skip to main content
     </a>
 
-    <!-- Announcement Bar (Jewelsmars Infinite Black Marquee) -->
-    <AnnouncementBar />
+    <!-- Announcement Bar (kept on interior pages; the homepage hero owns the first screen) -->
+    {!isHome && <AnnouncementBar />}
 
-    <!-- Sticky Navigation Header -->
-    <Header />
+    <!-- Navigation Header (transparent overlay on the homepage, solid elsewhere) -->
+    <Header overlay={isHome} />
 
     <!-- Main Content Slot (with mobile dock clearance) -->
     <main id="main-content" class="flex-1 pb-16 lg:pb-0" tabindex="-1">
@@ -67,5 +75,9 @@ const props = Astro.props;
     <RingSizeModal client:idle />
     <GSTInvoiceModal client:idle />
     <CookieConsentManager client:idle />
+
+    <!-- Motion layer -->
+    <SmoothScroll />
+    <ScrollReveal />
   </body>
 </html>

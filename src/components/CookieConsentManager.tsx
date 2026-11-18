@@ -54,9 +54,14 @@ export default function CookieConsentManager() {
     const handleReopen = () => {
       setIsPreferencesOpen(true);
     };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsPreferencesOpen(false);
+    };
     window.addEventListener('satvastones:open_cookie_preferences', handleReopen);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('satvastones:open_cookie_preferences', handleReopen);
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
@@ -144,59 +149,51 @@ export default function CookieConsentManager() {
 
   return (
     <>
-      {/* 1. MAIN BANNER: Equal Prominence, Zero Dark Patterns (DPDP Rules 2025 Compliant) */}
+      {/* 1. MAIN BANNER: Equal prominence, no dark patterns, and it never blocks the buy box */}
       {isOpen && !isPreferencesOpen && (
         <div
           role="region"
           aria-label="Digital Personal Data Protection Consent Banner"
-          className="fixed bottom-0 inset-x-0 z-[9999] bg-white border-t border-gray-200 shadow-2xl p-4 sm:p-6 transition-transform duration-300"
+          className="fixed bottom-[4.5rem] left-4 right-4 z-[9999] border border-[#e0d7c9] bg-[#fbf9f5] p-4 shadow-[0_18px_50px_rgba(20,17,15,0.18)] sm:bottom-5 sm:left-5 sm:right-auto sm:max-w-[340px]"
         >
-          <div class="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            
-            <div class="space-y-1.5 max-w-4xl text-left">
-              <div class="flex items-center gap-2">
-                <span class="inline-block w-2 h-2 rounded-full bg-[#f2707f]"></span>
-                <span class="text-xs font-bold uppercase tracking-wider text-gray-900">
-                  Data Privacy Notice • DPDP Act, 2023 Compliance
-                </span>
-              </div>
-              <p class="text-xs text-gray-600 leading-relaxed">
-                SatvaStones uses strictly necessary cookies to power cart checkout, secure Razorpay payments, and tax invoices. With your prior consent, we also use optional performance analytics to improve your experience. Under the <strong>Digital Personal Data Protection Act, 2023</strong>, non-essential cookies remain disabled until you choose your preference. We never sell your personal data.
-              </p>
-              <div class="flex flex-wrap gap-3 text-[11px] text-[#a1505a] font-medium pt-0.5">
-                <a href="/privacy-policy" class="underline hover:text-[#e05e6d]">Read Indian DPDP Privacy Policy</a>
-                <span>•</span>
-                <a href="/grievance-redressal" class="underline hover:text-[#e05e6d]">Grievance Officer Disclosures</a>
-              </div>
-            </div>
+          <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#8d3f3d]">
+            Your privacy, your choice
+          </p>
+          <p className="mt-1.5 text-[11.5px] leading-[1.6] text-[#4a443f]">
+            Essential cookies power your bag, payments and GST invoices. Optional analytics stay off until you consent, under India's{' '}
+            <strong className="font-medium text-[#14110f]">DPDP Act, 2023</strong>. We never sell your data.
+          </p>
+          <p className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1 text-[9.5px] text-[#6f675f]">
+            <a href="/privacy-policy" className="underline decoration-[#d8c3a6] underline-offset-2 hover:text-[#14110f]">
+              Privacy policy
+            </a>
+            <a href="/grievance-redressal" className="underline decoration-[#d8c3a6] underline-offset-2 hover:text-[#14110f]">
+              Grievance officer
+            </a>
+          </p>
 
-            {/* THREE BUTTONS WITH IDENTICAL VISUAL WEIGHT & SIZE (No Dark Patterns) */}
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto shrink-0">
-              <button
-                type="button"
-                onClick={handleAcceptAll}
-                class="bg-[#111111] hover:bg-black text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer border border-[#111111] text-center"
-              >
-                Accept All
-              </button>
-
-              <button
-                type="button"
-                onClick={handleRejectAll}
-                class="bg-white hover:bg-gray-100 text-gray-900 px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer border border-gray-300 text-center"
-              >
-                Reject All
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setIsPreferencesOpen(true)}
-                class="bg-gray-50 hover:bg-gray-100 text-gray-700 px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer border border-gray-200 text-center"
-              >
-                Manage Preferences
-              </button>
-            </div>
-
+          <div className="mt-3 grid grid-cols-3 gap-1.5">
+            <button
+              type="button"
+              onClick={handleAcceptAll}
+              className="h-8 cursor-pointer bg-[#14110f] text-[8.5px] font-medium uppercase tracking-[0.1em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+            >
+              Accept all
+            </button>
+            <button
+              type="button"
+              onClick={handleRejectAll}
+              className="h-8 cursor-pointer border border-[#cfc5b6] bg-transparent text-[8.5px] font-medium uppercase tracking-[0.1em] text-[#14110f] transition-colors hover:bg-[#f1ece3]"
+            >
+              Reject all
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsPreferencesOpen(true)}
+              className="h-8 cursor-pointer border border-[#cfc5b6] bg-transparent text-[8.5px] font-medium uppercase tracking-[0.1em] text-[#14110f] transition-colors hover:bg-[#f1ece3]"
+            >
+              Preferences
+            </button>
           </div>
         </div>
       )}
@@ -207,118 +204,130 @@ export default function CookieConsentManager() {
           role="dialog"
           aria-modal="true"
           aria-labelledby="cookie-pref-title"
-          class="fixed inset-0 z-[10000] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4"
+          className="fixed inset-0 z-[10000] flex items-center justify-center bg-[#14110f]/70 p-4 backdrop-blur-sm"
+          onClick={() => setIsPreferencesOpen(false)}
         >
-          <div class="bg-white w-full max-w-xl rounded-2xl border border-gray-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            
+          <div
+            className="flex max-h-[90vh] w-full max-w-xl flex-col overflow-hidden border border-[#e5ded3] bg-[#fbf9f5] shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Modal Header */}
-            <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+            <div className="flex items-start justify-between gap-4 border-b border-[#e5ded3] px-5 py-4 sm:px-6">
               <div>
-                <span class="text-[10px] font-bold uppercase tracking-widest text-[#a1505a]">Granular Consent Controls</span>
-                <h3 id="cookie-pref-title" class="text-base font-bold text-gray-900">
-                  Cookie & Privacy Preferences
-                </h3>
+                <p className="text-[9px] font-medium uppercase tracking-[0.2em] text-[#c5a059]">
+                  Granular consent controls
+                </p>
+                <h2 id="cookie-pref-title" className="font-display mt-1 text-[1.5rem] leading-none text-[#14110f]">
+                  Cookie &amp; privacy preferences
+                </h2>
               </div>
               <button
                 type="button"
                 onClick={() => setIsPreferencesOpen(false)}
-                class="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:text-black flex items-center justify-center text-sm font-bold cursor-pointer"
+                className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center border border-[#d8d0c4] text-[#6f675f] transition-colors hover:border-[#14110f] hover:text-[#14110f]"
                 aria-label="Close preferences modal"
               >
-                ✕
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
             {/* Modal Body */}
-            <div class="p-5 overflow-y-auto space-y-4 text-xs text-gray-600 leading-relaxed">
+            <div className="space-y-3 overflow-y-auto px-5 py-5 text-[11.5px] leading-relaxed text-[#4a443f] sm:px-6">
               <p>
-                In accordance with <strong>Rule 3 & Rule 4 of the Digital Personal Data Protection Rules, 2025</strong>, you have full control over the data processed on your device. Toggle your choices below:
+                Under <strong className="font-medium text-[#14110f]">Rules 3 and 4 of the Digital Personal Data Protection Rules, 2025</strong>, you control what is processed on your device. Toggle each category below.
               </p>
 
               {/* Category 1: Strictly Necessary (Locked) */}
-              <div class="p-4 rounded-xl border border-gray-200 bg-gray-50 space-y-1.5">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-gray-900 text-xs">Strictly Necessary Cookies</span>
-                  <span class="text-[10px] font-bold bg-gray-200 text-gray-700 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                    Always Active
+              <div className="border border-[#e5ded3] bg-white p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-[11.5px] font-medium text-[#14110f]">Strictly necessary</span>
+                  <span className="border border-[#e5ded3] bg-[#f4efe7] px-2 py-0.5 text-[8px] uppercase tracking-[0.14em] text-[#6f675f]">
+                    Always active
                   </span>
                 </div>
-                <p class="text-[11px] text-gray-500">
-                  Essential for shopping bag persistence, CSRF security, Razorpay checkout authorization, and GST invoice generation. Cannot be turned off.
+                <p className="mt-1.5 text-[10.5px] leading-relaxed text-[#8a8279]">
+                  Required for bag persistence, CSRF security, Razorpay checkout authorisation and GST invoice generation. Cannot be switched off.
                 </p>
               </div>
 
-              {/* Category 2: Analytics & Performance (Unticked by default) */}
-              <div class="p-4 rounded-xl border border-gray-200 space-y-2">
-                <div class="flex items-center justify-between">
+              {/* Category 2: Analytics */}
+              <div className="border border-[#e5ded3] bg-white p-4">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <span class="font-bold text-gray-900 text-xs block">Analytics & Store Performance</span>
-                    <span class="text-[11px] text-gray-500">Collects aggregated, privacy-safe metrics to measure site speed and checkout reliability.</span>
+                    <span className="block text-[11.5px] font-medium text-[#14110f]">Analytics &amp; performance</span>
+                    <span className="mt-1 block text-[10.5px] leading-relaxed text-[#8a8279]">
+                      Aggregated, privacy-safe metrics on site speed and checkout reliability.
+                    </span>
                   </div>
-                  <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3">
+                  <label className="relative mt-0.5 inline-flex shrink-0 cursor-pointer items-center">
                     <input
                       type="checkbox"
                       checked={analytics}
                       onChange={(e) => setAnalytics(e.target.checked)}
-                      class="sr-only peer"
+                      className="peer sr-only"
                     />
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#111111]"></div>
+                    <span className="h-5 w-10 border border-[#cfc5b6] bg-[#f1ece3] transition-colors peer-checked:border-[#14110f] peer-checked:bg-[#14110f] peer-focus-visible:outline peer-focus-visible:outline-1 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#14110f]"></span>
+                    <span className="pointer-events-none absolute left-[3px] top-[3px] h-[14px] w-[14px] bg-white transition-transform peer-checked:translate-x-5"></span>
                   </label>
                 </div>
               </div>
 
-              {/* Category 3: Marketing & Advertising (Unticked by default) */}
-              <div class="p-4 rounded-xl border border-gray-200 space-y-2">
-                <div class="flex items-center justify-between">
+              {/* Category 3: Marketing */}
+              <div className="border border-[#e5ded3] bg-white p-4">
+                <div className="flex items-start justify-between gap-4">
                   <div>
-                    <span class="font-bold text-gray-900 text-xs block">Marketing & Re-targeting</span>
-                    <span class="text-[11px] text-gray-500">Used only if you consent to personalized festive discounts and anti-tarnish styling capsules via Meta/Google ads.</span>
+                    <span className="block text-[11.5px] font-medium text-[#14110f]">Marketing &amp; re-targeting</span>
+                    <span className="mt-1 block text-[10.5px] leading-relaxed text-[#8a8279]">
+                      Used only with consent, for festive offers and styling capsules on Meta and Google.
+                    </span>
                   </div>
-                  <label class="relative inline-flex items-center cursor-pointer shrink-0 ml-3">
+                  <label className="relative mt-0.5 inline-flex shrink-0 cursor-pointer items-center">
                     <input
                       type="checkbox"
                       checked={marketing}
                       onChange={(e) => setMarketing(e.target.checked)}
-                      class="sr-only peer"
+                      className="peer sr-only"
                     />
-                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#111111]"></div>
+                    <span className="h-5 w-10 border border-[#cfc5b6] bg-[#f1ece3] transition-colors peer-checked:border-[#14110f] peer-checked:bg-[#14110f] peer-focus-visible:outline peer-focus-visible:outline-1 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#14110f]"></span>
+                    <span className="pointer-events-none absolute left-[3px] top-[3px] h-[14px] w-[14px] bg-white transition-transform peer-checked:translate-x-5"></span>
                   </label>
                 </div>
               </div>
 
-              <div class="text-[11px] text-gray-500 bg-amber-50/70 p-3 rounded-xl border border-amber-200/80">
-                <strong>Proof of Consent:</strong> Your preferences will generate a tamper-evident audit record logged in our edge database and retained for 1 year per statutory Indian DPDP guidelines. You can revoke or modify consent at any time via the "Cookie Preferences" link in the footer.
+              <div className="border-l-2 border-[#c5a059] bg-[#faf3e6] px-3.5 py-3 text-[10.5px] leading-relaxed text-[#6b4a1c]">
+                <strong className="font-medium text-[#6b4a1c]">Proof of consent:</strong> your choices generate a tamper-evident audit record in our edge database, retained for one year per Indian DPDP rules. You can change or revoke consent any time via the Cookie Preferences link in the footer.
               </div>
             </div>
 
             {/* Modal Footer Actions (Equal Prominence) */}
-            <div class="p-4 border-t border-gray-100 bg-gray-50 flex flex-col sm:flex-row items-center justify-between gap-2.5">
+            <div className="flex flex-col items-center justify-between gap-2.5 border-t border-[#e5ded3] bg-[#f4efe7] px-5 py-4 sm:flex-row sm:px-6">
               <button
                 type="button"
                 onClick={handleRejectAll}
-                class="w-full sm:w-auto bg-white hover:bg-gray-100 text-gray-800 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl border border-gray-300 transition-all cursor-pointer"
+                className="w-full cursor-pointer border border-[#14110f] px-4 py-2.5 text-[9px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:bg-[#fbf9f5] sm:w-auto"
               >
-                Reject All Optional
+                Reject all optional
               </button>
-              
-              <div class="flex items-center gap-2 w-full sm:w-auto">
+
+              <div className="flex w-full items-center gap-2 sm:w-auto">
                 <button
                   type="button"
                   onClick={handleAcceptAll}
-                  class="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 text-gray-900 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer"
+                  className="w-full cursor-pointer border border-[#cfc5b6] bg-white px-4 py-2.5 text-[9px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#14110f] sm:w-auto"
                 >
-                  Accept All
+                  Accept all
                 </button>
                 <button
                   type="button"
                   onClick={handleSavePreferences}
-                  class="w-full sm:w-auto bg-[#111111] hover:bg-black text-white px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-sm"
+                  className="w-full cursor-pointer bg-[#14110f] px-5 py-2.5 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d] sm:w-auto"
                 >
-                  Save Choices
+                  Save choices
                 </button>
               </div>
             </div>
-
           </div>
         </div>
       )}

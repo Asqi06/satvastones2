@@ -1,489 +1,482 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
 import GSTInvoiceModal from '../components/GSTInvoiceModal';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Account', url: '/account' }
+];
 ---
 
 <BaseLayout
   title="My Account | Satvastones Fine Jewellery"
-  description="Manage your personal Satvastones orders, delivery addresses, and VIP membership."
+  description="Sign in to your Satvastones account to view order history, live tracking, saved delivery addresses and GST invoices."
+  breadcrumbs={breadcrumbs}
+  noindex={true}
 >
   <!-- Interactive GST Tax Invoice Modal -->
   <GSTInvoiceModal client:load />
 
-  <!-- Header Banner -->
-  <div class="bg-white border-b border-gray-100 py-6 sm:py-8">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1">
-      <span class="text-xs font-bold uppercase tracking-widest text-[#a1505a]">Satvastones Atelier Circle</span>
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">Personal Account Portal</h1>
-      <p class="text-xs text-gray-500">Secure member access for order history, real-time tracking, and saved delivery details</p>
-    </div>
-  </div>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <PageIntro
+      eyebrow="Atelier circle"
+      title="Your account."
+      lede="Order history, live courier tracking, saved delivery details and GST invoices — held in one place, secured at the edge."
+      crumbs={breadcrumbs}
+    />
 
-  <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-    <div class="max-w-4xl mx-auto">
-      
-      <!-- ============================================================== -->
-      <!-- STATE 1: GUEST / UNAUTHENTICATED VIEW (SIGN IN / REGISTER TABS) -->
-      <!-- ============================================================== -->
-      <div id="auth-gate-view" class="max-w-md mx-auto bg-white border border-gray-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
-        
-        <!-- Tab Switcher -->
-        <div class="flex bg-gray-100 p-1 rounded-2xl text-xs font-bold">
-          <button
-            type="button"
-            id="tab-btn-signin"
-            class="flex-1 py-2.5 rounded-xl transition-all cursor-pointer bg-white text-gray-900 shadow-xs"
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            id="tab-btn-register"
-            class="flex-1 py-2.5 rounded-xl transition-all cursor-pointer text-gray-500 hover:text-gray-900"
-          >
-            Create Account
-          </button>
-        </div>
+    <div class="mx-auto max-w-[1440px] px-5 pb-20 sm:px-8 lg:px-10">
+      <!-- STATE 1: GUEST / UNAUTHENTICATED -->
+      <div id="auth-gate-view" class="grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <aside class="lg:col-span-5">
+          <p class="eyebrow text-[#8d3f3d]">Members only</p>
+          <h2 class="font-display mt-2 text-[2rem] leading-[1.02] sm:text-[2.6rem]">
+            Everything you've<br class="hidden sm:block" /> bought, in one place.
+          </h2>
+          <p class="mt-3 max-w-sm text-[12.5px] leading-relaxed text-[#5f5851]">
+            No newsletters, no noise. An account simply keeps your dispatch history and delivery
+            details ready for the next order.
+          </p>
 
-        <!-- Alert Notification -->
-        <div id="auth-alert" class="hidden p-3.5 rounded-xl text-xs font-medium space-y-1"></div>
+          <ul class="mt-7 divide-y divide-[#e5ded3] border-y border-[#e5ded3]">
+            {[
+              { t: 'Order history', d: 'Every dispatch with its live courier status.' },
+              { t: 'Saved address', d: 'Pre-fills checkout so you never retype it.' },
+              { t: 'GST invoices', d: 'Download a valid tax invoice for any order.' },
+              { t: 'DPDP data rights', d: 'Access, correct or erase your data at any time.' }
+            ].map((item, i) => (
+              <li class="flex gap-3 py-3.5">
+                <span class="mt-0.5 font-display text-[11px] leading-none text-[#c5a059]">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <div>
+                  <p class="text-[12px] font-medium text-[#14110f]">{item.t}</p>
+                  <p class="mt-0.5 text-[11px] leading-relaxed text-[#8a8279]">{item.d}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
 
-        <!-- Form 1: Sign In -->
-        <form id="form-signin" class="space-y-4">
-          <div class="space-y-1">
-            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Sign In to Your Account</h2>
-            <p class="text-xs text-gray-500">Access your past orders, delivery tracking, and saved addresses.</p>
-          </div>
+          <p class="mt-5 flex items-start gap-2 text-[10px] leading-relaxed text-[#8a8279]">
+            <span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span>
+            <span>PBKDF2 100k iterations · 256-bit edge encryption · DPDP Act 2023 compliant.</span>
+          </p>
+        </aside>
 
-          <!-- Official Google One-Tap / Sign-In Button -->
-          <button
-            type="button"
-            id="google-signin-btn"
-            class="w-full bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 hover:border-gray-300 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-3 shadow-2xs hover:shadow-xs cursor-pointer group"
-            aria-label="Continue with Google"
-          >
-            <svg class="w-4 h-4 shrink-0 transition-transform group-hover:scale-105" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-            </svg>
-            <span class="tracking-wide">Continue with Google</span>
-          </button>
-
-          <!-- Subtle Luxury Divider -->
-          <div class="relative flex py-1 items-center">
-            <div class="flex-grow border-t border-gray-200"></div>
-            <span class="flex-shrink mx-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">or sign in with password</span>
-            <div class="flex-grow border-t border-gray-200"></div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Mobile Number or Email Address *</label>
-            <input
-              type="text"
-              id="signin-identifier"
-              required
-              autocomplete="username"
-              placeholder="e.g. 9016703180 or priya@gmail.com"
-              class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-            />
-          </div>
-
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="block text-xs font-bold text-gray-700">Security Password *</label>
-              <a href="https://wa.me/919016703180?text=Hello%20Satvastones%2C%20I%20need%20help%20logging%20in%20to%20my%20account" target="_blank" rel="noopener noreferrer" class="text-[11px] text-[#f2707f] hover:underline font-bold">Forgot?</a>
-            </div>
-            <div class="relative">
-              <input
-                type="password"
-                id="signin-password"
-                required
-                autocomplete="current-password"
-                placeholder="••••••••••••"
-                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f] pr-10"
-              />
+        <div class="lg:col-span-7">
+          <div class="border border-[#e5ded3] bg-white">
+            <!-- Tab Switcher -->
+            <div class="flex border-b border-[#e5ded3]">
               <button
                 type="button"
-                id="toggle-signin-pwd"
-                class="absolute right-3 top-2.5 text-gray-400 hover:text-gray-700 cursor-pointer"
-                aria-label="Toggle password visibility"
+                id="tab-btn-signin"
+                class="flex-1 cursor-pointer border-b-2 border-[#14110f] px-4 py-3.5 text-[10px] uppercase tracking-[0.16em] text-[#14110f] transition-colors"
               >
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
+                Sign in
+              </button>
+              <button
+                type="button"
+                id="tab-btn-register"
+                class="flex-1 cursor-pointer border-b-2 border-transparent px-4 py-3.5 text-[10px] uppercase tracking-[0.16em] text-[#8a8279] transition-colors hover:text-[#14110f]"
+              >
+                Create account
               </button>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            id="signin-submit-btn"
-            class="w-full bg-[#111111] hover:bg-black text-white py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
-          >
-            Authenticate & Sign In →
-          </button>
+            <div class="p-5 sm:p-8">
+              <!-- Alert Notification -->
+              <div id="auth-alert" class="mb-4 hidden border-l-2 px-3.5 py-3 text-[11px] leading-relaxed"></div>
 
-          <p class="text-center text-xs text-gray-500 pt-2">
-            New to Satvastones? 
-            <button type="button" id="switch-to-register" class="text-[#f2707f] font-bold hover:underline cursor-pointer">Create a personal account</button>
-          </p>
-        </form>
+              <!-- Form 1: Sign In -->
+              <form id="form-signin" class="space-y-4">
+                <div>
+                  <h2 class="font-display text-[1.7rem] leading-none text-[#14110f]">Welcome back.</h2>
+                  <p class="mt-1.5 text-[11.5px] leading-relaxed text-[#6f675f]">
+                    Access your orders, tracking and saved addresses.
+                  </p>
+                </div>
 
-        <!-- Form 2: Register -->
-        <form id="form-register" class="space-y-4 hidden">
-          <div class="space-y-1">
-            <h2 class="text-lg font-extrabold text-gray-900 tracking-tight">Create Personal Account</h2>
-            <p class="text-xs text-gray-500">Save delivery addresses and track all current and past dispatches.</p>
-          </div>
+                <!-- Google Sign-In -->
+                <button
+                  type="button"
+                  id="google-signin-btn"
+                  class="flex w-full cursor-pointer items-center justify-center gap-3 border border-[#d8d0c4] bg-white px-4 py-3 text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#14110f] hover:bg-[#f8f5f0]"
+                  aria-label="Continue with Google"
+                >
+                  <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                  </svg>
+                  Continue with Google
+                </button>
 
-          <!-- Official Google One-Tap / Sign-Up Button -->
-          <button
-            type="button"
-            id="google-register-btn"
-            class="w-full bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 hover:border-gray-300 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-3 shadow-2xs hover:shadow-xs cursor-pointer group"
-            aria-label="Sign up with Google"
-          >
-            <svg class="w-4 h-4 shrink-0 transition-transform group-hover:scale-105" viewBox="0 0 24 24">
-              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-            </svg>
-            <span class="tracking-wide">Sign up with Google</span>
-          </button>
+                <div class="flex items-center gap-3">
+                  <span class="h-px flex-1 bg-[#e5ded3]"></span>
+                  <span class="text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">or use a password</span>
+                  <span class="h-px flex-1 bg-[#e5ded3]"></span>
+                </div>
 
-          <!-- Subtle Luxury Divider -->
-          <div class="relative flex py-1 items-center">
-            <div class="flex-grow border-t border-gray-200"></div>
-            <span class="flex-shrink mx-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">or register with mobile</span>
-            <div class="flex-grow border-t border-gray-200"></div>
-          </div>
+                <div>
+                  <label for="signin-identifier" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">
+                    Mobile number or email *
+                  </label>
+                  <input
+                    type="text"
+                    id="signin-identifier"
+                    required
+                    autocomplete="username"
+                    placeholder="9016703180 or priya@gmail.com"
+                    class="account-input"
+                  />
+                </div>
 
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Full Legal Name *</label>
-            <input
-              type="text"
-              id="reg-name"
-              required
-              autocomplete="name"
-              placeholder="e.g. Priya Sharma"
-              class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-            />
-          </div>
+                <div>
+                  <div class="mb-1.5 flex items-center justify-between gap-3">
+                    <label for="signin-password" class="block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">
+                      Password *
+                    </label>
+                    <a
+                      href="https://wa.me/919016703180?text=Hello%20Satvastones%2C%20I%20need%20help%20logging%20in%20to%20my%20account"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="text-[10px] text-[#8d3f3d] underline decoration-[#d8c3a6] underline-offset-2 hover:text-[#14110f]"
+                    >
+                      Forgot?
+                    </a>
+                  </div>
+                  <div class="relative">
+                    <input
+                      type="password"
+                      id="signin-password"
+                      required
+                      autocomplete="current-password"
+                      placeholder="••••••••••••"
+                      class="account-input pr-10"
+                    />
+                    <button
+                      type="button"
+                      id="toggle-signin-pwd"
+                      class="absolute right-3 top-1/2 flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center text-[#8a8279] transition-colors hover:text-[#14110f]"
+                      aria-label="Toggle password visibility"
+                    >
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Mobile Number (+91) *</label>
-              <input
-                type="tel"
-                id="reg-phone"
-                required
-                maxlength="10"
-                autocomplete="tel"
-                placeholder="10-digit mobile number"
-                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-              />
+                <button
+                  type="submit"
+                  id="signin-submit-btn"
+                  class="flex w-full cursor-pointer items-center justify-center gap-2 bg-[#14110f] px-6 py-3.5 text-[10px] uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+                >
+                  Sign in <span aria-hidden="true">→</span>
+                </button>
+
+                <p class="pt-1 text-center text-[11px] text-[#8a8279]">
+                  New to Satvastones?{' '}
+                  <button type="button" id="switch-to-register" class="cursor-pointer text-[#14110f] underline decoration-[#d8c3a6] underline-offset-2 hover:text-[#8d3f3d]">
+                    Create an account
+                  </button>
+                </p>
+              </form>
+
+              <!-- Form 2: Register -->
+              <form id="form-register" class="hidden space-y-4">
+                <div>
+                  <h2 class="font-display text-[1.7rem] leading-none text-[#14110f]">Create your account.</h2>
+                  <p class="mt-1.5 text-[11.5px] leading-relaxed text-[#6f675f]">
+                    Save delivery addresses and follow every dispatch in real time.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  id="google-register-btn"
+                  class="flex w-full cursor-pointer items-center justify-center gap-3 border border-[#d8d0c4] bg-white px-4 py-3 text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#14110f] hover:bg-[#f8f5f0]"
+                  aria-label="Sign up with Google"
+                >
+                  <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                  </svg>
+                  Sign up with Google
+                </button>
+
+                <div class="flex items-center gap-3">
+                  <span class="h-px flex-1 bg-[#e5ded3]"></span>
+                  <span class="text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">or register with mobile</span>
+                  <span class="h-px flex-1 bg-[#e5ded3]"></span>
+                </div>
+
+                <div>
+                  <label for="reg-name" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">
+                    Full legal name *
+                  </label>
+                  <input type="text" id="reg-name" required autocomplete="name" placeholder="Priya Sharma" class="account-input" />
+                </div>
+
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <div>
+                    <label for="reg-phone" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">
+                      Mobile (+91) *
+                    </label>
+                    <input type="tel" id="reg-phone" required maxlength="10" autocomplete="tel" placeholder="10-digit mobile" class="account-input" />
+                  </div>
+                  <div>
+                    <label for="reg-email" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">
+                      Email *
+                    </label>
+                    <input type="email" id="reg-email" required autocomplete="email" placeholder="priya@gmail.com" class="account-input" />
+                  </div>
+                </div>
+
+                <div>
+                  <label for="reg-password" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">
+                    Password · minimum 8 characters *
+                  </label>
+                  <input type="password" id="reg-password" required minlength="8" autocomplete="new-password" placeholder="••••••••••••" class="account-input" />
+                </div>
+
+                <div class="space-y-2.5 border-t border-[#e5ded3] pt-4">
+                  <span class="block text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">
+                    Default shipping address <span class="normal-case tracking-normal">(optional)</span>
+                  </span>
+                  <input type="text" id="reg-address" placeholder="Flat / building / street" class="account-input" />
+                  <div class="grid grid-cols-3 gap-2">
+                    <input type="text" id="reg-city" placeholder="City" class="account-input" />
+                    <input type="text" id="reg-state" placeholder="State" class="account-input" />
+                    <input type="text" id="reg-pincode" maxlength="6" placeholder="PIN code" class="account-input" />
+                  </div>
+                </div>
+
+                <label class="flex cursor-pointer items-start gap-2.5 pt-1 text-[10.5px] leading-relaxed text-[#6f675f]">
+                  <input type="checkbox" id="reg-consent" required checked class="mt-0.5 h-3.5 w-3.5 shrink-0 cursor-pointer accent-[#14110f]" />
+                  <span>
+                    I consent to my contact and delivery data being processed for order fulfilment under the DPDP Act, 2023 and the{' '}
+                    <a href="/privacy-policy" target="_blank" class="text-[#14110f] underline decoration-[#d8c3a6] underline-offset-2">Privacy Policy</a>.
+                  </span>
+                </label>
+
+                <button
+                  type="submit"
+                  id="reg-submit-btn"
+                  class="flex w-full cursor-pointer items-center justify-center gap-2 bg-[#14110f] px-6 py-3.5 text-[10px] uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+                >
+                  Create account <span aria-hidden="true">→</span>
+                </button>
+
+                <p class="pt-1 text-center text-[11px] text-[#8a8279]">
+                  Already have an account?{' '}
+                  <button type="button" id="switch-to-signin" class="cursor-pointer text-[#14110f] underline decoration-[#d8c3a6] underline-offset-2 hover:text-[#8d3f3d]">
+                    Sign in
+                  </button>
+                </p>
+              </form>
             </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Email Address *</label>
-              <input
-                type="email"
-                id="reg-email"
-                required
-                autocomplete="email"
-                placeholder="e.g. priya@gmail.com"
-                class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-              />
-            </div>
           </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-700 mb-1">Create Password (Min 8 characters) *</label>
-            <input
-              type="password"
-              id="reg-password"
-              required
-              minlength="8"
-              autocomplete="new-password"
-              placeholder="••••••••••••"
-              class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-            />
-          </div>
-
-          <!-- Optional Shipping Address -->
-          <div class="pt-2 border-t border-gray-100 space-y-2.5">
-            <span class="text-[11px] font-bold uppercase tracking-wider text-gray-500">Default Shipping Address (Optional)</span>
-            <input
-              type="text"
-              id="reg-address"
-              placeholder="Flat / Building / Street Address"
-              class="w-full bg-gray-50 border border-gray-200 px-4 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-            />
-            <div class="grid grid-cols-3 gap-2">
-              <input
-                type="text"
-                id="reg-city"
-                placeholder="City"
-                class="bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-              />
-              <input
-                type="text"
-                id="reg-state"
-                placeholder="State"
-                class="bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-              />
-              <input
-                type="text"
-                id="reg-pincode"
-                maxlength="6"
-                placeholder="PIN Code"
-                class="bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-              />
-            </div>
-          </div>
-
-          <label class="flex items-start gap-2.5 text-[11px] text-gray-500 pt-1 cursor-pointer">
-            <input type="checkbox" id="reg-consent" required checked class="accent-[#f2707f] mt-0.5" />
-            <span>I consent to processing my contact and delivery data for order fulfilment in strict compliance with the DPDP Act, 2023 and <a href="/privacy-policy" class="text-[#f2707f] underline" target="_blank">Privacy Policy</a>.</span>
-          </label>
-
-          <button
-            type="submit"
-            id="reg-submit-btn"
-            class="w-full bg-[#a1505a] hover:bg-[#8b4049] text-white py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-md"
-          >
-            Create Personal Account →
-          </button>
-
-          <p class="text-center text-xs text-gray-500 pt-1">
-            Already have an account? 
-            <button type="button" id="switch-to-signin" class="text-[#f2707f] font-bold hover:underline cursor-pointer">Sign in here</button>
-          </p>
-        </form>
-
-        <div class="pt-3 border-t border-gray-100 flex items-center justify-center gap-2 text-[10px] text-gray-400">
-          <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-          </svg>
-          <span>PBKDF2 100k Iterations • 256-Bit Edge Encryption • DPDP Act 2023 Compliant</span>
         </div>
       </div>
 
-      <!-- ============================================================== -->
-      <!-- STATE 2: AUTHENTICATED CUSTOMER DASHBOARD (HIDDEN INITIALLY) -->
-      <!-- ============================================================== -->
-      <div id="account-dashboard-view" class="hidden space-y-6">
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
-          <!-- Sidebar Navigation & Profile Card -->
+      <!-- STATE 2: AUTHENTICATED DASHBOARD -->
+      <div id="account-dashboard-view" class="hidden">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <!-- Sidebar -->
           <div class="space-y-3">
-            
-            <!-- Customer Profile Card -->
-            <div class="p-5 bg-white border border-gray-200 rounded-3xl space-y-3 shadow-xs">
+            <div class="border border-[#e5ded3] bg-white p-5">
               <div class="flex items-center gap-3">
-                <div id="cust-avatar" class="w-11 h-11 rounded-full bg-[#fff0f2] text-[#f2707f] flex items-center justify-center text-sm font-extrabold uppercase border border-[#f9d8dc]">
+                <div
+                  id="cust-avatar"
+                  class="flex h-11 w-11 items-center justify-center border border-[#d8c3a6] bg-[#f4efe7] font-display text-[15px] leading-none text-[#8d3f3d]"
+                >
                   S
                 </div>
                 <div class="min-w-0 flex-1">
-                  <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Welcome back</p>
-                  <h3 id="cust-name-display" class="text-base font-extrabold text-gray-900 truncate">Satvastones Patron</h3>
+                  <p class="text-[8.5px] uppercase tracking-[0.18em] text-[#8a8279]">Welcome back</p>
+                  <h2 id="cust-name-display" class="truncate font-display text-[1.15rem] leading-tight text-[#14110f]">
+                    Satvastones Patron
+                  </h2>
                 </div>
               </div>
 
-              <div class="space-y-1 text-xs text-gray-500 pt-2 border-t border-gray-100">
-                <p id="cust-phone-display" class="flex items-center gap-1.5 truncate">
-                  <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              <div class="mt-4 space-y-1.5 border-t border-[#e5ded3] pt-3 text-[11px] text-[#6f675f]">
+                <p id="cust-phone-display" class="flex items-center gap-2 truncate">
+                  <svg class="h-3.5 w-3.5 shrink-0 text-[#8a8279]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                   <span>+91 90167 03180</span>
                 </p>
-                <p id="cust-email-display" class="flex items-center gap-1.5 truncate">
-                  <svg class="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <p id="cust-email-display" class="flex items-center gap-2 truncate">
+                  <svg class="h-3.5 w-3.5 shrink-0 text-[#8a8279]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                   <span>customer@example.com</span>
                 </p>
               </div>
 
-              <div class="pt-2">
-                <span class="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#a1505a] bg-rose-50 border border-rose-100 px-3 py-1 rounded-full">
-                  <span>★ Atelier Member Tier</span>
+              <div class="mt-3 border-t border-[#e5ded3] pt-3">
+                <span class="inline-flex items-center gap-1.5 border border-[#e6d6bb] bg-[#faf3e6] px-2.5 py-1 text-[8.5px] uppercase tracking-[0.12em] text-[#8a5314]">
+                  <span aria-hidden="true">★</span> Atelier member tier
                 </span>
               </div>
             </div>
 
-            <!-- Navigation Buttons -->
-            <div class="space-y-1 text-xs">
+            <!-- Navigation -->
+            <div class="space-y-1.5">
               <button
                 type="button"
                 id="menu-btn-orders"
-                class="w-full p-3.5 bg-[#111111] text-white font-bold rounded-2xl shadow-xs transition-all flex items-center gap-2.5 text-left cursor-pointer"
+                class="flex w-full cursor-pointer items-center gap-2.5 border border-[#14110f] bg-[#14110f] p-3.5 text-left text-[10px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors"
               >
-                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
                 </svg>
-                <span>My Orders & Tracking</span>
+                <span>Orders &amp; tracking</span>
               </button>
 
               <button
                 type="button"
                 id="menu-btn-address"
-                class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-gray-300 font-bold rounded-2xl transition-all flex items-center gap-2.5 text-left cursor-pointer"
+                class="flex w-full cursor-pointer items-center gap-2.5 border border-[#e5ded3] bg-white p-3.5 text-left text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#14110f]"
               >
-                <svg class="w-4 h-4 shrink-0 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="h-4 w-4 shrink-0 text-[#8a8279]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                 </svg>
-                <span>Saved Shipping Address</span>
+                <span>Saved address</span>
               </button>
 
               <a
                 href="/wishlist"
-                class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-rose-200 hover:text-rose-600 font-bold rounded-2xl transition-all flex items-center gap-2.5 text-left"
+                class="flex w-full items-center gap-2.5 border border-[#e5ded3] bg-white p-3.5 text-left text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#14110f]"
               >
-                <svg class="w-4 h-4 shrink-0 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="h-4 w-4 shrink-0 text-[#8a8279]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                 </svg>
-                <span>Saved Wishlist</span>
+                <span>Wishlist</span>
               </a>
 
               <a
                 href="/privacy-rights"
-                class="w-full p-3.5 bg-white border border-gray-200 text-gray-800 hover:border-gray-300 font-bold rounded-2xl transition-all flex items-center gap-2.5 text-left"
+                class="flex w-full items-center gap-2.5 border border-[#e5ded3] bg-white p-3.5 text-left text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#14110f]"
               >
-                <svg class="w-4 h-4 shrink-0 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="h-4 w-4 shrink-0 text-[#2f7d5a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                 </svg>
-                <span>DPDP Data Rights</span>
+                <span>DPDP data rights</span>
               </a>
 
               <button
                 type="button"
                 id="cust-logout-btn"
-                class="w-full p-3.5 bg-rose-50/60 hover:bg-rose-100 text-rose-700 font-bold rounded-2xl transition-all flex items-center gap-2.5 text-left cursor-pointer pt-3 border border-rose-100"
+                class="flex w-full cursor-pointer items-center gap-2.5 border border-[#e5ded3] bg-white p-3.5 pt-3 text-left text-[10px] uppercase tracking-[0.14em] text-[#8d3f3d] transition-colors hover:border-[#8d3f3d] hover:bg-[#f8eeee]"
               >
-                <svg class="w-4 h-4 shrink-0 text-rose-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
                 </svg>
-                <span>Sign Out</span>
+                <span>Sign out</span>
               </button>
             </div>
           </div>
 
-          <!-- Main Content Area (Dynamic Tabs) -->
-          <div class="md:col-span-2 space-y-6">
-            
-            <!-- SECTION A: MY ORDERS -->
+          <!-- Main content -->
+          <div class="space-y-6 md:col-span-2">
+            <!-- Orders -->
             <div id="section-orders" class="space-y-4">
-              <div class="flex items-center justify-between border-b border-gray-100 pb-3">
+              <div class="flex items-end justify-between gap-3 border-b border-[#e5ded3] pb-3">
                 <div>
-                  <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Cloudflare D1 Verified</span>
-                  <h2 class="text-lg font-bold text-gray-900">Order History & Tracking</h2>
+                  <p class="text-[9px] uppercase tracking-[0.18em] text-[#c5a059]">Cloudflare D1 verified</p>
+                  <h2 class="font-display mt-1.5 text-[1.5rem] leading-none text-[#14110f]">
+                    Order history &amp; tracking
+                  </h2>
                 </div>
-                <span class="text-xs text-gray-500">Atelier Dispatches</span>
+                <span class="text-[9px] uppercase tracking-[0.14em] text-[#8a8279]">Atelier dispatches</span>
               </div>
 
-              <!-- Orders List Container -->
               <div id="orders-container" class="space-y-4">
-                <div class="p-8 text-center bg-gray-50 rounded-2xl border border-gray-200 text-gray-400 text-xs">
-                  Loading verified customer orders...
+                <div class="border border-[#e5ded3] bg-white px-5 py-10 text-center text-[11.5px] text-[#8a8279]">
+                  Loading verified customer orders…
                 </div>
               </div>
             </div>
 
-            <!-- SECTION B: SAVED ADDRESS -->
-            <div id="section-address" class="hidden bg-white p-6 sm:p-7 border border-gray-200 rounded-3xl space-y-5 shadow-xs">
-              <div class="border-b border-gray-100 pb-3">
-                <span class="text-[10px] text-[#a1505a] font-bold uppercase tracking-wider">Fast Pan-India Checkout</span>
-                <h2 class="text-lg font-bold text-gray-900">Manage Saved Delivery Address</h2>
-                <p class="text-xs text-gray-500">This address will automatically pre-fill your checkout details.</p>
+            <!-- Address -->
+            <div id="section-address" class="hidden space-y-5 border border-[#e5ded3] bg-white p-5 sm:p-7">
+              <div class="border-b border-[#e5ded3] pb-3">
+                <p class="text-[9px] uppercase tracking-[0.18em] text-[#c5a059]">Fast pan-India checkout</p>
+                <h2 class="font-display mt-1.5 text-[1.5rem] leading-none text-[#14110f]">
+                  Saved delivery address
+                </h2>
+                <p class="mt-1.5 text-[11px] leading-relaxed text-[#8a8279]">
+                  This address pre-fills your checkout details.
+                </p>
               </div>
 
-              <div id="address-alert" class="hidden p-3 rounded-xl text-xs font-medium"></div>
+              <div id="address-alert" class="hidden px-3.5 py-2.5 text-[11px] font-medium"></div>
 
               <form id="form-address-update" class="space-y-3.5">
                 <div>
-                  <label class="block text-xs font-bold text-gray-700 mb-1">House / Flat / Street Address *</label>
-                  <input
-                    type="text"
-                    id="edit-address"
-                    required
-                    placeholder="e.g. Flat 402, Green Glen Layout, Bellandur"
-                    class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-                  />
+                  <label for="edit-address" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">
+                    House / flat / street *
+                  </label>
+                  <input type="text" id="edit-address" required placeholder="Flat 402, Green Glen Layout, Bellandur" class="account-input" />
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
                   <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">City *</label>
-                    <input
-                      type="text"
-                      id="edit-city"
-                      required
-                      placeholder="Bengaluru"
-                      class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-                    />
+                    <label for="edit-city" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">City *</label>
+                    <input type="text" id="edit-city" required placeholder="Bengaluru" class="account-input" />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">State *</label>
-                    <input
-                      type="text"
-                      id="edit-state"
-                      required
-                      placeholder="Karnataka"
-                      class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-                    />
+                    <label for="edit-state" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">State *</label>
+                    <input type="text" id="edit-state" required placeholder="Karnataka" class="account-input" />
                   </div>
                   <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">PIN Code (6 digits) *</label>
-                    <input
-                      type="text"
-                      id="edit-pincode"
-                      required
-                      maxlength="6"
-                      placeholder="560103"
-                      class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
-                    />
+                    <label for="edit-pincode" class="mb-1.5 block text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">PIN code *</label>
+                    <input type="text" id="edit-pincode" required maxlength="6" placeholder="560103" class="account-input" />
                   </div>
                 </div>
 
                 <button
                   type="submit"
                   id="btn-save-address"
-                  class="bg-[#111111] hover:bg-black text-white px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer shadow-xs"
+                  class="cursor-pointer bg-[#14110f] px-6 py-3 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
                 >
-                  Save Address Changes
+                  Save address changes
                 </button>
               </form>
             </div>
 
-            <!-- Customer Concierge Support -->
-            <div class="bg-white p-5 sm:p-6 border border-gray-200 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xs">
-              <div class="space-y-0.5 text-center sm:text-left">
-                <h3 class="text-sm font-bold text-gray-900">Need Atelier Assistance with Your Order?</h3>
-                <p class="text-xs text-gray-500">Contact our Vapi customer support directly via WhatsApp or Email.</p>
+            <!-- Concierge -->
+            <div class="flex flex-col items-start justify-between gap-4 border border-[#e5ded3] bg-[#f4efe7] p-5 sm:flex-row sm:items-center sm:p-6">
+              <div>
+                <h3 class="font-display text-[1.2rem] leading-tight text-[#14110f]">
+                  Need help with an order?
+                </h3>
+                <p class="mt-1 text-[11px] leading-relaxed text-[#6f675f]">
+                  Message the Vapi atelier directly — a real person replies.
+                </p>
               </div>
               <div class="flex items-center gap-2">
                 <a
                   href="https://wa.me/919016703180?text=Hello%20Satvastones%2C%20I%20need%20help%20with%20my%20order"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="bg-[#25D366] hover:bg-[#20ba59] text-white px-4 py-2 text-xs font-bold rounded-xl transition-colors flex items-center gap-1.5 shadow-xs whitespace-nowrap"
+                  class="flex items-center gap-1.5 whitespace-nowrap bg-[#14110f] px-4 py-2.5 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors hover:bg-[#2f7d5a]"
                 >
-                  <span>WhatsApp Concierge</span>
+                  WhatsApp concierge
                 </a>
               </div>
             </div>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   </div>
 
@@ -537,20 +530,20 @@ import GSTInvoiceModal from '../components/GSTInvoiceModal';
 
     // Switch between Sign In and Register Tabs
     function showSignInTab() {
-      tabSignIn?.classList.add('bg-white', 'text-gray-900', 'shadow-xs');
-      tabSignIn?.classList.remove('text-gray-500');
-      tabRegister?.classList.remove('bg-white', 'text-gray-900', 'shadow-xs');
-      tabRegister?.classList.add('text-gray-500');
+      tabSignIn?.classList.add('border-[#14110f]', 'text-[#14110f]');
+      tabSignIn?.classList.remove('border-transparent', 'text-[#8a8279]');
+      tabRegister?.classList.remove('border-[#14110f]', 'text-[#14110f]');
+      tabRegister?.classList.add('border-transparent', 'text-[#8a8279]');
       formSignIn?.classList.remove('hidden');
       formRegister?.classList.add('hidden');
       if (authAlert) authAlert.classList.add('hidden');
     }
 
     function showRegisterTab() {
-      tabRegister?.classList.add('bg-white', 'text-gray-900', 'shadow-xs');
-      tabRegister?.classList.remove('text-gray-500');
-      tabSignIn?.classList.remove('bg-white', 'text-gray-900', 'shadow-xs');
-      tabSignIn?.classList.add('text-gray-500');
+      tabRegister?.classList.add('border-[#14110f]', 'text-[#14110f]');
+      tabRegister?.classList.remove('border-transparent', 'text-[#8a8279]');
+      tabSignIn?.classList.remove('border-[#14110f]', 'text-[#14110f]');
+      tabSignIn?.classList.add('border-transparent', 'text-[#8a8279]');
       formRegister?.classList.remove('hidden');
       formSignIn?.classList.add('hidden');
       if (authAlert) authAlert.classList.add('hidden');
@@ -682,8 +675,8 @@ import GSTInvoiceModal from '../components/GSTInvoiceModal';
       if (!authAlert) return;
       authAlert.textContent = msg;
       authAlert.className = isError
-        ? 'p-3.5 rounded-xl text-xs font-medium bg-red-50 text-red-700 border border-red-200'
-        : 'p-3.5 rounded-xl text-xs font-medium bg-emerald-50 text-emerald-800 border border-emerald-200';
+        ? 'mb-4 border-l-2 border-[#8d3f3d] bg-[#f8eeee] px-3.5 py-3 text-[11px] leading-relaxed text-[#8d3f3d]'
+        : 'mb-4 border-l-2 border-[#2f7d5a] bg-[#f0f7f2] px-3.5 py-3 text-[11px] leading-relaxed text-[#2f7d5a]';
       authAlert.classList.remove('hidden');
     }
 
@@ -783,17 +776,17 @@ import GSTInvoiceModal from '../components/GSTInvoiceModal';
 
     // Navigation Sub-tabs
     menuBtnOrders?.addEventListener('click', () => {
-      menuBtnOrders.className = 'w-full p-3.5 bg-[#111111] text-white font-bold rounded-2xl shadow-xs transition-all flex items-center gap-2.5 text-left cursor-pointer';
-      menuBtnAddress?.classList.remove('bg-[#111111]', 'text-white');
-      menuBtnAddress?.classList.add('bg-white', 'text-gray-800');
+      menuBtnOrders.className = 'flex w-full cursor-pointer items-center gap-2.5 border border-[#14110f] bg-[#14110f] p-3.5 text-left text-[10px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors';
+      menuBtnAddress?.classList.remove('bg-[#14110f]', 'text-[#f6f1e8]', 'border-[#14110f]');
+      menuBtnAddress?.classList.add('bg-white', 'text-[#14110f]', 'border-[#e5ded3]');
       sectionOrders?.classList.remove('hidden');
       sectionAddress?.classList.add('hidden');
     });
 
     menuBtnAddress?.addEventListener('click', () => {
-      menuBtnAddress.className = 'w-full p-3.5 bg-[#111111] text-white font-bold rounded-2xl shadow-xs transition-all flex items-center gap-2.5 text-left cursor-pointer';
-      menuBtnOrders?.classList.remove('bg-[#111111]', 'text-white');
-      menuBtnOrders?.classList.add('bg-white', 'text-gray-800');
+      menuBtnAddress.className = 'flex w-full cursor-pointer items-center gap-2.5 border border-[#14110f] bg-[#14110f] p-3.5 text-left text-[10px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors';
+      menuBtnOrders?.classList.remove('bg-[#14110f]', 'text-[#f6f1e8]', 'border-[#14110f]');
+      menuBtnOrders?.classList.add('bg-white', 'text-[#14110f]', 'border-[#e5ded3]');
       sectionAddress?.classList.remove('hidden');
       sectionOrders?.classList.add('hidden');
     });
@@ -859,7 +852,7 @@ import GSTInvoiceModal from '../components/GSTInvoiceModal';
           localStorage.setItem(CUST_USER_KEY, JSON.stringify(data.customer));
           if (addressAlert) {
             addressAlert.textContent = 'Saved delivery address updated! It will auto-fill your checkout details.';
-            addressAlert.className = 'p-3 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200';
+            addressAlert.className = 'border-l-2 border-[#2f7d5a] bg-[#f0f7f2] px-3.5 py-2.5 text-[11px] font-medium text-[#2f7d5a]';
             addressAlert.classList.remove('hidden');
             setTimeout(() => addressAlert?.classList.add('hidden'), 5000);
           }
@@ -895,59 +888,55 @@ import GSTInvoiceModal from '../components/GSTInvoiceModal';
             });
 
             const statusColors: Record<string, string> = {
-              'VERIFIED': 'bg-emerald-50 text-emerald-700 border-emerald-200',
-              'DISPATCHED_FROM_VAPI': 'bg-blue-50 text-blue-700 border-blue-200',
-              'IN_TRANSIT': 'bg-amber-50 text-amber-700 border-amber-200',
-              'DELIVERED': 'bg-green-50 text-green-700 border-green-200'
+              'VERIFIED': 'border-[#cfe3d6] bg-[#f0f7f2] text-[#2f7d5a]',
+              'DISPATCHED_FROM_VAPI': 'border-[#d3dbe6] bg-[#f1f4f8] text-[#3b5a7a]',
+              'IN_TRANSIT': 'border-[#e6d6bb] bg-[#faf3e6] text-[#8a5314]',
+              'DELIVERED': 'border-[#e5ded3] bg-[#f4efe7] text-[#6f675f]'
             };
 
-            const statusClass = statusColors[order.fulfillmentStatus] || 'bg-gray-100 text-gray-700 border-gray-200';
+            const statusClass = statusColors[order.fulfillmentStatus] || 'border-[#e5ded3] bg-[#f4efe7] text-[#6f675f]';
 
             return `
-              <div class="bg-white border border-gray-200 rounded-3xl p-5 sm:p-6 space-y-4 shadow-xs">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-100 pb-3">
+              <article class="border border-[#e5ded3] bg-white">
+                <div class="flex flex-col justify-between gap-2 border-b border-[#e5ded3] px-5 py-4 sm:flex-row sm:items-center">
                   <div>
-                    <span class="text-xs font-extrabold text-gray-900">${order.orderNumber}</span>
-                    <p class="text-[11px] text-gray-500">Placed on ${dateStr} • Courier: ${order.courierPartner}</p>
+                    <span class="text-[12px] font-medium text-[#14110f]">${order.orderNumber}</span>
+                    <p class="mt-0.5 text-[10px] uppercase tracking-[0.1em] text-[#8a8279]">Placed ${dateStr} · ${order.courierPartner}</p>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-full border ${statusClass}">
-                      ${order.fulfillmentStatus.replace(/_/g, ' ')}
-                    </span>
-                  </div>
+                  <span class="self-start border px-2.5 py-1 text-[8.5px] uppercase tracking-[0.12em] sm:self-auto ${statusClass}">
+                    ${order.fulfillmentStatus.replace(/_/g, ' ')}
+                  </span>
                 </div>
 
-                <!-- Purchased Items -->
-                <div class="space-y-3">
+                <div class="divide-y divide-[#eee8df] px-5">
                   ${(order.items || []).map((item: any) => `
-                    <div class="flex items-center gap-3.5 text-xs">
-                      <img src="${item.image || '/images/satvastones-logo.png'}" alt="${item.title || item.name}" class="w-12 h-14 object-cover rounded-xl bg-gray-50 border border-gray-100 shrink-0" />
-                      <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-gray-900 truncate">${item.title || item.name}</h4>
-                        <p class="text-[11px] text-gray-500">Qty: ${item.quantity || 1}</p>
-                        <p class="font-extrabold text-xs text-[#f2707f] pt-0.5">₹${((item.pricePaise || 0) / 100).toLocaleString('en-IN')}</p>
+                    <div class="flex items-center gap-3.5 py-3">
+                      <img src="${item.image || '/images/satvastones-logo.png'}" alt="${item.title || item.name}" class="h-14 w-12 shrink-0 border border-[#e5ded3] bg-[#f4efe7] object-cover" />
+                      <div class="min-w-0 flex-1">
+                        <h4 class="truncate text-[12px] font-medium text-[#14110f]">${item.title || item.name}</h4>
+                        <p class="mt-0.5 text-[10px] uppercase tracking-[0.1em] text-[#8a8279]">Qty ${item.quantity || 1}</p>
                       </div>
+                      <p class="shrink-0 text-[12px] font-medium text-[#14110f]">₹${((item.pricePaise || 0) / 100).toLocaleString('en-IN')}</p>
                     </div>
                   `).join('')}
                 </div>
 
-                <!-- Footer Summary & Actions -->
-                <div class="pt-3 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div class="flex flex-wrap items-center justify-between gap-3 border-t border-[#e5ded3] bg-[#f4efe7] px-5 py-3.5">
                   <div>
-                    <span class="text-[11px] text-gray-500">Total Paid:</span>
-                    <span class="font-extrabold text-sm text-gray-900 ml-1">₹${((order.totalPaise || 0) / 100).toLocaleString('en-IN')}</span>
+                    <span class="text-[10px] uppercase tracking-[0.12em] text-[#8a8279]">Total paid</span>
+                    <span class="ml-1.5 text-[13px] font-medium text-[#14110f]">₹${((order.totalPaise || 0) / 100).toLocaleString('en-IN')}</span>
                   </div>
 
-                  <div class="flex items-center gap-2">
-                    <a href="/track-order?ref=${encodeURIComponent(order.orderNumber)}" class="px-3.5 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl text-xs transition-colors">
-                      Track Live Courier →
+                  <div class="flex flex-wrap items-center gap-2">
+                    <a href="/track-order?ref=${encodeURIComponent(order.orderNumber)}" class="border border-[#14110f] px-3 py-1.5 text-[9px] uppercase tracking-[0.12em] text-[#14110f] transition-colors hover:bg-[#14110f] hover:text-[#f6f1e8]">
+                      Track courier →
                     </a>
-                    <button type="button" class="view-invoice-btn px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-[#a1505a] font-bold rounded-xl text-xs transition-colors cursor-pointer" data-order='${JSON.stringify(order).replace(/'/g, "&apos;")}'>
-                      GST Tax Invoice 📄
+                    <button type="button" class="view-invoice-btn cursor-pointer border border-[#e6d6bb] bg-[#faf3e6] px-3 py-1.5 text-[9px] uppercase tracking-[0.12em] text-[#8a5314] transition-colors hover:bg-[#f4e7d2]" data-order='${JSON.stringify(order).replace(/'/g, "&apos;")}'>
+                      GST invoice
                     </button>
                   </div>
                 </div>
-              </div>
+              </article>
             `;
           }).join('');
 
@@ -962,20 +951,22 @@ import GSTInvoiceModal from '../components/GSTInvoiceModal';
 
         } else {
           container.innerHTML = `
-            <div class="p-8 text-center bg-white rounded-3xl border border-dashed border-gray-300 space-y-3">
-              <div class="w-12 h-12 rounded-full bg-rose-50 text-[#f2707f] flex items-center justify-center mx-auto text-xl font-bold">
-                💍
-              </div>
-              <h3 class="text-sm font-bold text-gray-900">No Orders Placed Yet</h3>
-              <p class="text-xs text-gray-500 max-w-sm mx-auto">When you purchase anti-tarnish waterproof jewellery from our collection, your orders and tracking numbers will appear right here.</p>
-              <a href="/shop" class="inline-block bg-[#111111] hover:bg-black text-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl transition-all shadow-xs">
-                Explore Jewellery Atelier →
+            <div class="border border-dashed border-[#d8d0c4] bg-white px-6 py-12 text-center">
+              <span class="mx-auto flex h-11 w-11 items-center justify-center border border-[#d8c3a6] bg-[#f4efe7] text-[#8d3f3d]" aria-hidden="true">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                </svg>
+              </span>
+              <h3 class="font-display mt-4 text-[1.5rem] leading-tight text-[#14110f]">No orders yet.</h3>
+              <p class="mx-auto mt-1.5 max-w-sm text-[11.5px] leading-relaxed text-[#8a8279]">When you order, every dispatch and tracking number will appear here.</p>
+              <a href="/shop" class="mt-5 inline-flex items-center gap-2 bg-[#14110f] px-5 py-2.5 text-[9px] uppercase tracking-[0.14em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]">
+                Shop the collection <span aria-hidden="true">→</span>
               </a>
             </div>
           `;
         }
       } catch (err) {
-        container.innerHTML = `<div class="p-4 text-xs text-red-600 bg-red-50 rounded-2xl">Could not retrieve live order history. Please try again.</div>`;
+        container.innerHTML = `<div class="border border-[#e5ded3] bg-[#f8eeee] px-4 py-3 text-[11px] leading-relaxed text-[#8d3f3d]">Could not retrieve live order history. Please try again.</div>`;
       }
     }
 
@@ -995,3 +986,26 @@ import GSTInvoiceModal from '../components/GSTInvoiceModal';
     }
   </script>
 </BaseLayout>
+
+<style>
+  .account-input {
+    display: block;
+    width: 100%;
+    border: 1px solid #d8d0c4;
+    border-radius: 0;
+    background-color: #ffffff;
+    padding: 0.7rem 0.875rem;
+    font-size: 12.5px;
+    color: #14110f;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .account-input::placeholder {
+    color: #9a938b;
+  }
+
+  .account-input:focus {
+    border-color: #14110f;
+  }
+</style>

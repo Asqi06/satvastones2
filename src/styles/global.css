@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-pink: #d87280;
-  --color-brand-pink-hover: #c45d6c;
-  --color-brand-mauve: #9f4553;
+  --color-brand-pink: #8d3f3d;
+  --color-brand-pink-hover: #7a3533;
+  --color-brand-mauve: #8d3f3d;
   --color-brand-gold: #c5a059;
   --color-brand-gold-hover: #b38d45;
-  --color-blush-tint: #faf4f2;
-  --color-promo-bg: #f7ebe9;
+  --color-blush-tint: #f4efe7;
+  --color-promo-bg: #f4efe7;
   --color-urgency-bg: #eef8f3;
   --color-urgency-text: #1b6d48;
   --color-marquee-bg: #141211;
@@ -22,8 +22,8 @@
   --color-border-subtle: #eae4dc;
   --color-border-light: #dfd8cf;
 
-  --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: 'Cormorant Garamond', Garamond, Georgia, "Times New Roman", serif;
+  --font-sans: 'Instrument Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: 'Instrument Serif', 'Cormorant Garamond', Garamond, Georgia, "Times New Roman", serif;
 
   --max-w-standard: 1280px;
   --max-w-luxury: 1440px;
@@ -31,11 +31,11 @@
 
 @layer base {
   :root {
-    --color-primary: #9f4553;
-    --color-primary-hover: #863643;
-    --color-badge-sale: #9f4553;
-    --color-card-tint: #faf4f2;
-    --color-promo-bg: #f7ebe9;
+    --color-primary: #14110f;
+    --color-primary-hover: #8d3f3d;
+    --color-badge-sale: #8d3f3d;
+    --color-card-tint: #f4efe7;
+    --color-promo-bg: #f4efe7;
     --color-urgency-bg: #eef8f3;
     --color-urgency-text: #1b6d48;
     --color-text-main: #171513;
@@ -49,14 +49,14 @@
     font-family: var(--font-sans);
     background-color: #ffffff;
     color: #171513;
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
   ::selection {
-    background-color: #f7ebe9;
-    color: #9f4553;
+    background-color: #c5a059;
+    color: #14110f;
   }
 }
 
@@ -135,8 +135,8 @@
 
 /* Category Story Bubble / Squircle */
 .category-squircle {
-  border-radius: 20px;
-  background-color: #faf4f2;
+  border-radius: 0;
+  background-color: #f4efe7;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -200,4 +200,531 @@ details summary::marker {
 .scrollbar-none {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ============================================================
+   SATVASTONES EDITORIAL LAYER
+   Inspired by quiet luxury / runway-editorial pacing.
+   ============================================================ */
+
+:root {
+  --ink: #14110f;
+  --ink-soft: #3b3631;
+  --cream: #f4efe7;
+  --cream-deep: #ebe4d8;
+  --gold: #c5a059;
+  --gold-light: #e3c98d;
+  --line: rgba(20, 17, 15, 0.12);
+  --line-light: rgba(246, 242, 235, 0.16);
+}
+
+.font-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+.eyebrow {
+  font-size: 0.625rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Scroll reveal primitives — hidden only when JS is available */
+.has-js [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 30px, 0);
+  filter: blur(7px);
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform, filter;
+}
+
+.has-js [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* Word-by-word editorial headline reveal */
+.has-js [data-split] .word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.has-js [data-split] .word > span {
+  display: inline-block;
+  opacity: 0;
+  transform: translate3d(0, 105%, 0) rotate(1.5deg);
+  filter: blur(8px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.95s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.8s ease;
+  transition-delay: calc(var(--i, 0) * 34ms);
+}
+
+.has-js [data-split].is-revealed .word > span {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+
+/* Scroll-reactive editorial lines */
+.reveal-line {
+  transform-origin: left center;
+}
+
+.has-js .reveal-line {
+  transform: scaleX(0);
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.has-js .is-revealed .reveal-line,
+.has-js .reveal-line.is-revealed {
+  transform: scaleX(1);
+}
+
+/* Marquee */
+@keyframes satva-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: satva-marquee 38s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Cinematic grain for image + video surfaces */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+/* Dark atelier dot grid */
+.dot-grid {
+  background-image: radial-gradient(rgba(197, 160, 89, 0.22) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.dot-grid-light {
+  background-image: radial-gradient(rgba(20, 17, 15, 0.14) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Editorial media frames */
+.media-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--cream-deep);
+}
+
+.media-frame > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), filter 1.2s ease;
+}
+
+.media-frame:hover > img {
+  transform: scale(1.045);
+  filter: saturate(1.04);
+}
+
+/* Understated link underline */
+.link-line {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.link-line::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.28rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.35;
+  transform-origin: left center;
+  transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.link-line:hover::after {
+  opacity: 1;
+  transform: scaleX(1.04);
+}
+
+/* Hero wordmark */
+.hero-wordmark {
+  font-size: clamp(3.25rem, 14.2vw, 13.5rem);
+  line-height: 0.86;
+  letter-spacing: -0.055em;
+  font-weight: 400;
+  padding-bottom: 0.1em;
+}
+
+/* Scroll cue */
+@keyframes cue-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(7px);
+    opacity: 1;
+  }
+}
+
+.scroll-cue {
+  animation: cue-drift 2.4s ease-in-out infinite;
+}
+
+/* Paper texture for light sections (very subtle) */
+.paper {
+  background-color: #fbf9f5;
+  background-image:
+    radial-gradient(rgba(20, 17, 15, 0.035) 0.6px, transparent 0.6px);
+  background-size: 7px 7px;
+}
+
+/* Custom focus ring that matches the brand */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 1.5px solid var(--gold);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .has-js [data-reveal],
+  .has-js [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .has-js [data-split] .word > span {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .scroll-cue {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   LENIS SMOOTH SCROLL
+   ============================================================ */
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ============================================================
+   HEADER — HOMEPAGE TRANSPARENT OVERLAY
+   ============================================================ */
+
+.site-header {
+  transition:
+    background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.35s ease,
+    border-color 0.35s ease,
+    backdrop-filter 0.35s ease;
+}
+
+.site-header--overlay {
+  color: #f6f1e8;
+  background-color: transparent;
+}
+
+.site-header--overlay .header-logo-dark {
+  opacity: 0;
+}
+
+.site-header--overlay .header-logo-light {
+  opacity: 1;
+}
+
+.site-header--overlay.is-solid {
+  color: #171513;
+  background-color: rgba(252, 251, 249, 0.94);
+  border-bottom-color: #eae4dc;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.site-header--overlay.is-solid .header-logo-dark {
+  opacity: 1;
+}
+
+.site-header--overlay.is-solid .header-logo-light {
+  opacity: 0;
+}
+
+/* Anchored sections clear the fixed header */
+section[id],
+div[id^='story'] {
+  scroll-margin-top: 5.5rem;
+}
+
+/* Parallax images should not inherit hover transitions */
+img[data-parallax] {
+  will-change: transform;
+}
+
+
+/* ============================================================
+   Legal / policy document typography
+   Applied by .policy-body on privacy, terms, shipping,
+   refund and grievance pages.
+   ============================================================ */
+
+.policy-body {
+  font-size: 13px;
+  line-height: 1.75;
+  color: #4a443f;
+}
+
+.policy-body section {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
+.policy-body h2 {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  color: #14110f;
+  border-bottom: 1px solid #e5ded3;
+  padding-bottom: 0.55rem;
+  margin-bottom: 0.85rem;
+}
+
+/* Hide legacy decorative dots inside legal headings */
+.policy-body h2 > span:first-child:empty {
+  display: none;
+}
+
+.policy-body h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #14110f;
+  margin-top: 1.25rem;
+}
+
+.policy-body p,
+.policy-body li {
+  font-size: 13px;
+  line-height: 1.75;
+  color: #4a443f;
+}
+
+.policy-body ul,
+.policy-body ol {
+  padding-left: 1.15rem;
+  margin-top: 0.5rem;
+}
+
+.policy-body ul {
+  list-style: disc;
+}
+
+.policy-body ol {
+  list-style: decimal;
+}
+
+.policy-body li {
+  margin: 0.3rem 0;
+  padding-left: 0.15rem;
+}
+
+.policy-body li::marker {
+  color: #c5a059;
+}
+
+.policy-body strong,
+.policy-body b {
+  font-weight: 500;
+  color: #14110f;
+}
+
+.policy-body a {
+  color: #14110f;
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-color: #d8c3a6;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.policy-body a:hover {
+  color: #8d3f3d;
+}
+
+.policy-body code {
+  background: #f4efe7;
+  border: 1px solid #e5ded3;
+  padding: 0.05rem 0.3rem;
+  font-size: 0.88em;
+  color: #14110f;
+}
+
+.policy-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 0.75rem;
+}
+
+.policy-body th {
+  background: #f4efe7;
+  border: 1px solid #e5ded3;
+  padding: 0.55rem 0.7rem;
+  text-align: left;
+  font-weight: 500;
+  color: #14110f;
+}
+
+.policy-body td {
+  border: 1px solid #e5ded3;
+  padding: 0.55rem 0.7rem;
+  color: #4a443f;
+}
+
+.policy-body hr {
+  border: 0;
+  border-top: 1px solid #e5ded3;
+  margin: 1.75rem 0;
+}
+
+/* Normalise legacy info cards inside legal pages */
+.policy-body .grid > div {
+  border-radius: 0;
+}
+
+.policy-body [class*='rounded-2xl'],
+.policy-body [class*='rounded-xl'],
+.policy-body [class*='rounded-[2'] {
+  border-radius: 0;
+}
+
+/* Keep emphasis blocks readable without the old pastel cards */
+.policy-body section[class*='bg-gray-50'],
+.policy-body section[class*='bg-rose-50'],
+.policy-body section[class*='bg-amber-50'] {
+  border-left: 2px solid #c5a059;
+  padding-left: 1.1rem;
+}
+
+/* Square editorial controls for the DPDP request forms */
+.policy-body input[type='text'],
+.policy-body input[type='email'],
+.policy-body input[type='tel'],
+.policy-body input[type='number'],
+.policy-body select,
+.policy-body textarea {
+  width: 100%;
+  border: 1px solid #d8d0c4;
+  border-radius: 0;
+  background-color: #ffffff;
+  padding: 0.62rem 0.8rem;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: #14110f;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.policy-body input::placeholder,
+.policy-body textarea::placeholder {
+  color: #9a938b;
+}
+
+.policy-body input:focus,
+.policy-body select:focus,
+.policy-body textarea:focus {
+  border-color: #14110f;
+}
+
+.policy-body label {
+  display: block;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6f675f;
+}
+
+.policy-body button[type='submit'],
+.policy-body button[type='button'] {
+  border-radius: 0;
+}
+
+/* Inner bordered cards keep the thin editorial rule */
+.policy-body div[class*='bg-white'][class*='border'] {
+  border-color: #e5ded3;
+  box-shadow: none;
 }
