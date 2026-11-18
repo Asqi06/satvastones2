@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { CartItem } from '../types/ecommerce';
 import { getCartItems, updateQuantity, addToCart } from '../stores/cartStore';
+import { validateCouponCode, syncCouponsFromCloudflare } from '../stores/adminStore';
 
 const FREE_SHIPPING_THRESHOLD_PAISE = 49900; // ₹499
 const FREE_GIFT_THRESHOLD_PAISE = 149900; // ₹1,499
@@ -43,6 +44,20 @@ export default function CartDrawer() {
 
   useEffect(() => {
     setItems(getCartItems());
+    syncCouponsFromCloudflare();
+
+    // Check if coupon was previously applied
+    try {
+      const savedCoupon = localStorage.getItem('satvastones_applied_coupon');
+      if (savedCoupon) {
+        const parsed = JSON.parse(savedCoupon);
+        if (parsed.code && parsed.discountPaise) {
+          setCouponCode(parsed.code);
+          setCouponDiscountPaise(parsed.discountPaise);
+          setCouponApplied(true);
+        }
+      }
+    } catch (_) {}
 
     const handleOpen = () => setIsOpen(true);
     const handleUpdate = (e: CustomEvent<CartItem[]>) => {
@@ -98,18 +113,23 @@ export default function CartDrawer() {
     const code = couponCode.trim().toUpperCase();
     if (!code) return;
 
-    if (code === 'SATVA10') {
-      const discount = Math.round(subtotalPaise * 0.1);
-      setCouponDiscountPaise(discount);
+    const res = validateCouponCode(code, subtotalPaise);
+    if (res.valid) {
+      setCouponDiscountPaise(res.discountPaise);
       setCouponApplied(true);
       setCouponError('');
-    } else if (code === 'FIRSTBUY') {
-      const discount = 20000; // ₹200 off
-      setCouponDiscountPaise(discount);
-      setCouponApplied(true);
-      setCouponError('');
+      try {
+        localStorage.setItem(
+          'satvastones_applied_coupon',
+          JSON.stringify({
+            code,
+            discountPaise: res.discountPaise,
+            description: res.message
+          })
+        );
+      } catch (_) {}
     } else {
-      setCouponError('Invalid code. Try FIRSTBUY or SATVA10');
+      setCouponError(res.message);
     }
   };
 
@@ -117,6 +137,9 @@ export default function CartDrawer() {
     setCouponApplied(false);
     setCouponDiscountPaise(0);
     setCouponCode('');
+    try {
+      localStorage.removeItem('satvastones_applied_coupon');
+    } catch (_) {}
   };
 
   const availableUpsells = CART_UPSELL_ITEMS.filter(

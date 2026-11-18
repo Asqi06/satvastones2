@@ -6,6 +6,9 @@ import * as privacyHandler from '../functions/api/privacy-requests';
 import * as settingsHandler from '../functions/api/settings';
 import * as adminAuthHandler from '../functions/api/admin-auth';
 import * as customerHandler from '../functions/api/customer';
+import * as productsHandler from '../functions/api/products';
+import * as couponsHandler from '../functions/api/coupons';
+import * as reviewsHandler from '../functions/api/reviews';
 
 export interface Env {
   ASSETS: { fetch: (request: Request) => Promise<Response> };
@@ -74,6 +77,27 @@ export default {
         if (request.method === 'OPTIONS') return settingsHandler.onRequestOptions();
         if (request.method === 'GET') return settingsHandler.onRequestGet(context as any);
         if (request.method === 'POST') return settingsHandler.onRequestPost(context as any);
+      }
+
+      if (url.pathname === '/api/products' || url.pathname.startsWith('/api/products/')) {
+        if (request.method === 'OPTIONS') return productsHandler.onRequestOptions();
+        if (request.method === 'GET') return productsHandler.onRequestGet(context as any);
+        if (request.method === 'POST') return productsHandler.onRequestPost(context as any);
+        if (request.method === 'DELETE') return productsHandler.onRequestDelete(context as any);
+      }
+
+      if (url.pathname === '/api/coupons' || url.pathname.startsWith('/api/coupons/')) {
+        if (request.method === 'OPTIONS') return couponsHandler.onRequestOptions();
+        if (request.method === 'GET') return couponsHandler.onRequestGet(context as any);
+        if (request.method === 'POST') return couponsHandler.onRequestPost(context as any);
+        if (request.method === 'DELETE') return couponsHandler.onRequestDelete(context as any);
+      }
+
+      if (url.pathname === '/api/reviews' || url.pathname.startsWith('/api/reviews/')) {
+        if (request.method === 'OPTIONS') return reviewsHandler.onRequestOptions();
+        if (request.method === 'GET') return reviewsHandler.onRequestGet(context as any);
+        if (request.method === 'POST') return reviewsHandler.onRequestPost(context as any);
+        if (request.method === 'DELETE') return reviewsHandler.onRequestDelete(context as any);
       }
     }
 

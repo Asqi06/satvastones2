@@ -461,18 +461,67 @@ export function addAdminProduct(product: AdminProduct): void {
   const current = getAdminProducts();
   const updated = [product, ...current];
   saveAdminProducts(updated);
+
+  // Sync to Cloudflare D1
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('satvastones_admin_token') || '';
+    fetch('/api/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(product)
+    }).catch((err) => console.warn('Product D1 sync error:', err));
+  }
 }
 
 export function updateAdminProduct(product: AdminProduct): void {
   const current = getAdminProducts();
   const updated = current.map((p) => (p.id === product.id ? product : p));
   saveAdminProducts(updated);
+
+  // Sync to Cloudflare D1
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('satvastones_admin_token') || '';
+    fetch('/api/products', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(product)
+    }).catch((err) => console.warn('Product D1 sync error:', err));
+  }
 }
 
 export function deleteAdminProduct(productId: string): void {
   const current = getAdminProducts();
   const updated = current.filter((p) => p.id !== productId);
   saveAdminProducts(updated);
+
+  // Sync to Cloudflare D1
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('satvastones_admin_token') || '';
+    fetch(`/api/products?id=${encodeURIComponent(productId)}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).catch((err) => console.warn('Product delete D1 sync error:', err));
+  }
+}
+
+export async function syncProductsFromCloudflare(): Promise<AdminProduct[]> {
+  try {
+    const res = await fetch('/api/products');
+    const data = await res.json();
+    if (data?.success && Array.isArray(data.products) && data.products.length > 0) {
+      saveAdminProducts(data.products);
+      return data.products;
+    }
+  } catch (_) {}
+  return getAdminProducts();
 }
 
 export function toggleAdminProductStock(productId: string): void {
@@ -508,24 +557,122 @@ export function addAdminCoupon(coupon: AdminCoupon): void {
   const current = getAdminCoupons();
   const updated = [coupon, ...current];
   saveAdminCoupons(updated);
+
+  // Sync to Cloudflare D1
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('satvastones_admin_token') || '';
+    fetch('/api/coupons', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(coupon)
+    }).catch((err) => console.warn('Coupon D1 sync error:', err));
+  }
 }
 
 export function updateAdminCoupon(coupon: AdminCoupon): void {
   const current = getAdminCoupons();
   const updated = current.map((c) => (c.id === coupon.id ? coupon : c));
   saveAdminCoupons(updated);
+
+  // Sync to Cloudflare D1
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('satvastones_admin_token') || '';
+    fetch('/api/coupons', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(coupon)
+    }).catch((err) => console.warn('Coupon D1 sync error:', err));
+  }
 }
 
 export function deleteAdminCoupon(couponId: string): void {
   const current = getAdminCoupons();
   const updated = current.filter((c) => c.id !== couponId);
   saveAdminCoupons(updated);
+
+  // Sync to Cloudflare D1
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('satvastones_admin_token') || '';
+    fetch(`/api/coupons?id=${encodeURIComponent(couponId)}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }).catch((err) => console.warn('Coupon delete D1 sync error:', err));
+  }
 }
 
 export function toggleCouponActive(couponId: string): void {
   const current = getAdminCoupons();
   const updated = current.map((c) => (c.id === couponId ? { ...c, isActive: !c.isActive } : c));
   saveAdminCoupons(updated);
+
+  const toggled = updated.find((c) => c.id === couponId);
+  if (toggled && typeof window !== 'undefined') {
+    const token = localStorage.getItem('satvastones_admin_token') || '';
+    fetch('/api/coupons', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify(toggled)
+    }).catch((err) => console.warn('Coupon toggle D1 sync error:', err));
+  }
+}
+
+export async function syncCouponsFromCloudflare(): Promise<AdminCoupon[]> {
+  try {
+    const res = await fetch('/api/coupons');
+    const data = await res.json();
+    if (data?.success && Array.isArray(data.coupons) && data.coupons.length > 0) {
+      saveAdminCoupons(data.coupons);
+      return data.coupons;
+    }
+  } catch (_) {}
+  return getAdminCoupons();
+}
+
+export function validateCouponCode(
+  code: string,
+  subtotalPaise: number
+): { valid: boolean; discountPaise: number; message: string; coupon?: AdminCoupon } {
+  const coupons = getAdminCoupons();
+  const normalized = code.trim().toUpperCase();
+  const match = coupons.find((c) => c.code.toUpperCase() === normalized && c.isActive);
+
+  if (!match) {
+    return { valid: false, discountPaise: 0, message: 'Invalid or expired coupon code. Try FIRSTBUY or SATVA10' };
+  }
+
+  if (match.minOrderPaise && subtotalPaise < match.minOrderPaise) {
+    const minRupees = Math.round(match.minOrderPaise / 100);
+    return {
+      valid: false,
+      discountPaise: 0,
+      message: `Minimum order of ₹${minRupees.toLocaleString('en-IN')} required for coupon ${match.code}.`
+    };
+  }
+
+  let discount = 0;
+  if (match.discountPercent) {
+    discount = Math.round(subtotalPaise * (match.discountPercent / 100));
+  } else if (match.flatDiscountPaise) {
+    discount = Math.min(subtotalPaise, match.flatDiscountPaise);
+  }
+
+  return {
+    valid: true,
+    discountPaise: discount,
+    message: match.description || `Coupon ${match.code} applied successfully!`,
+    coupon: match
+  };
 }
 
 // ==========================================
@@ -580,6 +727,31 @@ export function saveSiteSettings(settings: SiteSettings): void {
   if (typeof window === 'undefined') return;
   localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   window.dispatchEvent(new CustomEvent('satvastones:settings_updated', { detail: settings }));
+
+  // Sync to Cloudflare D1
+  const token = localStorage.getItem('satvastones_admin_token') || '';
+  fetch('/api/settings', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(settings)
+  }).catch((err) => console.warn('Settings D1 sync error:', err));
+}
+
+export async function syncSiteSettingsFromCloudflare(): Promise<SiteSettings> {
+  try {
+    const res = await fetch('/api/settings');
+    const data = await res.json();
+    if (data?.success && data.settings) {
+      const merged = { ...getSiteSettings(), ...data.settings };
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(merged));
+      window.dispatchEvent(new CustomEvent('satvastones:settings_updated', { detail: merged }));
+      return merged;
+    }
+  } catch (_) {}
+  return getSiteSettings();
 }
 
 export function updateAdminCategory(slug: string, details: Partial<CategoryDetail>): void {

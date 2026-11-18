@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PRODUCTS, formatPrice } from '../data/products';
+import { getAllCatalogProducts, syncCatalogFromCloudflare } from '../stores/catalogStore';
 import type { Product } from '../types/ecommerce';
 
 export default function SearchModal() {
@@ -40,7 +41,8 @@ export default function SearchModal() {
       return;
     }
 
-    const filtered = PRODUCTS.filter(
+    const all = getAllCatalogProducts();
+    const filtered = all.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||

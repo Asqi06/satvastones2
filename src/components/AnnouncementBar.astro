@@ -1,6 +1,6 @@
 ---
-// AnnouncementBar.astro - High-Jewellery Atelier Marquee Ticker
-const marqueeItems = [
+// AnnouncementBar.astro - High-Jewellery Atelier Marquee Ticker with Dynamic Admin Sync
+const defaultMarqueeItems = [
   'ATELIER PRIVILEGE EVENT — UPTO 60% OFF CURATED SUITES',
   'COMPLIMENTARY EXPRESS AIR DELIVERY ON ORDERS ABOVE ₹499',
   'HAND-INSPECTED & DISPATCHED FROM OUR VAPI ATELIER IN 24–48 HOURS',
@@ -11,18 +11,93 @@ const marqueeItems = [
 ---
 
 <div class="bg-[#171513] text-[#faf6f0] py-2 overflow-hidden border-b border-[#2a2624] text-[11px] font-medium tracking-[0.14em] uppercase select-none relative z-50">
-  <div class="animate-marquee whitespace-nowrap flex items-center gap-10">
-    {marqueeItems.map((item) => (
-      <span class="inline-flex items-center gap-3.5">
-        <span class="text-[#c5a059] text-[9px] select-none">✦</span>
-        <span class="text-white/90 font-medium">{item}</span>
-      </span>
-    ))}
-    {marqueeItems.map((item) => (
-      <span class="inline-flex items-center gap-3.5">
-        <span class="text-[#c5a059] text-[9px] select-none">✦</span>
-        <span class="text-white/90 font-medium">{item}</span>
-      </span>
-    ))}
+  <div id="announcement-marquee-track" class="animate-marquee whitespace-nowrap flex items-center gap-10">
+    <div id="announcement-items-loop-1" class="flex items-center gap-10">
+      {defaultMarqueeItems.map((item) => (
+        <span class="inline-flex items-center gap-3.5">
+          <span class="text-[#c5a059] text-[9px] select-none">✦</span>
+          <span class="text-white/90 font-medium">{item}</span>
+        </span>
+      ))}
+    </div>
+    <div id="announcement-items-loop-2" class="flex items-center gap-10">
+      {defaultMarqueeItems.map((item) => (
+        <span class="inline-flex items-center gap-3.5">
+          <span class="text-[#c5a059] text-[9px] select-none">✦</span>
+          <span class="text-white/90 font-medium">{item}</span>
+        </span>
+      ))}
+    </div>
   </div>
 </div>
+
+<script>
+  function updateTickerFromSettings(announcementText: string) {
+    if (!announcementText || typeof announcementText !== 'string') return;
+    const trimmed = announcementText.trim();
+    if (!trimmed) return;
+
+    // Split text by common separators (· or • or | or --) or keep as single headline
+    let items = trimmed
+      .split(/[\·\•\|\—\–]+/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (items.length === 0) items = [trimmed];
+
+    const generateHtml = (list: string[]) =>
+      list
+        .map(
+          (item) => `
+          <span class="inline-flex items-center gap-3.5">
+            <span class="text-[#c5a059] text-[9px] select-none">✦</span>
+            <span class="text-white/90 font-medium">${item}</span>
+          </span>
+        `
+        )
+        .join('');
+
+    const loop1 = document.getElementById('announcement-items-loop-1');
+    const loop2 = document.getElementById('announcement-items-loop-2');
+
+    if (loop1) loop1.innerHTML = generateHtml(items);
+    if (loop2) loop2.innerHTML = generateHtml(items);
+  }
+
+  function initAnnouncementTicker() {
+    // 1. Check local storage settings first for instantaneous render
+    try {
+      const stored = localStorage.getItem('satvastones_site_settings');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed.announcementText) {
+          updateTickerFromSettings(parsed.announcementText);
+        }
+      }
+    } catch (_) {}
+
+    // 2. Fetch live settings from Cloudflare D1
+    fetch('/api/settings')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data?.success && data?.settings?.announcementText) {
+          updateTickerFromSettings(data.settings.announcementText);
+        }
+      })
+      .catch(() => {});
+
+    // 3. Listen for immediate admin updates in real-time
+    window.addEventListener('satvastones:settings_updated', ((e: CustomEvent) => {
+      if (e?.detail?.announcementText) {
+        updateTickerFromSettings(e.detail.announcementText);
+      }
+    }) as EventListener);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAnnouncementTicker);
+  } else {
+    initAnnouncementTicker();
+  }
+  document.addEventListener('astro:page-load', initAnnouncementTicker);
+</script>

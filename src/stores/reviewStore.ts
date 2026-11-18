@@ -126,13 +126,13 @@ export function submitCustomerReview(newReview: Omit<CustomerReview, 'id' | 'cre
       localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
       window.dispatchEvent(new CustomEvent('satvastones:review_added', { detail: fullReview }));
 
-      // Optional async sync to backend API if worker is available
+      // Sync to Cloudflare D1
       fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(fullReview)
-      }).catch(() => {
-        // Local persistence succeeded, fail-safe if offline
+      }).catch((err) => {
+        console.warn('Review D1 sync error:', err);
       });
     } catch (e) {
       console.warn('Failed to persist customer review:', e);
@@ -140,4 +140,36 @@ export function submitCustomerReview(newReview: Omit<CustomerReview, 'id' | 'cre
   }
 
   return fullReview;
+}
+
+export async function syncReviewsFromCloudflare(productId?: string): Promise<CustomerReview[]> {
+  if (typeof window === 'undefined') return INITIAL_REVIEWS;
+  try {
+    const url = productId ? `/api/reviews?productId=${encodeURIComponent(productId)}` : '/api/reviews';
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data?.success && Array.isArray(data.reviews) && data.reviews.length > 0) {
+      const current = getStoredReviews();
+      const remoteIds = new Set(data.reviews.map((r: any) => r.id));
+      const merged = [...data.reviews, ...current.filter((r) => !remoteIds.has(r.id))];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      window.dispatchEvent(new CustomEvent('satvastones:reviews_synced', { detail: merged }));
+      return merged;
+    }
+  } catch (_) {}
+  return getStoredReviews();
+}
+
+export function deleteCustomerReview(id: string): void {
+  const current = getStoredReviews();
+  const updated = current.filter((r) => r.id !== id);
+  if (typeof window !== 'undefined') {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    window.dispatchEvent(new CustomEvent('satvastones:reviews_synced', { detail: updated }));
+    const token = localStorage.getItem('satvastones_admin_token') || '';
+    fetch(`/api/reviews?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token}` }
+    }).catch(() => {});
+  }
 }

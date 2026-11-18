@@ -252,6 +252,11 @@ import DPDPNotice from '../components/DPDPNotice';
                 <span>Pan-India Express Shipping</span>
                 <span id="checkout-shipping" class="font-bold text-[#1b6d48]">FREE</span>
               </div>
+              <!-- Coupon Discount Row -->
+              <div id="checkout-discount-row" class="hidden flex justify-between text-[#9f4553] font-semibold">
+                <span>Promotional Discount (<span id="checkout-coupon-code"></span>)</span>
+                <span id="checkout-discount">−₹0</span>
+              </div>
               <!-- COD Fee Row (Shown only when Cash on Delivery is selected) -->
               <div id="cod-fee-row" class="hidden flex justify-between text-[#8a5314] bg-[#fef8ee] px-2.5 py-1.5 rounded-lg border border-[#fae2be] text-xs font-semibold">
                 <span class="flex items-center gap-1.5">
@@ -554,7 +559,26 @@ import DPDPNotice from '../components/DPDPNotice';
   } else {
     const subtotalPaise = items.reduce((acc, i) => acc + i.pricePaise * i.quantity, 0);
     const shippingPaise = subtotalPaise >= 49900 ? 0 : 4900;
-    const baseTotalPaise = subtotalPaise + shippingPaise;
+
+    // Check applied coupon from Cart Drawer
+    let discountPaise = 0;
+    try {
+      const storedCoupon = localStorage.getItem('satvastones_applied_coupon');
+      if (storedCoupon) {
+        const parsed = JSON.parse(storedCoupon);
+        if (parsed.discountPaise) {
+          discountPaise = parsed.discountPaise;
+          const discountRow = document.getElementById('checkout-discount-row');
+          const couponCodeEl = document.getElementById('checkout-coupon-code');
+          const discountEl = document.getElementById('checkout-discount');
+          if (discountRow) discountRow.classList.remove('hidden');
+          if (couponCodeEl) couponCodeEl.textContent = parsed.code || 'COUPON';
+          if (discountEl) discountEl.textContent = `−${formatINR(discountPaise)}`;
+        }
+      }
+    } catch (_) {}
+
+    const baseTotalPaise = Math.max(0, subtotalPaise - discountPaise + shippingPaise);
 
     if (cartList) {
       cartList.innerHTML = items
@@ -681,7 +705,7 @@ import DPDPNotice from '../components/DPDPNotice';
         })),
         subtotalPaise,
         shippingPaise,
-        discountPaise: 0,
+        discountPaise,
         totalPaise: opts.totalAmountPaise,
         paymentMethod: opts.paymentMethod,
         paymentStatus: opts.paymentStatus,
@@ -729,8 +753,11 @@ import DPDPNotice from '../components/DPDPNotice';
       if (successModal) successModal.classList.remove('hidden');
       if (completeBtn) completeBtn.classList.add('hidden');
 
-      // Clear Shopping Bag
+      // Clear Shopping Bag & Applied Coupon
       saveCartItems([]);
+      try {
+        localStorage.removeItem('satvastones_applied_coupon');
+      } catch (_) {}
     };
 
     // Primary CTA Button Click Handler

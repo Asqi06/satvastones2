@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PRODUCTS, formatPrice } from '../data/products';
+import { getAllCatalogProducts, syncCatalogFromCloudflare } from '../stores/catalogStore';
 import { addToCart } from '../stores/cartStore';
 import { toggleWishlist, isInWishlist } from '../stores/wishlistStore';
 import type { Product } from '../types/ecommerce';
@@ -54,13 +55,28 @@ function getOptimizedImageUrl(url: string, width = 450): string {
 
 export default function HomeCuratedTabs() {
   const [activeTab, setActiveTab] = useState('bestsellers');
+  const [catalogProducts, setCatalogProducts] = useState<Product[]>(PRODUCTS);
   const [wishlistIds, setWishlistIds] = useState<Set<string>>(new Set());
   const [addedId, setAddedId] = useState<string | null>(null);
 
   useEffect(() => {
+    // 1. Initial local merge
+    const merged = getAllCatalogProducts();
+    setCatalogProducts(merged);
+
+    // 2. Sync latest from Cloudflare D1
+    syncCatalogFromCloudflare().then((latest) => {
+      if (latest && latest.length > 0) setCatalogProducts(latest);
+    });
+
+    const handleProductsUpdated = () => {
+      setCatalogProducts(getAllCatalogProducts());
+    };
+    window.addEventListener('satvastones:products_updated', handleProductsUpdated);
+
     const updateWishlist = () => {
       const activeIds = new Set<string>();
-      PRODUCTS.forEach((p) => {
+      catalogProducts.forEach((p) => {
         if (isInWishlist(p.id)) activeIds.add(p.id);
       });
       setWishlistIds(activeIds);
@@ -68,13 +84,16 @@ export default function HomeCuratedTabs() {
 
     updateWishlist();
     window.addEventListener('satvastones:wishlist_updated', updateWishlist);
-    return () => window.removeEventListener('satvastones:wishlist_updated', updateWishlist);
+    return () => {
+      window.removeEventListener('satvastones:wishlist_updated', updateWishlist);
+      window.removeEventListener('satvastones:products_updated', handleProductsUpdated);
+    };
   }, []);
 
   const currentTabConfig = TABS.find((t) => t.id === activeTab) || TABS[0];
-  let filteredProducts = PRODUCTS.filter(currentTabConfig.filter);
+  let filteredProducts = catalogProducts.filter(currentTabConfig.filter);
   if (filteredProducts.length === 0) {
-    filteredProducts = PRODUCTS.slice(0, 4);
+    filteredProducts = catalogProducts.slice(0, 4);
   }
   const displayProducts = filteredProducts.slice(0, 8);
 
