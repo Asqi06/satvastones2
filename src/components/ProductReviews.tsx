@@ -85,11 +85,12 @@ export default function ProductReviews({
       productId,
       productName,
       authorName: name.trim(),
-      city: city.trim() || 'Verified Indian Patron',
+      city: city.trim() || 'India',
       rating: selectedRating,
-      title: title.trim() || 'Verified Customer Review',
+      title: title.trim() || 'Customer review',
       content: content.trim(),
-      verifiedBuyer: true
+      // Badges are earned through an order match, never by self-declaration.
+      verifiedBuyer: false
     });
 
     setIsSubmitted(true);
@@ -119,7 +120,7 @@ export default function ProductReviews({
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
         {/* Summary rail */}
         <div className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start">
-          <p className="eyebrow text-[#8d3f3d]">Verified patron reviews</p>
+          <p className="eyebrow text-[#8d3f3d]">Patron reviews</p>
           <h2
             id="product-reviews-title"
             className="font-display mt-2 text-[2rem] leading-[1.02] sm:text-[2.6rem]"
@@ -141,7 +142,7 @@ export default function ProductReviews({
               <div className="pb-0.5">
                 <Stars rating={Math.round(score)} size="md" />
                 <p className="mt-1.5 text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">
-                  {reviewCount > 0 ? `${reviewCount} verified reviews` : 'Awaiting first review'}
+                  {reviewCount > 0 ? `${reviewCount} patron reviews` : 'Awaiting first review'}
                 </p>
               </div>
             </div>
@@ -160,7 +161,7 @@ export default function ProductReviews({
             <span className="mt-0.5 text-[#c5a059]" aria-hidden="true">
               ✦
             </span>
-            <span>Reviews publish immediately. No moderation queue, no edited wording.</span>
+            <span>Reviews publish immediately. Only confirmed purchases carry a verified badge.</span>
           </p>
         </div>
 
@@ -305,7 +306,7 @@ export default function ProductReviews({
                       <span className="text-[#2f7d5a]" aria-hidden="true">
                         ✓
                       </span>
-                      Verified review, published immediately
+                      Published immediately · verified badge only after order match
                     </p>
                     <button
                       type="submit"

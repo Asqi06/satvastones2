@@ -8,8 +8,28 @@
  */
 
 const DEFAULT_ADMIN_USER = '@dmin';
-const DEFAULT_ADMIN_PASS = '@dmin060409';
-const DEFAULT_SECRET = 'satvastones-jewellery-vapi-super-secret-key-2026-secure-edge-hmac-sha256-token';
+// Dev-only convenience passwords. They are never accepted in production.
+const DEV_ADMIN_PASS = '@dmin060409';
+const LEGACY_DEV_ADMIN_PASS = 'SatvaStones@Vapi2026!';
+const DEV_FALLBACK_SECRET = 'satvastones-dev-only-session-secret-not-for-production';
+
+/** True when legacy/dev credentials may be used (explicitly opted in, non-production). */
+function legacyLoginAllowed(env?: any): boolean {
+  const environment = String(env?.ENVIRONMENT || '').toLowerCase();
+  return env?.ALLOW_LEGACY_ADMIN_LOGIN === 'true' && environment !== 'production';
+}
+
+/**
+ * The signing secret must come from the environment in production. Falling back to a
+ * constant that ships in the repository would let anyone mint a valid admin token.
+ */
+function resolveSessionSecret(env?: any): { secret: string; configured: boolean } {
+  const configured = typeof env?.ADMIN_SESSION_SECRET === 'string' && env.ADMIN_SESSION_SECRET.trim().length >= 32;
+  return {
+    secret: configured ? env.ADMIN_SESSION_SECRET : DEV_FALLBACK_SECRET,
+    configured
+  };
+}
 
 // Rate Limiting Storage for Brute-Force Prevention
 interface RateLimitEntry {
@@ -119,7 +139,11 @@ export function clearRateLimit(ip: string): void {
 
 // Generate signed HMAC-SHA256 Admin Session Token
 export async function createAdminToken(username: string, secret?: string): Promise<string> {
-  const keySecret = secret || DEFAULT_SECRET;
+  const resolved = resolveSessionSecret({ ADMIN_SESSION_SECRET: secret });
+  if (!resolved.configured) {
+    throw new Error('ADMIN_SESSION_SECRET is not configured.');
+  }
+  const keySecret = resolved.secret;
   const header = { alg: 'HS256', typ: 'JWT' };
   const payload = {
     sub: username,
@@ -144,12 +168,14 @@ export async function createAdminToken(username: string, secret?: string): Promi
 export async function verifyAdminToken(token: string, secret?: string): Promise<{ valid: boolean; user?: string }> {
   try {
     if (!token || typeof token !== 'string') return { valid: false };
+    const resolved = resolveSessionSecret({ ADMIN_SESSION_SECRET: secret });
+    if (!resolved.configured) return { valid: false };
     const parts = token.split('.');
     if (parts.length !== 3) return { valid: false };
 
     const [headerEnc, payloadEnc, sigEnc] = parts;
     const dataToVerify = `${headerEnc}.${payloadEnc}`;
-    const keySecret = secret || DEFAULT_SECRET;
+    const keySecret = resolved.secret;
 
     const cryptoKey = await getCryptoKey(keySecret);
     const signatureBytes = fromBase64Url(sigEnc);
@@ -168,6 +194,11 @@ export async function verifyAdminToken(token: string, secret?: string): Promise<
 
     if (payload.exp && payload.exp < nowSec) {
       return { valid: false }; // Token expired
+    }
+
+    // Admin endpoints must never accept a customer session (or vice versa).
+    if (payload.role !== 'SUPER_ADMIN') {
+      return { valid: false };
     }
 
     return { valid: true, user: payload.sub };
@@ -193,24 +224,41 @@ export async function verifyAdminAuth(request: Request, env?: any): Promise<bool
 
     if (!token) return false;
 
-    const secret = env?.ADMIN_SESSION_SECRET || DEFAULT_SECRET;
-    const result = await verifyAdminToken(token, secret);
+    const resolved = resolveSessionSecret(env);
+    if (!resolved.configured) return false;
+    const result = await verifyAdminToken(token, resolved.secret);
     return result.valid;
   } catch {
     return false;
   }
 }
 
-// Validate credentials against environment or defaults
+/** Reports whether the deployment has the secrets admin auth needs. */
+export function isAdminAuthConfigured(env?: any): boolean {
+  return Boolean(env?.ADMIN_PASSWORD) && resolveSessionSecret(env).configured;
+}
+
+// Validate credentials against environment configuration.
+// No password is hardcoded: production must supply ADMIN_PASSWORD. The old
+// passwords only work in non-production when ALLOW_LEGACY_ADMIN_LOGIN=true.
 export function validateCredentials(username: string, pass: string, env?: any): boolean {
   const expectedUser = env?.ADMIN_USERNAME || DEFAULT_ADMIN_USER;
   const userMatch = constantTimeCompare(username.trim(), expectedUser);
 
-  const inputPass = pass.trim();
-  const passMatch =
-    (env?.ADMIN_PASSWORD && constantTimeCompare(inputPass, env.ADMIN_PASSWORD)) ||
-    constantTimeCompare(inputPass, 'SatvaStones@Vapi2026!') ||
-    constantTimeCompare(inputPass, DEFAULT_ADMIN_PASS);
+  const candidates: string[] = [];
+  if (typeof env?.ADMIN_PASSWORD === 'string' && env.ADMIN_PASSWORD.length > 0) {
+    candidates.push(env.ADMIN_PASSWORD);
+  }
+  if (legacyLoginAllowed(env)) {
+    candidates.push(DEV_ADMIN_PASS, LEGACY_DEV_ADMIN_PASS);
+  }
 
-  return userMatch && Boolean(passMatch);
+  const inputPass = pass.trim();
+  let passMatch = false;
+  // Compare against every candidate without short-circuiting.
+  for (const candidate of candidates) {
+    if (constantTimeCompare(inputPass, candidate)) passMatch = true;
+  }
+
+  return userMatch && passMatch;
 }

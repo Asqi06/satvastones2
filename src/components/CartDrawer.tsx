@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import type { CartItem } from '../types/ecommerce';
+import type { CartItem, Product } from '../types/ecommerce';
 import { getCartItems, updateQuantity, addToCart } from '../stores/cartStore';
 import { validateCouponCode, syncCouponsFromCloudflare } from '../stores/adminStore';
-import { PRODUCTS } from '../data/products';
+import { ensureCatalog } from '../stores/catalogStore';
 
 const FREE_SHIPPING_THRESHOLD_PAISE = 49900; // ₹499
 
@@ -13,10 +13,23 @@ export default function CartDrawer() {
   const [couponDiscountPaise, setCouponDiscountPaise] = useState(0);
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
+  const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     setItems(getCartItems());
     syncCouponsFromCloudflare();
+
+    let cancelled = false;
+    const loadCatalog = () => {
+      ensureCatalog()
+        .then((products) => {
+          if (!cancelled) setCatalogProducts(products);
+        })
+        .catch(() => {});
+    };
+    loadCatalog();
+
+    window.addEventListener('satvastones:products_updated', loadCatalog);
 
     // Restore a previously applied code
     try {
@@ -44,6 +57,8 @@ export default function CartDrawer() {
     window.addEventListener('keydown', handleKey);
 
     return () => {
+      cancelled = true;
+      window.removeEventListener('satvastones:products_updated', loadCatalog);
       window.removeEventListener('satvastones:open_cart', handleOpen);
       window.removeEventListener('satvastones:cart_updated' as any, handleUpdate);
       window.removeEventListener('keydown', handleKey);
@@ -115,12 +130,12 @@ export default function CartDrawer() {
   // category so the suggestion reads as a genuine pairing.
   const cartIds = new Set(items.map((i) => i.productId));
   const cartCategories = new Set(
-    items.map((i) => PRODUCTS.find((p) => p.id === i.productId)?.category).filter(Boolean)
+    items.map((i) => catalogProducts.find((p) => p.id === i.productId)?.category).filter(Boolean)
   );
-  const preferredUpsells = PRODUCTS.filter(
-    (p) => !cartIds.has(p.id) && !cartCategories.has(p.category)
+  const preferredUpsells = catalogProducts.filter(
+    (p) => !cartIds.has(p.id) && !cartCategories.has(p.category) && p.inStock
   );
-  const fallbackUpsells = PRODUCTS.filter((p) => !cartIds.has(p.id));
+  const fallbackUpsells = catalogProducts.filter((p) => !cartIds.has(p.id) && p.inStock);
   const availableUpsells = [...preferredUpsells, ...fallbackUpsells]
     .filter((p, idx, arr) => arr.findIndex((x) => x.id === p.id) === idx)
     .slice(0, 2);

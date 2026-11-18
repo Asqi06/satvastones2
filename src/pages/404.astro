@@ -139,17 +139,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             slug: raw.slug,
             sku: raw.sku || `SAT-${raw.id}`,
             category: raw.category || 'necklaces',
-            collection: 'atelier-curations',
+            collection: raw.collection || 'atelier-curations',
             headline: raw.headline || raw.name,
             description: raw.description || `${raw.name} - Handcrafted with waterproof 316L surgical stainless steel and 18K gold vacuum PVD coating. Hand-inspected and dispatched from our Vapi atelier in 24–48 hours.`,
             material: raw.material || '316L Surgical Stainless Steel + 18K Gold Vacuum PVD',
             finish: raw.finish || 'Mirror Polished Liquid Gleam',
-            careInstructions: [
-              'Safe for regular showers, gym workouts, and tropical humidity',
-              'Rinse with fresh water after ocean beach visits',
-              'Wipe dry with the included velvet microfiber pouch'
-            ],
-            warranty: '365-Day Anti-Tarnish Assurance',
+            dimensions: raw.dimensions || '',
+            weightGrams: raw.weightGrams ?? undefined,
+            careInstructions:
+              Array.isArray(raw.careInstructions) && raw.careInstructions.length
+                ? raw.careInstructions
+                : [
+                    'Safe for regular showers, gym workouts, and tropical humidity',
+                    'Rinse with fresh water after ocean beach visits',
+                    'Wipe dry with the included velvet microfiber pouch'
+                  ],
+            warranty: raw.warranty || '365-Day Anti-Tarnish Assurance',
             pricePaise: Number(raw.pricePaise || raw.price_paise) || 0,
             compareAtPricePaise: raw.compareAtPricePaise || raw.compare_at_price_paise ? Number(raw.compareAtPricePaise || raw.compare_at_price_paise) : null,
             rating: raw.rating || 4.9,
@@ -186,15 +191,38 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     const primaryImage = product.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1000&q=80';
     const allImages = product.images && product.images.length > 0 ? product.images : [{ url: primaryImage, alt: product.name }];
 
-    // Curate 2 complementary pieces from catalog for Bundle Builder
-    const complementary = PRODUCTS.filter((p) => p.id !== product!.id && p.slug !== product!.slug).slice(0, 2);
+    // Admin-entered catalogue data is interpolated into innerHTML below, so every
+    // string is escaped once, here, before it reaches markup or an attribute.
+    const esc = (value: unknown) =>
+      String(value ?? '').replace(/[&<>"']/g, (char) =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] as string)
+      );
+    const safeName = esc(product.name);
+    const safeCategory = esc(product.category);
+    const safeDescription = esc(product.description);
+    const safeHeadline = esc(product.headline || product.description);
+    const safeMaterial = esc(product.material);
+    const safeFinish = esc(product.finish);
+    const safeWarranty = esc(product.warranty || '6 Months Anti-Tarnish Assurance');
+    const safeDimensions = esc(product.dimensions || '');
+    const safeCare = (product.careInstructions || []).map((line) => esc(line));
+    const safeImages = allImages.map((img) => ({ url: esc(img.url), alt: esc(img.alt || product!.name) }));
+
+    // Curate 2 complementary pieces from the live catalogue for the bundle builder
+    const complementary = all.filter((p) => p.id !== product!.id && p.slug !== product!.slug).slice(0, 2);
     const bundleItems = [product, ...complementary];
     const bundleRawSumPaise = bundleItems.reduce((acc, p) => acc + p.pricePaise, 0);
     const bundleDiscountPaise = Math.round(bundleRawSumPaise * 0.15);
     const bundleFinalPaise = bundleRawSumPaise - bundleDiscountPaise;
 
-    // Related items
-    const relatedProducts = PRODUCTS.filter((p) => p.id !== product!.id && p.slug !== product!.slug).slice(0, 4);
+    // Related items prefer the same category, then fall back to the rest of the catalogue.
+    const sameCategory = all.filter(
+      (p) => p.id !== product!.id && p.slug !== product!.slug && p.category === product!.category
+    );
+    const relatedProducts = (sameCategory.length >= 2
+      ? sameCategory
+      : all.filter((p) => p.id !== product!.id && p.slug !== product!.slug)
+    ).slice(0, 4);
 
     dynamicView.innerHTML = `
       <!-- Breadcrumbs -->
@@ -203,9 +231,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <span>/</span>
         <a href="/shop" class="hover:text-black">Shop</a>
         <span>/</span>
-        <a href="/collections/${product.category}" class="capitalize hover:text-black">${product.category}</a>
+        <a href="/collections/${safeCategory}" class="capitalize hover:text-black">${safeCategory}</a>
         <span>/</span>
-        <span class="text-gray-900 font-medium truncate max-w-[180px] sm:max-w-xs">${product.name}</span>
+        <span class="text-gray-900 font-medium truncate max-w-[180px] sm:max-w-xs">${safeName}</span>
       </nav>
 
       <!-- Main PDP Grid -->
@@ -216,8 +244,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <div class="aspect-[3/4] bg-[#f9f9f9] rounded-[22px] overflow-hidden border border-gray-100 relative group shadow-sm">
             <img
               id="pdp-main-image"
-              src="${primaryImage}"
-              alt="${product.name} - Anti Tarnish Waterproof 18K Gold Jewellery India"
+              src="${esc(primaryImage)}"
+              alt="${safeName} - Anti Tarnish Waterproof 18K Gold Jewellery India"
               width="800"
               height="1066"
               loading="eager"
@@ -249,16 +277,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
           <!-- Thumbnails Strip -->
           <div class="grid grid-cols-4 sm:grid-cols-5 gap-2.5 sm:gap-3">
-            ${allImages.map((img, idx) => `
+            ${safeImages.map((img, idx) => `
               <button
                 type="button"
                 data-img-src="${img.url}"
-                data-img-alt="${img.alt || product!.name}"
+                data-img-alt="${img.alt}"
                 class="aspect-[3/4] rounded-[14px] overflow-hidden border-2 transition-all pdp-thumb-btn ${idx === 0 ? 'border-[#171513] shadow-xs' : 'border-[#eae4dc] hover:border-[#c5a059]'}"
               >
                 <img
                   src="${img.url}"
-                  alt="${img.alt || product!.name}"
+                  alt="${img.alt}"
                   width="160"
                   height="213"
                   loading="lazy"
@@ -281,9 +309,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 <span>Anti-Tarnish Daily Atelier</span>
               </span>
               <h1 class="font-serif text-2xl sm:text-4xl font-normal text-[#171513] tracking-tight leading-tight">
-                ${product.name}
+                ${safeName}
               </h1>
-              <p class="text-[11px] text-[#99918b]">SKU: ${product.sku}</p>
+              <p class="text-[11px] text-[#99918b]">SKU: ${esc(product.sku)}</p>
             </div>
 
             <!-- Review Stars Rating -->
@@ -338,7 +366,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
             <!-- Headline Description -->
             <p class="text-xs sm:text-sm text-[#4a443f] leading-relaxed">
-              ${product.headline || product.description}
+              ${safeHeadline}
             </p>
 
             <!-- Interactive Size Guide Trigger -->
@@ -409,11 +437,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
                 <button
                   id="pdp-add-to-cart"
-                  data-product-id="${product.id}"
-                  data-product-name="${product.name}"
-                  data-product-slug="${product.slug}"
+                  data-product-id="${esc(product.id)}"
+                  data-product-name="${safeName}"
+                  data-product-slug="${esc(product.slug)}"
                   data-product-price="${product.pricePaise}"
-                  data-product-image="${primaryImage}"
+                  data-product-image="${esc(primaryImage)}"
                   class="flex-1 bg-[#171513] hover:bg-[#8d3f3d] text-white py-3.5 sm:py-4 px-6 text-xs sm:text-sm font-bold uppercase tracking-[0.1em] rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
@@ -602,7 +630,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
           </summary>
           <div class="pt-4 text-xs sm:text-sm text-gray-600 leading-relaxed border-t border-gray-100 mt-4 space-y-2">
-            <p>${product.description}</p>
+            <p>${safeDescription}</p>
             <p class="text-gray-500 text-xs">
               Hand-curated for daily wear, whether you are dressing up for a coffee run, work meeting, or evening celebration.
             </p>
@@ -622,11 +650,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </summary>
           <div class="pt-4 text-xs sm:text-sm text-gray-600 border-t border-gray-100 mt-4 space-y-2">
             <ul class="space-y-1.5">
-              <li><strong class="text-gray-900">Core Metal:</strong> ${product.material}</li>
-              <li><strong class="text-gray-900">Finish:</strong> ${product.finish}</li>
+              <li><strong class="text-gray-900">Core Metal:</strong> ${safeMaterial}</li>
+              <li><strong class="text-gray-900">Finish:</strong> ${safeFinish}</li>
               <li><strong class="text-gray-900">Skin Compatibility:</strong> 100% Nickel-free, Lead-free, Hypoallergenic (Zero Green Skin)</li>
+              ${safeDimensions ? `<li><strong class="text-gray-900">Dimensions:</strong> ${safeDimensions}</li>` : ''}
+              ${product.weightGrams ? `<li><strong class="text-gray-900">Weight:</strong> ${esc(product.weightGrams)} g</li>` : ''}
+              <li><strong class="text-gray-900">Warranty:</strong> ${safeWarranty}</li>
               <li><strong class="text-gray-900">Waterproof Standard:</strong> Shower, sweat &amp; perfume safe 24/7</li>
             </ul>
+            ${safeCare.length ? `<ul class="mt-3 space-y-1 border-t border-gray-100 pt-3">${safeCare.map((line) => `<li>· ${line}</li>`).join('')}</ul>` : ''}
             <div class="p-3 bg-[#f4efe7] border border-[#e5ded3] mt-3 text-xs text-[#5f5851]">
               <strong>Honest Shine Policy:</strong> While our 316L Stainless Steel and 18K PVD Gold plating are highly water and sweat resistant, following basic care preserves its brilliant luster for years.
             </div>
@@ -698,12 +730,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
           ${relatedProducts.map((rel) => `
-            <a href="/products/${rel.slug}" class="group block bg-white border border-[#eae4dc] rounded-[18px] overflow-hidden hover:shadow-md transition-all">
+            <a href="/products/${esc(rel.slug)}" class="group block bg-white border border-[#eae4dc] rounded-[18px] overflow-hidden hover:shadow-md transition-all">
               <div class="aspect-[3/4] bg-[#faf8f5] overflow-hidden">
-                <img src="${rel.images[0]?.url}" alt="${rel.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <img src="${esc(rel.images[0]?.url || '')}" alt="${esc(rel.name)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               </div>
               <div class="p-3.5 space-y-1">
-                <p class="text-xs font-semibold text-[#171513] truncate">${rel.name}</p>
+                <p class="text-xs font-semibold text-[#171513] truncate">${esc(rel.name)}</p>
                 <p class="font-bold text-xs text-[#171513]">${formatPrice(rel.pricePaise)}</p>
               </div>
             </a>
@@ -719,12 +751,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div class="max-w-[1240px] mx-auto flex items-center justify-between gap-3">
           <div class="flex items-center gap-2.5 min-w-0">
             <img
-              src="${primaryImage}"
-              alt="${product.name}"
+              src="${esc(primaryImage)}"
+              alt="${safeName}"
               class="w-10 h-12 object-cover rounded-[10px] bg-[#faf8f5] border border-[#eae4dc] shrink-0"
             />
             <div class="min-w-0">
-              <h4 class="text-xs font-semibold text-[#171513] truncate">${product.name}</h4>
+              <h4 class="text-xs font-semibold text-[#171513] truncate">${safeName}</h4>
               <p class="text-xs font-bold text-[#171513]">₹${priceRupees.toLocaleString('en-IN')}</p>
             </div>
           </div>
@@ -980,7 +1012,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <!-- Review Submission Form (Collapsible) -->
         <div id="review-form-container" class="hidden mb-10 bg-[#faf8f5] border border-[#eae4dc] rounded-[20px] p-5 sm:p-7 shadow-xs">
-          <h3 class="font-serif text-lg font-normal text-[#171513] mb-3">Share Your Experience with ${product.name}</h3>
+          <h3 class="font-serif text-lg font-normal text-[#171513] mb-3">Share Your Experience with ${safeName}</h3>
           <form id="dynamic-review-form" class="space-y-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -1042,7 +1074,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </div>
           `).join('') : `
             <div class="bg-[#faf8f5] border border-[#eae4dc] rounded-[18px] p-8 text-center space-y-2">
-              <p class="font-serif text-lg text-[#171513]">Be the first patron to review ${product.name}</p>
+              <p class="font-serif text-lg text-[#171513]">Be the first patron to review ${safeName}</p>
               <p class="text-xs text-[#6e6863] max-w-md mx-auto">Have you adorned this piece? Share your authentic experience regarding its waterproof durability and everyday shine.</p>
               <button id="be-first-review-btn" type="button" class="mt-2 text-xs font-bold text-[#8d3f3d] underline cursor-pointer">
                 Write a Review Now →
@@ -1101,11 +1133,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             productId: product.id,
+            productName: product.name,
             authorName: author,
-            location: location || 'India',
+            city: location || 'India',
+            title: 'Customer review',
             rating: selectedRating,
-            comment,
-            verified: true
+            content: comment
           })
         });
 

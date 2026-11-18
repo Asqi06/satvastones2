@@ -12,10 +12,13 @@ export interface AdminOrder {
   state: string;
   pincode: string;
   items: Array<{
+    productId?: string;
     name: string;
     quantity: number;
     pricePaise: number;
     image: string;
+    slug?: string;
+    variantId?: string;
   }>;
   subtotalPaise: number;
   shippingPaise: number;
@@ -26,6 +29,7 @@ export interface AdminOrder {
   fulfillmentStatus: 'VERIFIED' | 'PACKING_AT_VAPI' | 'DISPATCHED' | 'OUT_FOR_DELIVERY' | 'DELIVERED';
   courierPartner?: string;
   trackingNumber?: string;
+  couponCode?: string;
 }
 
 export interface DamageClaim {
@@ -52,6 +56,30 @@ export interface AdminProduct {
   inStock: boolean;
   material: string;
   finish: string;
+  // Extended catalogue fields (stored in D1 product_meta / local dev store)
+  description?: string;
+  gallery?: string[];
+  collection?: string;
+  dimensions?: string;
+  weightGrams?: number;
+  careInstructions?: string[];
+  warranty?: string;
+  stockQuantity?: number;
+  lowStockThreshold?: number;
+  isBestseller?: boolean;
+  isNewArrival?: boolean;
+  isPublished?: boolean;
+  tags?: string[];
+  seoTitle?: string;
+  seoDescription?: string;
+  costPaise?: number;
+  hsnCode?: string;
+  gstRate?: number;
+  sortOrder?: number;
+  variants?: Array<{ id: string; title: string; sku: string; pricePaise: number; stock: number; size?: string }>;
+  isDemo?: boolean;
+  rating?: number;
+  reviewCount?: number;
 }
 
 export interface AdminCoupon {
@@ -188,13 +216,13 @@ const DEFAULT_SETTINGS: SiteSettings = {
   googleClientId: '',
   enableSocialProofToast: true,
   stackStudioEnabledProducts: [
-    'prod-1', // Aura Herringbone Snake Chain
-    'prod-2', // Elysian Croissant Dome Ring
-    'prod-3', // Serene Molten Pearl Pendant
-    'prod-4', // Solace Chunky Link Chain Bracelet
-    'prod-5', // Chloe Sculptural Ribbed Huggies
-    'prod-6', // Vesta Twisted Cable Kada Bangle
-    'prod-7'  // Mira Dual Bezel Solitaire Ring
+    'aura-herringbone-snake-chain',
+    'elysian-croissant-dome-ring',
+    'serene-molten-pearl-pendant',
+    'solace-chunky-link-chain-bracelet',
+    'chloe-sculptural-ribbed-huggies',
+    'vesta-twisted-cable-kada-bangle',
+    'mira-dual-bezel-solitaire-ring'
   ],
   categories: DEFAULT_CATEGORIES_DATA
 };
@@ -444,22 +472,38 @@ export function findOrderByRef(ref: string): AdminOrder | null {
 // ==========================================
 // 2. PRODUCTS & INVENTORY CRUD
 // ==========================================
+function productToAdmin(p: Product): AdminProduct {
+  return {
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    sku: p.sku,
+    category: p.category,
+    pricePaise: p.pricePaise,
+    compareAtPricePaise: p.compareAtPricePaise,
+    headline: p.headline,
+    image: p.images?.[0]?.url || '',
+    inStock: p.inStock,
+    material: p.material,
+    finish: p.finish,
+    description: p.description,
+    gallery: (p.images || []).map((img) => img.url),
+    collection: p.collection || '',
+    dimensions: p.dimensions || '',
+    weightGrams: p.weightGrams,
+    careInstructions: p.careInstructions || [],
+    warranty: p.warranty,
+    isBestseller: Boolean(p.isBestseller),
+    isNewArrival: Boolean(p.isNewArrival),
+    isPublished: true,
+    rating: p.rating,
+    reviewCount: p.reviewCount
+  };
+}
+
 export function getAdminProducts(): AdminProduct[] {
   if (typeof window === 'undefined') {
-    return PRODUCTS.map((p) => ({
-      id: p.id,
-      name: p.name,
-      slug: p.slug,
-      sku: p.sku,
-      category: p.category,
-      pricePaise: p.pricePaise,
-      compareAtPricePaise: p.compareAtPricePaise,
-      headline: p.headline,
-      image: p.images[0]?.url || '',
-      inStock: p.inStock,
-      material: p.material,
-      finish: p.finish
-    }));
+    return PRODUCTS.map(productToAdmin);
   }
 
   const stored = localStorage.getItem(PRODUCTS_KEY);
@@ -470,22 +514,9 @@ export function getAdminProducts(): AdminProduct[] {
     } catch (_) {}
   }
 
-  const initial = PRODUCTS.map((p) => ({
-    id: p.id,
-    name: p.name,
-    slug: p.slug,
-    sku: p.sku,
-    category: p.category,
-    pricePaise: p.pricePaise,
-    compareAtPricePaise: p.compareAtPricePaise,
-    headline: p.headline,
-    image: p.images[0]?.url || '',
-    inStock: p.inStock,
-    material: p.material,
-    finish: p.finish
-  }));
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(initial));
-  return initial;
+  // No cache yet: nothing is invented. The catalogue is fetched from /api/products
+  // by syncProductsFromCloudflare(), which is the single source of truth.
+  return [];
 }
 
 export function saveAdminProducts(products: AdminProduct[]): void {
@@ -575,10 +606,18 @@ export async function deleteAdminProduct(productId: string): Promise<boolean> {
 
 export async function syncProductsFromCloudflare(): Promise<AdminProduct[]> {
   try {
-    const res = await fetch('/api/products');
+    const res = await fetch('/api/products', { headers: { Accept: 'application/json' } });
+    if (!res.ok) throw new Error(`Catalogue API responded ${res.status}`);
     const data = await res.json();
     if (data?.success && Array.isArray(data.products)) {
-      const adminFormat: AdminProduct[] = data.products.map((p: any) => ({
+      const adminFormat: AdminProduct[] = data.products.map((p: any) => {
+        const galleryUrls = Array.isArray(p.images)
+          ? p.images.map((img: any) => (typeof img === 'string' ? img : img.url)).filter(Boolean)
+          : Array.isArray(p.gallery)
+            ? p.gallery.filter(Boolean)
+            : [];
+        const heroImage = p.image || p.imageUrl || galleryUrls[0] || '';
+        return {
         id: p.id,
         name: p.name,
         slug: p.slug,
@@ -587,16 +626,68 @@ export async function syncProductsFromCloudflare(): Promise<AdminProduct[]> {
         pricePaise: Number(p.pricePaise) || 0,
         compareAtPricePaise: p.compareAtPricePaise ? Number(p.compareAtPricePaise) : undefined,
         headline: p.headline || p.name,
-        image: p.image || p.imageUrl || p.images?.[0]?.url || '',
+        image: heroImage,
         material: p.material || '316L Surgical Stainless Steel + 18K Gold PVD',
         finish: p.finish || 'Mirror Polished',
-        inStock: p.inStock !== false
-      }));
+        inStock: p.inStock !== false,
+        description: p.description || '',
+        gallery: galleryUrls.filter((url: string) => url !== heroImage),
+        collection: p.collection || '',
+        dimensions: p.dimensions || '',
+        weightGrams: p.weightGrams ?? undefined,
+        careInstructions: Array.isArray(p.careInstructions) ? p.careInstructions : [],
+        warranty: p.warranty || '',
+        stockQuantity: p.stockQuantity ?? undefined,
+        lowStockThreshold: p.lowStockThreshold ?? undefined,
+        isBestseller: Boolean(p.isBestseller),
+        isNewArrival: Boolean(p.isNewArrival),
+        isPublished: p.isPublished !== false,
+        tags: Array.isArray(p.tags) ? p.tags : [],
+        seoTitle: p.seoTitle || '',
+        seoDescription: p.seoDescription || '',
+        costPaise: Number(p.costPaise) || 0,
+        hsnCode: p.hsnCode || '',
+        gstRate: Number(p.gstRate) || 3,
+        sortOrder: Number(p.sortOrder) || 0,
+        variants: Array.isArray(p.variants) ? p.variants : [],
+        isDemo: Boolean(p.isDemo),
+        rating: Number(p.rating) || 4.9,
+        reviewCount: Number(p.reviewCount) || 0
+        };
+      });
       saveAdminProducts(adminFormat);
       return adminFormat;
     }
-  } catch (_) {}
+  } catch (err) {
+    console.warn('Catalogue sync failed:', err);
+    window.dispatchEvent(new CustomEvent('satvastones:catalog_error', { detail: String(err) }));
+  }
   return getAdminProducts();
+}
+
+/**
+ * Removes the seeded demo catalogue. Keeps every product the owner created.
+ * Works against the edge API first, then mirrors the change locally.
+ */
+export async function removeDemoProducts(): Promise<{ ok: boolean; removed: number; message: string }> {
+  const local = getAdminProducts();
+  const demoIds = new Set(local.filter((p) => p.isDemo).map((p) => p.id));
+
+  try {
+    const res = await fetch('/api/products/demo', {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${getAdminToken()}` },
+      credentials: 'include'
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || data.success === false) {
+      return { ok: false, removed: 0, message: data.error || `Catalogue API responded ${res.status}` };
+    }
+    saveAdminProducts(getAdminProducts().filter((p) => !p.isDemo));
+    return { ok: true, removed: Number(data.removed) || demoIds.size, message: 'Demo catalogue removed.' };
+  } catch (err: any) {
+    return { ok: false, removed: 0, message: err?.message || 'Could not reach the catalogue API.' };
+  }
 }
 
 export function toggleAdminProductStock(productId: string): void {
@@ -609,16 +700,18 @@ export function toggleAdminProductStock(productId: string): void {
 // 3. COUPONS CRUD
 // ==========================================
 export function getAdminCoupons(): AdminCoupon[] {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === 'undefined') return DEFAULT_COUPONS;
   const stored = localStorage.getItem(COUPONS_KEY);
   if (stored === null) {
-    return [];
+    // Match the edge API: a catalogue with no saved coupons still honours the
+    // three launch offers, so the storefront discount field works out of the box.
+    return DEFAULT_COUPONS;
   }
   try {
     const parsed = JSON.parse(stored);
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? parsed : DEFAULT_COUPONS;
   } catch {
-    return [];
+    return DEFAULT_COUPONS;
   }
 }
 

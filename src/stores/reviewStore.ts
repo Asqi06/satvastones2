@@ -44,7 +44,9 @@ export function submitCustomerReview(newReview: Omit<CustomerReview, 'id' | 'cre
 
   const fullReview: CustomerReview = {
     ...newReview,
-    id: `rev-${Date.now()}`,
+    // A storefront submission is unverified until an order match is confirmed.
+    verifiedBuyer: false,
+    id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? `rev-${crypto.randomUUID()}` : `rev-${Date.now()}`,
     date: today,
     createdAt: Date.now()
   };

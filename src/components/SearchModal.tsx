@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { formatPrice } from '../data/products';
-import { getAllCatalogProducts } from '../stores/catalogStore';
+import { ensureCatalog } from '../stores/catalogStore';
 import type { Product } from '../types/ecommerce';
 
 const POPULAR = ['Waterproof necklace', 'Snake chain', 'Croissant ring', 'Kada bangle', 'Baroque pearl', 'Gift set'];
@@ -9,9 +9,25 @@ export default function SearchModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Product[]>([]);
+  const [catalog, setCatalog] = useState<Product[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const lastFocused = useRef<HTMLElement | null>(null);
+
+  // Refresh the live catalogue every time the palette opens, so products added
+  // in the admin panel are searchable without a page rebuild.
+  useEffect(() => {
+    if (!isOpen) return;
+    let cancelled = false;
+    ensureCatalog()
+      .then((products) => {
+        if (!cancelled) setCatalog(products);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     const handleOpen = () => {
@@ -79,7 +95,7 @@ export default function SearchModal() {
       return;
     }
 
-    const filtered = getAllCatalogProducts().filter(
+    const filtered = catalog.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
@@ -88,7 +104,7 @@ export default function SearchModal() {
         p.headline.toLowerCase().includes(q)
     );
     setResults(filtered.slice(0, 8));
-  }, [query]);
+  }, [query, catalog]);
 
   if (!isOpen) return null;
 

@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
+import { devApi } from './dev-api.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,6 +12,6 @@ export default defineConfig({
     inlineStylesheets: 'always'
   },
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss(), devApi()]
   }
 });

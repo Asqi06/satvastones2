@@ -9,8 +9,6 @@
  * 4. Sliding-window IP & Account Rate Limiting (5 failed attempts -> 15 min lock)
  */
 
-const DEFAULT_SECRET = 'satvastones-customer-session-secret-key-2026-vapi-in-edge-pbkdf2-sha256';
-
 // Convert string to Uint8Array
 function strToBuf(str: string): Uint8Array {
   return new TextEncoder().encode(str);
@@ -98,12 +96,28 @@ function fromBase64Url(str: string): Uint8Array {
   return bytes;
 }
 
-// Customer Session Token (30 days)
+// Customer Session Token (30 days). A dedicated secret is mandatory: reusing the
+// admin secret would let a customer token satisfy admin verification.
+const CUSTOMER_SECRET_MIN_LENGTH = 32;
+
+function resolveCustomerSecret(secret?: string): { secret: string; configured: boolean } {
+  const configured = typeof secret === 'string' && secret.trim().length >= CUSTOMER_SECRET_MIN_LENGTH;
+  return { secret: configured ? secret : '', configured };
+}
+
+export function isCustomerAuthConfigured(secret?: string): boolean {
+  return resolveCustomerSecret(secret).configured;
+}
+
 export async function createCustomerToken(
   customer: { id: string; email: string; phone: string; fullName: string },
   secret?: string
 ): Promise<string> {
-  const keySecret = secret || DEFAULT_SECRET;
+  const resolved = resolveCustomerSecret(secret);
+  if (!resolved.configured) {
+    throw new Error('CUSTOMER_SESSION_SECRET is not configured.');
+  }
+  const keySecret = resolved.secret;
   const header = { alg: 'HS256', typ: 'JWT' };
   const payload = {
     sub: customer.id,
@@ -141,12 +155,14 @@ export async function verifyCustomerToken(
 ): Promise<{ valid: boolean; customer?: { id: string; email: string; phone: string; name: string } }> {
   try {
     if (!token || typeof token !== 'string') return { valid: false };
+    const resolved = resolveCustomerSecret(secret);
+    if (!resolved.configured) return { valid: false };
     const parts = token.split('.');
     if (parts.length !== 3) return { valid: false };
 
     const [headerEnc, payloadEnc, sigEnc] = parts;
     const dataToVerify = `${headerEnc}.${payloadEnc}`;
-    const keySecret = secret || DEFAULT_SECRET;
+    const keySecret = resolved.secret;
 
     const cryptoKey = await crypto.subtle.importKey(
       'raw',
@@ -170,6 +186,11 @@ export async function verifyCustomerToken(
 
     if (payload.exp && payload.exp < nowSec) {
       return { valid: false }; // Expired
+    }
+
+    // Only customer tokens may open a customer session.
+    if (payload.role !== 'CUSTOMER') {
+      return { valid: false };
     }
 
     return {

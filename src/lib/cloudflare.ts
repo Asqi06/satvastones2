@@ -37,9 +37,11 @@ export async function syncOrderToCloudflare(order: AdminOrder): Promise<boolean>
   }
 }
 
-export async function fetchOrderFromCloudflare(ref: string): Promise<AdminOrder | null> {
+export async function fetchOrderFromCloudflare(ref: string, contact?: string): Promise<AdminOrder | null> {
   try {
-    const res = await fetch(`/api/orders?ref=${encodeURIComponent(ref.trim())}`);
+    const params = new URLSearchParams({ ref: ref.trim() });
+    if (contact?.trim()) params.set('contact', contact.trim());
+    const res = await fetch(`/api/orders?${params.toString()}`);
     if (!res.ok) return null;
     const json = await res.json() as any;
     return json.success && json.order ? json.order : null;

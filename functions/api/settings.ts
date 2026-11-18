@@ -81,8 +81,31 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
   }
 
   try {
-    const data = await request.json();
-    const jsonStr = JSON.stringify(data);
+    const data = (await request.json()) as Record<string, any>;
+    const incoming = data && typeof data === 'object' ? data : {};
+
+    // Preserve an existing secret when the admin form submits the masked placeholder.
+    const existingRow: any = await db
+      .prepare(`SELECT value_json FROM site_settings WHERE key = 'global_config' LIMIT 1`)
+      .first();
+    let existing: Record<string, any> = {};
+    if (existingRow?.value_json) {
+      try {
+        existing = JSON.parse(existingRow.value_json);
+      } catch {
+        existing = {};
+      }
+    }
+
+    const submittedSecret = incoming.razorpayKeySecret;
+    const looksMasked =
+      typeof submittedSecret === 'string' && (/^[•*.\s]+$/.test(submittedSecret) || submittedSecret.trim() === '');
+    if (looksMasked) {
+      if (existing.razorpayKeySecret) incoming.razorpayKeySecret = existing.razorpayKeySecret;
+      else delete incoming.razorpayKeySecret;
+    }
+
+    const jsonStr = JSON.stringify(incoming);
 
     await db.prepare(`
       INSERT INTO site_settings (key, value_json, updated_at)

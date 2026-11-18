@@ -5,7 +5,8 @@ import {
   clearRateLimit,
   validateCredentials,
   createAdminToken,
-  verifyAdminAuth
+  verifyAdminAuth,
+  isAdminAuthConfigured
 } from '../../src/lib/server-auth';
 
 const corsHeaders = {
@@ -54,6 +55,19 @@ export async function onRequestPost(context: { request: Request; env: any }) {
         locked: true
       }),
       { status: 429, headers: corsHeaders }
+    );
+  }
+
+  // Refuse to authenticate against an unconfigured deployment rather than falling
+  // back to credentials that ship in the repository.
+  if (!isAdminAuthConfigured(env)) {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error:
+          'Admin authentication is not configured. Set the ADMIN_PASSWORD and ADMIN_SESSION_SECRET secrets for this deployment.'
+      }),
+      { status: 503, headers: corsHeaders }
     );
   }
 

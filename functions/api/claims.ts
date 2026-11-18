@@ -2,6 +2,7 @@
 // Handles 360° unboxing video claims verification for transit damage / anti-tarnish warranty
 // Connects to Cloudflare D1 (SQLite) binding: context.env.DB
 import { verifyAdminAuth } from '../../src/lib/server-auth';
+import { clientIp, isRateLimited, readJsonBody, safeHttpUrl } from '../../src/lib/http';
 
 interface Env {
   DB: any;
@@ -14,6 +15,24 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Content-Type': 'application/json'
 };
+
+const CLAIM_LIMITS = {
+  orderNumber: 40,
+  customerName: 80,
+  phone: 20,
+  videoProofUrl: 600,
+  description: 1500,
+  adminNotes: 1000
+} as const;
+
+const CLAIM_STATUSES = new Set(['PENDING_REVIEW', 'REPLACEMENT_APPROVED', 'REJECTED']);
+
+function cleanText(value: unknown, maxLength: number): string {
+  return String(value ?? '')
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '')
+    .trim()
+    .slice(0, maxLength);
+}
 
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: corsHeaders });
@@ -83,20 +102,45 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
   }
 
   try {
-    const data = await request.json() as any;
-    const id = data.id || ('claim-' + Date.now());
-    const orderNumber = (data.orderNumber || '').trim().toUpperCase();
-    const customerName = (data.customerName || 'Customer').trim();
-    const phone = (data.phone || '').trim();
-    const videoProofUrl = (data.videoProofUrl || '').trim();
-    const description = (data.description || '').trim();
+    if (isRateLimited(`claim:${clientIp(request)}`, 5, 10 * 60 * 1000)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Too many claims from this connection. Please try again later.' }),
+        { status: 429, headers: corsHeaders }
+      );
+    }
 
-    if (!orderNumber || !videoProofUrl) {
+    const data = await readJsonBody<Record<string, any>>(request, 32 * 1024);
+    const orderNumber = cleanText(data.orderNumber, CLAIM_LIMITS.orderNumber).toUpperCase();
+    const customerName = cleanText(data.customerName, CLAIM_LIMITS.customerName) || 'Customer';
+    const phone = cleanText(data.phone, CLAIM_LIMITS.phone).replace(/[^0-9+]/g, '');
+    const rawVideoUrl = cleanText(data.videoProofUrl, CLAIM_LIMITS.videoProofUrl);
+    const description = cleanText(data.description, CLAIM_LIMITS.description);
+
+    if (!orderNumber || !rawVideoUrl) {
       return new Response(
         JSON.stringify({ success: false, error: 'Order Number and 360° Unboxing Video Proof URL are required.' }),
         { status: 400, headers: corsHeaders }
       );
     }
+    if (!/^[A-Z0-9-]{4,40}$/.test(orderNumber)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Please enter a valid order number.' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // Only http(s) links may be stored. The admin panel renders this as an
+    // anchor, so a `javascript:` value would otherwise be a stored XSS vector.
+    const videoProofUrl = safeHttpUrl(rawVideoUrl, '');
+    if (!videoProofUrl) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Video proof must be a valid http(s) link.' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // Ids are server-owned so a claimant cannot overwrite another claim.
+    const id = `claim-${crypto.randomUUID()}`;
 
     await db.prepare(`
       INSERT INTO damage_claims (id, order_number, customer_name, phone, video_proof_url, description, status)
@@ -112,9 +156,10 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       { status: 201, headers: corsHeaders }
     );
   } catch (err: any) {
+    const tooLarge = String(err?.message || '').includes('Payload too large');
     return new Response(
-      JSON.stringify({ success: false, error: err.message }),
-      { status: 500, headers: corsHeaders }
+      JSON.stringify({ success: false, error: tooLarge ? 'Claim details are too long.' : 'Claim could not be saved.' }),
+      { status: tooLarge ? 413 : 500, headers: corsHeaders }
     );
   }
 }
@@ -140,12 +185,20 @@ export async function onRequestPut(context: { request: Request; env: Env }) {
   }
 
   try {
-    const data = await request.json() as any;
-    const { claimId, status, adminNotes } = data;
+    const data = await readJsonBody<Record<string, any>>(request, 16 * 1024);
+    const claimId = cleanText(data.claimId, CLAIM_LIMITS.orderNumber);
+    const status = cleanText(data.status, 40).toUpperCase();
+    const adminNotes = data.adminNotes ? cleanText(data.adminNotes, CLAIM_LIMITS.adminNotes) : null;
 
     if (!claimId || !status) {
       return new Response(
         JSON.stringify({ success: false, error: 'claimId and status are required.' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+    if (!CLAIM_STATUSES.has(status)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Unsupported claim status.' }),
         { status: 400, headers: corsHeaders }
       );
     }

@@ -631,12 +631,14 @@ import DPDPNotice from '../components/DPDPNotice';
 
     // Applied coupon from the cart drawer
     let discountPaise = 0;
+    let appliedCouponCode = '';
     try {
       const storedCoupon = localStorage.getItem('satvastones_applied_coupon');
       if (storedCoupon) {
         const parsed = JSON.parse(storedCoupon);
         if (parsed.discountPaise) {
           discountPaise = parsed.discountPaise;
+          appliedCouponCode = parsed.code || '';
           const discountRow = document.getElementById('checkout-discount-row');
           const couponCodeEl = document.getElementById('checkout-coupon-code');
           const discountEl = document.getElementById('checkout-discount');
@@ -759,6 +761,9 @@ import DPDPNotice from '../components/DPDPNotice';
         state: stateInput?.value.trim() || 'Gujarat',
         pincode: pinInput?.value.trim() || '396191',
         items: items.map((i) => ({
+          productId: i.productId,
+          variantId: i.variantId,
+          slug: i.slug,
           name: i.name,
           quantity: i.quantity,
           pricePaise: i.pricePaise,
@@ -767,6 +772,7 @@ import DPDPNotice from '../components/DPDPNotice';
         subtotalPaise,
         shippingPaise,
         discountPaise,
+        couponCode: appliedCouponCode || undefined,
         totalPaise: opts.totalAmountPaise,
         paymentMethod: opts.paymentMethod,
         paymentStatus: opts.paymentStatus,

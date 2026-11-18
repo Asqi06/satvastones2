@@ -1,6 +1,7 @@
 // Cloudflare Pages Function: /api/privacy-requests
 // Handles DPDP Act 2023 Statutory Rights Requests (Sections 11, 12, 13, 14)
 // Statutory SLA: Acknowledged within 48 Hours, Resolved within 1 Month
+import { verifyAdminAuth } from '../../src/lib/server-auth';
 
 interface Env {
   DB: any;
@@ -12,6 +13,25 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Content-Type': 'application/json'
 };
+
+const TICKET_PATTERN = /^DPDP-\d{6}$/i;
+
+// In-memory throttle for public ticket lookups (per isolate). A distributed store
+// would be stronger; this still removes the trivial enumeration loop.
+const lookupAttempts = new Map<string, { count: number; first: number }>();
+const LOOKUP_WINDOW_MS = 10 * 60 * 1000;
+const LOOKUP_LIMIT = 20;
+
+function lookupAllowed(ip: string): boolean {
+  const now = Date.now();
+  const entry = lookupAttempts.get(ip);
+  if (!entry || now - entry.first > LOOKUP_WINDOW_MS) {
+    lookupAttempts.set(ip, { count: 1, first: now });
+    return true;
+  }
+  entry.count += 1;
+  return entry.count <= LOOKUP_LIMIT;
+}
 
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: corsHeaders });
@@ -34,6 +54,22 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
   try {
     if (ticket) {
+      if (!TICKET_PATTERN.test(ticket)) {
+        return new Response(
+          JSON.stringify({ success: false, message: 'Privacy ticket references look like DPDP-123456.' }),
+          { status: 400, headers: corsHeaders }
+        );
+      }
+
+      const clientIp =
+        request.headers.get('CF-Connecting-IP') || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+      if (!lookupAllowed(clientIp)) {
+        return new Response(
+          JSON.stringify({ success: false, message: 'Too many ticket lookups. Please try again later.' }),
+          { status: 429, headers: corsHeaders }
+        );
+      }
+
       const row = await db.prepare(`
         SELECT ticket_number, request_type, patron_name, status, acknowledged_at, sla_due_date, created_at
         FROM privacy_requests
@@ -43,7 +79,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
       if (!row) {
         return new Response(
-          JSON.stringify({ success: false, message: 'No privacy ticket found matching: ' + ticket }),
+          JSON.stringify({ success: false, message: 'No privacy ticket found matching that reference.' }),
           { status: 404, headers: corsHeaders }
         );
       }
@@ -51,7 +87,15 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       return new Response(JSON.stringify({ success: true, request: row }), { status: 200, headers: corsHeaders });
     }
 
-    // Admin List: Fetch recent privacy requests
+    // Full request list contains personal data — admin only.
+    const isAuth = await verifyAdminAuth(request, env);
+    if (!isAuth) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Unauthorized: admin session required.' }),
+        { status: 401, headers: corsHeaders }
+      );
+    }
+
     const { results } = await db.prepare(`
       SELECT * FROM privacy_requests
       ORDER BY datetime(created_at) DESC

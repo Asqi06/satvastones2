@@ -8,7 +8,8 @@ import {
   verifyCustomerToken,
   checkCustomerRateLimit,
   recordCustomerFailure,
-  clearCustomerFailure
+  clearCustomerFailure,
+  isCustomerAuthConfigured
 } from '../../src/lib/customer-auth';
 
 const corsHeaders = {
@@ -36,7 +37,7 @@ async function getAuthCustomer(request: Request, env: any) {
   }
 
   if (!token) return null;
-  const result = await verifyCustomerToken(token, env?.ADMIN_SESSION_SECRET);
+  const result = await verifyCustomerToken(token, env?.CUSTOMER_SESSION_SECRET);
   return result.valid && result.customer ? result.customer : null;
 }
 
@@ -48,6 +49,18 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
   if (!db) {
     return new Response(
       JSON.stringify({ success: false, error: 'Database binding "DB" is not available.' }),
+      { status: 503, headers: corsHeaders }
+    );
+  }
+
+  // Customer sessions require their own signing secret. Refusing to mint or
+  // verify them without one keeps accounts closed rather than forgeable.
+  if (!isCustomerAuthConfigured(env?.CUSTOMER_SESSION_SECRET)) {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: 'Customer accounts are not configured. Set the CUSTOMER_SESSION_SECRET secret (32+ characters) for this deployment.'
+      }),
       { status: 503, headers: corsHeaders }
     );
   }
@@ -113,7 +126,7 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
       `).bind(id, fullName, email, phone, passwordHash, salt, address, city, state, pincode).run();
 
       const customerObj = { id, fullName, email, phone, address, city, state, pincode };
-      const token = await createCustomerToken(customerObj, env?.ADMIN_SESSION_SECRET);
+      const token = await createCustomerToken(customerObj, env?.CUSTOMER_SESSION_SECRET);
 
       const cookieVal = `satva_customer_session=${token}; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000; Path=/`;
       const responseHeaders = new Headers(corsHeaders);
@@ -202,7 +215,7 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
         pincode: row.pincode || ''
       };
 
-      const token = await createCustomerToken(customerObj, env?.ADMIN_SESSION_SECRET);
+      const token = await createCustomerToken(customerObj, env?.CUSTOMER_SESSION_SECRET);
 
       const cookieVal = `satva_customer_session=${token}; HttpOnly; Secure; SameSite=Lax; Max-Age=2592000; Path=/`;
       const responseHeaders = new Headers(corsHeaders);

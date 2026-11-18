@@ -213,14 +213,14 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
 
             <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end justify-between bg-gradient-to-t from-black/45 to-transparent p-4 pt-16">
               <span class="text-[9px] uppercase tracking-[0.2em] text-white/85">Waterproof 18K PVD</span>
-              <span class="text-[9px] uppercase tracking-[0.2em] text-white/60">
+              <span data-pdp-counter class="text-[9px] uppercase tracking-[0.2em] text-white/60">
                 {String(1).padStart(2, '0')} / {String(product.images.length).padStart(2, '0')}
               </span>
             </div>
           </div>
 
           {/* Thumbnails */}
-          <div class="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-5">
+          <div data-pdp-thumbs class="mt-3 grid grid-cols-4 gap-3 sm:grid-cols-5">
             {product.images.map((img, idx) => (
               <button
                 type="button"
@@ -571,7 +571,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
               <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <div class="pt-3 text-[13px] leading-relaxed text-[#5f5851]">
-              <p>{product.description}</p>
+              <p data-pdp-description>{product.description}</p>
               <p class="mt-2">
                 Hand-curated for daily wear — a coffee run, a work meeting, or an evening celebration.
               </p>
@@ -584,7 +584,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
               <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <div class="pt-3 text-[13px] leading-relaxed text-[#5f5851]">
-              <ul class="space-y-1.5">
+              <ul data-pdp-specs class="space-y-1.5">
                 <li><strong class="font-medium text-[#14110f]">Core metal:</strong> {product.material}</li>
                 <li><strong class="font-medium text-[#14110f]">Finish:</strong> {product.finish}</li>
                 {product.dimensions && <li><strong class="font-medium text-[#14110f]">Dimensions:</strong> {product.dimensions}</li>}
@@ -626,7 +626,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
               <h3 class="font-display text-[1.15rem] leading-snug text-[#14110f]">Jewellery care</h3>
               <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
-            <ul class="list-disc space-y-1.5 pt-3 pl-4 text-[13px] leading-relaxed text-[#5f5851]">
+            <ul data-pdp-care class="list-disc space-y-1.5 pt-3 pl-4 text-[13px] leading-relaxed text-[#5f5851]">
               {product.careInstructions.map((tip) => (
                 <li>{tip}</li>
               ))}
@@ -692,7 +692,12 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
         </a>
       </div>
 
-      <div class="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-6">
+      <div
+        class="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-6"
+        data-catalog-grid={product.category}
+        data-catalog-limit="4"
+        data-catalog-exclude={product.id}
+      >
         {fallbackRelated.map((rel) => (
           <ProductCard product={rel} />
         ))}

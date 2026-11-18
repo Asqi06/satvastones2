@@ -85,6 +85,14 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
     const result = await db.prepare('SELECT * FROM coupons ORDER BY created_at DESC').all();
     const rows = result.results || [];
 
+    // A fresh deployment with no coupon rows still advertises the launch offers.
+    if (rows.length === 0) {
+      return new Response(JSON.stringify({ success: true, coupons: DEFAULT_COUPONS }), {
+        status: 200,
+        headers: corsHeaders
+      });
+    }
+
     const coupons = rows.map((r: any) => ({
       id: r.id,
       code: r.code,

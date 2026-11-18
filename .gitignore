@@ -29,6 +29,10 @@ pnpm-debug.log*
 # graphify
 graphify-out/
 
+# local dev API store + dev uploads
+.data/
+public/uploads/
+
 
 # large 3D model sources and archives (optimised copies live in public/models)
 adrg001-diamond-ring-engagemet-ring-wedding-ring/

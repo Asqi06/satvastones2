@@ -209,7 +209,11 @@ const faqSchema = {
         </a>
       </div>
 
-      <div class="mt-10 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
+      <div
+        class="mt-10 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6"
+        data-catalog-grid="bestsellers"
+        data-catalog-limit="8"
+      >
         {bestsellers.map((product, index) => (
           <div data-reveal style={`--reveal-delay:${(index % 4) * 70}ms`}>
             <ProductCard product={product} />

@@ -298,6 +298,11 @@ const breadcrumbs = [
   const lookupInput = document.getElementById('lookup-ticket-input') as HTMLInputElement;
   const lookupResult = document.getElementById('lookup-ticket-result');
 
+  const escapeHtml = (value: unknown) =>
+    String(value ?? '').replace(/[&<>"']/g, (char) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] as string)
+    );
+
   lookupBtn?.addEventListener('click', async () => {
     const val = lookupInput?.value.trim();
     if (!val || !lookupResult) return;
@@ -313,14 +318,14 @@ const breadcrumbs = [
         const req = data.request;
         lookupResult.innerHTML = `
           <div class="space-y-1">
-            <p><strong class="text-[#14110f]">Ticket:</strong> ${req.ticket_number} • <span class="bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">${req.status}</span></p>
-            <p><strong class="text-[#14110f]">Type:</strong> ${req.request_type} | <strong class="text-[#14110f]">Patron:</strong> ${req.patron_name}</p>
+            <p><strong class="text-[#14110f]">Ticket:</strong> ${escapeHtml(req.ticket_number)} • <span class="bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">${escapeHtml(req.status)}</span></p>
+            <p><strong class="text-[#14110f]">Type:</strong> ${escapeHtml(req.request_type)} | <strong class="text-[#14110f]">Patron:</strong> ${escapeHtml(req.patron_name)}</p>
             <p><strong class="text-[#14110f]">Logged on:</strong> ${new Date(req.created_at).toLocaleDateString('en-IN')}</p>
             <p class="text-[#6f675f] text-[11px]">Assigned to Grievance Officer, Vapi Hub. Resolution in progress.</p>
           </div>
         `;
       } else {
-        lookupResult.innerHTML = `<span class="text-[#8d3f3d] font-medium">No active DPDP ticket found matching: ${val}.</span>`;
+        lookupResult.innerHTML = `<span class="text-[#8d3f3d] font-medium">No active DPDP ticket found matching that reference.</span>`;
       }
     } catch {
       lookupResult.innerHTML = `<span class="text-[#6f675f]">Service currently running in local offline mode.</span>`;

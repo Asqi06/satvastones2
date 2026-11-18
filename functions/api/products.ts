@@ -14,6 +14,67 @@ const corsHeaders = {
   'Content-Type': 'application/json'
 };
 
+const META_FIELDS = [
+  'collection',
+  'dimensions',
+  'weightGrams',
+  'careInstructions',
+  'warranty',
+  'stockQuantity',
+  'lowStockThreshold',
+  'isNewArrival',
+  'isPublished',
+  'tags',
+  'seoTitle',
+  'seoDescription',
+  'costPaise',
+  'hsnCode',
+  'gstRate',
+  'sortOrder',
+  'variants',
+  'isDemo',
+  'rating',
+  'reviewCount'
+] as const;
+
+async function ensureMetaTable(db: any): Promise<void> {
+  await db
+    .prepare(
+      `CREATE TABLE IF NOT EXISTS product_meta (
+        product_id TEXT PRIMARY KEY,
+        meta_json TEXT NOT NULL,
+        updated_at TEXT NOT NULL DEFAULT (datetime('now', 'utc'))
+      )`
+    )
+    .run();
+}
+
+async function loadProductMeta(db: any): Promise<Map<string, Record<string, any>>> {
+  const map = new Map<string, Record<string, any>>();
+  try {
+    await ensureMetaTable(db);
+    const { results } = await db.prepare('SELECT product_id, meta_json FROM product_meta').all();
+    for (const row of results || []) {
+      try {
+        map.set(String(row.product_id), JSON.parse(row.meta_json));
+      } catch {
+        /* ignore malformed rows */
+      }
+    }
+  } catch {
+    /* metadata is optional; catalogue still works without it */
+  }
+  return map;
+}
+
+function pickMeta(p: Record<string, any>): Record<string, any> {
+  const meta: Record<string, any> = {};
+  for (const field of META_FIELDS) {
+    if (p[field] !== undefined) meta[field] = p[field];
+  }
+  return meta;
+}
+
 export async function onRequestOptions() {
   return new Response(null, { status: 204, headers: corsHeaders });
 }
@@ -44,28 +105,33 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       rows = result.results || [];
     }
 
+    const metaMap = await loadProductMeta(db);
+
     // When D1 is operational, return D1 rows as the single authoritative source of truth
-    const d1Products = rows.map((r: any) => ({
-      id: r.id,
-      name: r.name,
-      slug: r.slug,
-      sku: r.sku,
-      category: r.category,
-      headline: r.headline || '',
-      description: r.description || '',
-      pricePaise: Number(r.price_paise),
-      compareAtPricePaise: r.compare_at_price_paise ? Number(r.compare_at_price_paise) : undefined,
-      image: r.image_url,
-      images: r.gallery_json
-        ? JSON.parse(r.gallery_json)
-        : [{ url: r.image_url, alt: r.name, isPrimary: true }],
-      material: r.material || '316L Surgical Stainless Steel + 18K Gold PVD',
-      finish: r.finish || 'Mirror Polished',
-      inStock: Boolean(r.in_stock),
-      isBestseller: Boolean(r.is_bestseller),
-      rating: 4.9,
-      reviewsCount: 12
-    }));
+    const d1Products = rows.map((r: any) => {
+      const base = {
+        id: r.id,
+        name: r.name,
+        slug: r.slug,
+        sku: r.sku,
+        category: r.category,
+        headline: r.headline || '',
+        description: r.description || '',
+        pricePaise: Number(r.price_paise),
+        compareAtPricePaise: r.compare_at_price_paise ? Number(r.compare_at_price_paise) : undefined,
+        image: r.image_url,
+        images: r.gallery_json
+          ? JSON.parse(r.gallery_json)
+          : [{ url: r.image_url, alt: r.name, isPrimary: true }],
+        material: r.material || '316L Surgical Stainless Steel + 18K Gold PVD',
+        finish: r.finish || 'Mirror Polished',
+        inStock: Boolean(r.in_stock),
+        isBestseller: Boolean(r.is_bestseller),
+        rating: 4.9,
+        reviewCount: 12
+      };
+      return { ...base, ...(metaMap.get(String(r.id)) || {}) };
+    });
 
     return new Response(JSON.stringify({ success: true, products: d1Products, source: 'd1' }), {
       status: 200,
@@ -119,11 +185,54 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     const pricePaise = Number(p.pricePaise) || (Number(p.price) ? Math.round(Number(p.price) * 100) : 0);
     const compareAtPricePaise = p.compareAtPricePaise ? Number(p.compareAtPricePaise) : (p.compareAtPrice ? Math.round(Number(p.compareAtPrice) * 100) : null);
     const imageUrl = p.image || p.imageUrl || p.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
-    const galleryJson = p.images ? JSON.stringify(p.images) : JSON.stringify([{ url: imageUrl, alt: name, isPrimary: true }]);
+    const galleryJson = p.images
+      ? JSON.stringify(p.images)
+      : JSON.stringify(
+          [
+            imageUrl,
+            ...(Array.isArray(p.gallery) ? p.gallery.filter((url: unknown) => typeof url === 'string' && url) : [])
+          ]
+            .filter((url, index, all) => all.indexOf(url) === index)
+            .map((url, index) => ({ url, alt: index === 0 ? name : `${name} detail ${index}`, isPrimary: index === 0 }))
+        );
     const material = p.material || '316L Surgical Stainless Steel + 18K Gold PVD';
     const finish = p.finish || 'Mirror Polished';
     const inStock = p.inStock === false ? 0 : 1;
     const isBestseller = p.isBestseller ? 1 : 0;
+    const meta = pickMeta(p);
+
+    if (!/^[a-z0-9][a-z0-9-]{2,119}$/.test(String(slug))) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Slug must be lowercase letters, numbers and hyphens (3–120 characters).' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    if (!Number.isFinite(pricePaise) || pricePaise <= 0) {
+      return new Response(JSON.stringify({ success: false, error: 'Price must be greater than zero.' }), {
+        status: 400,
+        headers: corsHeaders
+      });
+    }
+
+    const allowedCategories = new Set(['rings', 'necklaces', 'bracelets', 'earrings', 'bangles', 'gift-sets']);
+    if (!allowedCategories.has(String(category))) {
+      return new Response(JSON.stringify({ success: false, error: 'Unknown product category.' }), {
+        status: 400,
+        headers: corsHeaders
+      });
+    }
+
+    const slugClash = await db
+      .prepare('SELECT id, name FROM products WHERE slug = ? AND id <> ? LIMIT 1')
+      .bind(slug, id)
+      .first();
+    if (slugClash) {
+      return new Response(
+        JSON.stringify({ success: false, error: `Slug "${slug}" already belongs to ${slugClash.name}.` }),
+        { status: 409, headers: corsHeaders }
+      );
+    }
 
     await db.prepare(`
       INSERT INTO products (
@@ -154,6 +263,24 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       material, finish, inStock, isBestseller
     ).run();
 
+    // Extended catalogue fields live in an additive side table so the live
+    // `products` schema never needs a destructive migration.
+    try {
+      await ensureMetaTable(db);
+      await db
+        .prepare(
+          `INSERT INTO product_meta (product_id, meta_json, updated_at)
+           VALUES (?, ?, datetime('now', 'utc'))
+           ON CONFLICT(product_id) DO UPDATE SET
+             meta_json = excluded.meta_json,
+             updated_at = datetime('now', 'utc')`
+        )
+        .bind(id, JSON.stringify(meta))
+        .run();
+    } catch {
+      /* product saved; extended fields will retry on next save */
+    }
+
     return new Response(JSON.stringify({
       success: true,
       message: 'Product saved to catalogue.',
@@ -163,7 +290,8 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
         id, name, slug, sku, category, headline, description,
         pricePaise, compareAtPricePaise,
         image: imageUrl,
-        material, finish, inStock: Boolean(inStock), isBestseller: Boolean(isBestseller)
+        material, finish, inStock: Boolean(inStock), isBestseller: Boolean(isBestseller),
+        ...meta
       }
     }), {
       status: 200,
@@ -196,6 +324,33 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
 
   try {
     const url = new URL(request.url);
+
+    // /api/products/demo removes only the catalogue that shipped with the build.
+    if (/\/api\/products\/demo\/?$/.test(url.pathname)) {
+      const demoIds = Array.from({ length: 10 }, (_, index) => `prod-${String(index + 1).padStart(3, '0')}`);
+      const placeholders = demoIds.map(() => '?').join(',');
+      const result: any = await db
+        .prepare(`DELETE FROM products WHERE id IN (${placeholders})`)
+        .bind(...demoIds)
+        .run();
+      try {
+        await db
+          .prepare(`DELETE FROM product_meta WHERE product_id IN (${placeholders})`)
+          .bind(...demoIds)
+          .run();
+      } catch {
+        /* side table may not exist yet */
+      }
+      return new Response(
+        JSON.stringify({
+          success: true,
+          removed: Number(result?.meta?.changes) || 0,
+          message: 'Seeded demo products removed. Owner-created products are untouched.'
+        }),
+        { status: 200, headers: corsHeaders }
+      );
+    }
+
     const id = url.searchParams.get('id');
     const slug = url.searchParams.get('slug');
     if (!id && !slug) {
@@ -206,6 +361,11 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
     }
 
     await db.prepare('DELETE FROM products WHERE id = ? OR slug = ?').bind(id || '', slug || id || '').run();
+    try {
+      await db.prepare('DELETE FROM product_meta WHERE product_id = ?').bind(id || slug || '').run();
+    } catch {
+      /* side table may not exist yet */
+    }
     return new Response(JSON.stringify({ success: true, message: 'Product removed from catalogue.' }), {
       status: 200,
       headers: corsHeaders

@@ -6,6 +6,8 @@ interface Env {
   DB: any; // D1Database
   R2_BUCKET: any; // R2Bucket
   ADMIN_SECRET_KEY?: string;
+  FREE_SHIPPING_THRESHOLD_PAISE?: string;
+  [key: string]: any;
 }
 
 const corsHeaders = {
@@ -33,33 +35,66 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
   const url = new URL(request.url);
   const ref = url.searchParams.get('ref')?.trim();
+  const contact = (url.searchParams.get('contact') || '').trim();
 
   try {
     if (ref) {
       const q = ref.toUpperCase();
-      const cleanDigits = ref.replace(/[^0-9]/g, '');
-
-      // Query by Order Number, Tracking Number, Phone, or Email
+      // Exact references only: order number or AWB. Email/phone are never used to
+      // discover an order, which would allow enumeration of the customer list.
       const stmt = db.prepare(`
-        SELECT * FROM orders 
-        WHERE UPPER(order_number) = ? 
-           OR UPPER(tracking_number) = ? 
-           OR email = ? 
-           OR (length(?) >= 10 AND replace(phone, ' ', '') LIKE '%' || ? || '%')
+        SELECT * FROM orders
+        WHERE UPPER(order_number) = ?
+           OR UPPER(tracking_number) = ?
         LIMIT 1
-      `).bind(q, q, ref.toLowerCase(), cleanDigits, cleanDigits);
+      `).bind(q, q);
 
       const row = await stmt.first();
 
       if (!row) {
         return new Response(
-          JSON.stringify({ success: false, message: 'No order found matching reference: ' + ref }),
+          JSON.stringify({ success: false, message: 'No order found for that reference. Check your confirmation SMS or contact support.' }),
           { status: 404, headers: corsHeaders }
         );
       }
 
+      const digits = (value: unknown) => String(value || '').replace(/\D/g, '');
+      const contactDigits = digits(contact);
+      const contactMatches =
+        Boolean(contact) &&
+        (String(row.email || '').toLowerCase() === contact.toLowerCase() ||
+          (contactDigits.length >= 10 &&
+            digits(row.phone).length >= 10 &&
+            digits(row.phone).endsWith(contactDigits.slice(-10))));
+
       const order = formatOrderRow(row);
-      return new Response(JSON.stringify({ success: true, order }), { status: 200, headers: corsHeaders });
+      if (!contactMatches) {
+        // A reference alone reveals shipment status, never personal data.
+        return new Response(
+          JSON.stringify({
+            success: true,
+            redacted: true,
+            order: {
+              ...order,
+              customerName: 'Verified patron',
+              email: '',
+              phone: '',
+              address: '',
+              city: '',
+              state: '',
+              pincode: '',
+              items: []
+            },
+            message: 'Add the email or phone used at checkout to see full order details.'
+          }),
+          { status: 200, headers: corsHeaders }
+        );
+      }
+
+      return new Response(JSON.stringify({ success: true, redacted: false, order }), {
+        status: 200,
+        headers: corsHeaders
+      });
     }
 
     // Admin List: Fetch latest 150 orders - Requires Admin Authentication
@@ -91,6 +126,49 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
   }
 }
 
+// Active promo codes used when the D1 coupons table has not been seeded yet.
+const FALLBACK_COUPONS: Record<string, { discountPercent?: number; flatDiscountPaise?: number; minOrderPaise: number }> = {
+  FIRSTBUY: { flatDiscountPaise: 20000, minOrderPaise: 249900 },
+  SATVA10: { discountPercent: 10, minOrderPaise: 0 },
+  FESTIVE15: { discountPercent: 15, minOrderPaise: 299900 }
+};
+
+/** Owner-configured shipping and stack discount, with safe defaults. */
+async function readGlobalSettings(db: any): Promise<Record<string, any>> {
+  try {
+    const row: any = await db
+      .prepare(`SELECT value_json FROM site_settings WHERE key = 'global_config' LIMIT 1`)
+      .first();
+    if (row?.value_json) {
+      const parsed = JSON.parse(row.value_json);
+      if (parsed && typeof parsed === 'object') return parsed;
+    }
+  } catch {
+    /* settings table may not exist yet — defaults below apply */
+  }
+  return {};
+}
+
+/** Coupon terms are read from D1 (or the seeded defaults), never from the client. */
+async function lookupCoupon(db: any, code: string) {
+  try {
+    const row: any = await db
+      .prepare('SELECT * FROM coupons WHERE code = ? AND is_active = 1 LIMIT 1')
+      .bind(code)
+      .first();
+    if (row) {
+      return {
+        discountPercent: Number(row.discount_percent) || undefined,
+        flatDiscountPaise: Number(row.flat_discount_paise) || undefined,
+        minOrderPaise: Number(row.min_order_paise) || 0
+      };
+    }
+  } catch {
+    /* fall through to seeded defaults */
+  }
+  return FALLBACK_COUPONS[code] || null;
+}
+
 // POST /api/orders (Checkout completion)
 export async function onRequestPost(context: { request: Request; env: Env }) {
   const { request, env } = context;
@@ -105,6 +183,11 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
 
   try {
     const data = await request.json() as any;
+    const settings = await readGlobalSettings(db);
+    const stackDiscountPercent = Math.min(
+      50,
+      Math.max(0, Number(settings.stackDiscountPercent ?? env?.STACK_DISCOUNT_PERCENT) || 15)
+    );
 
     const id = data.id || ('ord-' + Date.now());
     const orderNumber = data.orderNumber || ('SAT-' + new Date().getFullYear() + '-' + Math.floor(100000 + Math.random() * 900000));
@@ -115,12 +198,83 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     const city = data.city || '';
     const state = data.state || '';
     const pincode = data.pincode || '';
-    const itemsJson = JSON.stringify(data.items || []);
-    const subtotalPaise = Number(data.subtotalPaise) || 0;
-    const shippingPaise = Number(data.shippingPaise) || 0;
-    const discountPaise = Number(data.discountPaise) || 0;
-    const totalPaise = Number(data.totalPaise) || 0;
+
+    const rawItems = Array.isArray(data.items) ? data.items.slice(0, 50) : [];
+    if (rawItems.length === 0) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'An order must contain at least one item.' }),
+        { status: 400, headers: corsHeaders }
+      );
+    }
+
+    // Recompute money server-side. Product prices are taken from D1 when the SKU is
+    // known; the client's subtotal/shipping/discount/total are never trusted. Stack
+    // and bundle pricing is re-applied from the configured discount, not the payload.
+    const items: Array<Record<string, any>> = [];
+    let subtotalPaise = 0;
+    for (const item of rawItems) {
+      const productId = String(item?.productId || item?.id || '');
+      const quantity = Math.max(1, Math.min(99, Math.floor(Number(item?.quantity) || 1)));
+      let pricePaise = Math.max(0, Math.round(Number(item?.pricePaise) || 0));
+      const variantId = String(item?.variantId || '');
+
+      if (productId) {
+        try {
+          const product: any = await db
+            .prepare('SELECT price_paise FROM products WHERE id = ? LIMIT 1')
+            .bind(productId)
+            .first();
+          if (product && Number(product.price_paise) > 0) pricePaise = Number(product.price_paise);
+        } catch {
+          /* products table may not exist yet — keep the supplied price */
+        }
+      }
+
+      if (/^(stack|bundle)-\d+off$/.test(variantId)) {
+        pricePaise = Math.round(pricePaise * (1 - stackDiscountPercent / 100));
+      }
+
+      subtotalPaise += pricePaise * quantity;
+      items.push({
+        productId,
+        name: String(item?.name || ''),
+        slug: String(item?.slug || ''),
+        image: String(item?.image || ''),
+        pricePaise,
+        quantity,
+        variantId: variantId || undefined
+      });
+    }
+
+    const itemsJson = JSON.stringify(items);
+
+    // Shipping follows the owner's settings, with env override for one-off deployments.
+    const freeShippingThreshold = Math.max(
+      0,
+      Number(settings.freeShippingThresholdPaise ?? env?.FREE_SHIPPING_THRESHOLD_PAISE) || 49900
+    );
+    const shippingChargePaise = Math.max(
+      0,
+      Number(settings.shippingChargePaise ?? env?.SHIPPING_CHARGE_PAISE) || 4900
+    );
+    const shippingPaise = subtotalPaise >= freeShippingThreshold ? 0 : shippingChargePaise;
+
+    // Coupon discounts are recomputed from the code's own terms.
+    const couponCode = String(data.couponCode || '').trim().toUpperCase();
+    let discountPaise = 0;
+    if (couponCode) {
+      const coupon = await lookupCoupon(db, couponCode);
+      if (coupon && subtotalPaise >= coupon.minOrderPaise) {
+        discountPaise = coupon.discountPercent
+          ? Math.round((subtotalPaise * Math.min(100, Math.max(0, coupon.discountPercent))) / 100)
+          : Math.min(subtotalPaise, Math.max(0, coupon.flatDiscountPaise || 0));
+      }
+    }
+
     const paymentMethod = data.paymentMethod || 'RAZORPAY';
+    // Cash-on-delivery carries the same ₹25 handling fee the checkout screen shows.
+    const codFeePaise = /cod|cash on delivery/i.test(paymentMethod) ? 2500 : 0;
+    const totalPaise = Math.max(0, subtotalPaise - discountPaise + shippingPaise + codFeePaise);
     const paymentStatus = data.paymentStatus || 'PAID';
     const fulfillmentStatus = data.fulfillmentStatus || 'VERIFIED';
     const courierPartner = data.courierPartner || 'BlueDart Express (Vapi Hub)';

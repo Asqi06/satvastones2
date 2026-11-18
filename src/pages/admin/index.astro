@@ -10,7 +10,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <!-- Cloudinary Official Upload Widget SDK -->
   <script is:inline src="https://upload-widget.cloudinary.com/global/all.js"></script>
 
-  <div class="bg-[#f8f9fa] min-h-screen py-8 text-[#1A1A1A]">
+  <div class="min-h-screen bg-[#f6f1e8] py-8 text-[#14110f]">
     <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
       
       <!-- ========================================== -->
@@ -101,32 +101,33 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <div id="admin-dashboard-view" class="hidden space-y-6">
         
         <!-- Admin Top Bar -->
-        <div class="bg-white p-5 sm:p-6 rounded-2xl border border-gray-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="bg-[#fbf9f5] p-5 sm:p-6 border border-[#e5ded3] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div class="flex items-center gap-3.5">
             <img
               src="/satvastones-logo.png"
               alt="Satvastones"
               class="h-8 sm:h-9 w-auto object-contain"
             />
-            <div class="border-l border-gray-200 pl-3.5">
-              <h1 class="text-base sm:text-lg font-bold text-gray-900">
-                Operations & Management Desk
+            <div class="border-l border-[#e5ded3] pl-3.5">
+              <p class="text-[9px] uppercase tracking-[0.22em] text-[#8d3f3d]">Operations console</p>
+              <h1 class="font-display mt-1 text-lg sm:text-xl leading-none text-[#14110f]">
+                Atelier Management Desk
               </h1>
-              <p class="text-xs text-gray-500">
-                Chala Atelier, Vapi (Gujarat - 396191) • Sole Proprietor: <strong>Anirudh A Verma</strong> • GSTIN: <strong>24DDAPV4074H1ZF</strong>
+              <p class="mt-1 text-[11px] text-[#6f675f]">
+                Chala Atelier, Vapi (Gujarat - 396191) · Sole Proprietor: <strong class="font-medium text-[#14110f]">Anirudh A Verma</strong> · GSTIN: <strong class="font-medium text-[#14110f]">24DDAPV4074H1ZF</strong>
               </p>
             </div>
           </div>
 
           <div class="flex items-center gap-3">
             <div class="text-right">
-              <p class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Vapi Hub Local Time</p>
-              <p id="admin-clock" class="text-xs font-bold text-gray-800"></p>
+              <p class="text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">Vapi hub local time</p>
+              <p id="admin-clock" class="text-xs font-medium text-[#14110f] tabular-nums"></p>
             </div>
             <button
               id="admin-refresh-btn"
               type="button"
-              class="bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5"
+              class="flex cursor-pointer items-center gap-1.5 border border-[#e5ded3] bg-[#f4efe7] px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-[#14110f] transition-colors hover:border-[#14110f]"
             >
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -136,7 +137,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <button
               id="admin-logout-btn"
               type="button"
-              class="bg-black hover:bg-gray-800 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-colors"
+              class="flex cursor-pointer items-center gap-1.5 bg-[#14110f] px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-[0.12em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
             >
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
@@ -146,38 +147,47 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           </div>
         </div>
 
+        <!-- Catalogue sync banner -->
+        <div id="admin-sync-banner" class="hidden items-start gap-3 border-l-2 border-[#8d3f3d] bg-[#f8eeee] px-4 py-3 text-[11px] leading-relaxed text-[#7a3634]">
+          <p class="flex-1">
+            <strong class="font-medium">Catalogue API unreachable.</strong>
+            <span id="admin-sync-banner-text">Products shown are the last copy stored in this browser. Storefront edits will not publish until the API responds.</span>
+          </p>
+          <button id="admin-sync-retry" type="button" class="shrink-0 cursor-pointer border border-[#8d3f3d] px-2.5 py-1 text-[9px] uppercase tracking-[0.12em] text-[#8d3f3d] transition-colors hover:bg-[#8d3f3d] hover:text-[#fbf9f5]">Retry</button>
+        </div>
+
         <!-- Metric KPI Cards -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
-            <span class="text-[10px] uppercase font-bold text-gray-400">Total Gross Sales</span>
-            <p id="metric-sales" class="text-2xl font-bold text-gray-900">₹0</p>
-            <p class="text-[11px] text-emerald-700 font-semibold">100% Razorpay Verified</p>
+        <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <div class="border border-[#e5ded3] bg-[#fbf9f5] p-5">
+            <span class="text-[9px] uppercase tracking-[0.18em] text-[#8a8279]">Total gross sales</span>
+            <p id="metric-sales" class="font-display mt-1.5 text-2xl leading-none text-[#14110f]">₹0</p>
+            <p class="mt-1.5 text-[10px] font-medium text-emerald-800">100% Razorpay verified</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
-            <span class="text-[10px] uppercase font-bold text-gray-400">Total Orders</span>
-            <p id="metric-orders" class="text-2xl font-bold text-[#8d3f3d]">0</p>
-            <p class="text-[11px] text-gray-500">Pan-India Dispatched</p>
+          <div class="border border-[#e5ded3] bg-[#fbf9f5] p-5">
+            <span class="text-[9px] uppercase tracking-[0.18em] text-[#8a8279]">Total orders</span>
+            <p id="metric-orders" class="font-display mt-1.5 text-2xl leading-none text-[#8d3f3d]">0</p>
+            <p class="mt-1.5 text-[10px] text-[#6f675f]">Pan-India dispatched</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
-            <span class="text-[10px] uppercase font-bold text-gray-400">Pending at Vapi Hub</span>
-            <p id="metric-pending" class="text-2xl font-bold text-amber-600">0</p>
-            <p class="text-[11px] text-amber-700 font-semibold">Under 24–48h SLA</p>
+          <div class="border border-[#e5ded3] bg-[#fbf9f5] p-5">
+            <span class="text-[9px] uppercase tracking-[0.18em] text-[#8a8279]">Pending at Vapi hub</span>
+            <p id="metric-pending" class="font-display mt-1.5 text-2xl leading-none text-amber-700">0</p>
+            <p class="mt-1.5 text-[10px] font-medium text-amber-800">Under 24–48h SLA</p>
           </div>
 
-          <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-1">
-            <span class="text-[10px] uppercase font-bold text-gray-400">Average Order Value</span>
-            <p id="metric-aov" class="text-2xl font-bold text-gray-900">₹0</p>
-            <p class="text-[11px] text-[#007c52] font-semibold">Boosted via Stack Studio</p>
+          <div class="border border-[#e5ded3] bg-[#fbf9f5] p-5">
+            <span class="text-[9px] uppercase tracking-[0.18em] text-[#8a8279]">Average order value</span>
+            <p id="metric-aov" class="font-display mt-1.5 text-2xl leading-none text-[#14110f]">₹0</p>
+            <p class="mt-1.5 text-[10px] text-[#6f675f]">Boosted via Stack Studio</p>
           </div>
         </div>
 
         <!-- Main Workspace Tabs Container -->
-        <div class="bg-white rounded-2xl border border-gray-200 shadow-xs overflow-hidden">
+        <div class="overflow-hidden border border-[#e5ded3] bg-[#fbf9f5]">
           
           <!-- Navigation Tabs -->
-          <div class="flex border-b border-gray-200 bg-gray-50/70 text-xs font-bold overflow-x-auto whitespace-nowrap">
+          <div class="flex overflow-x-auto whitespace-nowrap border-b border-[#e5ded3] bg-[#f4efe7] text-[10px] font-medium uppercase tracking-[0.1em]">
             <button id="tab-btn-orders" class="admin-tab-btn py-3.5 px-6 text-[#8d3f3d] border-b-2 border-[#8d3f3d] bg-white cursor-pointer flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
@@ -279,31 +289,50 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <!-- ========================================== -->
           <!-- PANEL 2: PRODUCTS & INVENTORY CRUD         -->
           <!-- ========================================== -->
-          <div id="panel-products" class="hidden p-5 sm:p-6 space-y-5">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div id="panel-products" class="hidden space-y-5 p-5 sm:p-6">
+            <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
               <div>
-                <h2 class="text-base font-bold text-gray-900">Fine Jewellery Inventory Control</h2>
-                <p class="text-xs text-gray-500">Add, edit, delete catalog products, set prices, and toggle stock</p>
+                <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">Catalogue</p>
+                <h2 class="font-display mt-1 text-xl leading-none text-[#14110f]">Fine jewellery inventory</h2>
+                <p class="mt-1.5 text-[11px] text-[#6f675f]">Every product saved here publishes to the storefront catalogue immediately.</p>
               </div>
-              <div class="flex items-center gap-3">
+              <div class="flex flex-wrap items-center gap-2">
                 <input
                   id="product-search-input"
                   type="text"
-                  placeholder="Search products or SKU..."
-                  class="bg-gray-50 border border-gray-200 px-3.5 py-1.5 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"
+                  placeholder="Search products or SKU…"
+                  class="w-52 border border-[#e5ded3] bg-white px-3 py-2 text-[11px] focus:border-[#14110f] focus:outline-none"
                 />
+                <button
+                  id="export-products-btn"
+                  type="button"
+                  class="flex cursor-pointer items-center gap-1.5 border border-[#e5ded3] bg-white px-3 py-2 text-[10px] font-medium uppercase tracking-[0.1em] text-[#14110f] transition-colors hover:border-[#14110f]"
+                >
+                  Export CSV
+                </button>
+                <button
+                  id="remove-demo-btn"
+                  type="button"
+                  class="flex cursor-pointer items-center gap-1.5 border border-[#8d3f3d] px-3 py-2 text-[10px] font-medium uppercase tracking-[0.1em] text-[#8d3f3d] transition-colors hover:bg-[#8d3f3d] hover:text-[#fbf9f5]"
+                >
+                  Remove demo products
+                </button>
                 <button
                   id="add-product-btn"
                   type="button"
-                  class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-xl text-xs font-bold cursor-pointer flex items-center gap-1.5 transition-colors"
+                  class="flex cursor-pointer items-center gap-1.5 bg-[#14110f] px-4 py-2 text-[10px] font-medium uppercase tracking-[0.12em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
                 >
                   <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                   </svg>
-                  <span>+ Add Product</span>
+                  <span>Add product</span>
                 </button>
               </div>
             </div>
+
+            <p id="demo-products-note" class="hidden border-l-2 border-[#b9ae9f] bg-[#f4efe7] px-3 py-2 text-[10.5px] leading-relaxed text-[#6f675f]">
+              The catalogue still contains seeded demo products. Remove them once your own pieces are live.
+            </p>
 
             <!-- Products Grid -->
             <div id="admin-products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -959,10 +988,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <!-- MODAL: ADD / EDIT PRODUCT                  -->
   <!-- ========================================== -->
   <div id="product-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg p-6 sm:p-8 rounded-2xl shadow-2xl border border-gray-200 space-y-5 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-        <h3 id="product-modal-title" class="text-base font-bold text-gray-900">Add New Product</h3>
-        <button id="close-product-modal" class="text-gray-400 hover:text-black cursor-pointer">
+    <div class="bg-white w-full max-w-3xl p-6 sm:p-8 shadow-2xl border border-[#e5ded3] space-y-5 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#e5ded3] pb-3">
+        <div>
+          <p class="text-[9px] uppercase tracking-[0.2em] text-[#8b837a]">Catalogue editor</p>
+          <h3 id="product-modal-title" class="font-display text-xl text-[#14110f]">Add New Product</h3>
+        </div>
+        <button id="close-product-modal" class="text-gray-400 hover:text-black cursor-pointer" aria-label="Close product editor">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -999,6 +1031,22 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
         <div class="grid grid-cols-2 gap-3">
           <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">URL Slug <span class="font-normal text-gray-400">(auto from name)</span></label>
+            <input id="prod-slug" type="text" placeholder="elysian-croissant-dome-ring" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs font-mono rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Collection</label>
+            <select id="prod-collection" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]">
+              <option value="everyday-luxury">Everyday Luxury</option>
+              <option value="atelier-curations">Atelier Curations</option>
+              <option value="gifting">Gifting</option>
+              <option value="statement">Statement</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">Price in INR (₹) *</label>
             <input id="prod-price" type="number" required min="1" placeholder="1299" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
           </div>
@@ -1028,11 +1076,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
 
         <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Gallery image URLs <span class="font-normal text-gray-400">(one per line — 2nd image becomes the hover shot)</span></label>
+          <textarea id="prod-gallery" rows="2" placeholder="https://…/front.webp&#10;https://…/detail.webp" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Full Description</label>
+          <textarea id="prod-description" rows="3" placeholder="Tell the story: craftsmanship, styling, why it survives Indian humidity…" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"></textarea>
+        </div>
+
+        <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Short Headline / Catchphrase</label>
           <input id="prod-headline" type="text" placeholder="Sculptural statement band with French twist" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-3 gap-3">
           <div>
             <label class="block text-xs font-bold text-gray-700 mb-1">Material</label>
             <input id="prod-material" type="text" value="316L Surgical Stainless Steel" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
@@ -1041,16 +1099,109 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <label class="block text-xs font-bold text-gray-700 mb-1">Finish</label>
             <input id="prod-finish" type="text" value="18K Vacuum Gold PVD" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
           </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Dimensions</label>
+            <input id="prod-dimensions" type="text" placeholder="40cm + 5cm extender" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+          </div>
         </div>
 
-        <div class="flex items-center gap-2 pt-1">
-          <input id="prod-stock" type="checkbox" checked class="w-4 h-4 accent-[#8d3f3d] rounded" />
-          <label for="prod-stock" class="text-xs font-bold text-gray-800">In Stock at Vapi Atelier</label>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Weight (grams)</label>
+            <input id="prod-weight" type="number" step="0.1" min="0" placeholder="8.4" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Warranty</label>
+            <input id="prod-warranty" type="text" value="6 Months Anti-Tarnish Assurance" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+          </div>
         </div>
 
-        <div class="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
-          <button type="button" id="cancel-product-modal" class="px-4 py-2 text-xs font-semibold text-gray-600 hover:text-black">Cancel</button>
-          <button type="submit" class="bg-black hover:bg-gray-800 text-white px-5 py-2 text-xs font-bold uppercase rounded-xl">Save Product</button>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Care instructions <span class="font-normal text-gray-400">(one per line)</span></label>
+          <textarea id="prod-care" rows="2" placeholder="Safe for daily showers and gym sessions&#10;Wipe dry with the included pouch" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl"></textarea>
+        </div>
+
+        <fieldset class="border border-gray-200 p-3.5 rounded-xl">
+          <legend class="px-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">Inventory &amp; visibility</legend>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Stock qty</label>
+              <input id="prod-stock-qty" type="number" min="0" placeholder="25" class="w-full bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Low-stock alert</label>
+              <input id="prod-low-stock" type="number" min="0" placeholder="3" class="w-full bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Sort order</label>
+              <input id="prod-sort-order" type="number" placeholder="0" class="w-full bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">HSN code</label>
+              <input id="prod-hsn" type="text" placeholder="7117" class="w-full bg-gray-50 border border-gray-200 px-3 py-2 text-xs rounded-xl" />
+            </div>
+          </div>
+          <div class="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+            <label class="flex items-center gap-2 text-xs font-bold text-gray-800">
+              <input id="prod-stock" type="checkbox" checked class="w-4 h-4 accent-[#8d3f3d] rounded" /> In stock
+            </label>
+            <label class="flex items-center gap-2 text-xs font-bold text-gray-800">
+              <input id="prod-bestseller" type="checkbox" class="w-4 h-4 accent-[#8d3f3d] rounded" /> Bestseller badge
+            </label>
+            <label class="flex items-center gap-2 text-xs font-bold text-gray-800">
+              <input id="prod-new-arrival" type="checkbox" class="w-4 h-4 accent-[#8d3f3d] rounded" /> New arrival badge
+            </label>
+            <label class="flex items-center gap-2 text-xs font-bold text-gray-800">
+              <input id="prod-published" type="checkbox" checked class="w-4 h-4 accent-[#8d3f3d] rounded" /> Published on storefront
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Cost price (₹) <span class="font-normal text-gray-400">private</span></label>
+            <input id="prod-cost" type="number" min="0" placeholder="420" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">GST rate (%)</label>
+            <select id="prod-gst" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl">
+              <option value="3">3% — Jewellery</option>
+              <option value="5">5%</option>
+              <option value="12">12%</option>
+              <option value="18">18%</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Tags <span class="font-normal text-gray-400">(comma separated — powers search &amp; filters)</span></label>
+          <input id="prod-tags" type="text" placeholder="waterproof, gift, everyday, gold" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+        </div>
+
+        <fieldset class="border border-gray-200 p-3.5 rounded-xl">
+          <legend class="px-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">Search engine preview</legend>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">SEO title</label>
+              <input id="prod-seo-title" type="text" maxlength="70" placeholder="Anti-Tarnish Gold Ring | Satvastones" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-700 mb-1">Meta description</label>
+              <textarea id="prod-seo-description" rows="2" maxlength="165" placeholder="Waterproof 18K gold PVD ring, dispatched from Vapi. Free delivery over ₹499." class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl"></textarea>
+            </div>
+          </div>
+        </fieldset>
+
+        <p id="prod-form-error" class="hidden border-l-2 border-[#8d3f3d] bg-[#f8eeee] px-3 py-2 text-[11px] leading-relaxed text-[#8d3f3d]" role="alert"></p>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 pt-3 border-t border-gray-100">
+          <p class="text-[10px] leading-relaxed text-gray-400">
+            Saved to the D1 catalogue — visible on the storefront immediately.
+          </p>
+          <div class="flex items-center gap-2">
+            <button type="button" id="cancel-product-modal" class="cursor-pointer px-4 py-2 text-xs font-semibold text-gray-600 hover:text-black">Cancel</button>
+            <button type="submit" class="cursor-pointer bg-black hover:bg-gray-800 text-white px-5 py-2 text-xs font-bold uppercase rounded-xl">Save Product</button>
+          </div>
         </div>
       </form>
     </div>
@@ -1198,6 +1349,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     saveSiteSettings,
     syncSiteSettingsFromCloudflare,
     syncProductsFromCloudflare,
+    removeDemoProducts,
     syncCouponsFromCloudflare,
     updateAdminCategory,
     toggleStackStudioProduct,
@@ -1306,13 +1458,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       }
     } catch (err) {
       console.warn('Authentication verification offline or edge error:', err);
-      // In offline development without worker running, check if token exists
-      if (token && window.location.hostname === 'localhost') {
-        loginGate?.classList.add('hidden');
-        dashboardView?.classList.remove('hidden');
-        initDashboard();
-        return;
-      }
+      // Dev server serves /api/admin/auth through the dev API plugin, so there is
+      // no client-side credential bypass here anymore.
     }
 
     // Invalid or expired token
@@ -1356,17 +1503,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         passwordInput.value = '';
       }
     } catch (err: any) {
-      // Local dev fallback if /api/admin/auth worker not running on dev port
-      if (window.location.hostname === 'localhost' && username === '@dmin' && password === '@dmin060409') {
-        saveToken('local-dev-admin-token');
-        if (errorMsg) errorMsg.classList.add('hidden');
-        passwordInput.value = '';
-        checkAuth();
-      } else {
-        if (errorMsg) {
-          errorMsg.textContent = 'Authentication server unreachable or rate limit exceeded.';
-          errorMsg.classList.remove('hidden');
-        }
+      if (errorMsg) {
+        errorMsg.textContent = 'Authentication server unreachable. Check your connection and try again.';
+        errorMsg.classList.remove('hidden');
       }
     } finally {
       if (loginBtn) {
@@ -1389,6 +1528,26 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       currency: 'INR',
       maximumFractionDigits: 0
     }).format(Math.round(paise / 100));
+  }
+
+  /** Admin-entered text is inserted with innerHTML, so escape it first. */
+  function escapeAdminHtml(value: unknown): string {
+    return String(value ?? '').replace(/[&<>"']/g, (char) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] as string)
+    );
+  }
+
+  /** Only http(s) links are allowed in admin-rendered href/src attributes. */
+  function safeAdminUrl(value: unknown): string {
+    const raw = String(value ?? '').trim();
+    if (!raw) return '';
+    try {
+      const parsed = new URL(raw, window.location.origin);
+      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return '';
+      return escapeAdminHtml(parsed.toString());
+    } catch {
+      return '';
+    }
   }
 
   function initDashboard() {
@@ -1436,7 +1595,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     // Edge Sync from Cloudflare D1
     syncSiteSettingsFromCloudflare().then(() => populateSettingsForm());
-    syncProductsFromCloudflare().then(() => renderProducts());
+    syncProductsFromCloudflare().then(() => {
+      renderProducts();
+      hideSyncBanner();
+    });
     syncCouponsFromCloudflare().then(() => renderCoupons());
     syncReviewsFromCloudflare().then(() => renderReviews());
     initCloudinaryUploadButtons();
@@ -1510,40 +1672,40 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
           return `
           <tr class="hover:bg-gray-50/80 transition-colors">
-            <td class="py-3 px-3.5 font-bold text-gray-900">${o.orderNumber}</td>
+            <td class="py-3 px-3.5 font-bold text-gray-900">${escapeAdminHtml(o.orderNumber)}</td>
             <td class="py-3 px-3.5">
-              <p class="font-bold text-gray-900">${o.customerName}</p>
-              <p class="text-[11px] text-gray-500">${o.phone}</p>
+              <p class="font-bold text-gray-900">${escapeAdminHtml(o.customerName)}</p>
+              <p class="text-[11px] text-gray-500">${escapeAdminHtml(o.phone)}</p>
             </td>
             <td class="py-3 px-3.5">
-              <p class="font-medium text-gray-900">${o.city}, ${o.state}</p>
-              <p class="text-[11px] text-gray-400">PIN: ${o.pincode}</p>
+              <p class="font-medium text-gray-900">${escapeAdminHtml(o.city)}, ${escapeAdminHtml(o.state)}</p>
+              <p class="text-[11px] text-gray-400">PIN: ${escapeAdminHtml(o.pincode)}</p>
             </td>
             <td class="py-3 px-3.5">
-              ${o.items.map((i) => `<p class="truncate max-w-[150px] text-gray-800">${i.name} (×${i.quantity})</p>`).join('')}
+              ${o.items.map((i) => `<p class="truncate max-w-[150px] text-gray-800">${escapeAdminHtml(i.name)} (×${i.quantity})</p>`).join('')}
             </td>
             <td class="py-3 px-3.5 text-right font-bold text-[#8d3f3d]">${formatINR(o.totalPaise)}</td>
             <td class="py-3 px-3.5 text-center">${statusBadge}</td>
             <td class="py-3 px-3.5">
-              <p class="font-semibold text-gray-800 text-[11px]">${o.courierPartner || 'Pending Assignment'}</p>
-              <p class="text-[10px] font-mono text-gray-500">${o.trackingNumber || 'AWB pending'}</p>
+              <p class="font-semibold text-gray-800 text-[11px]">${escapeAdminHtml(o.courierPartner || 'Pending Assignment')}</p>
+              <p class="text-[10px] font-mono text-gray-500">${escapeAdminHtml(o.trackingNumber || 'AWB pending')}</p>
             </td>
             <td class="py-3 px-3.5 text-right space-x-1.5 whitespace-nowrap">
               <button
                 class="view-invoice-btn bg-black hover:bg-gray-800 text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer"
-                data-order-num="${o.orderNumber}"
+                data-order-num="${escapeAdminHtml(o.orderNumber)}"
               >
                 Invoice
               </button>
               <button
                 class="dispatch-action-btn bg-[#f4efe7] hover:bg-[#f0e6d8] text-[#8d3f3d] border border-[#e5ded3] px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer"
-                data-order-num="${o.orderNumber}"
+                data-order-num="${escapeAdminHtml(o.orderNumber)}"
               >
                 Fulfill
               </button>
               <button
                 class="delete-order-btn text-gray-400 hover:text-red-600 p-1 rounded cursor-pointer"
-                data-order-num="${o.orderNumber}"
+                data-order-num="${escapeAdminHtml(o.orderNumber)}"
                 title="Delete order"
               >
                 ×
@@ -1633,8 +1795,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     const products = getAdminProducts();
     const countEl = document.getElementById('tab-products-count');
     const grid = document.getElementById('admin-products-grid');
+    const demoNote = document.getElementById('demo-products-note');
 
     if (countEl) countEl.textContent = String(products.length);
+    if (demoNote) demoNote.classList.toggle('hidden', !products.some((p) => p.isDemo));
 
     const filtered = products.filter((p) => {
       const q = filterText.toLowerCase();
@@ -1643,48 +1807,84 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     if (grid) {
       if (filtered.length === 0) {
-        grid.innerHTML = `<div class="col-span-full py-8 text-center text-gray-400">No products found.</div>`;
+        grid.innerHTML = `<div class="col-span-full border border-dashed border-[#e5ded3] bg-[#fbf9f5] px-6 py-12 text-center">
+          <p class="font-display text-lg text-[#14110f]">No products match this search.</p>
+          <p class="mt-1 text-[11px] text-[#6f675f]">Clear the search, or add your first piece to the catalogue.</p>
+        </div>`;
         return;
       }
 
       grid.innerHTML = filtered
-        .map(
-          (p) => `
-        <div class="bg-white p-4 rounded-xl border border-gray-200 space-y-3 shadow-xs">
+        .map((p) => {
+          const stockQty = typeof p.stockQuantity === 'number' ? p.stockQuantity : null;
+          const lowStock =
+            stockQty !== null && stockQty > 0 && stockQty <= (p.lowStockThreshold ?? 3);
+          const stockLabel = !p.inStock
+            ? '<span class="border border-[#c9b9b7] bg-[#f8eeee] px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.1em] text-[#7a3634]">Sold out</span>'
+            : lowStock
+              ? `<span class="border border-amber-300 bg-amber-50 px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.1em] text-amber-800">Low · ${stockQty} left</span>`
+              : stockQty !== null
+                ? `<span class="border border-[#d8e3d8] bg-[#f1f6f1] px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.1em] text-emerald-800">${stockQty} in stock</span>`
+                : '<span class="border border-[#d8e3d8] bg-[#f1f6f1] px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.1em] text-emerald-800">In stock</span>';
+
+          const badges = [
+            p.isDemo
+              ? '<span class="border border-[#b9ae9f] bg-[#f4efe7] px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.1em] text-[#6f675f]">Demo</span>'
+              : '',
+            p.isPublished === false
+              ? '<span class="border border-[#c9b9b7] bg-white px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.1em] text-[#8a8279]">Draft</span>'
+              : '',
+            p.isBestseller
+              ? '<span class="border border-[#d8c3a6] bg-[#fbf6ec] px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.1em] text-[#8d3f3d]">Bestseller</span>'
+              : '',
+            p.isNewArrival
+              ? '<span class="border border-[#d8c3a6] bg-[#fbf6ec] px-1.5 py-0.5 text-[8.5px] font-medium uppercase tracking-[0.1em] text-[#8d3f3d]">New</span>'
+              : ''
+          ]
+            .filter(Boolean)
+            .join('');
+
+          return `
+        <div class="space-y-3 border border-[#e5ded3] bg-white p-3.5">
           <div class="relative">
-            <img src="${p.image}" alt="${p.name}" class="aspect-[4/3] object-cover rounded-lg bg-gray-50 w-full" />
-            <span class="absolute top-2 left-2 text-[9px] font-bold uppercase tracking-wider bg-white/90 backdrop-blur-xs text-gray-800 px-2 py-0.5 rounded">
-              ${p.category}
+            <img src="${escapeAdminHtml(p.image)}" alt="${escapeAdminHtml(p.name)}" class="aspect-[4/3] w-full bg-[#f4efe7] object-cover" />
+            <span class="absolute left-2 top-2 bg-[#fbf9f5]/95 px-2 py-0.5 text-[8.5px] uppercase tracking-[0.12em] text-[#14110f] backdrop-blur-xs">
+              ${escapeAdminHtml(p.category)}
             </span>
-            <span class="absolute top-2 right-2 text-[10px] font-mono bg-black/75 text-white px-1.5 py-0.5 rounded">
-              ${p.sku}
+            <span class="absolute right-2 top-2 bg-[#14110f]/80 px-1.5 py-0.5 font-mono text-[9px] text-[#f6f1e8]">
+              ${escapeAdminHtml(p.sku)}
             </span>
           </div>
 
           <div>
-            <p class="text-xs font-bold text-gray-900 truncate" title="${p.name}">${p.name}</p>
-            <div class="flex items-baseline gap-2 mt-0.5">
-              <span class="text-xs font-bold text-[#8d3f3d]">${formatINR(p.pricePaise)}</span>
-              ${p.compareAtPricePaise ? `<span class="text-[10px] text-gray-400 line-through">${formatINR(p.compareAtPricePaise)}</span>` : ''}
+            <p class="truncate text-[11.5px] font-medium text-[#14110f]" title="${escapeAdminHtml(p.name)}">${escapeAdminHtml(p.name)}</p>
+            <div class="mt-1 flex items-baseline gap-2">
+              <span class="font-display text-sm text-[#8d3f3d]">${formatINR(p.pricePaise)}</span>
+              ${p.compareAtPricePaise ? `<span class="text-[10px] text-[#9a938b] line-through">${formatINR(p.compareAtPricePaise)}</span>` : ''}
             </div>
           </div>
 
-          <div class="pt-2 flex items-center justify-between border-t border-gray-100">
+          <div class="flex flex-wrap items-center gap-1.5">
+            ${stockLabel}
+            ${badges}
+          </div>
+
+          <div class="flex items-center justify-between border-t border-[#e5ded3] pt-2.5">
             <button
-              class="toggle-stock-btn text-[11px] font-bold cursor-pointer ${p.inStock ? 'text-emerald-700' : 'text-red-500'}"
+              class="toggle-stock-btn cursor-pointer text-[10px] font-medium uppercase tracking-[0.1em] ${p.inStock ? 'text-emerald-800' : 'text-[#8d3f3d]'}"
               data-prod-id="${p.id}"
             >
-              ${p.inStock ? '● In Stock' : '○ Sold Out'}
+              ${p.inStock ? '● In stock' : '○ Sold out'}
             </button>
             <div class="flex items-center gap-1.5">
               <button
-                class="edit-prod-btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-2.5 py-1 rounded-md text-[11px] font-semibold cursor-pointer"
+                class="edit-prod-btn cursor-pointer border border-[#e5ded3] px-2.5 py-1 text-[9.5px] font-medium uppercase tracking-[0.1em] text-[#14110f] transition-colors hover:border-[#14110f]"
                 data-prod-id="${p.id}"
               >
                 Edit
               </button>
               <button
-                class="delete-prod-btn text-gray-400 hover:text-red-600 px-1.5 py-1 text-sm font-bold cursor-pointer"
+                class="delete-prod-btn cursor-pointer px-1.5 py-1 text-sm font-bold text-[#b9b1a7] transition-colors hover:text-[#8d3f3d]"
                 data-prod-id="${p.id}"
                 title="Delete product"
               >
@@ -1693,8 +1893,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             </div>
           </div>
         </div>
-      `
-        )
+      `;
+        })
         .join('');
 
       // Wire Stock Toggle
@@ -1719,53 +1919,268 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       document.querySelectorAll('.delete-prod-btn').forEach((btn) => {
         btn.addEventListener('click', async (e) => {
           const id = (e.currentTarget as HTMLElement).dataset.prodId || '';
-          if (confirm('Are you sure you want to delete this product?')) {
+          const prod = products.find((p) => p.id === id);
+          const label = prod ? `“${prod.name}”` : 'this product';
+          if (confirm(`Delete ${label}? It will be removed from the storefront catalogue immediately.`)) {
             await deleteAdminProduct(id);
             renderProducts();
+            void syncProductsFromCloudflare();
           }
         });
       });
     }
   }
 
+  // ---- Catalogue toolbar: export, demo cleanup, sync banner ----
+  function exportProductsCsv() {
+    const rows = getAdminProducts();
+    const columns: Array<[string, (p: AdminProduct) => string | number]> = [
+      ['id', (p) => p.id],
+      ['name', (p) => p.name],
+      ['slug', (p) => p.slug],
+      ['sku', (p) => p.sku],
+      ['category', (p) => p.category],
+      ['collection', (p) => p.collection || ''],
+      ['price_inr', (p) => Math.round(p.pricePaise / 100)],
+      ['compare_at_inr', (p) => (p.compareAtPricePaise ? Math.round(p.compareAtPricePaise / 100) : '')],
+      ['stock_qty', (p) => (p.stockQuantity ?? '')],
+      ['in_stock', (p) => (p.inStock ? 'yes' : 'no')],
+      ['published', (p) => (p.isPublished === false ? 'no' : 'yes')],
+      ['bestseller', (p) => (p.isBestseller ? 'yes' : 'no')],
+      ['new_arrival', (p) => (p.isNewArrival ? 'yes' : 'no')],
+      ['hsn', (p) => p.hsnCode || ''],
+      ['gst_rate', (p) => (p.gstRate ?? '')],
+      ['tags', (p) => (p.tags || []).join('|')],
+      ['image', (p) => p.image]
+    ];
+
+    const escapeCell = (value: string | number) => {
+      let text = String(value ?? '');
+      // Spreadsheet apps evaluate cells beginning with these characters.
+      // Owner-entered product names/tags are untrusted, so neutralise formulas
+      // while leaving genuine numeric values (e.g. negative adjustments) alone.
+      if (text && !/^-?\d+(?:\.\d+)?$/.test(text) && /^[=+\-@\t\r]/.test(text)) {
+        text = `'${text}`;
+      }
+      return /[",\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    };
+
+    const csv = [
+      columns.map(([label]) => label).join(','),
+      ...rows.map((product) => columns.map(([, read]) => escapeCell(read(product))).join(','))
+    ].join('\r\n');
+
+    const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `satvastones-catalogue-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  }
+
+  document.getElementById('export-products-btn')?.addEventListener('click', exportProductsCsv);
+
+  document.getElementById('remove-demo-btn')?.addEventListener('click', async (event) => {
+    const button = event.currentTarget as HTMLButtonElement;
+    const demoCount = getAdminProducts().filter((p) => p.isDemo).length;
+    if (!demoCount) {
+      alert('There are no demo products left in the catalogue.');
+      return;
+    }
+    if (!confirm(`Remove ${demoCount} seeded demo product${demoCount === 1 ? '' : 's'}? Your own products are kept.`)) {
+      return;
+    }
+    button.disabled = true;
+    button.textContent = 'Removing…';
+    try {
+      const result = await removeDemoProducts();
+      if (!result.ok) {
+        alert(`Could not remove demo products: ${result.message}`);
+        return;
+      }
+      renderProducts();
+      void syncProductsFromCloudflare();
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Remove demo products';
+    }
+  });
+
+  const syncBanner = document.getElementById('admin-sync-banner');
+  const syncBannerText = document.getElementById('admin-sync-banner-text');
+
+  function showSyncBanner(message: string) {
+    if (syncBannerText && message) syncBannerText.textContent = message;
+    syncBanner?.classList.remove('hidden');
+    syncBanner?.classList.add('flex');
+  }
+
+  function hideSyncBanner() {
+    syncBanner?.classList.add('hidden');
+    syncBanner?.classList.remove('flex');
+  }
+
+  window.addEventListener('satvastones:catalog_error', () => {
+    showSyncBanner(
+      'Products shown are the last copy stored in this browser. Admin saves will retry, but the storefront will not update until /api/products responds.'
+    );
+  });
+
+  document.getElementById('admin-sync-retry')?.addEventListener('click', async () => {
+    const button = document.getElementById('admin-sync-retry') as HTMLButtonElement | null;
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Retrying…';
+    }
+    try {
+      await syncProductsFromCloudflare();
+      renderProducts();
+      hideSyncBanner();
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.textContent = 'Retry';
+      }
+    }
+  });
+
   // Product Modal Handling
   const productModal = document.getElementById('product-modal');
   const productForm = document.getElementById('product-form');
   const prodModalTitle = document.getElementById('product-modal-title');
+  const prodFormError = document.getElementById('prod-form-error');
   const prodIdInput = document.getElementById('prod-id') as HTMLInputElement;
   const prodNameInput = document.getElementById('prod-name') as HTMLInputElement;
   const prodCatInput = document.getElementById('prod-category') as HTMLSelectElement;
   const prodSkuInput = document.getElementById('prod-sku') as HTMLInputElement;
+  const prodSlugInput = document.getElementById('prod-slug') as HTMLInputElement;
+  const prodCollectionInput = document.getElementById('prod-collection') as HTMLSelectElement;
   const prodPriceInput = document.getElementById('prod-price') as HTMLInputElement;
   const prodCompareInput = document.getElementById('prod-compare-price') as HTMLInputElement;
   const prodImageInput = document.getElementById('prod-image') as HTMLInputElement;
+  const prodGalleryInput = document.getElementById('prod-gallery') as HTMLTextAreaElement;
   const prodHeadlineInput = document.getElementById('prod-headline') as HTMLInputElement;
+  const prodDescriptionInput = document.getElementById('prod-description') as HTMLTextAreaElement;
   const prodMaterialInput = document.getElementById('prod-material') as HTMLInputElement;
   const prodFinishInput = document.getElementById('prod-finish') as HTMLInputElement;
+  const prodDimensionsInput = document.getElementById('prod-dimensions') as HTMLInputElement;
+  const prodWeightInput = document.getElementById('prod-weight') as HTMLInputElement;
+  const prodWarrantyInput = document.getElementById('prod-warranty') as HTMLInputElement;
+  const prodCareInput = document.getElementById('prod-care') as HTMLTextAreaElement;
   const prodStockInput = document.getElementById('prod-stock') as HTMLInputElement;
+  const prodStockQtyInput = document.getElementById('prod-stock-qty') as HTMLInputElement;
+  const prodLowStockInput = document.getElementById('prod-low-stock') as HTMLInputElement;
+  const prodSortOrderInput = document.getElementById('prod-sort-order') as HTMLInputElement;
+  const prodHsnInput = document.getElementById('prod-hsn') as HTMLInputElement;
+  const prodBestsellerInput = document.getElementById('prod-bestseller') as HTMLInputElement;
+  const prodNewArrivalInput = document.getElementById('prod-new-arrival') as HTMLInputElement;
+  const prodPublishedInput = document.getElementById('prod-published') as HTMLInputElement;
+  const prodCostInput = document.getElementById('prod-cost') as HTMLInputElement;
+  const prodGstInput = document.getElementById('prod-gst') as HTMLSelectElement;
+  const prodTagsInput = document.getElementById('prod-tags') as HTMLInputElement;
+  const prodSeoTitleInput = document.getElementById('prod-seo-title') as HTMLInputElement;
+  const prodSeoDescriptionInput = document.getElementById('prod-seo-description') as HTMLTextAreaElement;
+
+  const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
+
+  function slugify(value: string): string {
+    return value
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '')
+      .slice(0, 120);
+  }
+
+  function showProductError(message: string) {
+    if (!prodFormError) return;
+    prodFormError.textContent = message;
+    prodFormError.classList.remove('hidden');
+  }
+
+  function clearProductError() {
+    prodFormError?.classList.add('hidden');
+  }
+
+  /** `descriptionLines` back to an array without empty entries. */
+  function linesToArray(value: string): string[] {
+    return value
+      .split('\n')
+      .map((line) => line.trim())
+      .filter(Boolean);
+  }
+
+  function commaToArray(value: string): string[] {
+    return value
+      .split(',')
+      .map((part) => part.trim())
+      .filter(Boolean);
+  }
+
+  // Auto-fill the slug while typing the name, until the slug is edited by hand.
+  let slugManuallyEdited = false;
+  prodSlugInput?.addEventListener('input', () => {
+    slugManuallyEdited = prodSlugInput.value.trim().length > 0;
+  });
+  prodNameInput?.addEventListener('input', () => {
+    if (slugManuallyEdited) return;
+    prodSlugInput.value = slugify(prodNameInput.value);
+  });
 
   function openProductModal(product?: AdminProduct) {
     if (!productModal) return;
+    clearProductError();
+    slugManuallyEdited = Boolean(product);
+
     if (product) {
       if (prodModalTitle) prodModalTitle.textContent = 'Edit Product';
       prodIdInput.value = product.id;
       prodNameInput.value = product.name;
       prodCatInput.value = product.category;
       prodSkuInput.value = product.sku;
+      prodSlugInput.value = product.slug || slugify(product.name);
+      prodCollectionInput.value = product.collection || 'everyday-luxury';
       prodPriceInput.value = String(Math.round(product.pricePaise / 100));
       prodCompareInput.value = product.compareAtPricePaise ? String(Math.round(product.compareAtPricePaise / 100)) : '';
       prodImageInput.value = product.image;
+      prodGalleryInput.value = (product.gallery || []).join('\n');
       prodHeadlineInput.value = product.headline || '';
+      prodDescriptionInput.value = product.description || '';
       prodMaterialInput.value = product.material || '316L Surgical Stainless Steel';
       prodFinishInput.value = product.finish || '18K Vacuum Gold PVD';
+      prodDimensionsInput.value = product.dimensions || '';
+      prodWeightInput.value = product.weightGrams !== undefined ? String(product.weightGrams) : '';
+      prodWarrantyInput.value = product.warranty || '6 Months Anti-Tarnish Assurance';
+      prodCareInput.value = (product.careInstructions || []).join('\n');
       prodStockInput.checked = product.inStock;
+      prodStockQtyInput.value = product.stockQuantity !== undefined ? String(product.stockQuantity) : '';
+      prodLowStockInput.value = product.lowStockThreshold !== undefined ? String(product.lowStockThreshold) : '';
+      prodSortOrderInput.value = product.sortOrder !== undefined ? String(product.sortOrder) : '';
+      prodHsnInput.value = product.hsnCode || '';
+      prodBestsellerInput.checked = Boolean(product.isBestseller);
+      prodNewArrivalInput.checked = Boolean(product.isNewArrival);
+      prodPublishedInput.checked = product.isPublished !== false;
+      prodCostInput.value = product.costPaise ? String(Math.round(product.costPaise / 100)) : '';
+      prodGstInput.value = product.gstRate !== undefined ? String(product.gstRate) : '3';
+      prodTagsInput.value = (product.tags || []).join(', ');
+      prodSeoTitleInput.value = product.seoTitle || '';
+      prodSeoDescriptionInput.value = product.seoDescription || '';
     } else {
       if (prodModalTitle) prodModalTitle.textContent = 'Add New Product';
       prodIdInput.value = '';
       productForm?.reset();
+      slugManuallyEdited = false;
+      prodSlugInput.value = '';
+      prodCollectionInput.value = 'everyday-luxury';
       prodMaterialInput.value = '316L Surgical Stainless Steel';
       prodFinishInput.value = '18K Vacuum Gold PVD';
+      prodWarrantyInput.value = '6 Months Anti-Tarnish Assurance';
+      prodGstInput.value = '3';
       prodStockInput.checked = true;
+      prodPublishedInput.checked = true;
     }
     productModal.classList.remove('hidden');
   }
@@ -1776,11 +2191,47 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   productForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const id = prodIdInput.value || `prod-${Date.now()}`;
+    clearProductError();
+
+    const editingId = prodIdInput.value;
+    const id = editingId || `prod-${Date.now()}`;
     const name = prodNameInput.value.trim();
-    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const slug = slugify(prodSlugInput.value.trim() || name);
     const pricePaise = Math.round(Number(prodPriceInput.value) * 100);
-    const compareAtPricePaise = prodCompareInput.value ? Math.round(Number(prodCompareInput.value) * 100) : undefined;
+    const compareAtPricePaise = prodCompareInput.value
+      ? Math.round(Number(prodCompareInput.value) * 100)
+      : undefined;
+
+    if (!name) {
+      showProductError('A product name is required.');
+      prodNameInput.focus();
+      return;
+    }
+    if (slug.length < 3) {
+      showProductError('The URL slug needs at least 3 characters.');
+      prodSlugInput.focus();
+      return;
+    }
+    if (!Number.isFinite(pricePaise) || pricePaise <= 0) {
+      showProductError('Enter a selling price greater than ₹0.');
+      prodPriceInput.focus();
+      return;
+    }
+    if (compareAtPricePaise && compareAtPricePaise <= pricePaise) {
+      showProductError('The compare-at price should be higher than the selling price.');
+      prodCompareInput.focus();
+      return;
+    }
+
+    const slugClash = getAdminProducts().find((p) => p.slug === slug && p.id !== id);
+    if (slugClash) {
+      showProductError(`The slug "${slug}" is already used by ${slugClash.name}. Choose a different one.`);
+      prodSlugInput.focus();
+      return;
+    }
+
+    const image = prodImageInput.value.trim() || DEFAULT_IMAGE;
+    const gallery = linesToArray(prodGalleryInput.value).filter((url) => url !== image);
 
     const prodData: AdminProduct = {
       id,
@@ -1788,36 +2239,76 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       slug,
       sku: prodSkuInput.value.trim().toUpperCase() || `SAT-${id.slice(-4).toUpperCase()}`,
       category: prodCatInput.value,
+      collection: prodCollectionInput.value || 'everyday-luxury',
       pricePaise,
       compareAtPricePaise,
       headline: prodHeadlineInput.value.trim() || name,
-      image: prodImageInput.value.trim() || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
+      description: prodDescriptionInput.value.trim() || undefined,
+      image,
+      gallery: gallery.length ? gallery : undefined,
       material: prodMaterialInput.value.trim() || '316L Surgical Stainless Steel + 18K Gold PVD',
       finish: prodFinishInput.value.trim() || 'Mirror Polished',
-      inStock: prodStockInput.checked
+      dimensions: prodDimensionsInput.value.trim() || undefined,
+      weightGrams: prodWeightInput.value ? Number(prodWeightInput.value) : undefined,
+      warranty: prodWarrantyInput.value.trim() || undefined,
+      careInstructions: linesToArray(prodCareInput.value),
+      inStock: prodStockInput.checked,
+      stockQuantity: prodStockQtyInput.value !== '' ? Math.max(0, Number(prodStockQtyInput.value)) : undefined,
+      lowStockThreshold:
+        prodLowStockInput.value !== '' ? Math.max(0, Number(prodLowStockInput.value)) : undefined,
+      sortOrder: prodSortOrderInput.value !== '' ? Number(prodSortOrderInput.value) : undefined,
+      hsnCode: prodHsnInput.value.trim() || undefined,
+      isBestseller: prodBestsellerInput.checked,
+      isNewArrival: prodNewArrivalInput.checked,
+      isPublished: prodPublishedInput.checked,
+      costPaise: prodCostInput.value ? Math.round(Number(prodCostInput.value) * 100) : undefined,
+      gstRate: prodGstInput.value ? Number(prodGstInput.value) : undefined,
+      tags: commaToArray(prodTagsInput.value),
+      seoTitle: prodSeoTitleInput.value.trim() || undefined,
+      seoDescription: prodSeoDescriptionInput.value.trim() || undefined
     };
 
-    const submitBtn = productForm.querySelector('button[type="submit"]') as HTMLButtonElement;
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Saving to Database...';
+    // Preserve values that this form does not edit.
+    if (editingId) {
+      const existing = getAdminProducts().find((p) => p.id === editingId);
+      if (existing) {
+        prodData.variants = existing.variants;
+        prodData.isDemo = existing.isDemo;
+        prodData.rating = existing.rating;
+        prodData.reviewCount = existing.reviewCount;
+      }
     }
 
+    const submitBtn = productForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const originalLabel = submitBtn?.textContent || 'Save Product';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving to catalogue…';
+    }
+
+    let saved = false;
     try {
-      if (prodIdInput.value) {
-        await updateAdminProduct(prodData);
-      } else {
-        await addAdminProduct(prodData);
-      }
+      saved = editingId ? await updateAdminProduct(prodData) : await addAdminProduct(prodData);
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Save Product';
+        submitBtn.textContent = originalLabel;
       }
+    }
+
+    if (!saved) {
+      // The localStorage copy is kept so the owner can retry, but say so plainly.
+      showProductError(
+        'Saved locally, but the D1 catalogue did not confirm the write. Check the deployment secrets and connection, then save again.'
+      );
+      renderProducts();
+      return;
     }
 
     productModal?.classList.add('hidden');
     renderProducts();
+    // Refresh the storefront catalogue in this tab (and other open tabs).
+    void syncProductsFromCloudflare();
   });
 
   // ==========================================
@@ -1843,13 +2334,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <div class="space-y-1">
             <div class="flex items-center gap-2">
               <span class="font-bold text-xs uppercase tracking-wider text-[#8d3f3d] bg-[#f4efe7] border border-[#e5ded3] px-2.5 py-0.5 rounded-lg">
-                ${c.code}
+                ${escapeAdminHtml(c.code)}
               </span>
               <span class="text-[11px] font-bold ${c.isActive ? 'text-emerald-700' : 'text-gray-400'}">
                 ${c.isActive ? '● Active' : '○ Inactive'}
               </span>
             </div>
-            <p class="text-xs text-gray-800">${c.description || 'Custom promotional discount'}</p>
+            <p class="text-xs text-gray-800">${escapeAdminHtml(c.description || 'Custom promotional discount')}</p>
             <p class="text-[11px] text-gray-500">
               ${c.discountPercent ? `${c.discountPercent}% OFF` : `Flat ${formatINR(c.flatDiscountPaise || 0)} OFF`}
               ${c.minOrderPaise > 0 ? `• Min Order: ${formatINR(c.minOrderPaise)}` : '• No minimum order'}
@@ -1861,19 +2352,19 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               class="toggle-coupon-btn px-2.5 py-1 text-xs font-semibold rounded-lg border ${
                 c.isActive ? 'bg-white text-gray-700 border-gray-200 hover:bg-gray-100' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
               } cursor-pointer"
-              data-coupon-id="${c.id}"
+              data-coupon-id="${escapeAdminHtml(c.id)}"
             >
               ${c.isActive ? 'Disable' : 'Enable'}
             </button>
             <button
               class="edit-coupon-btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer"
-              data-coupon-id="${c.id}"
+              data-coupon-id="${escapeAdminHtml(c.id)}"
             >
               Edit
             </button>
             <button
               class="delete-coupon-btn text-gray-400 hover:text-red-600 px-2 py-1 text-sm font-bold cursor-pointer"
-              data-coupon-id="${c.id}"
+              data-coupon-id="${escapeAdminHtml(c.id)}"
               title="Delete coupon"
             >
               ×
@@ -2305,6 +2796,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       { name: 'Slot 4: Bracelets & Kada Bangles', category: 'bracelets' }
     ];
 
+    // If the saved curation predates the current catalogue (legacy product IDs),
+    // treat every product as enabled instead of showing an empty matrix.
+    const curationIsStale = !products.some(
+      (p) => enabledIds.includes(p.id) || enabledIds.includes(p.slug)
+    );
+
     container.innerHTML = slots
       .map((slot) => {
         const matchingProds = products.filter(
@@ -2321,20 +2818,20 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             ${matchingProds
               .map((p) => {
-                const isChecked = enabledIds.includes(p.id) || enabledIds.includes(p.slug);
+                const isChecked = curationIsStale || enabledIds.includes(p.id) || enabledIds.includes(p.slug);
                 return `
               <label class="bg-white p-3 rounded-xl border border-gray-200 flex items-center justify-between gap-3 cursor-pointer hover:border-[#e5ded3] transition-all">
                 <div class="flex items-center gap-2.5 min-w-0">
-                  <img src="${p.image}" alt="${p.name}" class="w-10 h-12 object-cover rounded-lg border border-gray-100 shrink-0" />
+                  <img src="${safeAdminUrl(p.image)}" alt="${escapeAdminHtml(p.name)}" class="w-10 h-12 object-cover rounded-lg border border-gray-100 shrink-0" />
                   <div class="min-w-0">
-                    <p class="font-bold text-xs text-gray-900 truncate">${p.name}</p>
-                    <p class="text-[10px] text-gray-500">${formatINR(p.pricePaise)} • ${p.sku}</p>
+                    <p class="font-bold text-xs text-gray-900 truncate">${escapeAdminHtml(p.name)}</p>
+                    <p class="text-[10px] text-gray-500">${formatINR(p.pricePaise)} • ${escapeAdminHtml(p.sku)}</p>
                   </div>
                 </div>
                 <input
                   type="checkbox"
                   class="stack-item-toggle w-4 h-4 accent-[#8d3f3d] rounded shrink-0 cursor-pointer"
-                  data-prod-id="${p.id}"
+                  data-prod-id="${escapeAdminHtml(p.id)}"
                   ${isChecked ? 'checked' : ''}
                 />
               </label>
@@ -2507,16 +3004,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 flex flex-col sm:flex-row justify-between items-start gap-4">
         <div class="space-y-1">
           <div class="flex items-center gap-2">
-            <span class="font-bold text-sm text-gray-900">${c.orderNumber}</span>
+            <span class="font-bold text-sm text-gray-900">${escapeAdminHtml(c.orderNumber)}</span>
             <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${
               c.status === 'REPLACEMENT_APPROVED'
                 ? 'bg-emerald-50 text-emerald-700'
                 : 'bg-amber-50 text-amber-700'
-            }">${c.status}</span>
+            }">${escapeAdminHtml(c.status)}</span>
           </div>
-          <p class="text-xs text-gray-800">Patron: <strong>${c.customerName}</strong> (${c.phone})</p>
-          <p class="text-xs text-gray-600">${c.description}</p>
-          <a href="${c.videoProofUrl}" target="_blank" class="inline-flex items-center gap-1 text-xs text-[#8d3f3d] font-bold hover:underline">
+          <p class="text-xs text-gray-800">Patron: <strong>${escapeAdminHtml(c.customerName)}</strong> (${escapeAdminHtml(c.phone)})</p>
+          <p class="text-xs text-gray-600">${escapeAdminHtml(c.description)}</p>
+          <a href="${safeAdminUrl(c.videoProofUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-xs text-[#8d3f3d] font-bold hover:underline">
             View 360° Unboxing Video Proof →
           </a>
         </div>
@@ -2524,13 +3021,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div class="space-x-2 shrink-0">
           <button
             class="approve-claim-btn bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
-            data-claim-id="${c.id}"
+            data-claim-id="${escapeAdminHtml(c.id)}"
           >
             Approve Free Replacement
           </button>
           <button
             class="reject-claim-btn bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer"
-            data-claim-id="${c.id}"
+            data-claim-id="${escapeAdminHtml(c.id)}"
           >
             Reject
           </button>
@@ -2585,22 +3082,26 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       <div class="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-start justify-between gap-3 hover:bg-white transition-colors">
         <div class="space-y-1.5 flex-1 min-w-0">
           <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-bold text-gray-900">${r.authorName}</span>
+            <span class="text-xs font-bold text-gray-900">${escapeAdminHtml(r.authorName)}</span>
             <span class="text-[10px] text-gray-400">•</span>
-            <span class="text-[11px] text-gray-500">${r.city || 'Verified Buyer'}</span>
-            <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-2 py-0.5 rounded-full border border-emerald-200">
-              Verified Patron
+            <span class="text-[11px] text-gray-500">${escapeAdminHtml(r.city || 'Customer')}</span>
+            <span class="text-[10px] ${
+              r.verifiedBuyer
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-gray-100 text-gray-500 border-gray-200'
+            } font-bold px-2 py-0.5 rounded-full border">
+              ${r.verifiedBuyer ? 'Verified buyer' : 'Customer review'}
             </span>
-            <span class="text-[11px] font-bold text-[#c5a059]">★ ${r.rating} / 5</span>
+            <span class="text-[11px] font-bold text-[#c5a059]">★ ${Number(r.rating) || 0} / 5</span>
           </div>
-          <p class="text-xs font-bold text-gray-800">"${r.title}"</p>
-          <p class="text-xs text-gray-600 leading-relaxed">${r.content}</p>
-          <p class="text-[10px] text-gray-400">Piece: <strong>${r.productName || r.productId || 'General Atelier Review'}</strong> • Date: ${r.date}</p>
+          <p class="text-xs font-bold text-gray-800">"${escapeAdminHtml(r.title)}"</p>
+          <p class="text-xs text-gray-600 leading-relaxed">${escapeAdminHtml(r.content)}</p>
+          <p class="text-[10px] text-gray-400">Piece: <strong>${escapeAdminHtml(r.productName || r.productId || 'General Atelier Review')}</strong> • Date: ${escapeAdminHtml(r.date)}</p>
         </div>
         <div class="self-end sm:self-start">
           <button
             class="delete-review-btn text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-            data-review-id="${r.id}"
+            data-review-id="${escapeAdminHtml(r.id)}"
           >
             Delete
           </button>

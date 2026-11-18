@@ -234,9 +234,16 @@ const breadcrumbs = [
   const itemsList = document.getElementById('result-items-list');
   const invoiceBtn = document.getElementById('track-print-invoice-btn');
   const orderInput = document.getElementById('track-order-id') as HTMLInputElement;
+  const contactInput = document.getElementById('track-contact') as HTMLInputElement;
   const errorEl = document.getElementById('track-error');
 
   let currentMatchedOrder: AdminOrder | null = null;
+
+  function esc(value: unknown): string {
+    return String(value ?? '').replace(/[&<>"']/g, (char) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char] as string)
+    );
+  }
 
   function showError(message: string) {
     if (errorEl) {
@@ -247,7 +254,7 @@ const breadcrumbs = [
     placeholder?.classList.remove('hidden');
   }
 
-  async function performLookup(val: string) {
+  async function performLookup(val: string, contact = '') {
     if (!val) return;
     const cleanVal = val.trim();
     errorEl?.classList.add('hidden');
@@ -258,7 +265,7 @@ const breadcrumbs = [
     // 2. Cloudflare D1 edge database
     if (!matched) {
       try {
-        const cfOrder = await fetchOrderFromCloudflare(cleanVal);
+        const cfOrder = await fetchOrderFromCloudflare(cleanVal, contact);
         if (cfOrder) matched = cfOrder;
       } catch (e) {
         console.warn('Cloudflare D1 lookup error:', e);
@@ -356,19 +363,24 @@ const breadcrumbs = [
     }
 
     if (itemsList) {
+      if (!matched.items || matched.items.length === 0) {
+        itemsList.innerHTML =
+          '<p class="border border-[#e5ded3] bg-[#fbf9f5] px-3 py-2.5 text-[11px] leading-relaxed text-[#6f675f]">Add the phone or email used at checkout above, then track again to reveal the package contents and delivery address.</p>';
+      } else {
       itemsList.innerHTML = matched.items
         .map(
           (i) => `
         <div class="flex items-center gap-3 border border-[#e5ded3] bg-[#fbf9f5] p-2">
-          <img src="${i.image}" alt="${i.name}" class="h-11 w-9 shrink-0 border border-[#e5ded3] bg-white object-cover" />
+          <img src="${esc(i.image)}" alt="${esc(i.name)}" class="h-11 w-9 shrink-0 border border-[#e5ded3] bg-white object-cover" />
           <div class="min-w-0 flex-1">
-            <p class="truncate text-[11.5px] text-[#14110f]">${i.name}</p>
-            <p class="mt-0.5 text-[10px] uppercase tracking-[0.08em] text-[#8a8279]">Qty ${i.quantity} · ₹${Math.round(i.pricePaise / 100).toLocaleString('en-IN')}</p>
+            <p class="truncate text-[11.5px] text-[#14110f]">${esc(i.name)}</p>
+            <p class="mt-0.5 text-[10px] uppercase tracking-[0.08em] text-[#8a8279]">Qty ${esc(i.quantity)} · ₹${Math.round(i.pricePaise / 100).toLocaleString('en-IN')}</p>
           </div>
         </div>
       `
         )
         .join('');
+      }
     }
 
     placeholder?.classList.add('hidden');
@@ -386,7 +398,8 @@ const breadcrumbs = [
       orderInput?.focus();
       return;
     }
-    performLookup(value);
+    // The contact field disambiguates the order and unlocks the full detail view.
+    performLookup(value, contactInput?.value.trim() || '');
   });
 
   invoiceBtn?.addEventListener('click', () => {
