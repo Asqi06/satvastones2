@@ -99,103 +99,124 @@ import { CATEGORIES } from '../data/categories';
 
   <!-- Section 3: Atelier Hallmark & Quality Assurance Suite -->
   <section class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-5" aria-label="Satvastones Atelier Hallmarks">
-    <div class="relative bg-gradient-to-b from-white via-[#fcfbf9] to-[#f8f5ee] border border-[#e5ded3] rounded-[22px] sm:rounded-[26px] p-4 sm:p-6 lg:p-7 shadow-[0_12px_36px_-10px_rgba(23,21,19,0.06),0_2px_8px_rgba(23,21,19,0.02)] overflow-hidden">
-      <!-- Ambient Atelier Glow -->
+    <div class="relative bg-gradient-to-r from-[#fcfbf9] via-[#ffffff] to-[#fbf9f6] border border-[#e8dfd2] rounded-[22px] sm:rounded-[26px] p-3 sm:p-5 lg:p-6 shadow-[0_8px_30px_-6px_rgba(23,21,19,0.05),0_1px_3px_rgba(23,21,19,0.02)] overflow-hidden before:absolute before:inset-x-8 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-[#c5a059]/40 before:to-transparent">
+      
+      <!-- Subtle Ambient Atelier Warm Glow -->
       <div class="absolute -right-12 -top-12 w-48 h-48 bg-[#c5a059]/5 rounded-full blur-2xl pointer-events-none" aria-hidden="true"></div>
       <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-[#9f4553]/5 rounded-full blur-2xl pointer-events-none" aria-hidden="true"></div>
 
-      <div class="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 divide-y sm:divide-y-0 lg:divide-x divide-[#ece5db]">
+      <!-- Accessible Hidden Landmark -->
+      <h2 class="sr-only">Satvastones Craftsmanship & Quality Commitments</h2>
+
+      <!-- Responsive Grid: 2x2 Compact Luxury Grid on Mobile / 4-Column Luxury Ribbon on Desktop -->
+      <div class="relative grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 lg:gap-0 lg:divide-x divide-[#ece5db]">
         
         <!-- Pillar 1: Waterproof -->
-        <div class="group flex items-start gap-3.5 pt-3 first:pt-0 sm:pt-0 lg:px-4 first:lg:pl-0">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#f8f3ec] via-[#f1e6d7] to-[#e4d4bf] border border-[#d8c8b4] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_12px_rgba(23,21,19,0.05)] flex items-center justify-center text-[#844c20] shrink-0 group-hover:scale-105 transition-transform duration-300">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <div class="group relative flex flex-col sm:flex-row items-start gap-2.5 sm:gap-3.5 p-2.5 sm:p-3 lg:px-5 lg:py-3 rounded-xl sm:rounded-2xl lg:rounded-none bg-white/60 sm:bg-transparent border border-[#ece5db]/80 sm:border-0 hover:bg-[#faf7f2]/50 transition-colors duration-200">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#f8f3ec] via-[#f1e6d7] to-[#e4d4bf] border border-[#d8c8b4] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_2px_8px_rgba(23,21,19,0.04)] flex items-center justify-center text-[#844c20] shrink-0 group-hover:scale-105 transition-transform duration-300">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 2.25c-3.75 4.5-6.75 8.25-6.75 12a6.75 6.75 0 0013.5 0c0-3.75-3-7.5-6.75-12z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0l1.5-1.5M12 12l-1.5-1.5" />
             </svg>
           </div>
-          <div class="min-w-0 flex-1">
-            <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#9f4553]">
-              <span class="text-[#c5a059]">✦</span> 18K VACUUM GOLD PVD
-            </span>
-            <h3 class="font-serif text-base sm:text-lg font-bold text-[#171513] tracking-tight mt-0.5">
-              100% Waterproof
-            </h3>
-            <p class="text-xs text-[#5e5750] leading-snug mt-1">
-              Shower, sweat & perfume proof. Never turns black or peels.
-            </p>
-            <span class="inline-flex items-center gap-1 mt-2 text-[10px] font-semibold text-[#844c20] bg-[#f7f0e5] px-2.5 py-0.5 rounded-full border border-[#e6d8c4]">
-              365-Day Shine Guarantee
-            </span>
+          <div class="min-w-0 flex-1 flex flex-col justify-between">
+            <div>
+              <span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.14em] text-[#9f4553]">
+                <span class="text-[#c5a059]">✦</span> 18K GOLD PVD
+              </span>
+              <h3 class="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#171513] tracking-tight leading-snug mt-0.5">
+                100% Waterproof
+              </h3>
+              <p class="text-[11px] sm:text-xs text-[#59524c] leading-snug mt-0.5">
+                Shower, sweat &amp; perfume proof. Never fades.
+              </p>
+            </div>
+            <div class="mt-2">
+              <span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold text-[#844c20] bg-[#f7f0e5] px-2 py-0.5 rounded-full border border-[#e6d8c4]">
+                365-Day Shine Warranty
+              </span>
+            </div>
           </div>
         </div>
 
         <!-- Pillar 2: Complimentary Air Express -->
-        <div class="group flex items-start gap-3.5 pt-3 sm:pt-0 lg:px-4">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#f8f3ec] via-[#f1e6d7] to-[#e4d4bf] border border-[#d8c8b4] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_12px_rgba(23,21,19,0.05)] flex items-center justify-center text-[#844c20] shrink-0 group-hover:scale-105 transition-transform duration-300">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <div class="group relative flex flex-col sm:flex-row items-start gap-2.5 sm:gap-3.5 p-2.5 sm:p-3 lg:px-5 lg:py-3 rounded-xl sm:rounded-2xl lg:rounded-none bg-white/60 sm:bg-transparent border border-[#ece5db]/80 sm:border-0 hover:bg-[#faf7f2]/50 transition-colors duration-200">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#f8f3ec] via-[#f1e6d7] to-[#e4d4bf] border border-[#d8c8b4] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_2px_8px_rgba(23,21,19,0.04)] flex items-center justify-center text-[#844c20] shrink-0 group-hover:scale-105 transition-transform duration-300">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875A1.125 1.125 0 0013.125 3.75H4.5A1.125 1.125 0 003.375 4.875v9.375" />
             </svg>
           </div>
-          <div class="min-w-0 flex-1">
-            <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#9f4553]">
-              <span class="text-[#c5a059]">✦</span> PAN-INDIA AIR EXPRESS
-            </span>
-            <h3 class="font-serif text-base sm:text-lg font-bold text-[#171513] tracking-tight mt-0.5">
-              Complimentary Delivery
-            </h3>
-            <p class="text-xs text-[#5e5750] leading-snug mt-1">
-              Free express priority delivery on all orders above ₹499.
-            </p>
-            <span class="inline-flex items-center gap-1 mt-2 text-[10px] font-semibold text-[#844c20] bg-[#f7f0e5] px-2.5 py-0.5 rounded-full border border-[#e6d8c4]">
-              BlueDart &amp; Delhivery Priority
-            </span>
+          <div class="min-w-0 flex-1 flex flex-col justify-between">
+            <div>
+              <span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.14em] text-[#9f4553]">
+                <span class="text-[#c5a059]">✦</span> AIR EXPRESS
+              </span>
+              <h3 class="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#171513] tracking-tight leading-snug mt-0.5">
+                Complimentary Delivery
+              </h3>
+              <p class="text-[11px] sm:text-xs text-[#59524c] leading-snug mt-0.5">
+                Free priority air express on orders over ₹499.
+              </p>
+            </div>
+            <div class="mt-2">
+              <span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold text-[#844c20] bg-[#f7f0e5] px-2 py-0.5 rounded-full border border-[#e6d8c4]">
+                BlueDart Priority
+              </span>
+            </div>
           </div>
         </div>
 
         <!-- Pillar 3: Vapi Atelier Dispatch -->
-        <div class="group flex items-start gap-3.5 pt-3 sm:pt-0 lg:px-4">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#f8f3ec] via-[#f1e6d7] to-[#e4d4bf] border border-[#d8c8b4] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_12px_rgba(23,21,19,0.05)] flex items-center justify-center text-[#844c20] shrink-0 group-hover:scale-105 transition-transform duration-300">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <div class="group relative flex flex-col sm:flex-row items-start gap-2.5 sm:gap-3.5 p-2.5 sm:p-3 lg:px-5 lg:py-3 rounded-xl sm:rounded-2xl lg:rounded-none bg-white/60 sm:bg-transparent border border-[#ece5db]/80 sm:border-0 hover:bg-[#faf7f2]/50 transition-colors duration-200">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#f8f3ec] via-[#f1e6d7] to-[#e4d4bf] border border-[#d8c8b4] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_2px_8px_rgba(23,21,19,0.04)] flex items-center justify-center text-[#844c20] shrink-0 group-hover:scale-105 transition-transform duration-300">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <div class="min-w-0 flex-1">
-            <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#9f4553]">
-              <span class="text-[#c5a059]">✦</span> DIRECT GUJARAT ATELIER
-            </span>
-            <h3 class="font-serif text-base sm:text-lg font-bold text-[#171513] tracking-tight mt-0.5">
-              Dispatched in 24–48h
-            </h3>
-            <p class="text-xs text-[#5e5750] leading-snug mt-1">
-              Hand-inspected, ultrasonic-cleaned & sealed in Vapi, Gujarat.
-            </p>
-            <span class="inline-flex items-center gap-1 mt-2 text-[10px] font-semibold text-[#844c20] bg-[#f7f0e5] px-2.5 py-0.5 rounded-full border border-[#e6d8c4]">
-              Signature Velvet Pouch Box
-            </span>
+          <div class="min-w-0 flex-1 flex flex-col justify-between">
+            <div>
+              <span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.14em] text-[#9f4553]">
+                <span class="text-[#c5a059]">✦</span> GUJARAT ATELIER
+              </span>
+              <h3 class="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#171513] tracking-tight leading-snug mt-0.5">
+                Dispatched in 24–48h
+              </h3>
+              <p class="text-[11px] sm:text-xs text-[#59524c] leading-snug mt-0.5">
+                Ultrasonic cleaned &amp; sealed in Vapi, Gujarat.
+              </p>
+            </div>
+            <div class="mt-2">
+              <span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold text-[#844c20] bg-[#f7f0e5] px-2 py-0.5 rounded-full border border-[#e6d8c4]">
+                Velvet Box Sealed
+              </span>
+            </div>
           </div>
         </div>
 
         <!-- Pillar 4: Zero Green Skin -->
-        <div class="group flex items-start gap-3.5 pt-3 sm:pt-0 lg:px-4 last:lg:pr-0">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#f8f3ec] via-[#f1e6d7] to-[#e4d4bf] border border-[#d8c8b4] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_4px_12px_rgba(23,21,19,0.05)] flex items-center justify-center text-[#844c20] shrink-0 group-hover:scale-105 transition-transform duration-300">
-            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+        <div class="group relative flex flex-col sm:flex-row items-start gap-2.5 sm:gap-3.5 p-2.5 sm:p-3 lg:px-5 lg:py-3 rounded-xl sm:rounded-2xl lg:rounded-none bg-white/60 sm:bg-transparent border border-[#ece5db]/80 sm:border-0 hover:bg-[#faf7f2]/50 transition-colors duration-200">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#f8f3ec] via-[#f1e6d7] to-[#e4d4bf] border border-[#d8c8b4] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9),0_2px_8px_rgba(23,21,19,0.04)] flex items-center justify-center text-[#844c20] shrink-0 group-hover:scale-105 transition-transform duration-300">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
             </svg>
           </div>
-          <div class="min-w-0 flex-1">
-            <span class="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#9f4553]">
-              <span class="text-[#c5a059]">✦</span> 316L SURGICAL STEEL
-            </span>
-            <h3 class="font-serif text-base sm:text-lg font-bold text-[#171513] tracking-tight mt-0.5">
-              Zero Green Skin
-            </h3>
-            <p class="text-xs text-[#5e5750] leading-snug mt-1">
-              Pure hypoallergenic core. 100% nickel, cadmium & lead-free.
-            </p>
-            <span class="inline-flex items-center gap-1 mt-2 text-[10px] font-semibold text-[#844c20] bg-[#f7f0e5] px-2.5 py-0.5 rounded-full border border-[#e6d8c4]">
-              Dermatologically Tested
-            </span>
+          <div class="min-w-0 flex-1 flex flex-col justify-between">
+            <div>
+              <span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.14em] text-[#9f4553]">
+                <span class="text-[#c5a059]">✦</span> 316L STEEL CORE
+              </span>
+              <h3 class="font-serif text-sm sm:text-base lg:text-[17px] font-bold text-[#171513] tracking-tight leading-snug mt-0.5">
+                Zero Green Skin
+              </h3>
+              <p class="text-[11px] sm:text-xs text-[#59524c] leading-snug mt-0.5">
+                Pure hypoallergenic core. 100% nickel-free.
+              </p>
+            </div>
+            <div class="mt-2">
+              <span class="inline-flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold text-[#844c20] bg-[#f7f0e5] px-2 py-0.5 rounded-full border border-[#e6d8c4]">
+                Skin-Safe Certified
+              </span>
+            </div>
           </div>
         </div>
 
