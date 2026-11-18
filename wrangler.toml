@@ -5,6 +5,8 @@ compatibility_flags = ["nodejs_compat"]
 
 [assets]
 directory = "./dist"
+binding = "ASSETS"
+not_found_handling = "404-page"
 
 [[d1_databases]]
 binding = "DB"

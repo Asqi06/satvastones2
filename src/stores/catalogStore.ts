@@ -40,18 +40,32 @@ export function getAllCatalogProducts(): Product[] {
 
   try {
     const adminProducts = getAdminProducts();
-    if (!adminProducts || adminProducts.length === 0) return PRODUCTS;
+    if (!adminProducts) return PRODUCTS;
 
-    const baseSlugs = new Set(PRODUCTS.map((p) => p.slug));
-    const baseIds = new Set(PRODUCTS.map((p) => p.id));
+    const baseMap = new Map(PRODUCTS.map((p) => [p.slug, p]));
+    const baseIdMap = new Map(PRODUCTS.map((p) => [p.id, p]));
 
-    // Convert any custom products not in base
-    const custom = adminProducts
-      .filter((ap) => !baseSlugs.has(ap.slug) && !baseIds.has(ap.id))
-      .map(adminProductToProduct);
-
-    // Merge: custom products first, then base products
-    return [...custom, ...PRODUCTS];
+    return adminProducts.map((ap) => {
+      const existing = baseMap.get(ap.slug) || baseIdMap.get(ap.id);
+      if (existing) {
+        return {
+          ...existing,
+          id: ap.id,
+          name: ap.name,
+          slug: ap.slug,
+          sku: ap.sku,
+          category: ap.category as any,
+          pricePaise: ap.pricePaise,
+          compareAtPricePaise: ap.compareAtPricePaise,
+          headline: ap.headline || existing.headline,
+          inStock: ap.inStock,
+          material: ap.material || existing.material,
+          finish: ap.finish || existing.finish,
+          images: ap.image ? [{ url: ap.image, alt: ap.name, isPrimary: true }, ...(existing.images || []).slice(1)] : existing.images
+        };
+      }
+      return adminProductToProduct(ap);
+    });
   } catch {
     return PRODUCTS;
   }
@@ -62,7 +76,7 @@ export async function syncCatalogFromCloudflare(): Promise<Product[]> {
   try {
     const res = await fetch('/api/products');
     const data = await res.json();
-    if (data?.success && Array.isArray(data.products) && data.products.length > 0) {
+    if (data?.success && Array.isArray(data.products)) {
       // Store in admin products cache
       const adminFormat = data.products.map((p: any) => ({
         id: p.id,

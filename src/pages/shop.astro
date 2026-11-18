@@ -14,7 +14,7 @@ const description = 'Explore our full catalogue of 100% waterproof 18K gold PVD 
     <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
       <span class="inline-flex items-center gap-1.5 bg-white text-[#9f4553] text-[11px] font-bold uppercase tracking-[0.16em] px-4 py-1.5 rounded-full border border-[#eae4dc] shadow-2xs">
         <span class="text-[#c5a059]">✦</span>
-        <span>ATELIER PERMANENT COLLECTION ({PRODUCTS.length} SUITES)</span>
+        <span id="shop-total-suites">ATELIER PERMANENT COLLECTION ({PRODUCTS.length} SUITES)</span>
       </span>
       <h1 class="font-serif text-3xl sm:text-5xl font-normal text-[#171513] tracking-tight">
         Waterproof Fine Jewellery
@@ -32,7 +32,7 @@ const description = 'Explore our full catalogue of 100% waterproof 18K gold PVD 
         href="/shop"
         class="px-4 py-2 bg-[#171513] text-white rounded-full font-semibold whitespace-nowrap shadow-sm"
       >
-        All Suites ({PRODUCTS.length})
+        All Suites (<span id="shop-all-count">{PRODUCTS.length}</span>)
       </a>
       {CATEGORIES.map((cat) => (
         <a
@@ -51,102 +51,95 @@ const description = 'Explore our full catalogue of 100% waterproof 18K gold PVD 
       ))}
     </div>
 
-    <!-- Client Enhancer: Seamlessly injects Admin added & updated products from D1 / Catalog Store -->
+    <!-- Client Enhancer: Dynamic single-source-of-truth catalog sync from Cloudflare D1 -->
     <script>
       import { getAllCatalogProducts, syncCatalogFromCloudflare } from '../stores/catalogStore';
 
-      function renderCustomProducts() {
+      function renderShopCatalog() {
         const grid = document.getElementById('shop-products-grid');
         if (!grid) return;
 
         const allProducts = getAllCatalogProducts();
-        const existingSlugs = new Set(
-          Array.from(grid.querySelectorAll('a[href^="/products/"]')).map((el) => {
-            const href = el.getAttribute('href') || '';
-            return href.replace('/products/', '');
-          })
-        );
 
-        const customProducts = allProducts.filter((p) => !existingSlugs.has(p.slug));
-        if (customProducts.length === 0) return;
+        // Update suite count badges
+        const totalBadge = document.getElementById('shop-total-suites');
+        if (totalBadge) totalBadge.textContent = `ATELIER PERMANENT COLLECTION (${allProducts.length} SUITES)`;
+        const allCount = document.getElementById('shop-all-count');
+        if (allCount) allCount.textContent = String(allProducts.length);
 
-        // Render each custom product matching ProductCard luxury aesthetics
-        customProducts.forEach((product) => {
+        if (allProducts.length === 0) {
+          grid.innerHTML = `
+            <div class="col-span-full py-16 text-center space-y-3">
+              <p class="font-serif text-xl sm:text-2xl text-[#171513]">No suites currently available.</p>
+              <p class="text-xs text-[#8c827a]">New handcrafted pieces are arriving shortly from our Vapi atelier.</p>
+            </div>
+          `;
+          return;
+        }
+
+        grid.innerHTML = allProducts.map((product) => {
           const discountPercent = product.compareAtPricePaise
             ? Math.round(((product.compareAtPricePaise - product.pricePaise) / product.compareAtPricePaise) * 100)
             : 0;
-
-          const card = document.createElement('div');
-          card.className =
-            'product-card group relative flex flex-col bg-white border border-[#eae4dc] rounded-[18px] overflow-hidden transition-all duration-300 hover:shadow-[0_12px_28px_rgba(23,21,19,0.06)] hover:border-[#c5a059]/40';
 
           const primaryImage = product.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=450&q=80';
           const priceRupees = Math.round(product.pricePaise / 100);
           const compareRupees = product.compareAtPricePaise ? Math.round(product.compareAtPricePaise / 100) : null;
 
-          card.innerHTML = `
-            <a href="/products/${product.slug}" class="relative block aspect-[3/4] overflow-hidden bg-[#faf8f5] rounded-t-[18px]" aria-label="${product.name}">
-              <div class="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
-                <span class="bg-[#c5a059] text-white text-[9px] font-bold uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full shadow-2xs">
-                  New Arrival
-                </span>
-                ${
-                  discountPercent > 0
-                    ? `<span class="bg-[#171513] text-[#fbf8f5] text-[9px] font-bold px-2 py-0.5 rounded-full shadow-2xs">-${discountPercent}%</span>`
-                    : ''
-                }
-              </div>
-              <img
-                src="${primaryImage}"
-                alt="${product.name}"
-                class="product-card-image absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-            </a>
-
-            <div class="p-3 sm:p-4 flex flex-col flex-1 justify-between bg-white space-y-2.5">
-              <div>
-                <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#9f4553]">
-                  ${product.category || 'Atelier Fine Suite'}
-                </p>
-                <h3 class="font-serif text-xs sm:text-sm font-semibold text-[#171513] mt-0.5 line-clamp-1 hover:text-[#9f4553]">
-                  <a href="/products/${product.slug}">${product.name}</a>
-                </h3>
-              </div>
-
-              <div class="pt-2 border-t border-[#f0eae1] flex items-center justify-between">
-                <div class="flex items-baseline gap-1.5">
-                  <span class="font-serif font-bold text-sm sm:text-base text-[#171513]">
-                    ₹${priceRupees.toLocaleString('en-IN')}
-                  </span>
-                  ${
-                    compareRupees
-                      ? `<span class="text-[11px] text-[#8c827a] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>`
-                      : ''
-                  }
+          return `
+            <div class="product-card group relative flex flex-col bg-white border border-[#eae4dc] rounded-[18px] overflow-hidden transition-all duration-300 hover:shadow-[0_12px_28px_rgba(23,21,19,0.06)] hover:border-[#c5a059]/40">
+              <a href="/products/${product.slug}" class="relative block aspect-[3/4] overflow-hidden bg-[#faf8f5] rounded-t-[18px]" aria-label="${product.name}">
+                <div class="absolute top-2.5 left-2.5 z-10 flex flex-col gap-1">
+                  ${product.isBestseller ? `<span class="bg-[#9f4553] text-white text-[9px] font-bold uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full shadow-2xs">Bestseller</span>` : ''}
+                  ${product.isNewArrival && !product.isBestseller ? `<span class="bg-[#c5a059] text-white text-[9px] font-bold uppercase tracking-[0.08em] px-2.5 py-0.5 rounded-full shadow-2xs">New</span>` : ''}
+                  ${discountPercent > 0 ? `<span class="bg-[#171513] text-[#fbf8f5] text-[9px] font-bold px-2 py-0.5 rounded-full shadow-2xs">-${discountPercent}%</span>` : ''}
                 </div>
-                <button
-                  type="button"
-                  data-add-to-bag="${product.id}"
-                  data-name="${product.name}"
-                  data-slug="${product.slug}"
-                  data-price="${product.pricePaise}"
-                  data-image="${primaryImage}"
-                  class="custom-add-to-bag w-8 h-8 rounded-full bg-[#171513] hover:bg-[#9f4553] text-white flex items-center justify-center transition-transform hover:scale-110 active:scale-95 shadow-xs"
-                  title="Add to shopping bag"
-                >
-                  <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                  </svg>
-                </button>
+                <img
+                  src="${primaryImage}"
+                  alt="${product.name}"
+                  class="product-card-image absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </a>
+
+              <div class="p-3 sm:p-4 flex flex-col flex-1 justify-between bg-white space-y-2.5">
+                <div>
+                  <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#9f4553]">
+                    ${product.category || 'Atelier Fine Suite'}
+                  </p>
+                  <h3 class="font-serif text-xs sm:text-sm font-semibold text-[#171513] mt-0.5 line-clamp-1 hover:text-[#9f4553]">
+                    <a href="/products/${product.slug}">${product.name}</a>
+                  </h3>
+                </div>
+
+                <div class="pt-2 border-t border-[#f0eae1] flex items-center justify-between">
+                  <div class="flex items-baseline gap-1.5">
+                    <span class="font-serif font-bold text-sm sm:text-base text-[#171513]">
+                      ₹${priceRupees.toLocaleString('en-IN')}
+                    </span>
+                    ${compareRupees ? `<span class="text-[11px] text-[#8c827a] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>` : ''}
+                  </div>
+                  <button
+                    type="button"
+                    data-add-to-bag="${product.id}"
+                    data-name="${product.name}"
+                    data-slug="${product.slug}"
+                    data-price="${product.pricePaise}"
+                    data-image="${primaryImage}"
+                    class="custom-add-to-bag w-8 h-8 rounded-full bg-[#171513] hover:bg-[#9f4553] text-white flex items-center justify-center transition-transform hover:scale-110 active:scale-95 shadow-xs cursor-pointer"
+                    title="Add to shopping bag"
+                  >
+                    <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           `;
+        }).join('');
 
-          grid.prepend(card);
-        });
-
-        // Wire Add to Bag buttons for custom products
+        // Wire Add to Bag buttons
         grid.querySelectorAll('.custom-add-to-bag').forEach((btn) => {
           btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -167,9 +160,9 @@ const description = 'Explore our full catalogue of 100% waterproof 18K gold PVD 
       }
 
       function initShopDynamicCatalog() {
-        renderCustomProducts();
-        syncCatalogFromCloudflare().then(() => renderCustomProducts());
-        window.addEventListener('satvastones:products_updated', renderCustomProducts);
+        renderShopCatalog();
+        syncCatalogFromCloudflare().then(() => renderShopCatalog());
+        window.addEventListener('satvastones:products_updated', renderShopCatalog);
       }
 
       if (document.readyState === 'loading') {

@@ -490,7 +490,7 @@ import DPDPNotice from '../components/DPDPNotice';
 
 <script>
   import { getCartItems, saveCartItems } from '../stores/cartStore';
-  import { addAdminOrder, type AdminOrder } from '../stores/adminStore';
+  import { addAdminOrder, getSiteSettings, syncSiteSettingsFromCloudflare, type AdminOrder } from '../stores/adminStore';
   import { syncOrderToCloudflare } from '../lib/cloudflare';
   import { syncOrderToSupabase } from '../lib/supabase';
 
@@ -537,6 +537,9 @@ import DPDPNotice from '../components/DPDPNotice';
   const items = getCartItems();
   const COD_FEE_PAISE = 2500; // ₹25 fixed COD fee
   let isCodSelected = false;
+
+  // Sync edge settings (including Razorpay Key ID) from Cloudflare D1
+  syncSiteSettingsFromCloudflare().catch(() => {});
 
   function formatINR(paise: number) {
     return new Intl.NumberFormat('en-IN', {
@@ -761,7 +764,7 @@ import DPDPNotice from '../components/DPDPNotice';
     };
 
     // Primary CTA Button Click Handler
-    completeBtn?.addEventListener('click', () => {
+    completeBtn?.addEventListener('click', async () => {
       const nameInput = document.getElementById('checkout-name') as HTMLInputElement;
       const emailInput = document.getElementById('checkout-email') as HTMLInputElement;
       const phoneInput = document.getElementById('checkout-phone') as HTMLInputElement;
@@ -804,49 +807,89 @@ import DPDPNotice from '../components/DPDPNotice';
         return;
       }
 
-      // CASE B: RAZORPAY ONLINE (UPI / CARDS)
+      // CASE B: RAZORPAY ONLINE (UPI / CARDS / NETBANKING)
       const currentRazorpayTotalPaise = baseTotalPaise;
-      const configuredKey = (window as any).PUBLIC_RAZORPAY_KEY_ID || (import.meta as any).env?.PUBLIC_RAZORPAY_KEY_ID || '';
-      const isLiveKey = configuredKey && configuredKey.startsWith('rzp_') && !configuredKey.includes('AbcDef');
+      const settings = getSiteSettings();
+      const configuredKey = (
+        settings.razorpayKeyId ||
+        (window as any).PUBLIC_RAZORPAY_KEY_ID ||
+        (import.meta as any).env?.PUBLIC_RAZORPAY_KEY_ID ||
+        ''
+      ).trim();
+      const isLiveKey =
+        configuredKey &&
+        (configuredKey.startsWith('rzp_live_') || configuredKey.startsWith('rzp_test_')) &&
+        !configuredKey.includes('AbcDef');
 
-      if (isLiveKey && typeof window.Razorpay !== 'undefined') {
-        const options = {
-          key: configuredKey,
-          amount: currentRazorpayTotalPaise,
-          currency: 'INR',
-          name: 'SatvaStones Jewellery',
-          description: 'Anti-Tarnish Jewellery Acquisition',
-          image: '/satvastones-logo.png',
-          handler: function (response: any) {
-            finalizeOrder({
-              paymentMethod: `Razorpay Online (${response.razorpay_payment_id || 'Instant'})`,
-              paymentStatus: 'PAID',
-              paymentId: response.razorpay_payment_id || `pay_${Date.now()}`,
-              totalAmountPaise: currentRazorpayTotalPaise,
-              isCod: false
-            });
-          },
-          prefill: {
-            name: nameInput.value,
-            email: emailInput.value,
-            contact: phoneInput.value
-          },
-          theme: {
-            color: '#f2707f'
-          },
-          modal: {
-            ondismiss: function () {
-              // User dismissed without paying
+      async function ensureRazorpayLoaded(): Promise<boolean> {
+        if (typeof (window as any).Razorpay !== 'undefined') return true;
+        return new Promise((resolve) => {
+          const existing = document.querySelector('script[src*="checkout.razorpay.com"]');
+          if (existing && typeof (window as any).Razorpay !== 'undefined') return resolve(true);
+          const s = document.createElement('script');
+          s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+          s.async = true;
+          s.onload = () => resolve(typeof (window as any).Razorpay !== 'undefined');
+          s.onerror = () => resolve(false);
+          document.head.appendChild(s);
+        });
+      }
+
+      if (isLiveKey) {
+        completeBtn.disabled = true;
+        if (completeBtnText) completeBtnText.textContent = 'Launching Razorpay Gateway...';
+
+        const sdkReady = await ensureRazorpayLoaded();
+        if (sdkReady && typeof (window as any).Razorpay !== 'undefined') {
+          const options = {
+            key: configuredKey,
+            amount: currentRazorpayTotalPaise,
+            currency: 'INR',
+            name: 'SatvaStones Jewellery',
+            description: 'Anti-Tarnish Fine Jewellery Acquisition',
+            image: '/satvastones-logo.png',
+            handler: function (response: any) {
+              finalizeOrder({
+                paymentMethod: `Razorpay Online (${response.razorpay_payment_id || 'Instant'})`,
+                paymentStatus: 'PAID',
+                paymentId: response.razorpay_payment_id || `pay_${Date.now()}`,
+                totalAmountPaise: currentRazorpayTotalPaise,
+                isCod: false
+              });
+            },
+            prefill: {
+              name: nameInput.value,
+              email: emailInput.value,
+              contact: phoneInput.value
+            },
+            theme: {
+              color: '#c5a059'
+            },
+            modal: {
+              ondismiss: function () {
+                completeBtn.disabled = false;
+                if (completeBtnText) completeBtnText.textContent = 'Pay Now & Place Order';
+              }
             }
-          }
-        };
+          };
 
-        try {
-          const rzp = new window.Razorpay(options);
-          rzp.open();
-          return;
-        } catch (e) {
-          console.warn('Razorpay SDK modal error, opening interactive UPI portal:', e);
+          try {
+            const rzp = new (window as any).Razorpay(options);
+            rzp.on('payment.failed', function (resp: any) {
+              alert('Payment declined: ' + (resp.error?.description || 'Please try another UPI app or card.'));
+              completeBtn.disabled = false;
+              if (completeBtnText) completeBtnText.textContent = 'Pay Now & Place Order';
+            });
+            rzp.open();
+            return;
+          } catch (e) {
+            console.warn('Razorpay SDK modal error, opening interactive UPI portal:', e);
+            completeBtn.disabled = false;
+            if (completeBtnText) completeBtnText.textContent = 'Pay Now & Place Order';
+          }
+        } else {
+          completeBtn.disabled = false;
+          if (completeBtnText) completeBtnText.textContent = 'Pay Now & Place Order';
         }
       }
 

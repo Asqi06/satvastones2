@@ -44,41 +44,30 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       rows = result.results || [];
     }
 
-    // If D1 is populated, format and merge with base products
-    if (rows.length > 0) {
-      const d1Products = rows.map((r: any) => ({
-        id: r.id,
-        name: r.name,
-        slug: r.slug,
-        sku: r.sku,
-        category: r.category,
-        headline: r.headline || '',
-        description: r.description || '',
-        pricePaise: Number(r.price_paise),
-        compareAtPricePaise: r.compare_at_price_paise ? Number(r.compare_at_price_paise) : undefined,
-        images: r.gallery_json
-          ? JSON.parse(r.gallery_json)
-          : [{ url: r.image_url, alt: r.name, isPrimary: true }],
-        material: r.material || '316L Surgical Stainless Steel + 18K Gold PVD',
-        finish: r.finish || 'Mirror Polished',
-        inStock: Boolean(r.in_stock),
-        isBestseller: Boolean(r.is_bestseller),
-        rating: 4.9,
-        reviewsCount: 12
-      }));
+    // When D1 is operational, return D1 rows as the single authoritative source of truth
+    const d1Products = rows.map((r: any) => ({
+      id: r.id,
+      name: r.name,
+      slug: r.slug,
+      sku: r.sku,
+      category: r.category,
+      headline: r.headline || '',
+      description: r.description || '',
+      pricePaise: Number(r.price_paise),
+      compareAtPricePaise: r.compare_at_price_paise ? Number(r.compare_at_price_paise) : undefined,
+      image: r.image_url,
+      images: r.gallery_json
+        ? JSON.parse(r.gallery_json)
+        : [{ url: r.image_url, alt: r.name, isPrimary: true }],
+      material: r.material || '316L Surgical Stainless Steel + 18K Gold PVD',
+      finish: r.finish || 'Mirror Polished',
+      inStock: Boolean(r.in_stock),
+      isBestseller: Boolean(r.is_bestseller),
+      rating: 4.9,
+      reviewsCount: 12
+    }));
 
-      // Combine: custom products first, then any base products not yet replaced
-      const d1Slugs = new Set(d1Products.map((p) => p.slug));
-      const combined = [...d1Products, ...PRODUCTS.filter((p) => !d1Slugs.has(p.slug))];
-
-      return new Response(JSON.stringify({ success: true, products: combined, source: 'd1' }), {
-        status: 200,
-        headers: corsHeaders
-      });
-    }
-
-    // Default base products
-    return new Response(JSON.stringify({ success: true, products: PRODUCTS, source: 'base' }), {
+    return new Response(JSON.stringify({ success: true, products: d1Products, source: 'd1' }), {
       status: 200,
       headers: corsHeaders
     });
@@ -111,8 +100,9 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
   }
 
   try {
-    const p = await request.json();
-    if (!p.name || !p.pricePaise) {
+    const body = await request.json();
+    const p = body?.product || body;
+    if (!p?.name || (p?.pricePaise === undefined && p?.price === undefined)) {
       return new Response(JSON.stringify({ success: false, error: 'Name and price are required.' }), {
         status: 400,
         headers: corsHeaders
@@ -120,15 +110,16 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     }
 
     const id = p.id || `prod-${Date.now()}`;
-    const slug = p.slug || p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const name = String(p.name).trim();
+    const slug = p.slug || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     const sku = p.sku || `SAT-${p.category?.toUpperCase()?.slice(0, 2) || 'JW'}-${Math.floor(100 + Math.random() * 900)}`;
     const category = p.category || 'necklaces';
-    const headline = p.headline || p.name;
-    const description = p.description || `${p.name} - Anti-tarnish waterproof jewellery.`;
-    const pricePaise = Number(p.pricePaise);
-    const compareAtPricePaise = p.compareAtPricePaise ? Number(p.compareAtPricePaise) : null;
+    const headline = p.headline || name;
+    const description = p.description || `${name} - Anti-tarnish waterproof fine jewellery.`;
+    const pricePaise = Number(p.pricePaise) || (Number(p.price) ? Math.round(Number(p.price) * 100) : 0);
+    const compareAtPricePaise = p.compareAtPricePaise ? Number(p.compareAtPricePaise) : (p.compareAtPrice ? Math.round(Number(p.compareAtPrice) * 100) : null);
     const imageUrl = p.image || p.imageUrl || p.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
-    const galleryJson = p.images ? JSON.stringify(p.images) : JSON.stringify([{ url: imageUrl, alt: p.name, isPrimary: true }]);
+    const galleryJson = p.images ? JSON.stringify(p.images) : JSON.stringify([{ url: imageUrl, alt: name, isPrimary: true }]);
     const material = p.material || '316L Surgical Stainless Steel + 18K Gold PVD';
     const finish = p.finish || 'Mirror Polished';
     const inStock = p.inStock === false ? 0 : 1;
@@ -163,7 +154,18 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       material, finish, inStock, isBestseller
     ).run();
 
-    return new Response(JSON.stringify({ success: true, message: 'Product saved to catalogue.', id, slug }), {
+    return new Response(JSON.stringify({
+      success: true,
+      message: 'Product saved to catalogue.',
+      id,
+      slug,
+      product: {
+        id, name, slug, sku, category, headline, description,
+        pricePaise, compareAtPricePaise,
+        image: imageUrl,
+        material, finish, inStock: Boolean(inStock), isBestseller: Boolean(isBestseller)
+      }
+    }), {
       status: 200,
       headers: corsHeaders
     });
@@ -195,14 +197,15 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
   try {
     const url = new URL(request.url);
     const id = url.searchParams.get('id');
-    if (!id) {
-      return new Response(JSON.stringify({ success: false, error: 'Product ID is required.' }), {
+    const slug = url.searchParams.get('slug');
+    if (!id && !slug) {
+      return new Response(JSON.stringify({ success: false, error: 'Product ID or slug is required.' }), {
         status: 400,
         headers: corsHeaders
       });
     }
 
-    await db.prepare('DELETE FROM products WHERE id = ?').bind(id).run();
+    await db.prepare('DELETE FROM products WHERE id = ? OR slug = ?').bind(id || '', slug || id || '').run();
     return new Response(JSON.stringify({ success: true, message: 'Product removed from catalogue.' }), {
       status: 200,
       headers: corsHeaders

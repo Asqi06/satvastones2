@@ -85,10 +85,6 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
     const result = await db.prepare('SELECT * FROM coupons ORDER BY created_at DESC').all();
     const rows = result.results || [];
 
-    if (rows.length === 0) {
-      return new Response(JSON.stringify({ success: true, coupons: DEFAULT_COUPONS }), { status: 200, headers: corsHeaders });
-    }
-
     const coupons = rows.map((r: any) => ({
       id: r.id,
       code: r.code,
@@ -101,7 +97,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     return new Response(JSON.stringify({ success: true, coupons }), { status: 200, headers: corsHeaders });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: true, coupons: DEFAULT_COUPONS, error: err.message }), {
+    return new Response(JSON.stringify({ success: false, coupons: [], error: err.message }), {
       status: 200,
       headers: corsHeaders
     });

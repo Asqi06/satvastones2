@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getReviewsForProduct, submitCustomerReview, type CustomerReview } from '../stores/reviewStore';
+import { getReviewsForProduct, submitCustomerReview, syncReviewsFromCloudflare, type CustomerReview } from '../stores/reviewStore';
 
 interface ProductReviewsProps {
   productId: string;
@@ -30,13 +30,22 @@ export default function ProductReviews({
   useEffect(() => {
     setReviews(getReviewsForProduct(productId));
 
+    // Real-time sync from Cloudflare D1
+    syncReviewsFromCloudflare(productId).then((fetched) => {
+      if (Array.isArray(fetched)) {
+        setReviews(fetched.filter((r) => !r.productId || r.productId === productId));
+      }
+    });
+
     const handleNewReview = () => {
       setReviews(getReviewsForProduct(productId));
     };
 
     window.addEventListener('satvastones:review_added', handleNewReview);
+    window.addEventListener('satvastones:reviews_synced', handleNewReview);
     return () => {
       window.removeEventListener('satvastones:review_added', handleNewReview);
+      window.removeEventListener('satvastones:reviews_synced', handleNewReview);
     };
   }, [productId]);
 

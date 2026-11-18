@@ -227,18 +227,26 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
     );
   }
 
+  const isAuth = await verifyAdminAuth(request, env);
+  if (!isAuth) {
+    return new Response(
+      JSON.stringify({ success: false, error: 'Unauthorized: Admin authentication token required to delete orders.' }),
+      { status: 401, headers: corsHeaders }
+    );
+  }
+
   try {
     const url = new URL(request.url);
-    const orderNumber = url.searchParams.get('orderNumber');
+    const orderNumber = url.searchParams.get('orderNumber') || url.searchParams.get('id');
 
     if (!orderNumber) {
       return new Response(
-        JSON.stringify({ success: false, error: 'Missing orderNumber query param' }),
+        JSON.stringify({ success: false, error: 'Missing orderNumber or id query param' }),
         { status: 400, headers: corsHeaders }
       );
     }
 
-    await db.prepare(`DELETE FROM orders WHERE order_number = ?`).bind(orderNumber).run();
+    await db.prepare(`DELETE FROM orders WHERE order_number = ? OR id = ?`).bind(orderNumber, orderNumber).run();
 
     return new Response(
       JSON.stringify({ success: true, message: `Order ${orderNumber} deleted.` }),

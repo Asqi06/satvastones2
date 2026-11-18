@@ -6,7 +6,10 @@ import type { AdminOrder, DamageClaim, SiteSettings } from '../stores/adminStore
  */
 
 function getAdminAuthHeaders(explicitToken?: string): Record<string, string> {
-  const token = explicitToken || (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('satvastones_admin_token') : null);
+  const token =
+    explicitToken ||
+    (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('satvastones_admin_token') : null) ||
+    (typeof localStorage !== 'undefined' ? localStorage.getItem('satvastones_admin_token') : null);
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -71,12 +74,28 @@ export async function updateOrderStatusInCloudflare(
     const res = await fetch('/api/orders', {
       method: 'PUT',
       headers: getAdminAuthHeaders(token),
+      credentials: 'include',
       body: JSON.stringify({ orderNumber, fulfillmentStatus, courierPartner, trackingNumber })
     });
     const json = await res.json() as any;
     return !!json.success;
   } catch (err) {
     console.warn('Failed to update status in Cloudflare D1:', err);
+    return false;
+  }
+}
+
+export async function deleteOrderFromCloudflare(orderNumber: string, token?: string): Promise<boolean> {
+  try {
+    const res = await fetch(`/api/orders?orderNumber=${encodeURIComponent(orderNumber)}`, {
+      method: 'DELETE',
+      headers: getAdminAuthHeaders(token),
+      credentials: 'include'
+    });
+    const json = await res.json() as any;
+    return !!json.success;
+  } catch (err) {
+    console.warn('Failed to delete order from Cloudflare D1:', err);
     return false;
   }
 }

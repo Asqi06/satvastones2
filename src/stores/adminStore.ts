@@ -85,6 +85,11 @@ export interface SiteSettings {
   // Cloudinary credentials & config
   cloudinaryCloudName: string;
   cloudinaryUploadPreset: string;
+  // Razorpay Gateway
+  razorpayKeyId?: string;
+  razorpayKeySecret?: string;
+  // Google Single Sign-On
+  googleClientId?: string;
   // Stack Studio curation: IDs of products available in Stack Studio
   stackStudioEnabledProducts: string[];
   // Editable Category details
@@ -178,6 +183,9 @@ const DEFAULT_SETTINGS: SiteSettings = {
   },
   cloudinaryCloudName: '',
   cloudinaryUploadPreset: '',
+  razorpayKeyId: '',
+  razorpayKeySecret: '',
+  googleClientId: '',
   enableSocialProofToast: true,
   stackStudioEnabledProducts: [
     'prod-1', // Aura Herringbone Snake Chain
@@ -332,20 +340,30 @@ const PRODUCTS_KEY = 'satvastones_admin_products';
 const COUPONS_KEY = 'satvastones_admin_coupons';
 const SETTINGS_KEY = 'satvastones_site_settings';
 
+// Centralized helper to retrieve the authenticated session token from either storage
+export function getAdminToken(): string {
+  if (typeof window === 'undefined') return '';
+  return (
+    (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('satvastones_admin_token') : null) ||
+    (typeof localStorage !== 'undefined' ? localStorage.getItem('satvastones_admin_token') : null) ||
+    ''
+  );
+}
+
 // ==========================================
 // 1. ORDERS ENGINE
 // ==========================================
 export function getAdminOrders(): AdminOrder[] {
-  if (typeof window === 'undefined') return DEFAULT_ORDERS;
+  if (typeof window === 'undefined') return [];
   const stored = localStorage.getItem(ORDERS_KEY);
-  if (!stored) {
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(DEFAULT_ORDERS));
-    return DEFAULT_ORDERS;
+  if (stored === null) {
+    return [];
   }
   try {
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return DEFAULT_ORDERS;
+    return [];
   }
 }
 
@@ -384,10 +402,29 @@ export function updateOrderStatus(
   saveAdminOrders(updated);
 }
 
-export function deleteAdminOrder(orderNumber: string): void {
+export async function deleteAdminOrder(orderNumber: string): Promise<boolean> {
   const orders = getAdminOrders();
   const updated = orders.filter((o) => o.orderNumber !== orderNumber);
   saveAdminOrders(updated);
+
+  // Sync deletion permanently to Cloudflare D1
+  if (typeof window !== 'undefined') {
+    const token = getAdminToken();
+    try {
+      const res = await fetch(`/api/orders?orderNumber=${encodeURIComponent(orderNumber)}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        credentials: 'include'
+      });
+      return res.ok;
+    } catch (err) {
+      console.warn('Order delete D1 sync error:', err);
+      return false;
+    }
+  }
+  return true;
 }
 
 export function findOrderByRef(ref: string): AdminOrder | null {
@@ -426,29 +463,29 @@ export function getAdminProducts(): AdminProduct[] {
   }
 
   const stored = localStorage.getItem(PRODUCTS_KEY);
-  if (!stored) {
-    const initial = PRODUCTS.map((p) => ({
-      id: p.id,
-      name: p.name,
-      slug: p.slug,
-      sku: p.sku,
-      category: p.category,
-      pricePaise: p.pricePaise,
-      compareAtPricePaise: p.compareAtPricePaise,
-      headline: p.headline,
-      image: p.images[0]?.url || '',
-      inStock: p.inStock,
-      material: p.material,
-      finish: p.finish
-    }));
-    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(initial));
-    return initial;
+  if (stored !== null) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed)) return parsed;
+    } catch (_) {}
   }
-  try {
-    return JSON.parse(stored);
-  } catch {
-    return [];
-  }
+
+  const initial = PRODUCTS.map((p) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    sku: p.sku,
+    category: p.category,
+    pricePaise: p.pricePaise,
+    compareAtPricePaise: p.compareAtPricePaise,
+    headline: p.headline,
+    image: p.images[0]?.url || '',
+    inStock: p.inStock,
+    material: p.material,
+    finish: p.finish
+  }));
+  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(initial));
+  return initial;
 }
 
 export function saveAdminProducts(products: AdminProduct[]): void {
@@ -457,68 +494,106 @@ export function saveAdminProducts(products: AdminProduct[]): void {
   window.dispatchEvent(new CustomEvent('satvastones:products_updated', { detail: products }));
 }
 
-export function addAdminProduct(product: AdminProduct): void {
+export async function addAdminProduct(product: AdminProduct): Promise<boolean> {
   const current = getAdminProducts();
   const updated = [product, ...current];
   saveAdminProducts(updated);
 
   // Sync to Cloudflare D1
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('satvastones_admin_token') || '';
-    fetch('/api/products', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(product)
-    }).catch((err) => console.warn('Product D1 sync error:', err));
+    const token = getAdminToken();
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        credentials: 'include',
+        body: JSON.stringify(product)
+      });
+      return res.ok;
+    } catch (err) {
+      console.warn('Product D1 sync error:', err);
+      return false;
+    }
   }
+  return true;
 }
 
-export function updateAdminProduct(product: AdminProduct): void {
+export async function updateAdminProduct(product: AdminProduct): Promise<boolean> {
   const current = getAdminProducts();
   const updated = current.map((p) => (p.id === product.id ? product : p));
   saveAdminProducts(updated);
 
   // Sync to Cloudflare D1
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('satvastones_admin_token') || '';
-    fetch('/api/products', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify(product)
-    }).catch((err) => console.warn('Product D1 sync error:', err));
+    const token = getAdminToken();
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        credentials: 'include',
+        body: JSON.stringify(product)
+      });
+      return res.ok;
+    } catch (err) {
+      console.warn('Product D1 sync error:', err);
+      return false;
+    }
   }
+  return true;
 }
 
-export function deleteAdminProduct(productId: string): void {
+export async function deleteAdminProduct(productId: string): Promise<boolean> {
   const current = getAdminProducts();
   const updated = current.filter((p) => p.id !== productId);
   saveAdminProducts(updated);
 
   // Sync to Cloudflare D1
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('satvastones_admin_token') || '';
-    fetch(`/api/products?id=${encodeURIComponent(productId)}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).catch((err) => console.warn('Product delete D1 sync error:', err));
+    const token = getAdminToken();
+    try {
+      const res = await fetch(`/api/products?id=${encodeURIComponent(productId)}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        credentials: 'include'
+      });
+      return res.ok;
+    } catch (err) {
+      console.warn('Product delete D1 sync error:', err);
+      return false;
+    }
   }
+  return true;
 }
 
 export async function syncProductsFromCloudflare(): Promise<AdminProduct[]> {
   try {
     const res = await fetch('/api/products');
     const data = await res.json();
-    if (data?.success && Array.isArray(data.products) && data.products.length > 0) {
-      saveAdminProducts(data.products);
-      return data.products;
+    if (data?.success && Array.isArray(data.products)) {
+      const adminFormat: AdminProduct[] = data.products.map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        slug: p.slug,
+        sku: p.sku || `SAT-${p.id}`,
+        category: p.category || 'necklaces',
+        pricePaise: Number(p.pricePaise) || 0,
+        compareAtPricePaise: p.compareAtPricePaise ? Number(p.compareAtPricePaise) : undefined,
+        headline: p.headline || p.name,
+        image: p.image || p.imageUrl || p.images?.[0]?.url || '',
+        material: p.material || '316L Surgical Stainless Steel + 18K Gold PVD',
+        finish: p.finish || 'Mirror Polished',
+        inStock: p.inStock !== false
+      }));
+      saveAdminProducts(adminFormat);
+      return adminFormat;
     }
   } catch (_) {}
   return getAdminProducts();
@@ -534,16 +609,16 @@ export function toggleAdminProductStock(productId: string): void {
 // 3. COUPONS CRUD
 // ==========================================
 export function getAdminCoupons(): AdminCoupon[] {
-  if (typeof window === 'undefined') return DEFAULT_COUPONS;
+  if (typeof window === 'undefined') return [];
   const stored = localStorage.getItem(COUPONS_KEY);
-  if (!stored) {
-    localStorage.setItem(COUPONS_KEY, JSON.stringify(DEFAULT_COUPONS));
-    return DEFAULT_COUPONS;
+  if (stored === null) {
+    return [];
   }
   try {
-    return JSON.parse(stored);
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return DEFAULT_COUPONS;
+    return [];
   }
 }
 
@@ -560,13 +635,14 @@ export function addAdminCoupon(coupon: AdminCoupon): void {
 
   // Sync to Cloudflare D1
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('satvastones_admin_token') || '';
+    const token = getAdminToken();
     fetch('/api/coupons', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
+      credentials: 'include',
       body: JSON.stringify(coupon)
     }).catch((err) => console.warn('Coupon D1 sync error:', err));
   }
@@ -579,33 +655,42 @@ export function updateAdminCoupon(coupon: AdminCoupon): void {
 
   // Sync to Cloudflare D1
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('satvastones_admin_token') || '';
+    const token = getAdminToken();
     fetch('/api/coupons', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
+      credentials: 'include',
       body: JSON.stringify(coupon)
     }).catch((err) => console.warn('Coupon D1 sync error:', err));
   }
 }
 
-export function deleteAdminCoupon(couponId: string): void {
+export async function deleteAdminCoupon(couponId: string): Promise<boolean> {
   const current = getAdminCoupons();
   const updated = current.filter((c) => c.id !== couponId);
   saveAdminCoupons(updated);
 
   // Sync to Cloudflare D1
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('satvastones_admin_token') || '';
-    fetch(`/api/coupons?id=${encodeURIComponent(couponId)}`, {
-      method: 'DELETE',
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    }).catch((err) => console.warn('Coupon delete D1 sync error:', err));
+    const token = getAdminToken();
+    try {
+      const res = await fetch(`/api/coupons?id=${encodeURIComponent(couponId)}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        credentials: 'include'
+      });
+      return res.ok;
+    } catch (err) {
+      console.warn('Coupon delete D1 sync error:', err);
+      return false;
+    }
   }
+  return true;
 }
 
 export function toggleCouponActive(couponId: string): void {
@@ -615,13 +700,14 @@ export function toggleCouponActive(couponId: string): void {
 
   const toggled = updated.find((c) => c.id === couponId);
   if (toggled && typeof window !== 'undefined') {
-    const token = localStorage.getItem('satvastones_admin_token') || '';
+    const token = getAdminToken();
     fetch('/api/coupons', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
+      credentials: 'include',
       body: JSON.stringify(toggled)
     }).catch((err) => console.warn('Coupon toggle D1 sync error:', err));
   }
@@ -631,7 +717,7 @@ export async function syncCouponsFromCloudflare(): Promise<AdminCoupon[]> {
   try {
     const res = await fetch('/api/coupons');
     const data = await res.json();
-    if (data?.success && Array.isArray(data.coupons) && data.coupons.length > 0) {
+    if (data?.success && Array.isArray(data.coupons)) {
       saveAdminCoupons(data.coupons);
       return data.coupons;
     }
@@ -729,13 +815,14 @@ export function saveSiteSettings(settings: SiteSettings): void {
   window.dispatchEvent(new CustomEvent('satvastones:settings_updated', { detail: settings }));
 
   // Sync to Cloudflare D1
-  const token = localStorage.getItem('satvastones_admin_token') || '';
+  const token = getAdminToken();
   fetch('/api/settings', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`
     },
+    credentials: 'include',
     body: JSON.stringify(settings)
   }).catch((err) => console.warn('Settings D1 sync error:', err));
 }

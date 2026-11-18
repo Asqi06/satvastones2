@@ -19,7 +19,7 @@ export async function onRequestOptions() {
 
 // GET /api/settings
 export async function onRequestGet(context: { request: Request; env: Env }) {
-  const { env } = context;
+  const { request, env } = context;
   const db = env.DB;
 
   if (!db) {
@@ -32,11 +32,28 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
   try {
     const row = await db.prepare(`SELECT value_json FROM site_settings WHERE key = 'global_config' LIMIT 1`).first();
 
-    if (!row || !row.value_json) {
-      return new Response(JSON.stringify({ success: true, settings: null }), { status: 200, headers: corsHeaders });
+    let settings: any = {};
+    if (row && (row as any).value_json) {
+      settings = JSON.parse((row as any).value_json);
     }
 
-    const settings = JSON.parse(row.value_json);
+    // Dynamic environment fallback for Razorpay and Google Client ID
+    if (!settings.razorpayKeyId && (env as any).PUBLIC_RAZORPAY_KEY_ID) {
+      settings.razorpayKeyId = (env as any).PUBLIC_RAZORPAY_KEY_ID;
+    }
+    if (!settings.razorpayKeyId && (env as any).RAZORPAY_KEY_ID) {
+      settings.razorpayKeyId = (env as any).RAZORPAY_KEY_ID;
+    }
+    if (!settings.googleClientId && (env as any).GOOGLE_CLIENT_ID) {
+      settings.googleClientId = (env as any).GOOGLE_CLIENT_ID;
+    }
+
+    // Security check: only return raw razorpayKeySecret to authenticated admins
+    const isAuth = await verifyAdminAuth(request, env);
+    if (!isAuth && settings.razorpayKeySecret) {
+      settings.razorpayKeySecret = '••••••••••••••••';
+    }
+
     return new Response(JSON.stringify({ success: true, settings }), { status: 200, headers: corsHeaders });
   } catch (err: any) {
     return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });

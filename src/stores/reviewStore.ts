@@ -12,97 +12,26 @@ export interface CustomerReview {
   createdAt: number;
 }
 
-// Authentic reviews from genuine verified customers
-const INITIAL_REVIEWS: CustomerReview[] = [
-  {
-    id: 'rev-1',
-    productId: 'aura-herringbone-snake-chain',
-    productName: 'Aura Herringbone Snake Chain',
-    authorName: 'Sneha Patel',
-    city: 'Surat, Gujarat',
-    rating: 5,
-    title: 'Surpassed all my expectations in daily showers',
-    content: 'I have been wearing this herringbone snake chain continuously for over 4 months now. Daily hot showers, perfume sprays, and gym sweat—it has not tarnished or turned my neck green at all. The 18K gold color looks authentic and rich, not that fake yellow.',
-    date: '12 Nov 2026',
-    verifiedBuyer: true,
-    createdAt: 1731388800000
-  },
-  {
-    id: 'rev-2',
-    productId: 'elysian-croissant-dome-ring',
-    productName: 'Elysian Croissant Dome Ring',
-    authorName: 'Rhea D’Souza',
-    city: 'Bandra, Mumbai',
-    rating: 5,
-    title: 'True surgical steel quality, zero green marks',
-    content: 'My fingers always react to brass fashion jewellery within hours. Ordered this dome ring after checking their 316L surgical steel claim. It is completely hypoallergenic! Sizing on the screen calculator was spot on for Indian size 14.',
-    date: '04 Nov 2026',
-    verifiedBuyer: true,
-    createdAt: 1730697600000
-  },
-  {
-    id: 'rev-3',
-    productId: 'chloe-sculptural-ribbed-huggies',
-    productName: 'Chloe Sculptural Ribbed Huggies',
-    authorName: 'Ananya Sharma',
-    city: 'Bengaluru, Karnataka',
-    rating: 5,
-    title: 'Featherlight and never irritates my sensitive ears',
-    content: 'Finding daily huggies that do not make my earlobes swell has been impossible until now. These are so lightweight I sleep with them on. The click closure is secure and the velvet gift pouch packaging was beautiful.',
-    date: '28 Oct 2026',
-    verifiedBuyer: true,
-    createdAt: 1730092800000
-  },
-  {
-    id: 'rev-4',
-    productId: 'vesta-twisted-cable-kada-bangle',
-    productName: 'Vesta Twisted Cable Kada Bangle',
-    authorName: 'Priya Mehra',
-    city: 'Ahmedabad, Gujarat',
-    rating: 5,
-    title: 'Dispatched from Vapi in 24 hours, stunning finish',
-    content: 'I received the package via BlueDart in Ahmedabad just 2 days after placing the order. The kada has a solid, luxury heft to it and pairs effortlessly with both my silk sarees and linen shirts.',
-    date: '21 Oct 2026',
-    verifiedBuyer: true,
-    createdAt: 1729488000000
-  },
-  {
-    id: 'rev-5',
-    productId: 'the-mystery-jewellery-jar',
-    productName: 'The Mystery Jewellery Jar',
-    authorName: 'Tanvi Desai',
-    city: 'Pune, Maharashtra',
-    rating: 5,
-    title: 'Unboxed 3 breathtaking pieces worth much more',
-    content: 'Took a chance on the mystery jar after seeing it on Instagram. Got a gorgeous molten pearl pendant, tennis bracelet, and stackable ring. All 3 are anti-tarnish and come in a heavy keepsake glass jar.',
-    date: '15 Oct 2026',
-    verifiedBuyer: true,
-    createdAt: 1728969600000
-  }
-];
-
 const STORAGE_KEY = 'satvastones_customer_reviews';
 
 export function getStoredReviews(): CustomerReview[] {
-  if (typeof window === 'undefined') return INITIAL_REVIEWS;
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_REVIEWS));
-      return INITIAL_REVIEWS;
+    if (raw === null) {
+      return [];
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : INITIAL_REVIEWS;
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-    return INITIAL_REVIEWS;
+    return [];
   }
 }
 
 export function getReviewsForProduct(productId: string): CustomerReview[] {
   const all = getStoredReviews();
   const matched = all.filter((r) => r.productId === productId);
-  // If no reviews for this specific product yet, show top verified atelier reviews
-  return matched.length > 0 ? matched : all.slice(0, 3);
+  return matched;
 }
 
 export function submitCustomerReview(newReview: Omit<CustomerReview, 'id' | 'createdAt' | 'date'>): CustomerReview {
@@ -143,33 +72,39 @@ export function submitCustomerReview(newReview: Omit<CustomerReview, 'id' | 'cre
 }
 
 export async function syncReviewsFromCloudflare(productId?: string): Promise<CustomerReview[]> {
-  if (typeof window === 'undefined') return INITIAL_REVIEWS;
   try {
     const url = productId ? `/api/reviews?productId=${encodeURIComponent(productId)}` : '/api/reviews';
     const res = await fetch(url);
     const data = await res.json();
-    if (data?.success && Array.isArray(data.reviews) && data.reviews.length > 0) {
-      const current = getStoredReviews();
-      const remoteIds = new Set(data.reviews.map((r: any) => r.id));
-      const merged = [...data.reviews, ...current.filter((r) => !remoteIds.has(r.id))];
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-      window.dispatchEvent(new CustomEvent('satvastones:reviews_synced', { detail: merged }));
-      return merged;
+    if (data?.success && Array.isArray(data.reviews)) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data.reviews));
+      window.dispatchEvent(new CustomEvent('satvastones:reviews_synced', { detail: data.reviews }));
+      return data.reviews;
     }
   } catch (_) {}
   return getStoredReviews();
 }
 
-export function deleteCustomerReview(id: string): void {
+export async function deleteCustomerReview(id: string): Promise<boolean> {
   const current = getStoredReviews();
   const updated = current.filter((r) => r.id !== id);
   if (typeof window !== 'undefined') {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
     window.dispatchEvent(new CustomEvent('satvastones:reviews_synced', { detail: updated }));
-    const token = localStorage.getItem('satvastones_admin_token') || '';
-    fetch(`/api/reviews?id=${encodeURIComponent(id)}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` }
-    }).catch(() => {});
+    const token =
+      (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('satvastones_admin_token') : null) ||
+      localStorage.getItem('satvastones_admin_token') ||
+      '';
+    try {
+      const res = await fetch(`/api/reviews?id=${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include'
+      });
+      return res.ok;
+    } catch (_) {
+      return false;
+    }
   }
+  return true;
 }

@@ -597,6 +597,108 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 <div id="cloudinary-test-feedback" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
               </div>
 
+              <!-- Razorpay Official Payment Gateway Configuration Card -->
+              <div class="bg-gradient-to-r from-blue-50/60 via-[#f8fbfe] to-white p-5 rounded-2xl border border-blue-200/80 space-y-3.5 shadow-2xs">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-[#0c2340] text-white flex items-center justify-center font-bold text-xs shadow-xs">
+                      Rzp
+                    </div>
+                    <div>
+                      <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-gray-900">Razorpay Payment Gateway (Official Integration)</h3>
+                      <p class="text-[11px] text-gray-500">Live UPI (GPay, PhonePe, Paytm, QR), Credit/Debit Cards, &amp; NetBanking</p>
+                    </div>
+                  </div>
+                  <span id="razorpay-status-badge" class="text-[10px] bg-blue-100 text-blue-900 font-bold px-2.5 py-0.5 rounded-full border border-blue-300">
+                    Auto-Detecting
+                  </span>
+                </div>
+
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Enter your Razorpay API Credentials below. Find these in your <a href="https://dashboard.razorpay.com/app/keys" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline font-semibold">Razorpay Dashboard &rarr; Account &amp; Settings &rarr; API Keys</a>. Once saved, customers on checkout can pay instantly via UPI or cards, and completed payments automatically record in your Orders tab with 256-bit encryption.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Razorpay Key ID</label>
+                    <input
+                      id="setting-razorpay-key-id"
+                      type="text"
+                      placeholder="e.g. rzp_live_xxxxxxxxxxxxxx or rzp_test_xxxxxxxxxxxxxx"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs font-mono rounded-xl focus:outline-none focus:border-blue-600"
+                    />
+                    <span class="text-[10px] text-gray-400 mt-0.5 block">Starts with <code class="text-gray-600">rzp_live_</code> (production) or <code class="text-gray-600">rzp_test_</code> (testing)</span>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Razorpay Key Secret</label>
+                    <input
+                      id="setting-razorpay-key-secret"
+                      type="password"
+                      placeholder="••••••••••••••••••••••••"
+                      class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs font-mono rounded-xl focus:outline-none focus:border-blue-600"
+                    />
+                    <span class="text-[10px] text-gray-400 mt-0.5 block">Encrypted at rest on Cloudflare Edge (never exposed to public visitors)</span>
+                  </div>
+                </div>
+
+                <div class="p-3 bg-blue-50/80 border border-blue-200/70 rounded-xl text-xs text-blue-900 space-y-1">
+                  <p class="font-bold flex items-center gap-1.5 text-blue-950">
+                    <span>💡</span>
+                    <span>Tip: Zero Extra Fees for Customers</span>
+                  </p>
+                  <p class="text-[11px] text-blue-800 leading-relaxed">
+                    Your checkout automatically promotes Razorpay UPI over COD, highlighting the ₹25 saving. When your Key ID is saved, live Razorpay checkout activates immediately across the store.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Google Single Sign-On (OAuth 2.0 & One-Tap) Card -->
+              <div class="bg-gradient-to-r from-gray-50 via-white to-gray-50 p-5 rounded-2xl border border-gray-200 space-y-3.5 shadow-2xs">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center shadow-xs">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 class="text-xs sm:text-sm font-extrabold uppercase tracking-wider text-gray-900">Google Single Sign-On (OAuth 2.0 / One-Tap)</h3>
+                      <p class="text-[11px] text-gray-500">Enable 1-click customer login &amp; registration on /account</p>
+                    </div>
+                  </div>
+                  <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-300">
+                    Customer Identity
+                  </span>
+                </div>
+
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Add your <strong>Google OAuth Client ID</strong> to allow patrons to sign in with one tap. Get your Client ID from <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline font-semibold">Google Cloud Console &rarr; APIs &amp; Services &rarr; Credentials</a>.
+                </p>
+
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 mb-1">Google OAuth Client ID</label>
+                  <input
+                    id="setting-google-client-id"
+                    type="text"
+                    placeholder="e.g. 123456789012-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"
+                    class="w-full bg-white border border-gray-200 px-3.5 py-2 text-xs font-mono rounded-xl focus:outline-none focus:border-gray-800"
+                  />
+                </div>
+
+                <div class="p-3 bg-gray-100/80 rounded-xl text-[11px] text-gray-700 space-y-1">
+                  <p class="font-bold text-gray-900">Where to set Authorized JavaScript Origins in Google Cloud Console:</p>
+                  <ul class="list-disc list-inside space-y-0.5 text-gray-600 font-mono text-[10px]">
+                    <li>https://satvastones.in</li>
+                    <li>https://www.satvastones.in</li>
+                    <li>https://satvastones2.techmax1245-a47.workers.dev</li>
+                    <li>http://localhost:4321 (for local development)</li>
+                  </ul>
+                </div>
+              </div>
+
               <!-- Cloudflare Native Edge Stack: D1 Database + R2 Storage -->
               <div class="bg-gradient-to-r from-amber-50/70 via-[#fffbf5] to-white p-5 rounded-2xl border border-amber-200 space-y-3.5">
                 <div class="flex items-center justify-between">
@@ -1140,13 +1242,32 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
   });
 
+  // Centralized token helpers for session persistence across all admin modules
+  function getSavedToken(): string {
+    return (
+      (typeof sessionStorage !== 'undefined' ? sessionStorage.getItem(TOKEN_KEY) : null) ||
+      (typeof localStorage !== 'undefined' ? localStorage.getItem(TOKEN_KEY) : null) ||
+      ''
+    );
+  }
+
+  function saveToken(token: string) {
+    sessionStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem(TOKEN_KEY, token);
+  }
+
+  function clearToken() {
+    sessionStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(TOKEN_KEY);
+  }
+
   // 30-Minute Inactivity Auto-Lock (Bank-Grade Security Standard)
   function resetInactivityTimer() {
     if (inactivityTimer) clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
-      const token = sessionStorage.getItem(TOKEN_KEY);
+      const token = getSavedToken();
       if (token) {
-        sessionStorage.removeItem(TOKEN_KEY);
+        clearToken();
         alert('Administrative session locked due to 30 minutes of inactivity. Please re-authenticate.');
         checkAuth();
       }
@@ -1155,7 +1276,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   ['mousemove', 'keydown', 'click', 'scroll'].forEach((event) => {
     window.addEventListener(event, () => {
-      if (sessionStorage.getItem(TOKEN_KEY)) {
+      if (getSavedToken()) {
         resetInactivityTimer();
       }
     }, { passive: true });
@@ -1163,7 +1284,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   // Check Authentication Status via Cryptographic Edge Endpoint
   async function checkAuth() {
-    const token = sessionStorage.getItem(TOKEN_KEY);
+    const token = getSavedToken();
     if (!token) {
       loginGate?.classList.remove('hidden');
       dashboardView?.classList.add('hidden');
@@ -1195,7 +1316,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     }
 
     // Invalid or expired token
-    sessionStorage.removeItem(TOKEN_KEY);
+    clearToken();
     loginGate?.classList.remove('hidden');
     dashboardView?.classList.add('hidden');
   }
@@ -1223,7 +1344,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       const data = await res.json() as any;
 
       if (res.ok && data.success && data.token) {
-        sessionStorage.setItem(TOKEN_KEY, data.token);
+        saveToken(data.token);
         if (errorMsg) errorMsg.classList.add('hidden');
         passwordInput.value = '';
         checkAuth();
@@ -1237,7 +1358,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     } catch (err: any) {
       // Local dev fallback if /api/admin/auth worker not running on dev port
       if (window.location.hostname === 'localhost' && username === '@dmin' && password === '@dmin060409') {
-        sessionStorage.setItem(TOKEN_KEY, 'local-dev-admin-token');
+        saveToken('local-dev-admin-token');
         if (errorMsg) errorMsg.classList.add('hidden');
         passwordInput.value = '';
         checkAuth();
@@ -1257,7 +1378,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
   // Handle Logout
   logoutBtn?.addEventListener('click', () => {
-    sessionStorage.removeItem(TOKEN_KEY);
+    clearToken();
     if (inactivityTimer) clearTimeout(inactivityTimer);
     checkAuth();
   });
@@ -1325,31 +1446,19 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   // 1. ORDERS LOGIC
   // ==========================================
   function renderOrders(filterText = '') {
-    // 1. Edge Sync from Cloudflare D1
-    fetchAllOrdersFromCloudflare().then((cfOrders) => {
-      if (cfOrders && cfOrders.length > 0) {
-        const local = getAdminOrders();
-        const existingNumbers = new Set(local.map((o) => o.orderNumber));
-        const newFromCf = cfOrders.filter((co) => !existingNumbers.has(co.orderNumber));
-        if (newFromCf.length > 0) {
-          saveAdminOrders([...newFromCf, ...local]);
-        }
-      }
-    }).catch(() => {});
-
-    // 2. Background cloud sync from Supabase if configured
-    fetchOrdersFromSupabase().then((cloudOrders) => {
-      if (cloudOrders && cloudOrders.length > 0) {
-        const local = getAdminOrders();
-        const existingNumbers = new Set(local.map((o) => o.orderNumber));
-        const newFromCloud = cloudOrders.filter((co) => !existingNumbers.has(co.orderNumber));
-        if (newFromCloud.length > 0) {
-          saveAdminOrders([...newFromCloud, ...local]);
-        }
-      }
-    }).catch(() => {});
-
     const orders = getAdminOrders();
+    drawOrders(orders, filterText);
+
+    // 1. Edge Sync from Cloudflare D1 (Authoritative source)
+    fetchAllOrdersFromCloudflare().then((cfOrders) => {
+      if (cfOrders !== null) {
+        saveAdminOrders(cfOrders);
+        drawOrders(cfOrders, filterText);
+      }
+    }).catch(() => {});
+  }
+
+  function drawOrders(orders: AdminOrder[], filterText = '') {
     const countEl = document.getElementById('tab-orders-count');
     const salesEl = document.getElementById('metric-sales');
     const ordersEl = document.getElementById('metric-orders');
@@ -1469,10 +1578,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
       // Wire Delete Order
       document.querySelectorAll('.delete-order-btn').forEach((btn) => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
           const num = (e.currentTarget as HTMLElement).dataset.orderNum || '';
           if (confirm(`Are you sure you want to delete order ${num}?`)) {
-            deleteAdminOrder(num);
+            await deleteAdminOrder(num);
             renderOrders();
           }
         });
@@ -1608,10 +1717,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
       // Wire Delete Product
       document.querySelectorAll('.delete-prod-btn').forEach((btn) => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
           const id = (e.currentTarget as HTMLElement).dataset.prodId || '';
           if (confirm('Are you sure you want to delete this product?')) {
-            deleteAdminProduct(id);
+            await deleteAdminProduct(id);
             renderProducts();
           }
         });
@@ -1665,7 +1774,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   document.getElementById('close-product-modal')?.addEventListener('click', () => productModal?.classList.add('hidden'));
   document.getElementById('cancel-product-modal')?.addEventListener('click', () => productModal?.classList.add('hidden'));
 
-  productForm?.addEventListener('submit', (e) => {
+  productForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = prodIdInput.value || `prod-${Date.now()}`;
     const name = prodNameInput.value.trim();
@@ -1677,21 +1786,34 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       id,
       name,
       slug,
-      sku: prodSkuInput.value.trim().toUpperCase(),
+      sku: prodSkuInput.value.trim().toUpperCase() || `SAT-${id.slice(-4).toUpperCase()}`,
       category: prodCatInput.value,
       pricePaise,
       compareAtPricePaise,
-      headline: prodHeadlineInput.value.trim(),
-      image: prodImageInput.value.trim(),
-      material: prodMaterialInput.value.trim(),
-      finish: prodFinishInput.value.trim(),
+      headline: prodHeadlineInput.value.trim() || name,
+      image: prodImageInput.value.trim() || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80',
+      material: prodMaterialInput.value.trim() || '316L Surgical Stainless Steel + 18K Gold PVD',
+      finish: prodFinishInput.value.trim() || 'Mirror Polished',
       inStock: prodStockInput.checked
     };
 
-    if (prodIdInput.value) {
-      updateAdminProduct(prodData);
-    } else {
-      addAdminProduct(prodData);
+    const submitBtn = productForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving to Database...';
+    }
+
+    try {
+      if (prodIdInput.value) {
+        await updateAdminProduct(prodData);
+      } else {
+        await addAdminProduct(prodData);
+      }
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save Product';
+      }
     }
 
     productModal?.classList.add('hidden');
@@ -1782,10 +1904,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
       // Wire Coupon Delete
       document.querySelectorAll('.delete-coupon-btn').forEach((b) => {
-        b.addEventListener('click', (e) => {
+        b.addEventListener('click', async (e) => {
           const id = (e.currentTarget as HTMLElement).dataset.couponId || '';
           if (confirm('Delete this coupon code?')) {
-            deleteAdminCoupon(id);
+            await deleteAdminCoupon(id);
             renderCoupons();
           }
         });
@@ -1886,6 +2008,32 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     if (heroImg) heroImg.value = settings.heroImage;
     if (cloudNameInput) cloudNameInput.value = settings.cloudinaryCloudName || '';
     if (presetInput) presetInput.value = settings.cloudinaryUploadPreset || '';
+
+    // Razorpay Credentials
+    const rzpKeyInput = document.getElementById('setting-razorpay-key-id') as HTMLInputElement;
+    const rzpSecretInput = document.getElementById('setting-razorpay-key-secret') as HTMLInputElement;
+    const rzpBadge = document.getElementById('razorpay-status-badge');
+    if (rzpKeyInput) rzpKeyInput.value = settings.razorpayKeyId || '';
+    if (rzpSecretInput && settings.razorpayKeySecret && !settings.razorpayKeySecret.startsWith('•••')) {
+      rzpSecretInput.value = settings.razorpayKeySecret;
+    }
+    if (rzpBadge) {
+      const key = settings.razorpayKeyId || '';
+      if (key.startsWith('rzp_live_')) {
+        rzpBadge.textContent = '● Live Production Active';
+        rzpBadge.className = 'text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full border border-emerald-300';
+      } else if (key.startsWith('rzp_test_')) {
+        rzpBadge.textContent = '▲ Test Sandbox Key';
+        rzpBadge.className = 'text-[10px] bg-amber-100 text-amber-900 font-bold px-2.5 py-0.5 rounded-full border border-amber-300';
+      } else {
+        rzpBadge.textContent = 'Pending Setup';
+        rzpBadge.className = 'text-[10px] bg-gray-100 text-gray-600 font-bold px-2.5 py-0.5 rounded-full border border-gray-200';
+      }
+    }
+
+    // Google Client ID
+    const googleClientInput = document.getElementById('setting-google-client-id') as HTMLInputElement;
+    if (googleClientInput) googleClientInput.value = settings.googleClientId || '';
 
     const heroPreview = document.getElementById('hero-img-preview') as HTMLImageElement;
     const heroPreviewTitle = document.getElementById('hero-preview-title');
@@ -2243,6 +2391,16 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     const toastCheck = document.getElementById('setting-social-proof-toast') as HTMLInputElement;
 
+    // Razorpay Credentials
+    const rzpKeyInput = document.getElementById('setting-razorpay-key-id') as HTMLInputElement;
+    const rzpSecretInput = document.getElementById('setting-razorpay-key-secret') as HTMLInputElement;
+    const rzpKeyVal = rzpKeyInput?.value.trim() || '';
+    const rzpSecretVal = rzpSecretInput?.value.trim() || '';
+
+    // Google OAuth Client ID
+    const googleClientInput = document.getElementById('setting-google-client-id') as HTMLInputElement;
+    const googleClientVal = googleClientInput?.value.trim() || '';
+
     const newSettings: SiteSettings = {
       ...currentSettings,
       shippingChargePaise: Math.round(Number(shipInput.value) * 100),
@@ -2253,6 +2411,9 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       heroTagline: heroTag.value.trim(),
       heroImage: heroImg.value.trim(),
       categoryImages: catImages,
+      razorpayKeyId: rzpKeyVal,
+      ...(rzpSecretVal && !rzpSecretVal.startsWith('•••') ? { razorpayKeySecret: rzpSecretVal } : {}),
+      googleClientId: googleClientVal,
       enableSocialProofToast: toastCheck ? toastCheck.checked : true
     };
 
@@ -2450,10 +2611,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       .join('');
 
     list.querySelectorAll('.delete-review-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', async (e) => {
         const id = (e.currentTarget as HTMLElement).dataset.reviewId || '';
         if (confirm('Delete this customer review permanently from Cloudflare D1?')) {
-          deleteCustomerReview(id);
+          await deleteCustomerReview(id);
           renderReviews();
         }
       });
