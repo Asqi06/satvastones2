@@ -4,39 +4,40 @@ import ProductCard from '../components/ProductCard.astro';
 import { PRODUCTS } from '../data/products';
 import { CATEGORIES } from '../data/categories';
 
-const title = 'All Anti-Tarnish Jewellery | Satvastones Collection';
-const description = 'Explore our full catalogue of trendy 18K gold PVD rings, necklaces, bracelets, earrings, and bangles. Waterproof, sweat-proof, and dispatched from Vapi, Gujarat.';
+const title = 'Complete Anti-Tarnish Jewellery Catalog | Satvastones Atelier';
+const description = 'Explore our full catalogue of 100% waterproof 18K gold PVD rings, necklaces, bracelets, earrings, and bangles. Handcrafted in 316L steel & dispatched from Vapi, Gujarat.';
 ---
 
 <BaseLayout title={title} description={description}>
-  <!-- Jewelsmars Style Header Banner -->
-  <div class="bg-[#fafafa] border-b border-[#eeeeee] py-8 sm:py-12">
-    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
-      <span class="inline-block bg-[#ffe7e9] text-[#f2707f] text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-        ALL JEWELLERY ({PRODUCTS.length})
+  <!-- Atelier Header Banner -->
+  <div class="bg-[#faf8f5] border-b border-[#eae4dc] py-8 sm:py-14">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+      <span class="inline-flex items-center gap-1.5 bg-white text-[#9f4553] text-[11px] font-bold uppercase tracking-[0.16em] px-4 py-1.5 rounded-full border border-[#eae4dc] shadow-2xs">
+        <span class="text-[#c5a059]">✦</span>
+        <span>ATELIER PERMANENT COLLECTION ({PRODUCTS.length} SUITES)</span>
       </span>
-      <h1 class="text-2xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
-        Anti-Tarnish Collection
+      <h1 class="font-serif text-3xl sm:text-5xl font-normal text-[#171513] tracking-tight">
+        Waterproof Fine Jewellery
       </h1>
-      <p class="text-xs sm:text-sm text-[#666666] max-w-lg mx-auto leading-relaxed">
-        Shower-safe, sweat-safe, and made for daily wear. Handcrafted in 316L stainless steel & 18K Gold PVD.
+      <p class="text-xs sm:text-sm text-[#6e6863] max-w-lg mx-auto leading-relaxed">
+        Shower-safe, sweat-safe, and perfume-resistant everyday luxury. Handcrafted with 316L surgical stainless steel & authentic 18K vacuum gold PVD.
       </p>
     </div>
   </div>
 
   <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-    <!-- Horizontal Scrollable Category Filter Pills (Jewelsmars Mobile-First) -->
+    <!-- Horizontal Category Filter Pills -->
     <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-6 sm:mb-8 text-xs scrollbar-none">
       <a
         href="/shop"
-        class="px-4 py-2 bg-[#f2707f] text-white rounded-full font-bold whitespace-nowrap shadow-xs"
+        class="px-4 py-2 bg-[#171513] text-white rounded-full font-semibold whitespace-nowrap shadow-sm"
       >
-        All ({PRODUCTS.length})
+        All Suites ({PRODUCTS.length})
       </a>
       {CATEGORIES.map((cat) => (
         <a
           href={`/collections/${cat.slug}`}
-          class="px-4 py-2 bg-[#fafafa] hover:bg-[#ffe7e9] hover:text-[#f2707f] text-[#333333] border border-[#eeeeee] rounded-full font-semibold whitespace-nowrap transition-colors"
+          class="px-4 py-2 bg-[#faf8f5] hover:bg-[#f2ece4] text-[#332f2c] border border-[#eae4dc] rounded-full font-semibold whitespace-nowrap transition-colors"
         >
           {cat.name} ({cat.itemCount})
         </a>
@@ -44,18 +45,23 @@ const description = 'Explore our full catalogue of trendy 18K gold PVD rings, ne
     </div>
 
     <!-- 2-Column Mobile Grid / 4-Column Desktop Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
       {PRODUCTS.map((product) => (
         <ProductCard product={product} />
       ))}
     </div>
 
     <!-- Vapi Store Location Trust Strip -->
-    <div class="mt-14 p-6 bg-[#fafafa] border border-[#eeeeee] rounded-[18px] text-center max-w-2xl mx-auto space-y-2">
-      <p class="text-xs font-bold text-[#f2707f] uppercase tracking-wider">The Satvastones Promise</p>
-      <h3 class="text-base sm:text-lg font-bold text-[#111111]">Dispatched directly from our Vapi Store (Gujarat)</h3>
-      <p class="text-xs text-[#666666] leading-relaxed">
-        Free Express Pan-India Delivery on orders above ₹499. All pieces inspected and packed in 24–48 hours. Questions? Write to <strong class="text-[#111111]">support@satvastones.in</strong>.
+    <div class="mt-16 p-6 sm:p-8 bg-[#faf8f5] border border-[#eae4dc] rounded-[24px] text-center max-w-3xl mx-auto space-y-2.5 shadow-2xs">
+      <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-[#9f4553]">
+        <span class="text-[#c5a059]">✦</span>
+        <span>THE SATVASTONES QUALITY STANDARD</span>
+      </span>
+      <h3 class="font-serif text-xl sm:text-2xl font-normal text-[#171513]">
+        Hand-Inspected &amp; Dispatched From Our Vapi Atelier (Gujarat)
+      </h3>
+      <p class="text-xs sm:text-sm text-[#6e6863] leading-relaxed max-w-xl mx-auto">
+        Complimentary Express Delivery on orders above ₹499. Every parcel is safely sealed in anti-tarnish velvet packaging with care certificates. Questions? Concierge assistance at <strong class="text-[#171513]">support@satvastones.in</strong>.
       </p>
     </div>
   </div>

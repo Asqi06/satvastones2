@@ -1,21 +1,208 @@
 ---
-// WhatsAppButton.astro - Instant Vapi Concierge WhatsApp Chat Widget
+// WhatsAppButton.astro - Movable/Draggable Vapi Concierge WhatsApp Chat Widget
 ---
 
-<a
-  href="https://wa.me/919016703180?text=Hi%20Satvastones!%20I%20have%20an%20enquiry%20about%20your%20anti-tarnish%20jewellery%20and%20Vapi%20dispatch."
-  target="_blank"
-  rel="noopener noreferrer"
-  class="fixed bottom-20 lg:bottom-6 right-4 lg:right-6 z-40 bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 sm:px-4 sm:py-3 rounded-full shadow-2xl flex items-center gap-2.5 transition-all duration-300 hover:scale-105 group"
-  aria-label="Chat on WhatsApp"
-  title="Chat with our Vapi Concierge"
+<div
+  id="movable-whatsapp-root"
+  class="fixed z-50 select-none touch-none"
+  style="right: 16px; bottom: 84px;"
 >
-  <!-- WhatsApp SVG Icon -->
-  <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-  </svg>
-  <span class="hidden sm:inline text-xs font-bold tracking-wide">
-    WhatsApp Support
-  </span>
-  <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
-</a>
+  <div class="relative flex items-center group">
+    <!-- Main Draggable Button -->
+    <a
+      id="movable-whatsapp-link"
+      href="https://wa.me/919016703180?text=Hi%20Satvastones!%20I%20have%20an%20enquiry%20about%20your%20anti-tarnish%20jewellery%20and%20Vapi%20dispatch."
+      target="_blank"
+      rel="noopener noreferrer"
+      class="bg-[#25D366] hover:bg-[#20bd5a] text-white p-3.5 sm:px-4 sm:py-3 rounded-full shadow-[0_8px_25px_rgba(37,211,102,0.45)] flex items-center gap-2.5 transition-transform duration-200 hover:scale-105 active:scale-95 cursor-grab active:cursor-grabbing border border-white/30 backdrop-blur-xs"
+      aria-label="Chat on WhatsApp (Draggable: move anywhere along screen sides)"
+      title="Chat with our Vapi Concierge (Drag anywhere along screen sides)"
+    >
+      <!-- Move handle indicator (dots) -->
+      <span class="hidden sm:inline-flex flex-col gap-0.5 opacity-60 group-hover:opacity-100 transition-opacity pointer-events-none" aria-hidden="true">
+        <span class="flex gap-0.5">
+          <span class="w-1 h-1 bg-white rounded-full"></span>
+          <span class="w-1 h-1 bg-white rounded-full"></span>
+        </span>
+        <span class="flex gap-0.5">
+          <span class="w-1 h-1 bg-white rounded-full"></span>
+          <span class="w-1 h-1 bg-white rounded-full"></span>
+        </span>
+        <span class="flex gap-0.5">
+          <span class="w-1 h-1 bg-white rounded-full"></span>
+          <span class="w-1 h-1 bg-white rounded-full"></span>
+        </span>
+      </span>
+
+      <!-- WhatsApp SVG Icon -->
+      <svg class="w-6 h-6 fill-current pointer-events-none" viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+      </svg>
+      <span class="hidden sm:inline text-xs font-bold tracking-wide pointer-events-none">
+        WhatsApp Support
+      </span>
+      <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse pointer-events-none"></span>
+    </a>
+  </div>
+</div>
+
+<script>
+  function initMovableWhatsApp() {
+    const root = document.getElementById('movable-whatsapp-root');
+    const link = document.getElementById('movable-whatsapp-link') as HTMLAnchorElement | null;
+    if (!root || !link) return;
+
+    const STORAGE_KEY = 'satvastones_wa_pos';
+    let isDragging = false;
+    let hasMoved = false;
+    let startX = 0;
+    let startY = 0;
+    let initialLeft = 0;
+    let initialTop = 0;
+
+    // Restore saved position
+    const restorePosition = () => {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const { side, topPercent } = JSON.parse(saved);
+          const topPx = (topPercent / 100) * window.innerHeight;
+          const clampedTop = Math.max(70, Math.min(topPx, window.innerHeight - 80));
+          root.style.top = `${clampedTop}px`;
+          root.style.bottom = 'auto';
+          if (side === 'left') {
+            root.style.left = '16px';
+            root.style.right = 'auto';
+          } else {
+            root.style.right = '16px';
+            root.style.left = 'auto';
+          }
+          return;
+        }
+      } catch (e) {
+        // Fallback default
+      }
+      // Default: bottom-right
+      root.style.right = '16px';
+      root.style.bottom = window.innerWidth >= 1024 ? '24px' : '84px';
+      root.style.top = 'auto';
+      root.style.left = 'auto';
+    };
+
+    restorePosition();
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.button !== 0) return;
+      isDragging = true;
+      hasMoved = false;
+      startX = e.clientX;
+      startY = e.clientY;
+
+      const rect = root.getBoundingClientRect();
+      initialLeft = rect.left;
+      initialTop = rect.top;
+
+      // Switch to absolute coordinates for smooth dragging
+      root.style.transition = 'none';
+      root.style.left = `${initialLeft}px`;
+      root.style.top = `${initialTop}px`;
+      root.style.right = 'auto';
+      root.style.bottom = 'auto';
+
+      try {
+        root.setPointerCapture(e.pointerId);
+      } catch (_) {}
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+
+      if (!hasMoved && Math.hypot(dx, dy) > 6) {
+        hasMoved = true;
+        root.classList.add('opacity-90', 'scale-105');
+      }
+
+      if (hasMoved) {
+        const newLeft = initialLeft + dx;
+        const newTop = initialTop + dy;
+
+        const clampedX = Math.max(8, Math.min(newLeft, window.innerWidth - root.offsetWidth - 8));
+        const clampedY = Math.max(60, Math.min(newTop, window.innerHeight - root.offsetHeight - 20));
+
+        root.style.left = `${clampedX}px`;
+        root.style.top = `${clampedY}px`;
+      }
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+      if (!isDragging) return;
+      isDragging = false;
+      try {
+        root.releasePointerCapture(e.pointerId);
+      } catch (_) {}
+
+      root.classList.remove('opacity-90', 'scale-105');
+
+      if (!hasMoved) {
+        // Was just a quick click/tap; link opens normally
+        return;
+      }
+
+      // Was dragged: prevent accidental link opening
+      const clickStopper = (clickEvent: MouseEvent) => {
+        clickEvent.preventDefault();
+        clickEvent.stopImmediatePropagation();
+        link.removeEventListener('click', clickStopper, true);
+      };
+      link.addEventListener('click', clickStopper, true);
+
+      // Snap to nearest side (left or right)
+      const rect = root.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const snapToLeft = centerX < window.innerWidth / 2;
+
+      const clampedTop = Math.max(70, Math.min(rect.top, window.innerHeight - rect.height - 24));
+      const topPercent = (clampedTop / window.innerHeight) * 100;
+
+      root.style.transition = 'all 0.35s cubic-bezier(0.2, 0.9, 0.3, 1)';
+      root.style.top = `${clampedTop}px`;
+
+      if (snapToLeft) {
+        root.style.left = '16px';
+        root.style.right = 'auto';
+      } else {
+        root.style.left = 'auto';
+        root.style.right = '16px';
+      }
+
+      // Persist chosen position in localStorage
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            side: snapToLeft ? 'left' : 'right',
+            topPercent
+          })
+        );
+      } catch (err) {}
+    };
+
+    root.addEventListener('pointerdown', onPointerDown);
+    root.addEventListener('pointermove', onPointerMove);
+    root.addEventListener('pointerup', onPointerUp);
+    root.addEventListener('pointercancel', onPointerUp);
+
+    window.addEventListener('resize', () => {
+      restorePosition();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMovableWhatsApp);
+  } else {
+    initMovableWhatsApp();
+  }
+  document.addEventListener('astro:page-load', initMovableWhatsApp);
+</script>

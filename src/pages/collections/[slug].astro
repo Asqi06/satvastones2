@@ -146,16 +146,17 @@ const categoryFaqSchema = {
   schema={[itemListSchema, categoryFaqSchema]}
   breadcrumbs={breadcrumbs}
 >
-  <!-- Jewelsmars Style Header Banner -->
-  <div class="bg-[#fafafa] border-b border-[#eeeeee] py-8 sm:py-12">
-    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-2">
-      <span id="collection-tagline" class="inline-block bg-[#ffe7e9] text-[#a1505a] text-xs font-bold uppercase tracking-wider px-3.5 py-1 rounded-full">
-        {category.tagline}
+  <!-- Atelier Header Banner -->
+  <div class="bg-[#faf8f5] border-b border-[#eae4dc] py-8 sm:py-14">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+      <span id="collection-tagline" class="inline-flex items-center gap-1.5 bg-white text-[#9f4553] text-[11px] font-bold uppercase tracking-[0.16em] px-4 py-1.5 rounded-full border border-[#eae4dc] shadow-2xs">
+        <span class="text-[#c5a059]">✦</span>
+        <span>{category.tagline}</span>
       </span>
-      <h1 id="collection-title" class="text-2xl sm:text-4xl font-extrabold text-[#111111] tracking-tight">
+      <h1 id="collection-title" class="font-serif text-3xl sm:text-5xl font-normal text-[#171513] tracking-tight">
         {category.name}
       </h1>
-      <p id="collection-desc" class="text-xs sm:text-sm text-[#666666] max-w-lg mx-auto leading-relaxed">
+      <p id="collection-desc" class="text-xs sm:text-sm text-[#6e6863] max-w-xl mx-auto leading-relaxed">
         {category.description}
       </p>
     </div>
@@ -163,35 +164,68 @@ const categoryFaqSchema = {
 
   <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
     <!-- Breadcrumbs -->
-    <nav class="flex items-center gap-2 text-xs text-[#888888] mb-6">
-      <a href="/" class="hover:text-[#111111]">Home</a>
+    <nav class="flex items-center gap-2 text-xs text-[#888888] mb-5">
+      <a href="/" class="hover:text-[#171513] transition-colors">Home</a>
       <span>/</span>
-      <a href="/shop" class="hover:text-[#111111]">Shop</a>
+      <a href="/shop" class="hover:text-[#171513] transition-colors">Shop</a>
       <span>/</span>
-      <span class="text-[#111111] font-bold">{category.name}</span>
+      <span class="text-[#171513] font-semibold">{category.name}</span>
     </nav>
 
+    <!-- Quick Navigation Category Pills Strip -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 scrollbar-none">
+      <a
+        href="/shop"
+        class="px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-colors bg-[#faf8f5] text-[#332f2c] border border-[#eae4dc] hover:bg-[#f2ece4]"
+      >
+        All Suites ({PRODUCTS.length})
+      </a>
+      {CATEGORIES.map((cat) => {
+        const isCurrent = cat.slug === category.slug;
+        return (
+          <a
+            href={`/collections/${cat.slug}`}
+            class={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+              isCurrent
+                ? 'bg-[#171513] text-white shadow-sm'
+                : 'bg-[#faf8f5] text-[#332f2c] border border-[#eae4dc] hover:bg-[#f2ece4]'
+            }`}
+          >
+            {cat.name} ({cat.itemCount})
+          </a>
+        );
+      })}
+    </div>
+
     {products.length === 0 ? (
-      <div class="text-center py-16 space-y-3 bg-[#fafafa] rounded-[18px] p-6 border border-[#eeeeee]">
-        <h2 class="text-xl font-bold text-[#111111]">New Designs Dropping Soon</h2>
-        <p class="text-xs text-[#666666]">Our Vapi atelier is hand-crafting new pieces for this collection.</p>
-        <a href="/shop" class="inline-block bg-[#f2707f] text-white px-6 py-2.5 rounded-full text-xs font-bold uppercase">
-          Browse All Jewellery
-        </a>
+      <div class="text-center py-16 space-y-3 bg-[#faf8f5] rounded-[24px] p-8 border border-[#eae4dc]">
+        <h2 class="font-serif text-2xl font-normal text-[#171513]">New Designs In Production</h2>
+        <p class="text-xs sm:text-sm text-[#6e6863] max-w-md mx-auto">
+          Our Vapi atelier is hand-crafting new pieces for this collection. Explore other trending suites in the meantime.
+        </p>
+        <div class="pt-2">
+          <a
+            href="/shop"
+            class="inline-block bg-[#171513] hover:bg-[#9f4553] text-white px-7 py-3 rounded-full text-xs font-bold uppercase tracking-wider transition-colors shadow-sm"
+          >
+            Browse All Jewellery →
+          </a>
+        </div>
       </div>
     ) : (
       <div>
-        <div class="flex items-center justify-between pb-3 mb-6 border-b border-[#eeeeee]">
-          <span class="text-xs text-[#666666] font-medium">
-            Showing {products.length} {category.name}
+        <div class="flex items-center justify-between pb-3 mb-6 border-b border-[#eae4dc]">
+          <span class="text-xs text-[#6e6863] font-medium">
+            Showing {products.length} {category.name} Pieces
           </span>
-          <span class="text-xs font-bold text-[#f2707f]">
-            Free Express Shipping &gt; ₹499 • 24–48h Vapi Dispatch
+          <span class="text-xs font-semibold text-[#171513] flex items-center gap-1.5">
+            <span class="text-[#c5a059]">✦</span>
+            <span>Free Express Delivery &gt; ₹499 • 24–48h Dispatch</span>
           </span>
         </div>
 
         <!-- 2-Column Mobile Grid / 4-Column Desktop -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {products.map((product) => (
             <ProductCard product={product} />
           ))}
@@ -199,48 +233,46 @@ const categoryFaqSchema = {
       </div>
     )}
 
-    <!-- Category Informational SEO, Buying Guide & FAQ Section (Boosts Topical Authority below the fold) -->
-    <div class="mt-14 pt-8 border-t border-gray-100 bg-[#fffafb] border border-[#f9d8dc] rounded-[22px] p-6 sm:p-8 space-y-6">
+    <!-- Category Informational SEO, Buying Guide & FAQ Section -->
+    <div class="mt-14 pt-8 bg-[#faf8f5] border border-[#eae4dc] rounded-[24px] p-6 sm:p-10 space-y-6">
       <div class="space-y-2">
-        <div class="flex items-center gap-2 text-[#a1505a] font-bold text-xs uppercase tracking-wider">
-          <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-          </svg>
-          <span>Buying Guide: Satvastones {category.name} in India</span>
+        <div class="flex items-center gap-2 text-[#9f4553] font-bold text-xs uppercase tracking-[0.14em]">
+          <span class="text-[#c5a059]">✦</span>
+          <span>Atelier Buying Guide: Satvastones {category.name} in India</span>
         </div>
-        <p class="text-xs sm:text-sm text-gray-700 leading-relaxed">
+        <p class="text-xs sm:text-sm text-[#4a443f] leading-relaxed">
           Every piece in our {category.name.toLowerCase()} collection is engineered from solid 316L surgical stainless steel with authentic 18K gold vacuum PVD coating. They are 100% waterproof, sweat-resistant, shower-safe, and guaranteed never to leave green skin marks. All orders are hand-inspected and dispatched directly from our Vapi store location in Gujarat within 24 to 48 hours.
         </p>
       </div>
 
       <!-- FAQ Accordion for Category -->
-      <div class="space-y-3 pt-2 border-t border-[#f9d8dc]">
-        <h3 class="text-xs font-bold text-[#111111] uppercase tracking-wider">
+      <div class="space-y-3 pt-2 border-t border-[#eae4dc]">
+        <h3 class="text-xs font-bold text-[#171513] uppercase tracking-wider">
           Frequently Asked Questions About {category.name}
         </h3>
         {categoryFaqs.map((faq, idx) => (
-          <details class="group bg-white rounded-xl border border-[#f5cfd4] p-3.5 [&_summary::-webkit-details-marker]:hidden open:shadow-xs transition-all">
-            <summary class="flex items-center justify-between cursor-pointer font-bold text-xs text-gray-900 select-none">
+          <details class="group bg-white rounded-xl border border-[#eae4dc] p-4 [&_summary::-webkit-details-marker]:hidden open:shadow-2xs transition-all">
+            <summary class="flex items-center justify-between cursor-pointer font-semibold text-xs sm:text-sm text-[#171513] select-none">
               <span class="pr-2">{faq.q}</span>
-              <span class="text-gray-400 group-open:rotate-180 group-open:text-[#f2707f] transition-transform duration-200 shrink-0 text-xs">
+              <span class="text-[#99918b] group-open:rotate-180 group-open:text-[#171513] transition-transform duration-200 shrink-0 text-xs">
                 ▼
               </span>
             </summary>
-            <p class="pt-2 text-xs text-gray-600 leading-relaxed border-t border-gray-100 mt-2">
+            <p class="pt-2 text-xs sm:text-sm text-[#4a443f] leading-relaxed border-t border-[#eae4dc] mt-2">
               {faq.a}
             </p>
           </details>
         ))}
       </div>
 
-      <div class="pt-2 flex flex-wrap gap-3 text-xs">
-        <a href="/materials" class="text-[#a1505a] hover:text-[#f2707f] font-bold underline">
+      <div class="pt-2 flex flex-wrap gap-4 text-xs font-semibold">
+        <a href="/materials" class="text-[#9f4553] hover:text-[#171513] underline transition-colors">
           Learn about 316L Surgical Steel &rarr;
         </a>
-        <a href="/faqs#styling-guide" class="text-[#a1505a] hover:text-[#f2707f] font-bold underline">
+        <a href="/faqs#styling-guide" class="text-[#9f4553] hover:text-[#171513] underline transition-colors">
           How to Style with Saree &rarr;
         </a>
-        <a href="/track-order" class="text-[#a1505a] hover:text-[#f2707f] font-bold underline">
+        <a href="/track-order" class="text-[#9f4553] hover:text-[#171513] underline transition-colors">
           Track Your Delivery &rarr;
         </a>
       </div>

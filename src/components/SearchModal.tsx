@@ -11,7 +11,7 @@ export default function SearchModal() {
   useEffect(() => {
     const handleOpen = () => {
       setIsOpen(true);
-      setTimeout(() => inputRef.current?.focus(), 50);
+      setTimeout(() => inputRef.current?.focus(), 60);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -45,7 +45,8 @@ export default function SearchModal() {
         p.name.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q) ||
         p.sku.toLowerCase().includes(q) ||
-        p.material.toLowerCase().includes(q)
+        p.material.toLowerCase().includes(q) ||
+        p.headline.toLowerCase().includes(q)
     );
     setResults(filtered);
   }, [query]);
@@ -53,30 +54,44 @@ export default function SearchModal() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-4 bg-black/50 backdrop-blur-xs">
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-4 bg-[#171513]/60 backdrop-blur-sm transition-opacity duration-200"
+      onClick={() => setIsOpen(false)}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Search Satvastones Jewellery"
+    >
       <div
-        className="w-full max-w-2xl bg-white rounded-[22px] shadow-2xl border border-gray-100 overflow-hidden flex flex-col max-h-[80vh] animate-in fade-in zoom-in-95 duration-200"
-        role="dialog"
-        aria-modal="true"
+        className="w-full max-w-2xl bg-[#fcfbf9] rounded-[24px] shadow-2xl border border-[#eae4dc] overflow-hidden flex flex-col max-h-[82vh] animate-in fade-in zoom-in-95 duration-200"
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Search Input Bar */}
-        <div className="p-4 sm:p-5 border-b border-gray-100 flex items-center gap-3 bg-white">
-          <svg className="w-5 h-5 text-gray-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        {/* Search Header */}
+        <div className="p-4 sm:p-5 border-b border-[#eae4dc] flex items-center gap-3 bg-white">
+          <svg className="w-5 h-5 text-[#9f4553] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
           <input
             ref={inputRef}
             type="text"
-            placeholder="Search rings, necklaces, bracelets, earrings..."
+            placeholder="Search anti-tarnish rings, chains, bracelets, earrings..."
             aria-label="Search jewellery collections"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full bg-transparent text-sm sm:text-base text-gray-900 placeholder:text-gray-400 focus:outline-none"
+            className="w-full bg-transparent text-sm sm:text-base text-[#171513] placeholder:text-[#99918b] focus:outline-none font-medium"
           />
+          {query && (
+            <button
+              onClick={() => setQuery('')}
+              className="text-xs text-[#99918b] hover:text-[#171513] p-1 cursor-pointer"
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          )}
           <button
             onClick={() => setIsOpen(false)}
             aria-label="Close search modal"
-            className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-2.5 py-1 rounded-lg uppercase tracking-wider font-bold transition-colors cursor-pointer"
+            className="text-[11px] bg-[#faf8f5] hover:bg-[#eae4dc] text-[#6e6863] px-2.5 py-1 rounded-lg uppercase tracking-wider font-bold transition-colors cursor-pointer border border-[#eae4dc]"
           >
             ESC
           </button>
@@ -84,14 +99,23 @@ export default function SearchModal() {
 
         {/* Quick Suggestion Pills */}
         {!query && (
-          <div className="p-4 sm:p-5 bg-[#fffafb] border-b border-[#f9d8dc] text-xs">
-            <span className="text-gray-400 font-bold uppercase tracking-wider text-[10px] block mb-2">Popular Searches:</span>
+          <div className="p-4 sm:p-5 bg-[#faf8f5] border-b border-[#eae4dc] text-xs">
+            <span className="text-[#99918b] font-bold uppercase tracking-[0.14em] text-[10px] block mb-2.5">
+              Popular Searches
+            </span>
             <div className="flex flex-wrap gap-2">
-              {['Waterproof Necklace', 'Snake Chain', 'Croissant Ring', 'Huggie Earrings', 'Bangles'].map((tag) => (
+              {[
+                'Waterproof Necklace',
+                'Snake Chain',
+                'Croissant Ring',
+                'Kada Bangle',
+                'Baroque Pearl',
+                'Gift Set'
+              ].map((tag) => (
                 <button
                   key={tag}
                   onClick={() => setQuery(tag)}
-                  className="bg-white hover:bg-[#ffe7e9] text-gray-700 hover:text-[#f2707f] border border-gray-200 px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer"
+                  className="bg-white hover:bg-[#faf4f2] text-[#332f2c] hover:text-[#9f4553] border border-[#eae4dc] hover:border-[#9f4553]/40 px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer shadow-2xs"
                 >
                   {tag}
                 </button>
@@ -101,11 +125,16 @@ export default function SearchModal() {
         )}
 
         {/* Search Results */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 divide-y divide-gray-100">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 divide-y divide-[#eae4dc]">
           {query && results.length === 0 ? (
-            <div className="text-center py-10 space-y-2">
-              <p className="text-sm font-bold text-gray-800">No matching jewellery found</p>
-              <p className="text-xs text-gray-400">Try searching for "necklace", "ring", "earring", or "18K".</p>
+            <div className="text-center py-12 space-y-2">
+              <div className="w-12 h-12 mx-auto rounded-full bg-[#faf4f2] flex items-center justify-center text-[#9f4553]">
+                <svg className="w-6 h-6 stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <p className="text-sm font-bold text-[#171513]">No matching atelier pieces found</p>
+              <p className="text-xs text-[#6e6863]">Try searching for "necklace", "ring", "bangle", or "18K gold".</p>
             </div>
           ) : (
             results.map((product) => (
@@ -113,30 +142,30 @@ export default function SearchModal() {
                 key={product.id}
                 href={`/products/${product.slug}`}
                 onClick={() => setIsOpen(false)}
-                className="py-3 flex items-center gap-3.5 hover:bg-[#fffafb] p-2 rounded-[14px] transition-colors group"
+                className="py-3 flex items-center gap-3.5 hover:bg-[#faf8f5] p-2.5 rounded-[16px] transition-colors group"
               >
                 <img
                   src={product.images[0]?.url}
                   alt={product.name}
-                  className="w-12 h-14 object-cover rounded-[10px] bg-gray-50 border border-gray-100 shrink-0"
+                  className="w-13 h-16 object-cover rounded-[12px] bg-[#faf8f5] border border-[#eae4dc] shrink-0"
                 />
                 <div className="flex-1 min-w-0">
-                  <span className="text-[10px] uppercase font-bold text-[#a1505a] tracking-wider">
+                  <span className="text-[10px] uppercase font-bold text-[#9f4553] tracking-wider block">
                     {product.category}
                   </span>
-                  <h4 className="text-sm font-bold text-gray-900 truncate group-hover:text-[#f2707f] transition-colors">
+                  <h4 className="text-xs sm:text-sm font-semibold text-[#171513] truncate group-hover:text-[#9f4553] transition-colors">
                     {product.name}
                   </h4>
-                  <p className="text-xs text-gray-400">
-                    18K Gold PVD • 316L Surgical Steel
+                  <p className="text-[11px] text-[#6e6863] truncate">
+                    {product.material}
                   </p>
                 </div>
                 <div className="text-right shrink-0">
-                  <span className="text-sm font-extrabold text-[#f2707f]">
+                  <span className="text-sm font-bold text-[#171513]">
                     {formatPrice(product.pricePaise)}
                   </span>
                   {product.compareAtPricePaise && (
-                    <span className="block text-[11px] text-gray-400 line-through">
+                    <span className="block text-[11px] text-[#99918b] line-through">
                       {formatPrice(product.compareAtPricePaise)}
                     </span>
                   )}
@@ -146,10 +175,13 @@ export default function SearchModal() {
           )}
         </div>
 
-        {/* Footer */}
-        <div className="p-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400 px-5">
-          <span>Free express delivery on orders above ₹499</span>
-          <span className="text-gray-500">Dispatched from Vapi in 24–48h</span>
+        {/* Search Footer */}
+        <div className="p-3.5 bg-[#faf8f5] border-t border-[#eae4dc] flex items-center justify-between text-[11px] text-[#6e6863] px-5">
+          <span className="flex items-center gap-1.5">
+            <span className="text-[#c5a059]">✦</span>
+            <span>Free Express Pan-India Delivery &gt; ₹499</span>
+          </span>
+          <span className="font-medium text-[#171513]">Direct from Vapi Atelier</span>
         </div>
       </div>
     </div>

@@ -10,17 +10,17 @@ import DPDPNotice from '../components/DPDPNotice';
   <!-- Razorpay Official Checkout SDK (Loaded only on Checkout page) -->
   <script is:inline src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 
-  <!-- Minimalist Editorial Header -->
-  <div class="bg-white border-b border-gray-100 py-6 sm:py-8">
-    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1">
-      <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-[#a1505a] bg-rose-50 px-3 py-1 rounded-full">
-        <svg class="w-3.5 h-3.5 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+  <!-- Atelier Checkout Header -->
+  <div class="bg-[#faf8f5] border-b border-[#eae4dc] py-6 sm:py-8">
+    <div class="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-1.5">
+      <div class="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-[#9f4553] bg-white px-3.5 py-1 rounded-full border border-[#eae4dc] shadow-2xs">
+        <svg class="w-3.5 h-3.5 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
         </svg>
-        <span>256-Bit SSL Encrypted • Razorpay Verified</span>
+        <span>256-Bit SSL Encrypted • Official Razorpay Gateway</span>
       </div>
-      <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">Complete Your Order</h1>
-      <p class="text-xs text-gray-500">Free express delivery on orders above ₹499 • Hand-inspected and dispatched from Vapi in 24–48h</p>
+      <h1 class="font-serif text-2xl sm:text-4xl font-normal text-[#171513] tracking-tight">Complete Your Order</h1>
+      <p class="text-xs text-[#6e6863]">Complimentary express delivery on orders above ₹499 • Hand-inspected and dispatched from Vapi in 24–48h</p>
     </div>
   </div>
 
@@ -32,109 +32,109 @@ import DPDPNotice from '../components/DPDPNotice';
         <div class="lg:col-span-7 space-y-6">
           
           <!-- Contact Info -->
-          <div class="bg-white p-5 sm:p-7 border border-gray-200 rounded-2xl space-y-4 shadow-xs">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-rose-50 text-[#a1505a] flex items-center justify-center text-xs font-bold">1</span>
+          <div class="bg-white p-5 sm:p-7 border border-[#eae4dc] rounded-2xl space-y-4 shadow-2xs">
+            <div class="flex items-center justify-between border-b border-[#eae4dc] pb-3">
+              <h2 class="text-base font-bold text-[#171513] flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-[#171513] text-white flex items-center justify-center text-xs font-bold">1</span>
                 <span>Contact Details</span>
               </h2>
-              <span class="text-[11px] text-gray-400">For SMS/WhatsApp Tracking</span>
+              <span class="text-[11px] text-[#6e6863]">For SMS &amp; WhatsApp Tracking</span>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <div class="sm:col-span-2">
-                <label class="block text-xs font-bold text-gray-700 mb-1">Full Name *</label>
+                <label class="block text-xs font-semibold text-[#171513] mb-1">Full Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Priya Sharma"
                   id="checkout-name"
-                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
                 />
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">Mobile Number (WhatsApp) *</label>
+                <label class="block text-xs font-semibold text-[#171513] mb-1">Mobile Number (WhatsApp) *</label>
                 <input
                   type="tel"
                   required
                   placeholder="+91 90167 03180"
                   id="checkout-phone"
-                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
                 />
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">Email Address (For Tax Invoice) *</label>
+                <label class="block text-xs font-semibold text-[#171513] mb-1">Email Address (For Tax Invoice) *</label>
                 <input
                   type="email"
                   required
                   placeholder="name@example.com"
                   id="checkout-email"
-                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
                 />
               </div>
             </div>
           </div>
 
           <!-- Shipping Address -->
-          <div class="bg-white p-5 sm:p-7 border border-gray-200 rounded-2xl space-y-4 shadow-xs">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-rose-50 text-[#a1505a] flex items-center justify-center text-xs font-bold">2</span>
+          <div class="bg-white p-5 sm:p-7 border border-[#eae4dc] rounded-2xl space-y-4 shadow-2xs">
+            <div class="flex items-center justify-between border-b border-[#eae4dc] pb-3">
+              <h2 class="text-base font-bold text-[#171513] flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-[#171513] text-white flex items-center justify-center text-xs font-bold">2</span>
                 <span>Shipping Address</span>
               </h2>
-              <span class="text-[11px] text-gray-400">Pan-India Express</span>
+              <span class="text-[11px] text-[#6e6863]">Pan-India Express Air</span>
             </div>
 
             <div class="space-y-3.5">
               <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">House / Flat / Building *</label>
+                <label class="block text-xs font-semibold text-[#171513] mb-1">House / Flat / Building *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Flat 304, Green Heights"
                   id="checkout-addr1"
-                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
                 />
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">Street / Landmark / Area</label>
+                <label class="block text-xs font-semibold text-[#171513] mb-1">Street / Landmark / Area</label>
                 <input
                   type="text"
                   placeholder="e.g. Near Outer Ring Road"
                   id="checkout-addr2"
-                  class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                  class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
                 />
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                 <div>
-                  <label class="block text-xs font-bold text-gray-700 mb-1">PIN Code *</label>
+                  <label class="block text-xs font-semibold text-[#171513] mb-1">PIN Code *</label>
                   <input
                     type="text"
                     required
                     maxlength="6"
                     placeholder="396191"
                     id="checkout-pin"
-                    class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
                   />
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-gray-700 mb-1">City *</label>
+                  <label class="block text-xs font-semibold text-[#171513] mb-1">City *</label>
                   <input
                     type="text"
                     required
                     placeholder="Vapi"
                     id="checkout-city"
-                    class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
                   />
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-gray-700 mb-1">State *</label>
+                  <label class="block text-xs font-semibold text-[#171513] mb-1">State *</label>
                   <input
                     type="text"
                     required
                     placeholder="Gujarat"
                     id="checkout-state"
-                    class="w-full bg-gray-50 border border-gray-200 px-4 py-2.5 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                    class="w-full bg-[#faf8f5] border border-[#eae4dc] px-4 py-2.5 text-xs text-[#171513] rounded-xl focus:outline-none focus:border-[#c5a059]"
                   />
                 </div>
               </div>
@@ -142,17 +142,15 @@ import DPDPNotice from '../components/DPDPNotice';
           </div>
 
           <!-- Luxury Velvet Gifting Option -->
-          <div class="bg-rose-50/40 p-5 border border-rose-100 rounded-2xl space-y-3">
+          <div class="bg-[#faf8f5] p-5 border border-[#eae4dc] rounded-2xl space-y-3 shadow-2xs">
             <label class="flex items-start gap-3 cursor-pointer">
-              <input type="checkbox" id="gift-packaging-check" checked class="accent-[#f2707f] w-4 h-4 mt-0.5 rounded" />
+              <input type="checkbox" id="gift-packaging-check" checked class="accent-[#171513] w-4 h-4 mt-0.5 rounded cursor-pointer" />
               <div class="flex-1">
-                <span class="text-xs font-bold text-gray-900 flex items-center gap-1.5">
-                  <svg class="w-4 h-4 text-[#a1505a]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H4.5a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                  </svg>
-                  <span>Complimentary Luxury Velvet Box & Handwritten Gift Note (Free)</span>
+                <span class="text-xs font-bold text-[#171513] flex items-center gap-1.5">
+                  <span class="text-[#c5a059]">✦</span>
+                  <span>Complimentary Luxury Velvet Box &amp; Handwritten Gift Note (Free)</span>
                 </span>
-                <p class="text-[11px] text-gray-500 mt-0.5">
+                <p class="text-[11px] text-[#6e6863] mt-0.5">
                   Includes anti-tarnish storage pouch, care certificate, and a handwritten card sealed with wax.
                 </p>
               </div>
@@ -162,63 +160,62 @@ import DPDPNotice from '../components/DPDPNotice';
                 type="text"
                 id="gift-note-input"
                 placeholder="Optional gift note (e.g. 'To Rhea, with love on your special day!')"
-                class="w-full bg-white border border-rose-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#f2707f]"
+                class="w-full bg-white border border-[#eae4dc] px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#c5a059]"
               />
             </div>
           </div>
 
           <!-- Payment Options: Razorpay Online vs Cash on Delivery -->
-          <div class="bg-white p-5 sm:p-7 border border-gray-200 rounded-2xl space-y-4 shadow-xs">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
-                <span class="w-6 h-6 rounded-full bg-rose-50 text-[#a1505a] flex items-center justify-center text-xs font-bold">3</span>
+          <div class="bg-white p-5 sm:p-7 border border-[#eae4dc] rounded-2xl space-y-4 shadow-2xs">
+            <div class="flex items-center justify-between border-b border-[#eae4dc] pb-3">
+              <h2 class="text-base font-bold text-[#171513] flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-[#171513] text-white flex items-center justify-center text-xs font-bold">3</span>
                 <span>Select Payment Method</span>
               </h2>
-              <span class="text-[11px] text-emerald-700 font-semibold flex items-center gap-1">
+              <span class="text-[11px] text-[#1b6d48] font-semibold flex items-center gap-1">
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                100% Encrypted & Safe
+                100% Encrypted &amp; Safe
               </span>
             </div>
 
             <div class="space-y-3">
               <!-- Option 1: Razorpay Online (UPI, Cards, NetBanking) -->
-              <label id="payment-card-razorpay" class="flex items-start gap-3.5 p-4 border-2 border-[#f2707f] bg-rose-50/20 rounded-2xl cursor-pointer transition-all">
-                <input type="radio" name="payment-method" value="RAZORPAY" checked class="mt-1 accent-[#f2707f]" />
+              <label id="payment-card-razorpay" class="flex items-start gap-3.5 p-4 border-2 border-[#171513] bg-[#faf8f5] rounded-2xl cursor-pointer transition-all">
+                <input type="radio" name="payment-method" value="RAZORPAY" checked class="mt-1 accent-[#171513]" />
                 <div class="flex-1 min-w-0">
                   <div class="flex flex-wrap items-center justify-between gap-1.5">
-                    <span class="text-xs sm:text-sm font-extrabold text-gray-900">Razorpay Online (UPI, Cards, NetBanking)</span>
-                    <span class="text-[10px] text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full font-extrabold flex items-center gap-1">
+                    <span class="text-xs sm:text-sm font-bold text-[#171513]">Razorpay Online (UPI, Cards, NetBanking)</span>
+                    <span class="text-[10px] text-[#1b6d48] bg-[#eef8f3] border border-[#c4e8d3] px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1">
                       <span>✓</span> Zero Extra Fees • Save ₹25
                     </span>
                   </div>
-                  <p class="text-[11px] text-gray-600 mt-1">
-                    Pay securely via UPI (Google Pay, PhonePe, Paytm, QR), Credit/Debit Cards, or NetBanking. Instant dispatch priority.
+                  <p class="text-[11px] text-[#6e6863] mt-1">
+                    Pay securely via UPI (Google Pay, PhonePe, Paytm, QR), Cards, or NetBanking. Priority atelier dispatch.
                   </p>
-                  <div class="flex flex-wrap items-center gap-1.5 mt-2.5 pt-2 border-t border-rose-100/70 text-[10px] text-gray-600 font-semibold">
-                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">Google Pay</span>
-                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">PhonePe</span>
-                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">Paytm UPI</span>
-                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">Credit/Debit Card</span>
-                    <span class="px-2 py-0.5 bg-white border border-gray-200 rounded-md">NetBanking</span>
+                  <div class="flex flex-wrap items-center gap-1.5 mt-2.5 pt-2 border-t border-[#eae4dc] text-[10px] text-[#6e6863] font-semibold">
+                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">Google Pay</span>
+                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">PhonePe</span>
+                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">Paytm UPI</span>
+                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">Credit/Debit Card</span>
+                    <span class="px-2 py-0.5 bg-white border border-[#eae4dc] rounded-md">NetBanking</span>
                   </div>
                 </div>
               </label>
 
               <!-- Option 2: Cash on Delivery (COD) -->
-              <label id="payment-card-cod" class="flex items-start gap-3.5 p-4 border border-gray-200 bg-white rounded-2xl cursor-pointer hover:border-gray-300 transition-all">
-                <input type="radio" name="payment-method" value="COD" class="mt-1 accent-[#f2707f]" />
+              <label id="payment-card-cod" class="flex items-start gap-3.5 p-4 border border-[#eae4dc] bg-white rounded-2xl cursor-pointer hover:border-[#99918b] transition-all">
+                <input type="radio" name="payment-method" value="COD" class="mt-1 accent-[#171513]" />
                 <div class="flex-1 min-w-0">
                   <div class="flex flex-wrap items-center justify-between gap-1.5">
-                    <span class="text-xs sm:text-sm font-extrabold text-gray-900">Cash on Delivery (COD)</span>
-                    <span class="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full font-extrabold">
+                    <span class="text-xs sm:text-sm font-bold text-[#171513]">Cash on Delivery (COD)</span>
+                    <span class="text-[10px] text-[#8a5314] bg-[#fef8ee] border border-[#fae2be] px-2.5 py-0.5 rounded-full font-bold">
                       +₹25 COD Processing Fee
                     </span>
                   </div>
-                  <p class="text-[11px] text-gray-600 mt-1">
+                  <p class="text-[11px] text-[#6e6863] mt-1">
                     Pay cash or scan courier QR at your doorstep upon parcel arrival.
                   </p>
-                  <!-- Clear savings tip nudging user to UPI -->
-                  <div class="mt-2.5 p-2.5 bg-amber-50/80 border border-amber-200 rounded-xl text-[11px] text-amber-900 flex items-start gap-2">
+                  <div class="mt-2.5 p-2.5 bg-[#fef8ee] border border-[#fae2be] rounded-xl text-[11px] text-[#8a5314] flex items-start gap-2">
                     <span class="text-xs">💡</span>
                     <div>
                       <span class="font-bold">Avoid ₹25 fee:</span> Choose <strong>Razorpay Online</strong> above and pay via <strong>UPI (GPay / PhonePe)</strong> for <strong>₹0 extra fee</strong> and faster dispatch!
@@ -232,48 +229,50 @@ import DPDPNotice from '../components/DPDPNotice';
 
         <!-- Order Summary Column -->
         <div class="lg:col-span-5">
-          <div class="bg-white p-5 sm:p-6 border border-gray-200 rounded-2xl space-y-5 sticky top-24 shadow-xs">
-            <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-              <h2 class="text-base sm:text-lg font-bold text-gray-900">
+          <div class="bg-white p-5 sm:p-6 border border-[#eae4dc] rounded-[24px] space-y-5 sticky top-24 shadow-2xs">
+            <div class="flex items-center justify-between border-b border-[#eae4dc] pb-3">
+              <h2 class="font-serif text-lg sm:text-xl font-normal text-[#171513]">
                 Order Summary
               </h2>
-              <span class="text-[10px] bg-rose-50 text-[#a1505a] font-bold px-2 py-0.5 rounded-full">Vapi Dispatch</span>
+              <span class="text-[10px] bg-[#faf4f2] text-[#9f4553] font-bold px-2.5 py-0.5 rounded-full border border-[#eae4dc]">
+                Vapi Atelier Dispatch
+              </span>
             </div>
 
-            <div id="checkout-cart-items" class="space-y-3 divide-y divide-gray-100 text-xs">
-              <p class="text-xs text-gray-400">Loading your bag...</p>
+            <div id="checkout-cart-items" class="space-y-3 divide-y divide-[#eae4dc] text-xs">
+              <p class="text-xs text-[#6e6863]">Loading your shopping bag...</p>
             </div>
 
-            <div class="space-y-2 text-xs text-gray-600 pt-3 border-t border-gray-100">
+            <div class="space-y-2 text-xs text-[#6e6863] pt-3 border-t border-[#eae4dc]">
               <div class="flex justify-between">
                 <span>Subtotal</span>
-                <span id="checkout-subtotal" class="font-bold text-gray-900">₹0</span>
+                <span id="checkout-subtotal" class="font-bold text-[#171513]">₹0</span>
               </div>
               <div class="flex justify-between">
-                <span>Pan-India Shipping</span>
-                <span id="checkout-shipping" class="font-bold text-gray-900">FREE</span>
+                <span>Pan-India Express Shipping</span>
+                <span id="checkout-shipping" class="font-bold text-[#1b6d48]">FREE</span>
               </div>
               <!-- COD Fee Row (Shown only when Cash on Delivery is selected) -->
-              <div id="cod-fee-row" class="hidden flex justify-between text-amber-800 bg-amber-50/80 px-2.5 py-1.5 rounded-lg border border-amber-200 text-xs font-semibold">
+              <div id="cod-fee-row" class="hidden flex justify-between text-[#8a5314] bg-[#fef8ee] px-2.5 py-1.5 rounded-lg border border-[#fae2be] text-xs font-semibold">
                 <span class="flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <svg class="w-3.5 h-3.5 text-[#8a5314]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   <span>Cash on Delivery Handling Fee</span>
                 </span>
-                <span id="checkout-cod-fee" class="font-extrabold text-amber-900">+₹25</span>
+                <span id="checkout-cod-fee" class="font-bold text-[#8a5314]">+₹25</span>
               </div>
-              <div class="flex justify-between text-base font-bold text-gray-900 pt-2 border-t border-gray-100">
+              <div class="flex justify-between text-base font-bold text-[#171513] pt-2 border-t border-[#eae4dc]">
                 <span>Total Amount</span>
-                <span id="checkout-total" class="text-[#f2707f]">₹0</span>
+                <span id="checkout-total" class="text-xl font-bold text-[#171513]">₹0</span>
               </div>
             </div>
 
             <!-- COD Nudge Banner in Order Summary -->
-            <div id="cod-nudge-banner" class="hidden p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-[11px] text-emerald-950">
+            <div id="cod-nudge-banner" class="hidden p-3 bg-[#eef8f3] border border-[#c4e8d3] rounded-xl text-[11px] text-[#1b6d48]">
               <div class="flex items-start gap-2">
                 <span class="text-sm">💡</span>
                 <div>
-                  <p class="font-bold text-emerald-900">Want to save ₹25 on this order?</p>
-                  <p class="text-emerald-700 mt-0.5">Switch to <strong>Razorpay Online (UPI)</strong> above to remove the ₹25 handling fee and enjoy 100% free checkout!</p>
+                  <p class="font-bold text-[#1b6d48]">Save ₹25 on this order:</p>
+                  <p class="text-[#256f48] mt-0.5">Switch to <strong>Razorpay Online (UPI)</strong> above to remove the ₹25 handling fee and enjoy 100% free checkout!</p>
                 </div>
               </div>
             </div>
@@ -285,16 +284,16 @@ import DPDPNotice from '../components/DPDPNotice';
             <button
               id="complete-order-btn"
               type="button"
-              class="w-full bg-[#111111] hover:bg-black text-white py-4 text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
+              class="w-full bg-[#171513] hover:bg-[#9f4553] text-white py-4 text-xs font-bold uppercase tracking-[0.12em] rounded-xl shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
             >
               <svg id="complete-btn-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>
-              <span id="complete-btn-text">Pay via Razorpay & Confirm Order</span>
+              <span id="complete-btn-text">Pay via Razorpay &amp; Confirm Order</span>
             </button>
 
             <!-- Order Success Confirmation Modal with Live GST Invoice Download -->
-            <div id="order-success-modal" class="hidden p-6 bg-rose-50/40 border-2 border-[#f2707f] rounded-2xl text-center space-y-4 shadow-xl">
+            <div id="order-success-modal" class="hidden p-6 bg-[#faf8f5] border-2 border-[#c5a059] rounded-2xl text-center space-y-4 shadow-xl">
               <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
                 <svg class="w-6 h-6 stroke-[2.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -327,7 +326,7 @@ import DPDPNotice from '../components/DPDPNotice';
                 <a
                   id="checkout-track-order-link"
                   href="/track-order"
-                  class="block w-full bg-[#f2707f] hover:bg-[#e05e6d] text-white py-3 text-xs uppercase tracking-wider font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                  class="block w-full bg-[#171513] hover:bg-[#9f4553] text-white py-3 text-xs uppercase tracking-[0.1em] font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                 >
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V4.875A1.125 1.125 0 0013.125 3.75H4.5A1.125 1.125 0 003.375 4.875v9.375" />
@@ -564,10 +563,10 @@ import DPDPNotice from '../components/DPDPNotice';
           <div class="flex items-center gap-3 pt-2">
             <img src="${item.image}" alt="${item.name}" class="w-12 h-14 object-cover rounded-lg bg-gray-50 border border-gray-100" />
             <div class="flex-1 min-w-0">
-              <p class="font-bold text-gray-900 truncate">${item.name}</p>
-              <p class="text-gray-400 text-[11px]">Qty: ${item.quantity}</p>
+              <p class="font-semibold text-[#171513] truncate">${item.name}</p>
+              <p class="text-[#6e6863] text-[11px]">Qty: ${item.quantity}</p>
             </div>
-            <span class="font-bold text-[#f2707f]">${formatINR(item.pricePaise * item.quantity)}</span>
+            <span class="font-bold text-[#171513]">${formatINR(item.pricePaise * item.quantity)}</span>
           </div>
         `
         )
@@ -586,10 +585,10 @@ import DPDPNotice from '../components/DPDPNotice';
 
       if (isCodSelected) {
         // Active COD styling
-        cardCod?.classList.add('border-2', 'border-[#f2707f]', 'bg-rose-50/20');
-        cardCod?.classList.remove('border-gray-200', 'bg-white');
-        cardRazorpay?.classList.remove('border-2', 'border-[#f2707f]', 'bg-rose-50/20');
-        cardRazorpay?.classList.add('border-gray-200', 'bg-white');
+        cardCod?.classList.add('border-2', 'border-[#171513]', 'bg-[#faf8f5]');
+        cardCod?.classList.remove('border-[#eae4dc]', 'bg-white');
+        cardRazorpay?.classList.remove('border-2', 'border-[#171513]', 'bg-[#faf8f5]');
+        cardRazorpay?.classList.add('border-[#eae4dc]', 'bg-white');
 
         // Show COD fee row and nudge banner
         codFeeRow?.classList.remove('hidden');
@@ -600,10 +599,10 @@ import DPDPNotice from '../components/DPDPNotice';
         if (completeBtnText) completeBtnText.textContent = `Confirm Cash on Delivery Order (${formatINR(codTotalPaise)})`;
       } else {
         // Active Razorpay styling
-        cardRazorpay?.classList.add('border-2', 'border-[#f2707f]', 'bg-rose-50/20');
-        cardRazorpay?.classList.remove('border-gray-200', 'bg-white');
-        cardCod?.classList.remove('border-2', 'border-[#f2707f]', 'bg-rose-50/20');
-        cardCod?.classList.add('border-gray-200', 'bg-white');
+        cardRazorpay?.classList.add('border-2', 'border-[#171513]', 'bg-[#faf8f5]');
+        cardRazorpay?.classList.remove('border-[#eae4dc]', 'bg-white');
+        cardCod?.classList.remove('border-2', 'border-[#171513]', 'bg-[#faf8f5]');
+        cardCod?.classList.add('border-[#eae4dc]', 'bg-white');
 
         // Hide COD fee row and nudge banner
         codFeeRow?.classList.add('hidden');
