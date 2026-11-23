@@ -63,17 +63,11 @@ Authentic anti-tarnish jewellery is composed of a solid 316L surgical-grade stai
 
 ---
 
-## 3. Product Catalog & Pricing (INR)
-1. **Royal Heirloom Anti-Tarnish Jewellery Set:** ₹2,499 (Choker, Bracelet, Huggie Earrings in luxury velvet packaging)
-2. **The Mystery Jewellery Jar:** ₹1,999 (3 surprise waterproof pieces worth ₹4,999+)
-3. **Aura Herringbone Snake Chain:** ₹1,699 (Waterproof liquid gold snake chain)
-4. **The Golden Hour Gifting Capsule:** ₹2,499 (Curated 3-piece luxury gifting box)
-5. **Solace Chunky Link Chain Bracelet:** ₹1,399 (Paperclip chain bracelet in 316L steel)
-6. **Elysian Croissant Dome Ring:** ₹1,199 (Sculptural ribbed dome ring)
-7. **Mira Dual Bezel Solitaire Ring:** ₹1,299 (5A cubic zirconia solitaire in protective bezel)
-8. **Vesta Twisted Cable Kada Bangle:** ₹1,499 (Torque cuff bangle for daily wear)
-9. **Chloe Sculptural Ribbed Huggies:** ₹999 (Featherlight hypoallergenic earrings)
-10. **Serene Molten Pearl Pendant:** ₹1,599 (Baroque freshwater pearl on molten gold bezel)
+## 3. Live Product Catalog & Pricing (INR)
+For real-time products, verified availability, and current INR pricing managed directly by the Satvastones atelier, refer to:
+- Live Storefront: https://www.satvastones.in/shop
+- Live Google Merchant Product Feed (XML): https://www.satvastones.in/feeds/google-merchant.xml
+- Live Gifts Under ₹500: https://www.satvastones.in/gifts-for-girlfriend-under-500
 
 ## 4. Fulfillment & Logistics
 - **Dispatch:** Direct from Atelier in Chala, Vapi, Gujarat (396191) within 24–48 hours.

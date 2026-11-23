@@ -1,13 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
-import ProductCard from '../components/ProductCard.astro';
-import { PRODUCTS } from '../data/products';
-
-const fallbackProducts = [
-  ...PRODUCTS.filter((p) => p.isBestseller),
-  ...PRODUCTS.filter((p) => !p.isBestseller)
-].slice(0, 4);
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -16,43 +9,43 @@ const breadcrumbs = [
 
 const giftIdeas = [
   {
-    title: 'Korean Crystal & Floral Drop Earrings (From ₹199)',
-    copy: 'Featherlight, nickel-free pavé studs, star fringe drops, and floral crystal earrings safe for sensitive ears — gift-ready and sweat-proof.',
+    title: 'Nickel-Free & Hypoallergenic Earrings',
+    copy: 'Featherlight studs, crystal drops, and daily hoops safe for sensitive ears — waterproof and sweat-proof.',
     href: '/collections/earrings',
-    cta: 'Shop hypoallergenic earrings'
+    cta: 'Shop earrings'
   },
   {
-    title: 'Minimal Anti-Tarnish Gold Plated Rings (Under ₹500)',
-    copy: 'Aesthetic minimalist 18K gold PVD bands and daisy rings in 316L steel that never turn her fingers green like ₹50–₹100 brass rings.',
+    title: 'Minimal Anti-Tarnish Rings',
+    copy: 'Everyday 18K gold PVD rings in 316L surgical steel that never turn fingers green.',
     href: '/collections/rings',
-    cta: 'Shop minimal rings'
+    cta: 'Shop rings'
   },
   {
-    title: 'Waterproof Bracelets & Daisy Cuffs (From ₹179)',
-    copy: 'Bracelets that don’t tarnish — daily-wear cuffs and chains she can wear to college, office, showers, and dates without losing color.',
+    title: 'Waterproof Bracelets & Bangles',
+    copy: 'Daily-wear bracelets and cuffs she can wear to college, office, showers, and outings without losing color.',
     href: '/collections/bracelets',
-    cta: 'Shop waterproof bracelets'
+    cta: 'Shop bracelets'
   },
   {
-    title: 'Necklace Gifts & Viral Pendants',
-    copy: 'Minimalist oval pendants, clover charms, and liquid-gold herringbone chains that stay luminous in Indian humidity.',
+    title: 'Waterproof Necklaces & Pendants',
+    copy: 'Minimalist pendants and everyday chains crafted to stay lustrous in Indian humidity.',
     href: '/collections/necklaces',
-    cta: 'Shop waterproof necklaces'
+    cta: 'Shop necklaces'
   }
 ];
 
 const giftFaqs = [
   {
     q: 'What is the best birthday gift for a girlfriend under ₹500 in India?',
-    a: 'Waterproof, anti-tarnish jewellery is one of the best birthday gifts for a girlfriend under ₹500 because she can wear it every single day without it turning black. Satvastones offers 18K gold PVD plated earrings, daisy cuff bracelets, minimal rings, and Korean crystal drops starting at just ₹179–₹325, packed in luxury keepsake packaging with fast pan-India delivery.'
+    a: 'Waterproof, anti-tarnish jewellery is one of the best birthday gifts for a girlfriend under ₹500 because she can wear it every day without it turning black. Satvastones offers 18K gold PVD plated earrings, bracelets, rings, and necklaces in 316L surgical stainless steel with fast pan-India delivery.'
   },
   {
     q: 'Can I get good quality anti-tarnish jewellery gifts under ₹500 that won’t lose color?',
-    a: 'Yes. While cheap ₹50–₹100 street or brass rings tarnish in days and stain skin green, Satvastones crafts affordable 316L surgical stainless steel + 18K gold vacuum PVD jewellery starting from ₹179. Every piece is waterproof, sweat-proof, hypoallergenic, and nickel-free.'
+    a: 'Yes. While cheap brass alloy jewellery tarnishes in days and stains skin green, Satvastones crafts affordable 316L surgical stainless steel + 18K gold vacuum PVD jewellery that is waterproof, sweat-proof, hypoallergenic, and nickel-free.'
   },
   {
-    q: 'Do you offer necklace gifts for girlfriend under ₹500 or combo gift boxes?',
-    a: 'Yes! You can shop individual waterproof earrings, rings, bracelets, and pendants under ₹500, or combine any 2+ pieces in our Stack Studio to unlock an automatic 10%–15% discount with free express shipping across India above ₹499. We also offer the viral Mystery Jewellery Jar for surprise gifting.'
+    q: 'Do you offer combo discounts and free delivery on gifts?',
+    a: 'Yes. You can combine any 2+ pieces in our Stack Studio to unlock automatic bundle savings, and all orders above ₹499 get free express shipping across India.'
   },
   {
     q: 'How fast will my gift reach, and is Cash on Delivery available?',
@@ -73,41 +66,38 @@ const faqSchema = {
   }))
 };
 
-const collectionSchema = {
+const itemListSchema = {
   '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: 'Best Jewellery Gifts for Girlfriend Under ₹500 in India | Satvastones',
-  description:
-    'Shop the best birthday and anniversary jewellery gifts for your girlfriend under ₹500 in India. Waterproof, anti-tarnish 18K gold plated rings, earrings, bracelets & necklaces starting ₹179.',
-  url: 'https://www.satvastones.in/gifts-for-girlfriend-under-500'
+  '@type': 'ItemList',
+  name: 'Satvastones Anti-Tarnish Jewellery Gifts Under ₹500',
+  numberOfItems: 0,
+  itemListElement: []
 };
 ---
 
 <BaseLayout
-  title="Best Jewellery Gifts for Girlfriend Under ₹500 in India (From ₹179) | Satvastones"
-  description="Shop the best birthday & anniversary jewellery gifts for girlfriend under ₹500 in India. Waterproof, anti-tarnish 18K gold plated rings, Korean earrings, bracelets & necklaces from ₹179. Fast pan-India delivery & COD."
-  schema={[collectionSchema, faqSchema]}
+  title="Best Jewellery Gifts for Girlfriend Under ₹500 in India | Satvastones"
+  description="Shop real waterproof & anti-tarnish jewellery gifts for girlfriend under ₹500 in India. 18K gold PVD rings, nickel-free earrings, bracelets & necklaces in 316L steel. Fast pan-India delivery & COD."
+  schema={[itemListSchema, faqSchema]}
   breadcrumbs={breadcrumbs}
 >
   <div class="bg-[#fbf9f5] text-[#14110f]">
     <PageIntro
       eyebrow="Gifting Under ₹500 · Waterproof & Non-Tarnish"
       title="Best jewellery gifts for girlfriend under ₹500."
-      lede="Thoughtful birthday, anniversary, and everyday jewellery gifts she will never have to take off. 18K gold PVD on nickel-free 316L surgical steel — starting at ₹179."
+      lede="Thoughtful birthday, anniversary, and everyday jewellery gifts she will never have to take off. 18K gold PVD on nickel-free 316L surgical steel — live from our catalogue."
       crumbs={breadcrumbs}
     >
       <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
-        <span>Starting at ₹179</span>
-        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
         <span>Waterproof &amp; Anti-Tarnish</span>
         <span aria-hidden="true" class="text-[#c5a059]">✦</span>
         <span>Nickel-Free for Sensitive Skin</span>
         <span aria-hidden="true" class="text-[#c5a059]">✦</span>
-        <span>24–48h Dispatch · COD Available</span>
+        <span>24–48h Vapi Dispatch · COD Available</span>
       </div>
     </PageIntro>
 
-    <!-- Live Under ₹500 Products Grid -->
+    <!-- Live Under ₹500 Products Grid (Populated from Live D1 Catalogue — Zero Mock Data) -->
     <section class="border-y border-[#e5ded3] bg-[#f8f4ed] py-14 sm:py-20">
       <div class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10">
         <div class="flex flex-wrap items-end justify-between gap-4">
@@ -124,16 +114,17 @@ const collectionSchema = {
 
         <div
           id="under-500-grid"
+          data-live-products="under-500"
           class="mt-8 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6"
         >
-          {fallbackProducts.map((product) => (
-            <ProductCard product={product} />
-          ))}
+          <p class="col-span-full py-10 text-center text-xs uppercase tracking-[0.16em] text-[#8a8279]">
+            Loading live catalogue…
+          </p>
         </div>
 
         <div class="mt-10 flex flex-wrap items-center justify-between gap-4 border border-[#e0d7c9] bg-[#f4efe7] px-5 py-4">
           <p class="text-[13px] text-[#14110f]">
-            Want to build a custom birthday gift combo? Combine 2+ pieces in <strong>Stack Studio</strong> and save <strong>15% automatically</strong> + free shipping above ₹499.
+            Want to build a custom birthday gift combo? Combine 2+ pieces in <strong>Stack Studio</strong> and save automatically + free shipping above ₹499.
           </p>
           <a
             href="/stack-builder"
@@ -148,7 +139,7 @@ const collectionSchema = {
     <!-- Curated Gift Categories -->
     <section class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
       <div class="max-w-2xl">
-        <p class="eyebrow text-[#8d3f3d]">Gift ideas by style</p>
+        <p class="eyebrow text-[#8d3f3d]">Browse by category</p>
         <h2 class="font-display mt-2 text-[2rem] leading-tight sm:text-[2.6rem]">
           What she’ll actually wear every day.
         </h2>
@@ -180,8 +171,8 @@ const collectionSchema = {
           </h2>
           <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em]">
             <a href="/collections/gift-sets" class="link-line text-[#14110f]">Curated gift sets</a>
-            <a href="/collections/mystery-jewellery-jar" class="link-line text-[#14110f]">Mystery jewellery jar</a>
             <a href="/affordable-anti-tarnish-jewellery-india" class="link-line text-[#14110f]">Affordable India guide</a>
+            <a href="/anti-tarnish-jewellery-vapi" class="link-line text-[#14110f]">Vapi Gujarat atelier</a>
           </div>
         </div>
 
@@ -201,52 +192,52 @@ const collectionSchema = {
   </div>
 
   <script>
-    import { getAllCatalogProducts, syncCatalogFromCloudflare } from '../stores/catalogStore';
-
-    function renderUnder500Products() {
+    async function hydrateLiveUnder500() {
       const grid = document.getElementById('under-500-grid');
-      if (!grid) return;
-
-      const all = getAllCatalogProducts();
-      const under500 = all.filter((p) => p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise);
-      const list = under500.length ? under500 : all.slice(0, 8);
-      if (!list.length) return;
-
-      grid.innerHTML = list
-        .map((product) => {
-          const primaryImage = product.images?.[0]?.url || '';
-          const priceRupees = Math.round(product.pricePaise / 100);
-          const compareRupees = product.compareAtPricePaise ? Math.round(product.compareAtPricePaise / 100) : null;
-          const discountPercent = product.compareAtPricePaise
-            ? Math.round(((product.compareAtPricePaise - product.pricePaise) / product.compareAtPricePaise) * 100)
-            : 0;
-          return `
-            <div class="product-card group relative flex flex-col">
-              <a href="/products/${product.slug}" class="relative block aspect-[3/4] overflow-hidden bg-[#f1ece3]" aria-label="${product.name}">
-                <div class="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">
-                  ${priceRupees <= 500 ? `<span class="bg-[#14110f] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8]">Under ₹500</span>` : ''}
-                  ${discountPercent > 0 ? `<span class="bg-[#c5a059] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-white">−${discountPercent}%</span>` : ''}
-                </div>
-                <img src="${primaryImage}" alt="${product.name}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-              </a>
-              <div class="flex flex-1 flex-col gap-2 pt-3.5">
-                <h3 class="font-serif text-[15px] leading-snug text-[#14110f] sm:text-base">
-                  <a href="/products/${product.slug}">${product.name}</a>
-                </h3>
-                <div class="mt-auto flex items-baseline gap-2">
-                  <span class="text-sm font-medium text-[#14110f]">₹${priceRupees.toLocaleString('en-IN')}</span>
-                  ${compareRupees ? `<span class="text-[11px] text-[#a39a91] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>` : ''}
+      if (!grid || grid.dataset.ssrHydrated === 'true') return;
+      try {
+        const res = await fetch('/api/products', { headers: { Accept: 'application/json' } });
+        if (!res.ok) return;
+        const data = await res.json();
+        const products = Array.isArray(data?.products)
+          ? data.products.filter((p: any) => p.isPublished !== false && p.inStock !== false)
+          : [];
+        const under500 = products
+          .filter((p: any) => Number(p.pricePaise) <= 50000)
+          .sort((a: any, b: any) => Number(a.pricePaise) - Number(b.pricePaise));
+        const list = under500.length ? under500 : products.slice(0, 8);
+        if (!list.length) {
+          grid.innerHTML = `<p class="col-span-full py-10 text-center text-sm text-[#5f5851]">New gift pieces are being added — <a href="/shop" class="underline">browse all available jewellery</a>.</p>`;
+          return;
+        }
+        grid.innerHTML = list
+          .map((product: any) => {
+            const primaryImage = product.image || product.images?.[0]?.url || '';
+            const priceRupees = Math.round(Number(product.pricePaise) / 100);
+            const compareRupees = product.compareAtPricePaise ? Math.round(Number(product.compareAtPricePaise) / 100) : null;
+            return `
+              <div class="product-card group relative flex flex-col">
+                <a href="/products/${product.slug}" class="relative block aspect-[3/4] overflow-hidden bg-[#f1ece3]" aria-label="${product.name}">
+                  ${priceRupees <= 500 ? `<span class="absolute left-3 top-3 z-10 bg-[#14110f] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8]">Under ₹500</span>` : ''}
+                  <img src="${primaryImage}" alt="${product.name}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                </a>
+                <div class="flex flex-1 flex-col gap-2 pt-3.5">
+                  <h3 class="font-serif text-[15px] leading-snug text-[#14110f] sm:text-base">
+                    <a href="/products/${product.slug}">${product.name}</a>
+                  </h3>
+                  <div class="mt-auto flex items-baseline gap-2">
+                    <span class="text-sm font-medium text-[#14110f]">₹${priceRupees.toLocaleString('en-IN')}</span>
+                    ${compareRupees ? `<span class="text-[11px] text-[#a39a91] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>` : ''}
+                  </div>
                 </div>
               </div>
-            </div>
-          `;
-        })
-        .join('');
+            `;
+          })
+          .join('');
+      } catch {
+        /* leave SSR content intact */
+      }
     }
-
-    syncCatalogFromCloudflare().then(renderUnder500Products);
-    document.addEventListener('astro:page-load', () => {
-      syncCatalogFromCloudflare().then(renderUnder500Products);
-    });
+    hydrateLiveUnder500();
   </script>
 </BaseLayout>

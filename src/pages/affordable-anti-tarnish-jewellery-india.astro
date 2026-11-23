@@ -1,13 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
-import ProductCard from '../components/ProductCard.astro';
-import { PRODUCTS } from '../data/products';
-
-const topProducts = [
-  ...PRODUCTS.filter((p) => p.isBestseller),
-  ...PRODUCTS.filter((p) => !p.isBestseller)
-].slice(0, 4);
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -66,7 +59,7 @@ const indiaFaqs = [
   },
   {
     q: 'Does Satvastones offer affordable gifts and bundle discounts?',
-    a: 'Yes. Through our Stack Studio, combining 2 items saves 10% and 3+ items saves 15% automatically—no coupon code needed. We also offer curated Gift Sets and our bestselling Mystery Jewellery Jar (3 surprise waterproof pieces) in luxury gift-ready packaging.'
+    a: 'Yes. Through our Stack Studio, combining 2 items saves 10% and 3+ items saves 15% automatically—no coupon code needed. You can also explore our dedicated Gifts Under ₹500 collection for budget-friendly waterproof gifting.'
   }
 ];
 
@@ -259,10 +252,14 @@ const guideSchema = {
               View all bestsellers
             </a>
           </div>
-          <div class="mt-6 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
-            {topProducts.map((product) => (
-              <ProductCard product={product} />
-            ))}
+          <div
+            id="india-live-grid"
+            data-live-products="featured"
+            class="mt-6 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6"
+          >
+            <p class="col-span-full py-10 text-center text-xs uppercase tracking-[0.16em] text-[#8a8279]">
+              Loading live catalogue…
+            </p>
           </div>
         </div>
       </div>

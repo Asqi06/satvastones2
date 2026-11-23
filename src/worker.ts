@@ -436,6 +436,9 @@ export default {
               const purgeTargets = [
                 '/api/products',
                 '/shop',
+                '/gifts-for-girlfriend-under-500',
+                '/anti-tarnish-jewellery-vapi',
+                '/affordable-anti-tarnish-jewellery-india',
                 '/sitemap.xml',
                 '/feeds/google-merchant.xml',
                 '/google-merchant.xml',
@@ -1017,14 +1020,19 @@ export default {
       }
     }
 
-    // 5. Dynamic ItemList JSON-LD for /shop, /collections/*, and /journal (Edge Cached for 200 OK only)
+    // 5. Dynamic Live D1 Products & ItemList JSON-LD for /shop, /collections/*, /journal, and SEO landing pages
+    const normalizedPath = url.pathname.replace(/\/$/, '') || '/';
+    const isLiveLandingPage =
+      normalizedPath === '/gifts-for-girlfriend-under-500' ||
+      normalizedPath === '/anti-tarnish-jewellery-vapi' ||
+      normalizedPath === '/affordable-anti-tarnish-jewellery-india';
+
     if (
       env.DB &&
-      (url.pathname === '/shop' ||
-        url.pathname === '/shop/' ||
+      (normalizedPath === '/shop' ||
         url.pathname.startsWith('/collections/') ||
-        url.pathname === '/journal' ||
-        url.pathname === '/journal/')
+        normalizedPath === '/journal' ||
+        isLiveLandingPage)
     ) {
       return withEdgeCache(request, ctx, HTML_CACHE_CONTROL, false, async () => {
       try {
@@ -1032,7 +1040,7 @@ export default {
         if (assetRes.ok && (assetRes.headers.get('content-type') || '').includes('text/html')) {
           let html = await assetRes.text();
 
-          if (url.pathname === '/journal' || url.pathname === '/journal/') {
+          if (normalizedPath === '/journal') {
             const blogs = await loadLivePublishedBlogs(env.DB);
             html = updateJsonLdNodes(html, 'ItemList', (node) => {
               node.numberOfItems = blogs.length;
@@ -1048,11 +1056,65 @@ export default {
             const colSlug = url.pathname.startsWith('/collections/')
               ? url.pathname.replace('/collections/', '').replace(/\/$/, '').trim()
               : '';
-            const matching = colSlug
+            let matching = colSlug
               ? colSlug === 'bestsellers' || colSlug === 'new-arrivals'
                 ? allProducts
                 : allProducts.filter((p) => p.category === colSlug)
               : allProducts;
+
+            if (normalizedPath === '/gifts-for-girlfriend-under-500') {
+              const under500 = allProducts
+                .filter((p) => p.inStock && p.pricePaise <= 50000)
+                .sort((a, b) => a.pricePaise - b.pricePaise);
+              matching = under500.length ? under500 : allProducts.slice(0, 8);
+            } else if (isLiveLandingPage) {
+              matching = allProducts.filter((p) => p.inStock).slice(0, 8);
+            }
+
+            if (isLiveLandingPage) {
+              const cardsHtml = matching.length
+                ? matching
+                    .map((p) => {
+                      const priceRupees = Math.round(p.pricePaise / 100);
+                      const compareRupees = p.compareAtPricePaise ? Math.round(p.compareAtPricePaise / 100) : null;
+                      const discountPercent =
+                        p.compareAtPricePaise && p.compareAtPricePaise > p.pricePaise
+                          ? Math.round(((p.compareAtPricePaise - p.pricePaise) / p.compareAtPricePaise) * 100)
+                          : 0;
+                      const badgeHtml =
+                        normalizedPath === '/gifts-for-girlfriend-under-500' && priceRupees <= 500
+                          ? `<span class="bg-[#14110f] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8]">Under ₹500</span>`
+                          : '';
+                      const discHtml =
+                        discountPercent > 0
+                          ? `<span class="bg-[#c5a059] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-white">−${discountPercent}%</span>`
+                          : '';
+                      return `
+                        <div class="product-card group relative flex flex-col">
+                          <a href="/products/${encodeURIComponent(p.slug)}" class="relative block aspect-[3/4] overflow-hidden bg-[#f1ece3]" aria-label="${escapeHtml(p.name)}">
+                            ${badgeHtml || discHtml ? `<div class="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">${badgeHtml}${discHtml}</div>` : ''}
+                            <img src="${escapeHtml(p.imageUrl)}" alt="${escapeHtml(p.name)}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async" />
+                          </a>
+                          <div class="flex flex-1 flex-col gap-2 pt-3.5">
+                            <h3 class="font-serif text-[15px] leading-snug text-[#14110f] sm:text-base">
+                              <a href="/products/${encodeURIComponent(p.slug)}">${escapeHtml(p.name)}</a>
+                            </h3>
+                            <div class="mt-auto flex items-baseline gap-2">
+                              <span class="text-sm font-medium text-[#14110f]">₹${priceRupees.toLocaleString('en-IN')}</span>
+                              ${compareRupees ? `<span class="text-[11px] text-[#a39a91] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>` : ''}
+                            </div>
+                          </div>
+                        </div>`;
+                    })
+                    .join('')
+                : `<p class="col-span-full py-10 text-center text-sm text-[#5f5851]">Browse our latest pieces in the <a href="/shop" class="underline">live shop</a>.</p>`;
+
+              html = html.replace(
+                /(<div[^>]*data-live-products="[^"]*"[^>]*>)[\s\S]*?(<\/div>)/,
+                (_m, open: string, close: string) =>
+                  `${open.replace(/>$/, ' data-ssr-hydrated="true">')}${cardsHtml}${close}`
+              );
+            }
 
             html = updateJsonLdNodes(html, 'ItemList', (node) => {
               node.numberOfItems = matching.length;

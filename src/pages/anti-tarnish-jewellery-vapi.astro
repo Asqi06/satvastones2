@@ -1,13 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageIntro from '../components/PageIntro.astro';
-import ProductCard from '../components/ProductCard.astro';
-import { PRODUCTS } from '../data/products';
-
-const featuredProducts = [
-  ...PRODUCTS.filter((p) => p.isBestseller),
-  ...PRODUCTS.filter((p) => !p.isBestseller)
-].slice(0, 4);
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -38,7 +31,7 @@ const vapiFaqs = [
   },
   {
     q: 'Can I contact Satvastones Vapi on WhatsApp for ring sizing or gift sets?',
-    a: 'Yes. You can message our Vapi concierge directly on WhatsApp at +91 90167 03180 (Monday–Saturday, 10 AM to 7 PM IST) for ring sizing guidance, curated birthday or wedding gift boxes, Mystery Jewellery Jars, and order assistance.'
+    a: 'Yes. You can message our Vapi concierge directly on WhatsApp at +91 90167 03180 (Monday–Saturday, 10 AM to 7 PM IST) for ring sizing guidance, curated birthday or wedding gift boxes, and order assistance.'
   },
   {
     q: 'Is Satvastones a registered jewellery business in Gujarat?',
@@ -193,10 +186,14 @@ const faqSchema = {
           </a>
         </div>
 
-        <div class="mt-8 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
-          {featuredProducts.map((product) => (
-            <ProductCard product={product} />
-          ))}
+        <div
+          id="vapi-live-grid"
+          data-live-products="featured"
+          class="mt-8 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6"
+        >
+          <p class="col-span-full py-10 text-center text-xs uppercase tracking-[0.16em] text-[#8a8279]">
+            Loading live catalogue…
+          </p>
         </div>
       </div>
     </section>
