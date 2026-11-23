@@ -405,6 +405,43 @@ export default {
   async fetch(request: Request, env: Env, ctx: any): Promise<Response> {
     const url = new URL(request.url);
 
+    // 0. Canonical SEO 301 Redirects (Host, Trailing Slash, and Legacy Policy Aliases)
+    if ((request.method === 'GET' || request.method === 'HEAD') && !url.pathname.startsWith('/api/')) {
+      const lowerHost = url.hostname.toLowerCase();
+      const isNonCanonicalHost =
+        lowerHost === 'satvastones.in' ||
+        lowerHost === 'satvastonesjewellery.in' ||
+        lowerHost === 'www.satvastonesjewellery.in';
+
+      const policyAliasMap: Record<string, string> = {
+        '/policies/privacy': '/privacy-policy',
+        '/policies/returns': '/refund-policy',
+        '/policies/shipping': '/shipping-policy',
+        '/policies/terms': '/terms-and-conditions'
+      };
+      const cleanPath = url.pathname.length > 1 && url.pathname.endsWith('/') ? url.pathname.slice(0, -1) : url.pathname;
+      const aliasTarget = policyAliasMap[cleanPath];
+      const hasTrailingSlash = url.pathname.length > 1 && url.pathname.endsWith('/');
+
+      if (isNonCanonicalHost || aliasTarget || hasTrailingSlash) {
+        const targetHost = isNonCanonicalHost ? 'www.satvastones.in' : url.host;
+        const targetPath = aliasTarget || cleanPath;
+        const targetUrl = `https://${targetHost}${targetPath}${url.search}`;
+        return Response.redirect(targetUrl, 301);
+      }
+    }
+
+    // Helper: fetch static Astro HTML page directly via /<path>/index.html to avoid Cloudflare Assets 307 redirects
+    const fetchStaticAssetClean = async (req: Request): Promise<Response> => {
+      const reqUrl = new URL(req.url);
+      const hasExtension = /\.[a-z0-9]{1,8}$/i.test(reqUrl.pathname);
+      if (!hasExtension && reqUrl.pathname !== '/' && !reqUrl.pathname.endsWith('/')) {
+        const indexRes = await env.ASSETS.fetch(new URL(`${reqUrl.pathname}/index.html`, req.url));
+        if (indexRes.ok) return indexRes;
+      }
+      return env.ASSETS.fetch(req);
+    };
+
     // Route /api/* requests to serverless D1 handlers, then normalise CORS.
     if (url.pathname.startsWith('/api/')) {
       try {
@@ -1036,7 +1073,7 @@ export default {
     ) {
       return withEdgeCache(request, ctx, HTML_CACHE_CONTROL, false, async () => {
       try {
-        const assetRes = await env.ASSETS.fetch(request);
+        const assetRes = await fetchStaticAssetClean(request);
         if (assetRes.ok && (assetRes.headers.get('content-type') || '').includes('text/html')) {
           let html = await assetRes.text();
 
@@ -1143,13 +1180,14 @@ export default {
       });
     }
 
-    // Serve all static pages via Cloudflare Assets
+    // Serve all static pages via Cloudflare Assets (200 OK directly without 307 trailing-slash redirects)
     try {
-      const assetRes = await env.ASSETS.fetch(request);
+      const assetRes = await fetchStaticAssetClean(request);
       if (assetRes.status === 404) {
         const resHeaders = new Headers(assetRes.headers);
         resHeaders.set('Cache-Control', 'no-cache, no-store, must-revalidate');
         resHeaders.set('Cloudflare-CDN-Cache-Control', 'no-cache');
+        resHeaders.set('X-Robots-Tag', 'noindex, nofollow');
         return new Response(assetRes.body, {
           status: 404,
           statusText: assetRes.statusText,

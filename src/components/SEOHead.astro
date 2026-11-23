@@ -15,10 +15,19 @@ export interface Props {
   noindex?: boolean;
 }
 
+const rawCanonical = Astro.props.canonicalUrl || Astro.url.href
+  .replace('://satvastones.in', '://www.satvastones.in')
+  .replace('://satvastonesjewellery.in', '://www.satvastones.in')
+  .replace('://www.satvastonesjewellery.in', '://www.satvastones.in')
+  .split('?')[0];
+const canonicalUrl =
+  rawCanonical.endsWith('/') && rawCanonical !== 'https://www.satvastones.in/'
+    ? rawCanonical.slice(0, -1)
+    : rawCanonical;
+
 const {
   title = 'Satvastones – Affordable Anti-Tarnish & Waterproof Jewellery for Women in India',
   description = 'Shop affordable, waterproof & non-tarnish 18K gold plated jewellery for women in India. 316L surgical steel rings, bracelets, necklaces & earrings that never lose color. Dispatched from Vapi, Gujarat — free shipping above ₹499.',
-  canonicalUrl = Astro.url.href.replace('satvastonesjewellery.in', 'www.satvastones.in').split('?')[0],
   ogImage = 'https://www.satvastones.in/og-image.jpg',
   type = 'website',
   schema,
