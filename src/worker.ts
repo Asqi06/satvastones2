@@ -840,7 +840,9 @@ export default {
             warranty
               ? `<li><strong class="font-medium text-[#14110f]">Warranty:</strong> ${warranty}</li>`
               : '',
-            `<li><strong class="font-medium text-[#14110f]">Skin compatibility:</strong> Nickel-free, lead-free, hypoallergenic</li>`
+            `<li><strong class="font-medium text-[#14110f]">Skin compatibility:</strong> Nickel-free, lead-free, hypoallergenic</li>`,
+            `<li><strong class="font-medium text-[#14110f]">Country of origin:</strong> India</li>`,
+            `<li><strong class="font-medium text-[#14110f]">Packed &amp; marketed by:</strong> Satvastones Jewellery (Anirudh A Verma), Chala, Vapi, Gujarat – 396191</li>`
           ].join('');
           html = html.replace(
             /(<ul[^>]*data-pdp-specs[^>]*>)[\s\S]*?(<\/ul>)/,

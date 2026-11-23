@@ -188,6 +188,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
               loading="eager"
               fetchpriority="high"
               decoding="async"
+              onerror="this.onerror=null;this.src='/satvastones-logo.png';"
               class="h-full w-full object-cover"
             />
 
@@ -590,6 +591,8 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
                 {product.dimensions && <li><strong class="font-medium text-[#14110f]">Dimensions:</strong> {product.dimensions}</li>}
                 {product.weightGrams && <li><strong class="font-medium text-[#14110f]">Weight:</strong> {product.weightGrams} grams</li>}
                 <li><strong class="font-medium text-[#14110f]">Skin compatibility:</strong> Nickel-free, lead-free, hypoallergenic</li>
+                <li><strong class="font-medium text-[#14110f]">Country of origin:</strong> India</li>
+                <li><strong class="font-medium text-[#14110f]">Packed &amp; marketed by:</strong> Satvastones Jewellery (Anirudh A Verma), Chala, Vapi, Gujarat – 396191</li>
               </ul>
               <p class="mt-3 border-l-2 border-[#e0d7c9] pl-3 text-[11px] text-[#6f675f]">
                 <strong class="font-medium text-[#14110f]">Our honest shine policy:</strong> 316L steel and 18K PVD gold resist water and sweat, but no plated piece is invincible against harsh chemicals. Basic care keeps its lustre for years.
