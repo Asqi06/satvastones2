@@ -118,7 +118,10 @@ export function generateSitemapXml(products: FeedProduct[], blogs: FeedBlog[]): 
     { path: '/collections/bangles', changefreq: 'daily', priority: '0.8' },
     { path: '/collections/gift-sets', changefreq: 'daily', priority: '0.8' },
     { path: '/collections/jewellery-set', changefreq: 'daily', priority: '0.8' },
-    { path: '/collections/mystery-jewellery-jar', changefreq: 'daily', priority: '0.8' },
+    { path: '/collections/mystery-jewellery-jar', changefreq: 'daily', priority: '0.9' },
+    { path: '/collections/rings-under-100', changefreq: 'daily', priority: '0.9' },
+    { path: '/collections/gifts-for-girlfriend-under-500', changefreq: 'daily', priority: '0.9' },
+    { path: '/collections/anti-tarnish-minimal-rings', changefreq: 'daily', priority: '0.9' },
     { path: '/collections/bestsellers', changefreq: 'daily', priority: '0.85' },
     { path: '/collections/new-arrivals', changefreq: 'daily', priority: '0.85' }
   ];

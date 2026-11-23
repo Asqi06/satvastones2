@@ -46,7 +46,58 @@ export function getStaticPaths() {
     }
   };
 
-  return [...categoryPaths, bestsellers, newArrivals];
+  const seoVirtualCollections = [
+    {
+      params: { slug: 'rings-under-100' },
+      props: {
+        category: {
+          id: 'rings-under-100',
+          name: 'Rings Under ₹100',
+          slug: 'rings-under-100',
+          tagline: 'Starting ₹49–₹99 · Budget Aesthetic & Anti-Tarnish Rings',
+          description:
+            'Explore budget aesthetic rings under ₹100 alongside long-lasting waterproof 18K gold plated anti-tarnish rings for women in India. Free shipping above ₹499 & COD available.',
+          image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
+          itemCount: 0
+        },
+        products: []
+      }
+    },
+    {
+      params: { slug: 'gifts-for-girlfriend-under-500' },
+      props: {
+        category: {
+          id: 'gifts-for-girlfriend-under-500',
+          name: 'Gifts for Girlfriend Under ₹500',
+          slug: 'gifts-for-girlfriend-under-500',
+          tagline: 'Birthday & Anniversary Picks · Starting ₹179',
+          description:
+            'Shop the best waterproof & anti-tarnish jewellery gifts for your girlfriend under ₹500 — 18K gold plated necklaces, minimal rings, bracelets & nickel-free earrings with fast India delivery and COD.',
+          image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80',
+          itemCount: 0
+        },
+        products: []
+      }
+    },
+    {
+      params: { slug: 'anti-tarnish-minimal-rings' },
+      props: {
+        category: {
+          id: 'anti-tarnish-minimal-rings',
+          name: 'Anti-Tarnish Minimal Rings',
+          slug: 'anti-tarnish-minimal-rings',
+          tagline: '18K Gold PVD · Waterproof & Nickel-Free',
+          description:
+            'Minimalist anti-tarnish rings crafted in 316L surgical stainless steel with 18K gold vacuum PVD. Shower-safe, sweat-proof daily rings for women that never turn fingers green.',
+          image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=800&q=80',
+          itemCount: 0
+        },
+        products: []
+      }
+    }
+  ];
+
+  return [...categoryPaths, bestsellers, newArrivals, ...seoVirtualCollections];
 }
 
 interface Props {
@@ -58,9 +109,12 @@ const { category, products } = Astro.props;
 
 // Keyword-targeted high-CTR SEO titles & meta descriptions (aligned with live Search Console demand)
 const seoTitles: Record<string, string> = {
+  'rings-under-100': 'Rings Under ₹99 & Budget Anti-Tarnish Rings (Starting ₹49–₹99) | Satvastones',
+  'gifts-for-girlfriend-under-500': 'Best Gifts for Girlfriend Under ₹500 — Necklaces, Rings & Earrings | Satvastones',
+  'anti-tarnish-minimal-rings': 'Anti-Tarnish Minimal Rings for Women — 18K Gold Plated & Waterproof | Satvastones',
+  'mystery-jewellery-jar': 'Mystery Jewellery Jar Online India — Waterproof 18K Gold Pieces | Satvastones',
   'bracelets': 'Waterproof & Anti-Tarnish Bracelets for Women (From ₹179) | Satvastones India',
   'jewellery-set': 'Affordable Anti-Tarnish & Traditional Jewellery Sets Online India | Satvastones',
-  'mystery-jewellery-jar': 'Mystery Jewellery Jar & Mystery Box Jewellery Online India | Satvastones',
   'necklaces': 'Waterproof Anti-Tarnish Necklaces, Oval & Clover Pendants India | Satvastones',
   'rings': 'Minimal Anti-Tarnish & 18K Gold Plated Rings for Women Under ₹500 | Satvastones',
   'earrings': 'Nickel-Free & Hypoallergenic Korean Crystal Earrings for Sensitive Ears (From ₹199) | Satvastones',
@@ -71,9 +125,12 @@ const seoTitles: Record<string, string> = {
 };
 
 const seoDescriptions: Record<string, string> = {
+  'rings-under-100': 'Looking for aesthetic rings under ₹100 or ₹50? Compare budget rings & shop waterproof 18K gold plated anti-tarnish rings for women in India. Free shipping above ₹499 & COD available.',
+  'gifts-for-girlfriend-under-500': 'Shop the best birthday & anniversary gifts for girlfriend under ₹500 in India. 18K gold plated waterproof & anti-tarnish necklaces, minimal rings & earrings from ₹179. Free shipping > ₹499 & COD.',
+  'anti-tarnish-minimal-rings': 'Shop anti-tarnish minimal rings for women in India. 18K gold plated 316L surgical steel rings — 100% waterproof, sweat-proof & nickel-free. Free shipping above ₹499 & COD available.',
+  'mystery-jewellery-jar': 'Unbox the viral Satvastones Mystery Jewellery Jar in India. Surprise waterproof & anti-tarnish 18K gold plated rings, necklaces & earrings in a keepsake jar. Free shipping & COD available.',
   'bracelets': 'Shop bracelets that don’t tarnish from ₹179. Waterproof 18K gold plated bracelets, daisy cuffs & link chains for women in India. Sweat-proof 316L steel, COD & free delivery above ₹499.',
   'jewellery-set': 'Explore affordable anti-tarnish & traditional Indian jewellery sets for women. Waterproof 18K gold PVD necklaces, bracelets & earrings for sarees, weddings & daily wear.',
-  'mystery-jewellery-jar': 'Unbox the viral Satvastones Mystery Jewellery Jar & Mystery Box Jewellery in India. 3 surprise waterproof, non-tarnish 18K gold PVD pieces dispatched from Vapi, Gujarat.',
   'necklaces': 'Shop waterproof, non-tarnish necklaces for women in India — oval pendants, viral clover chains, herringbone snakes & necklace gifts for girlfriend under ₹500. Free delivery above ₹499.',
   'rings': 'Shop minimal anti-tarnish & budget 18K gold plated rings for women under ₹500. Aesthetic, non-tarnish daisy & dome rings in 316L steel that never turn fingers green. Fast India delivery.',
   'earrings': 'Shop nickel-free & hypoallergenic earrings for sensitive ears in India from ₹199. Korean crystal fringe earrings, floral drop earrings, pavé studs & non-tarnish gold hoops.',
@@ -109,7 +166,90 @@ const itemListSchema = {
   }))
 };
 
+const defaultLowPrice =
+  category.slug === 'rings-under-100'
+    ? '99'
+    : category.slug === 'gifts-for-girlfriend-under-500'
+      ? '179'
+      : '179';
+const defaultHighPrice =
+  category.slug === 'gifts-for-girlfriend-under-500' ? '499' : '2499';
+
+const aggregateOfferSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: `Satvastones ${category.name}`,
+  description: pageDescription,
+  image: [category.image],
+  brand: {
+    '@type': 'Brand',
+    name: 'Satvastones Jewellery'
+  },
+  offers: {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'INR',
+    lowPrice: defaultLowPrice,
+    highPrice: defaultHighPrice,
+    offerCount: Math.max(1, products.length),
+    availability: 'https://schema.org/InStock',
+    url: `${siteUrl}/collections/${category.slug}`
+  }
+};
+
+const collectionBuyingGuides: Record<string, string[]> = {
+  'rings-under-100': [
+    'Searching for aesthetic rings under ₹100 or ₹50 in India usually leads to street-market brass or zinc alloy bands that look shiny on day one and turn your finger green within a week of handwashing, sanitizer, or monsoon humidity. If you buy five ₹80 fashion rings in a year, you still spend ₹400 while dealing with skin irritation and peeling color.',
+    'At Satvastones, we design affordable everyday jewellery for women that bridges budget pricing with real longevity. Our waterproof, anti-tarnish collection uses medical-grade 316L surgical stainless steel bonded with 18K gold vacuum PVD—so whether you pick a budget ring, an everyday daisy cuff, or a minimal band, it stays sweat-proof, shower-safe, and nickel-free.',
+    'Every order is hand-inspected at our Vapi, Gujarat atelier and dispatched within 24–48 hours across 19,000+ Indian pin codes with Cash on Delivery and free express shipping above ₹499. Combine 2+ pieces in Stack Studio to unlock an automatic 15% discount and bring your per-piece cost even lower.'
+  ],
+  'gifts-for-girlfriend-under-500': [
+    'Finding the best birthday or anniversary gift for your girlfriend under ₹500 in India does not have to mean settling for generic keychains or imitation jewellery that blackens in two weeks. Everyday waterproof jewellery is personal, wearable from college to office to festive dinners, and reminds her of you every single day.',
+    'Satvastones curates waterproof 18K gold plated gifts under ₹500—including Korean crystal fringe earrings, floral drop studs, daisy solitaire cuffs, minimal anti-tarnish rings, and delicate necklace gifts for girlfriends. Every piece is built on hypoallergenic, nickel-free 316L surgical stainless steel so it is completely safe for sensitive ears and skin.',
+    'Want to elevate your gift? Pair any two pieces under ₹500 in our Stack Studio for an automatic 15% bundle discount plus free pan-India express shipping above ₹499. Every parcel is hand-inspected in Vapi, Gujarat, dispatched in 24–48 hours, and available with both UPI and Cash on Delivery.'
+  ],
+  'anti-tarnish-minimal-rings': [
+    'Minimalist gold rings take more daily abuse than any other piece of jewellery—constant handwashing, soap, alcohol sanitizers, desk friction, and Indian summer sweat quickly strip conventional flash-plated brass rings down to dull copper.',
+    'Satvastones anti-tarnish minimal rings for women are engineered specifically for continuous, 24/7 Indian wear. Beneath the warm 18K gold vacuum PVD plasma finish sits solid 316L surgical stainless steel—the same corrosion-resistant, biocompatible alloy used in medical implants. Because PVD bonds gold at the atomic level inside a vacuum chamber, it is roughly 10 times more durable than standard electroplating and never leaves green marks on your fingers.',
+    'Style a single sleek band for office wear, stack sculpted dome and solitaire rings for weekends, or pair them with our waterproof bracelets and necklaces. Use our built-in Ring Size Finder before ordering, enjoy 7-day easy size exchanges, Cash on Delivery, and free pan-India shipping above ₹499.'
+  ],
+  'mystery-jewellery-jar': [
+    'The Satvastones Mystery Jewellery Jar brings the thrill of luxury unboxing to everyday waterproof jewellery in India. Instead of cheap novelty trinkets that tarnish after one outing, every surprise piece inside our keepsake jar is crafted from genuine 316L surgical stainless steel with 18K gold vacuum PVD coating.',
+    'Designed for birthdays, bridesmaid hampers, college gifting, and self-care treats, each mystery box experience delivers curated everyday staples—a mix of waterproof necklaces, minimal rings, hypoallergenic earrings, or stackable bracelets—that pair effortlessly with both western outfits and Indian festive sarees.',
+    'Every jar is hand-packed, inspected for finish quality, and sealed at our Chala, Vapi atelier in Gujarat before being dispatched within 24–48 hours via express air couriers. Orders above ₹499 qualify for free pan-India delivery, Cash on Delivery, and official GST tax invoicing.'
+  ]
+};
+
 const extraFaqsBySlug: Record<string, Array<{ q: string; a: string }>> = {
+  'rings-under-100': [
+    {
+      q: 'Can you get genuinely waterproof anti-tarnish rings under ₹50 or ₹100 in India?',
+      a: 'Honest answer: ₹50–₹99 rings are typically thin electroplated brass that loses color in 1–2 weeks. True 316L surgical stainless steel with 18K gold vacuum PVD starts slightly higher (around ₹179–₹499), lasts years through showers and sweat, and costs less per wear than repeatedly replacing cheap rings.'
+    },
+    {
+      q: 'How can I get the lowest price on Satvastones rings & jewellery?',
+      a: 'Browse our lowest-priced pieces right here, use Stack Studio to save 15% automatically when bundling 2+ pieces, and get free express shipping across India on orders above ₹499 with Cash on Delivery available.'
+    }
+  ],
+  'gifts-for-girlfriend-under-500': [
+    {
+      q: 'What is the best birthday or necklace gift for a girlfriend under ₹500?',
+      a: 'Waterproof 18K gold plated jewellery—such as Korean crystal drop earrings, daisy cuff bracelets, minimal rings, and delicate pendants starting at ₹179—is one of the best gifts for a girlfriend under ₹500 because it is nickel-free, sweat-proof, and stays bright every day.'
+    },
+    {
+      q: 'Is Cash on Delivery and fast pan-India shipping available for gifts?',
+      a: 'Yes! Orders are dispatched from our Vapi, Gujarat atelier within 24–48 hours, arrive in 2–4 business days across India, and support both UPI/Razorpay and Cash on Delivery (free shipping above ₹499).'
+    }
+  ],
+  'anti-tarnish-minimal-rings': [
+    {
+      q: 'Will anti-tarnish minimal rings turn my finger green after washing hands?',
+      a: 'Never. Satvastones minimal rings use biocompatible 316L surgical stainless steel with 18K vacuum gold PVD—zero copper, zero brass, zero nickel leaching, and 100% safe for daily handwashing and showers.'
+    },
+    {
+      q: 'What if the ring size I order does not fit?',
+      a: 'You can check your exact size using our on-screen Ring Sizer, and every ring order includes a hassle-free 7-day size exchange via our WhatsApp concierge (+91 90167 03180).'
+    }
+  ],
   rings: [
     {
       q: 'How much does a good quality anti-tarnish gold plated ring cost in India?',
@@ -189,7 +329,7 @@ const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug
 <BaseLayout
   title={pageTitle}
   description={pageDescription}
-  schema={[itemListSchema, categoryFaqSchema]}
+  schema={[itemListSchema, aggregateOfferSchema, categoryFaqSchema]}
   breadcrumbs={breadcrumbs}
 >
   <div class="bg-[#fbf9f5] text-[#14110f]">
@@ -264,66 +404,52 @@ const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug
     </div>
 
     <div class="mx-auto max-w-[1440px] px-5 pb-16 pt-8 sm:px-8 lg:px-10">
-      {products.length === 0 ? (
-        <div class="border border-[#e5ded3] bg-[#f4efe7] px-6 py-16 text-center">
-          <p class="eyebrow text-[#8d3f3d]">In production</p>
-          <h2 class="font-display mt-3 text-[2rem] leading-tight sm:text-[2.6rem]">New designs,<br />almost ready.</h2>
-          <p class="mx-auto mt-3 max-w-md text-[13px] leading-relaxed text-[#5f5851]">
-            Our Vapi atelier is hand-finishing new pieces for this collection. In the meantime, explore the full permanent collection.
-          </p>
-          <a href="/shop" class="mt-6 inline-flex items-center gap-2 bg-[#14110f] px-7 py-3.5 text-[10px] uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]">
-            Browse all jewellery <span aria-hidden="true">→</span>
-          </a>
+      <!-- Toolbar -->
+      <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+        <p id="collection-count-badge" class="text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
+          {products.length > 0 ? `Showing ${products.length} pieces` : 'Live collection'}
+        </p>
+        <label class="flex items-center gap-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+          <span>Sort</span>
+          <select
+            id="collection-sort"
+            class="cursor-pointer border border-[#d8d0c4] bg-transparent py-2 pl-2 pr-6 text-[10px] uppercase tracking-[0.12em] text-[#14110f] focus:border-[#14110f] focus:outline-none"
+          >
+            <option value="curated">Editor's pick</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+            <option value="name">Name: A–Z</option>
+          </select>
+        </label>
+      </div>
+
+      <div
+        id="collection-products-grid"
+        data-live-products="collection"
+        data-static-signature={staticSignature}
+        class="grid grid-cols-2 gap-x-3 gap-y-9 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4 lg:gap-6"
+      >
+        {products.map((product) => (
+          <div class="shop-item" data-price={product.pricePaise} data-name={product.name}>
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
+
+      <!-- Stacking nudge -->
+      <a
+        href="/stack-builder"
+        class="group mt-12 flex flex-col justify-between gap-3 border border-[#e0d7c9] bg-[#f4efe7] px-5 py-4 transition-colors hover:border-[#c5a059] sm:flex-row sm:items-center"
+      >
+        <div class="flex flex-wrap items-baseline gap-3">
+          <span class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">The stacking edit</span>
+          <span class="text-[13px] text-[#14110f]">Pair this collection with another — save 15% on two or more.</span>
         </div>
-      ) : (
-        <>
-          <!-- Toolbar -->
-          <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <p id="collection-count-badge" class="text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
-              Showing {products.length} pieces
-            </p>
-            <label class="flex items-center gap-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
-              <span>Sort</span>
-              <select
-                id="collection-sort"
-                class="cursor-pointer border border-[#d8d0c4] bg-transparent py-2 pl-2 pr-6 text-[10px] uppercase tracking-[0.12em] text-[#14110f] focus:border-[#14110f] focus:outline-none"
-              >
-                <option value="curated">Editor's pick</option>
-                <option value="price-asc">Price: low to high</option>
-                <option value="price-desc">Price: high to low</option>
-                <option value="name">Name: A–Z</option>
-              </select>
-            </label>
-          </div>
-
-          <div
-            id="collection-products-grid"
-            data-static-signature={staticSignature}
-            class="grid grid-cols-2 gap-x-3 gap-y-9 md:grid-cols-3 md:gap-x-5 lg:grid-cols-4 lg:gap-6"
-          >
-            {products.map((product) => (
-              <div class="shop-item" data-price={product.pricePaise} data-name={product.name}>
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </div>
-
-          <!-- Stacking nudge -->
-          <a
-            href="/stack-builder"
-            class="group mt-12 flex flex-col justify-between gap-3 border border-[#e0d7c9] bg-[#f4efe7] px-5 py-4 transition-colors hover:border-[#c5a059] sm:flex-row sm:items-center"
-          >
-            <div class="flex flex-wrap items-baseline gap-3">
-              <span class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">The stacking edit</span>
-              <span class="text-[13px] text-[#14110f]">Pair this collection with another — save 15% on two or more.</span>
-            </div>
-            <span class="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[#14110f]">
-              Build your stack
-              <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
-            </span>
-          </a>
-        </>
-      )}
+        <span class="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[#14110f]">
+          Build your stack
+          <span class="transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+        </span>
+      </a>
 
       <!-- Buying guide + FAQ -->
       <section class="mt-16 grid gap-10 border-t border-[#e5ded3] pt-10 lg:grid-cols-12 lg:gap-14" aria-labelledby="collection-guide-title">
@@ -332,9 +458,13 @@ const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug
           <h2 id="collection-guide-title" class="font-display mt-2 text-[1.9rem] leading-tight sm:text-[2.4rem]">
             {category.name},<br class="hidden sm:block" /> explained.
           </h2>
-          <p class="mt-4 text-[13px] leading-relaxed text-[#5f5851]">
-            Every piece in our {category.name.toLowerCase()} collection is engineered from solid 316L surgical stainless steel with authentic 18K gold vacuum PVD coating. 100% waterproof, sweat-resistant, shower-safe, and guaranteed never to leave green skin marks. All orders are hand-inspected and dispatched from our Vapi store in Gujarat within 24–48 hours.
-          </p>
+          <div class="mt-4 space-y-3 text-[13px] leading-relaxed text-[#5f5851]">
+            {(collectionBuyingGuides[category.slug] || [
+              `Every piece in our ${category.name.toLowerCase()} collection is engineered from solid 316L surgical stainless steel with authentic 18K gold vacuum PVD coating. 100% waterproof, sweat-resistant, shower-safe, and guaranteed never to leave green skin marks. All orders are hand-inspected and dispatched from our Vapi store in Gujarat within 24–48 hours.`
+            ]).map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
 
           <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em]">
             <a href="/materials" class="link-line text-[#14110f]">316L surgical steel</a>
@@ -393,6 +523,15 @@ const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug
         matched = all.filter((p) => p.isBestseller);
       } else if (slug === 'new-arrivals') {
         matched = all.filter((p) => p.isNewArrival);
+      } else if (slug === 'gifts-for-girlfriend-under-500') {
+        const under500 = all.filter((p) => p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise);
+        matched = under500.length ? under500 : all.sort((a, b) => a.pricePaise - b.pricePaise);
+      } else if (slug === 'rings-under-100') {
+        const rings = all.filter((p) => p.category === 'rings').sort((a, b) => a.pricePaise - b.pricePaise);
+        matched = rings.length ? rings : all.filter((p) => p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise);
+      } else if (slug === 'anti-tarnish-minimal-rings') {
+        const rings = all.filter((p) => p.category === 'rings');
+        matched = rings.length ? rings : all;
       } else {
         matched = all.filter((p) => p.category === slug);
       }

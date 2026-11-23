@@ -525,6 +525,9 @@ export default {
                 '/collections/gift-sets',
                 '/collections/jewellery-set',
                 '/collections/mystery-jewellery-jar',
+                '/collections/rings-under-100',
+                '/collections/gifts-for-girlfriend-under-500',
+                '/collections/anti-tarnish-minimal-rings',
                 '/collections/bestsellers',
                 '/collections/new-arrivals',
                 ...(slugParam ? [`/products/${slugParam}`] : [])
@@ -1135,8 +1138,36 @@ export default {
             let matching = colSlug
               ? colSlug === 'bestsellers' || colSlug === 'new-arrivals'
                 ? allProducts
-                : allProducts.filter((p) => p.category === colSlug)
+                : colSlug === 'gifts-for-girlfriend-under-500'
+                  ? allProducts.filter((p) => p.inStock && p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise)
+                  : colSlug === 'rings-under-100'
+                    ? (() => {
+                        const rings = allProducts.filter((p) => p.category === 'rings').sort((a, b) => a.pricePaise - b.pricePaise);
+                        return rings.length ? rings : allProducts.filter((p) => p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise);
+                      })()
+                    : colSlug === 'anti-tarnish-minimal-rings'
+                      ? (() => {
+                          const rings = allProducts.filter((p) => p.category === 'rings');
+                          return rings.length ? rings : allProducts;
+                        })()
+                      : allProducts.filter((p) => p.category === colSlug)
               : allProducts;
+
+            if (colSlug && matching.length > 0) {
+              const prices = matching.map((p) => Math.round(p.pricePaise / 100)).filter((n) => n > 0);
+              if (prices.length) {
+                const lowPrice = String(Math.min(...prices));
+                const highPrice = String(Math.max(...prices));
+                html = updateJsonLdNodes(html, 'Product', (node) => {
+                  if (node.offers && node.offers['@type'] === 'AggregateOffer') {
+                    node.offers.lowPrice = lowPrice;
+                    node.offers.highPrice = highPrice;
+                    node.offers.offerCount = matching.length;
+                    node.offers.availability = 'https://schema.org/InStock';
+                  }
+                });
+              }
+            }
 
             if (normalizedPath === '/gifts-for-girlfriend-under-500') {
               const under500 = allProducts
