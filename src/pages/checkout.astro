@@ -749,7 +749,7 @@ import DPDPNotice from '../components/DPDPNotice';
       const trackingNumber = `BLR-${Math.floor(100000000 + Math.random() * 900000000)}`;
       const courierPartner = 'BlueDart Air Express (Vapi Hub)';
 
-      const newOrder: AdminOrder = {
+      const newOrder: AdminOrder & { razorpayPaymentId?: string } = {
         id: `ord-${Date.now()}`,
         orderNumber,
         createdAt: new Date().toISOString(),
@@ -776,6 +776,7 @@ import DPDPNotice from '../components/DPDPNotice';
         totalPaise: opts.totalAmountPaise,
         paymentMethod: opts.paymentMethod,
         paymentStatus: opts.paymentStatus,
+        razorpayPaymentId: opts.isCod ? undefined : opts.paymentId,
         fulfillmentStatus: 'VERIFIED',
         courierPartner,
         trackingNumber

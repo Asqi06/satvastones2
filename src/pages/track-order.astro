@@ -371,7 +371,7 @@ const breadcrumbs = [
         .map(
           (i) => `
         <div class="flex items-center gap-3 border border-[#e5ded3] bg-[#fbf9f5] p-2">
-          <img src="${esc(i.image)}" alt="${esc(i.name)}" class="h-11 w-9 shrink-0 border border-[#e5ded3] bg-white object-cover" />
+          <img src="${/^https?:\/\//i.test(String(i.image || '')) ? esc(i.image) : ''}" alt="${esc(i.name)}" class="h-11 w-9 shrink-0 border border-[#e5ded3] bg-white object-cover" />
           <div class="min-w-0 flex-1">
             <p class="truncate text-[11.5px] text-[#14110f]">${esc(i.name)}</p>
             <p class="mt-0.5 text-[10px] uppercase tracking-[0.08em] text-[#8a8279]">Qty ${esc(i.quantity)} · ₹${Math.round(i.pricePaise / 100).toLocaleString('en-IN')}</p>

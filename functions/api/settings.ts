@@ -56,7 +56,8 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     return new Response(JSON.stringify({ success: true, settings }), { status: 200, headers: corsHeaders });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
+    console.error('[api/settings]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Unable to process settings request.' }), { status: 500, headers: corsHeaders });
   }
 }
 
@@ -120,6 +121,7 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
+    console.error('[api/settings]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Unable to process settings request.' }), { status: 500, headers: corsHeaders });
   }
 }

@@ -8,26 +8,16 @@
  */
 
 const DEFAULT_ADMIN_USER = '@dmin';
-// Dev-only convenience passwords. They are never accepted in production.
-const DEV_ADMIN_PASS = '@dmin060409';
-const LEGACY_DEV_ADMIN_PASS = 'SatvaStones@Vapi2026!';
-const DEV_FALLBACK_SECRET = 'satvastones-dev-only-session-secret-not-for-production';
-
-/** True when legacy/dev credentials may be used (explicitly opted in, non-production). */
-function legacyLoginAllowed(env?: any): boolean {
-  const environment = String(env?.ENVIRONMENT || '').toLowerCase();
-  return env?.ALLOW_LEGACY_ADMIN_LOGIN === 'true' && environment !== 'production';
-}
 
 /**
- * The signing secret must come from the environment in production. Falling back to a
- * constant that ships in the repository would let anyone mint a valid admin token.
+ * The signing secret must come from the environment (ADMIN_SESSION_SECRET, 32+ chars).
+ * No fallback secret is ever shipped in source control.
  */
 function resolveSessionSecret(env?: any): { secret: string; configured: boolean } {
-  const configured = typeof env?.ADMIN_SESSION_SECRET === 'string' && env.ADMIN_SESSION_SECRET.trim().length >= 32;
+  const secret = typeof env?.ADMIN_SESSION_SECRET === 'string' ? env.ADMIN_SESSION_SECRET.trim() : '';
   return {
-    secret: configured ? env.ADMIN_SESSION_SECRET : DEV_FALLBACK_SECRET,
-    configured
+    secret,
+    configured: secret.length >= 32
   };
 }
 
@@ -238,27 +228,13 @@ export function isAdminAuthConfigured(env?: any): boolean {
   return Boolean(env?.ADMIN_PASSWORD) && resolveSessionSecret(env).configured;
 }
 
-// Validate credentials against environment configuration.
-// No password is hardcoded: production must supply ADMIN_PASSWORD. The old
-// passwords only work in non-production when ALLOW_LEGACY_ADMIN_LOGIN=true.
+// Validate credentials strictly against environment configuration (zero hardcoded passwords).
 export function validateCredentials(username: string, pass: string, env?: any): boolean {
+  if (typeof env?.ADMIN_PASSWORD !== 'string' || env.ADMIN_PASSWORD.length === 0) {
+    return false;
+  }
   const expectedUser = env?.ADMIN_USERNAME || DEFAULT_ADMIN_USER;
   const userMatch = constantTimeCompare(username.trim(), expectedUser);
-
-  const candidates: string[] = [];
-  if (typeof env?.ADMIN_PASSWORD === 'string' && env.ADMIN_PASSWORD.length > 0) {
-    candidates.push(env.ADMIN_PASSWORD);
-  }
-  if (legacyLoginAllowed(env)) {
-    candidates.push(DEV_ADMIN_PASS, LEGACY_DEV_ADMIN_PASS);
-  }
-
-  const inputPass = pass.trim();
-  let passMatch = false;
-  // Compare against every candidate without short-circuiting.
-  for (const candidate of candidates) {
-    if (constantTimeCompare(inputPass, candidate)) passMatch = true;
-  }
-
+  const passMatch = constantTimeCompare(pass.trim(), env.ADMIN_PASSWORD);
   return userMatch && passMatch;
 }

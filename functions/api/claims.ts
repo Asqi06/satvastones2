@@ -82,8 +82,9 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
+    console.error('[api/claims]', err);
     return new Response(
-      JSON.stringify({ success: false, error: err.message }),
+      JSON.stringify({ success: false, error: 'Unable to process claim request.' }),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -216,8 +217,9 @@ export async function onRequestPut(context: { request: Request; env: Env }) {
       { status: 200, headers: corsHeaders }
     );
   } catch (err: any) {
+    console.error('[api/claims]', err);
     return new Response(
-      JSON.stringify({ success: false, error: err.message }),
+      JSON.stringify({ success: false, error: 'Unable to process claim request.' }),
       { status: 500, headers: corsHeaders }
     );
   }

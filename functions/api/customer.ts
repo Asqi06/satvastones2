@@ -11,6 +11,7 @@ import {
   clearCustomerFailure,
   isCustomerAuthConfigured
 } from '../../src/lib/customer-auth';
+import { isRateLimited, readJsonBody } from '../../src/lib/http';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -73,8 +74,14 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
   // 1. REGISTER: POST /api/customer/register
   // ----------------------------------------------------
   if (pathname === '/api/customer/register' && request.method === 'POST') {
+    if (isRateLimited(`register:${clientIp}`, 5, 15 * 60 * 1000)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Too many registration attempts. Please try again in 15 minutes.' }),
+        { status: 429, headers: corsHeaders }
+      );
+    }
     try {
-      const data = await request.json() as any;
+      const data = await readJsonBody<Record<string, any>>(request, 32 * 1024);
       const fullName = (data.fullName || '').trim();
       const email = (data.email || '').toLowerCase().trim();
       const rawPhone = (data.phone || '').replace(/[^0-9]/g, '');
@@ -142,7 +149,8 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
         { status: 201, headers: responseHeaders }
       );
     } catch (err: any) {
-      return new Response(JSON.stringify({ success: false, error: err.message || 'Registration failed.' }), { status: 500, headers: corsHeaders });
+      console.error('[api/customer/register]', err);
+      return new Response(JSON.stringify({ success: false, error: 'Registration failed. Please try again.' }), { status: 500, headers: corsHeaders });
     }
   }
 
@@ -299,7 +307,8 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
         { status: 200, headers: corsHeaders }
       );
     } catch (err: any) {
-      return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
+      console.error('[api/customer/profile PUT]', err);
+      return new Response(JSON.stringify({ success: false, error: 'Unable to update profile.' }), { status: 500, headers: corsHeaders });
     }
   }
 
@@ -314,14 +323,14 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
 
     try {
       const email = auth.email.toLowerCase();
-      const phone = auth.phone.slice(-10);
+      const phone = String(auth.phone || '').replace(/[^0-9]/g, '').slice(-10);
 
       const { results } = await db.prepare(`
         SELECT * FROM orders 
-        WHERE LOWER(email) = ? OR replace(phone, ' ', '') LIKE '%' || ?
+        WHERE LOWER(email) = ? OR (length(?) = 10 AND substr(replace(replace(phone, ' ', ''), '-', ''), -10) = ?)
         ORDER BY datetime(created_at) DESC 
         LIMIT 50
-      `).bind(email, phone).all();
+      `).bind(email, phone, phone).all();
 
       const orders = (results || []).map((row: any) => {
         let items = [];
@@ -358,7 +367,8 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
         { status: 200, headers: corsHeaders }
       );
     } catch (err: any) {
-      return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
+      console.error('[api/customer/profile PUT]', err);
+      return new Response(JSON.stringify({ success: false, error: 'Unable to update profile.' }), { status: 500, headers: corsHeaders });
     }
   }
 

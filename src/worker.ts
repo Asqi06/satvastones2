@@ -11,7 +11,7 @@ import * as couponsHandler from '../functions/api/coupons';
 import * as reviewsHandler from '../functions/api/reviews';
 import * as uploadHandler from '../functions/api/upload';
 import * as blogsHandler from '../functions/api/blogs';
-import { applyCorsPolicy, escapeHtml, safeHttpUrl } from './lib/http';
+import { applyCorsPolicy, escapeHtml, isAllowedOrigin, safeHttpUrl } from './lib/http';
 import { generateGoogleMerchantFeedXml, generateSitemapXml, type FeedBlog, type FeedProduct } from './lib/feeds';
 import { estimateReadTimeMinutes, renderEditorialMarkdown } from './lib/markdown';
 
@@ -401,8 +401,37 @@ function formatReadableDate(value?: string): string {
   }
 }
 
+function withSecurityHeaders(response: Response): Response {
+  const headers = new Headers(response.headers);
+  if (!headers.has('Strict-Transport-Security')) {
+    headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  }
+  if (!headers.has('X-Frame-Options')) {
+    headers.set('X-Frame-Options', 'SAMEORIGIN');
+  }
+  if (!headers.has('X-Content-Type-Options')) {
+    headers.set('X-Content-Type-Options', 'nosniff');
+  }
+  if (!headers.has('Referrer-Policy')) {
+    headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  }
+  if (!headers.has('Permissions-Policy')) {
+    headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()');
+  }
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env, ctx: any): Promise<Response> {
+    const res = await this.handleRequest(request, env, ctx);
+    return withSecurityHeaders(res);
+  },
+
+  async handleRequest(request: Request, env: Env, ctx: any): Promise<Response> {
     const url = new URL(request.url);
 
     // 0. Canonical SEO 301 Redirects (Host, Trailing Slash, and Legacy Policy Aliases)
@@ -444,6 +473,14 @@ export default {
 
     // Route /api/* requests to serverless D1 handlers, then normalise CORS.
     if (url.pathname.startsWith('/api/')) {
+      // CSRF Defense: reject state-changing browser requests from untrusted origins
+      if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
+        const origin = request.headers.get('Origin');
+        if (origin && !isAllowedOrigin(origin, request.url)) {
+          return jsonError('Forbidden origin.', 403);
+        }
+      }
+
       try {
         const isPublicReadCatalog =
           request.method === 'GET' &&

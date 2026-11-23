@@ -2,6 +2,7 @@
 // Handles DPDP Act 2023 Statutory Rights Requests (Sections 11, 12, 13, 14)
 // Statutory SLA: Acknowledged within 48 Hours, Resolved within 1 Month
 import { verifyAdminAuth } from '../../src/lib/server-auth';
+import { clientIp, isRateLimited, readJsonBody } from '../../src/lib/http';
 
 interface Env {
   DB: any;
@@ -107,8 +108,9 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
+    console.error('[api/privacy-requests]', err);
     return new Response(
-      JSON.stringify({ success: false, error: err.message }),
+      JSON.stringify({ success: false, error: 'Unable to process privacy request.' }),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -127,7 +129,14 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
   }
 
   try {
-    const data = await request.json() as any;
+    if (isRateLimited(`privacy:${clientIp(request)}`, 5, 15 * 60 * 1000)) {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Too many privacy requests from this connection. Please try again later.' }),
+        { status: 429, headers: corsHeaders }
+      );
+    }
+
+    const data = await readJsonBody<Record<string, any>>(request, 32 * 1024);
 
     const requestType = (data.request_type || '').toUpperCase();
     const patronName = (data.patron_name || '').trim();
