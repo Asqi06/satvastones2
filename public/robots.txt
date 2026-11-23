@@ -3,13 +3,18 @@ User-agent: *
 Allow: /
 Allow: /collections/
 Allow: /products/
+Allow: /journal/
 Allow: /blog/
+Allow: /feeds/
+Allow: /api/upload
 Allow: /legal/
 Allow: /about
 Allow: /contact
 Allow: /faqs
 Allow: /materials
 Allow: /jewellery-care
+Allow: /affordable-anti-tarnish-jewellery-india
+Allow: /anti-tarnish-jewellery-vapi
 Allow: /llms.txt
 Allow: /llms-full.txt
 

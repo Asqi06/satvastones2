@@ -184,17 +184,27 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     const description = p.description || `${name} - Anti-tarnish waterproof fine jewellery.`;
     const pricePaise = Number(p.pricePaise) || (Number(p.price) ? Math.round(Number(p.price) * 100) : 0);
     const compareAtPricePaise = p.compareAtPricePaise ? Number(p.compareAtPricePaise) : (p.compareAtPrice ? Math.round(Number(p.compareAtPrice) * 100) : null);
-    const imageUrl = p.image || p.imageUrl || p.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
-    const galleryJson = p.images
-      ? JSON.stringify(p.images)
-      : JSON.stringify(
-          [
-            imageUrl,
-            ...(Array.isArray(p.gallery) ? p.gallery.filter((url: unknown) => typeof url === 'string' && url) : [])
-          ]
-            .filter((url, index, all) => all.indexOf(url) === index)
-            .map((url, index) => ({ url, alt: index === 0 ? name : `${name} detail ${index}`, isPrimary: index === 0 }))
-        );
+    const DEFAULT_FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
+    const isMockFallback = (url: string) => url.includes('photo-1599643478518-a784e5dc4c8f');
+    const rawGalleryUrls = Array.isArray(p.gallery)
+      ? p.gallery.filter((url: unknown): url is string => typeof url === 'string' && url.trim().length > 0).map((u: string) => u.trim())
+      : [];
+    const rawImagesUrls = Array.isArray(p.images)
+      ? p.images
+          .map((img: any) => (typeof img === 'string' ? img : img?.url))
+          .filter((url: unknown): url is string => typeof url === 'string' && url.trim().length > 0)
+          .map((u: string) => u.trim())
+      : [];
+    const candidatePrimary = String(p.image || p.imageUrl || '').trim();
+    const allCandidateUrls = [candidatePrimary, ...rawGalleryUrls, ...rawImagesUrls].filter(
+      (url, index, all) => Boolean(url) && all.indexOf(url) === index
+    );
+    const realUrls = allCandidateUrls.filter((url) => !isMockFallback(url));
+    const finalUrls = realUrls.length ? realUrls : allCandidateUrls.length ? allCandidateUrls : [DEFAULT_FALLBACK_IMAGE];
+    const imageUrl = finalUrls[0];
+    const galleryJson = JSON.stringify(
+      finalUrls.map((url, index) => ({ url, alt: index === 0 ? name : `${name} detail ${index}`, isPrimary: index === 0 }))
+    );
     const material = p.material || '316L Surgical Stainless Steel + 18K Gold PVD';
     const finish = p.finish || 'Mirror Polished';
     const inStock = p.inStock === false ? 0 : 1;
@@ -215,7 +225,16 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       });
     }
 
-    const allowedCategories = new Set(['rings', 'necklaces', 'bracelets', 'earrings', 'bangles', 'gift-sets']);
+    const allowedCategories = new Set([
+      'rings',
+      'necklaces',
+      'bracelets',
+      'earrings',
+      'bangles',
+      'gift-sets',
+      'jewellery-set',
+      'mystery-jewellery-jar'
+    ]);
     if (!allowedCategories.has(String(category))) {
       return new Response(JSON.stringify({ success: false, error: 'Unknown product category.' }), {
         status: 400,

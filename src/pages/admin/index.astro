@@ -203,6 +203,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <span>Products & Inventory (<span id="tab-products-count">0</span>)</span>
             </button>
 
+            <button id="tab-btn-blogs" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+              </svg>
+              <span>Journal &amp; Blogs (<span id="tab-blogs-count">0</span>)</span>
+            </button>
+
             <button id="tab-btn-coupons" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 6v.75m0 3v.75m0 3v.75m0 3V18m-9-5.25h5.25M7.5 15h3M3.375 5.25c-.621 0-1.125.504-1.125 1.125v3.026a2.999 2.999 0 010 5.198v3.026c0 .621.504 1.125 1.125 1.125h17.25c.621 0 1.125-.504 1.125-1.125v-3.026a2.999 2.999 0 010-5.198V6.375c0-.621-.504-1.125-1.125-1.125H3.375z" />
@@ -333,6 +340,33 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             <p id="demo-products-note" class="hidden border-l-2 border-[#b9ae9f] bg-[#f4efe7] px-3 py-2 text-[10.5px] leading-relaxed text-[#6f675f]">
               The catalogue still contains seeded demo products. Remove them once your own pieces are live.
             </p>
+
+            <!-- Google SEO & Merchant Center Auto-Sync Strip -->
+            <div class="grid gap-3 border border-[#e5ded3] bg-[#f4efe7] p-4 sm:grid-cols-2">
+              <div class="flex flex-col justify-between gap-2 bg-white p-3.5 border border-[#e5ded3]">
+                <div>
+                  <p class="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8d3f3d]">Google Merchant Center Feed (Auto-Synced)</p>
+                  <p class="mt-1 text-[11px] text-[#5f5851]">Add this live XML URL in Google Merchant Center → Products → Data sources → Add from file (Scheduled fetch).</p>
+                  <code class="mt-1.5 block truncate bg-[#fbf9f5] px-2.5 py-1.5 text-[11px] text-[#14110f] border border-[#ebe4d9]">https://www.satvastones.in/feeds/google-merchant.xml</code>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                  <button type="button" data-copy-url="https://www.satvastones.in/feeds/google-merchant.xml" class="seo-copy-btn cursor-pointer border border-[#14110f] bg-[#14110f] px-3 py-1 text-[9.5px] uppercase tracking-[0.14em] text-[#f6f1e8] hover:bg-[#8d3f3d] hover:border-[#8d3f3d]">Copy Feed URL</button>
+                  <a href="/feeds/google-merchant.xml" target="_blank" rel="noopener noreferrer" class="border border-[#e5ded3] px-3 py-1 text-[9.5px] uppercase tracking-[0.14em] text-[#14110f] hover:border-[#14110f]">Preview XML ↗</a>
+                </div>
+              </div>
+
+              <div class="flex flex-col justify-between gap-2 bg-white p-3.5 border border-[#e5ded3]">
+                <div>
+                  <p class="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8d3f3d]">Dynamic XML Sitemap (Auto-Synced)</p>
+                  <p class="mt-1 text-[11px] text-[#5f5851]">Updates automatically whenever you add, edit, or delete products or Journal articles. Deleted mock products return 404.</p>
+                  <code class="mt-1.5 block truncate bg-[#fbf9f5] px-2.5 py-1.5 text-[11px] text-[#14110f] border border-[#ebe4d9]">https://www.satvastones.in/sitemap.xml</code>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                  <button type="button" data-copy-url="https://www.satvastones.in/sitemap.xml" class="seo-copy-btn cursor-pointer border border-[#14110f] bg-[#14110f] px-3 py-1 text-[9.5px] uppercase tracking-[0.14em] text-[#f6f1e8] hover:bg-[#8d3f3d] hover:border-[#8d3f3d]">Copy Sitemap URL</button>
+                  <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" class="border border-[#e5ded3] px-3 py-1 text-[9.5px] uppercase tracking-[0.14em] text-[#14110f] hover:border-[#14110f]">Preview XML ↗</a>
+                </div>
+              </div>
+            </div>
 
             <!-- Products Grid -->
             <div id="admin-products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -977,6 +1011,59 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             </div>
           </div>
 
+          <!-- ========================================== -->
+          <!-- PANEL 7: JOURNAL & BLOGS CRUD              -->
+          <!-- ========================================== -->
+          <div id="panel-blogs" class="hidden space-y-5 p-5 sm:p-6">
+            <div class="flex flex-col justify-between gap-3 border-b border-[#e5ded3] pb-4 sm:flex-row sm:items-end">
+              <div>
+                <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">Editorial &amp; Organic SEO</p>
+                <h2 class="font-display mt-1 text-xl leading-none text-[#14110f]">Journal &amp; Blog Articles</h2>
+                <p class="mt-1.5 text-[11px] text-[#6f675f]">
+                  Publish styling guides, care tutorials, and brand stories. Every published post is automatically indexed in <code>/sitemap.xml</code> with Article schema.
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <input
+                  id="blog-search-input"
+                  type="text"
+                  placeholder="Search articles…"
+                  class="w-48 border border-[#e5ded3] bg-white px-3 py-2 text-[11px] focus:border-[#14110f] focus:outline-none"
+                />
+                <select
+                  id="blog-status-filter"
+                  class="border border-[#e5ded3] bg-white px-3 py-2 text-[11px] text-[#14110f] focus:border-[#14110f] focus:outline-none"
+                >
+                  <option value="all">All Status</option>
+                  <option value="published">Published</option>
+                  <option value="draft">Drafts</option>
+                </select>
+                <a
+                  href="/journal"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="border border-[#e5ded3] bg-white px-3 py-2 text-[10px] font-medium uppercase tracking-[0.1em] text-[#14110f] hover:border-[#14110f]"
+                >
+                  View Journal ↗
+                </a>
+                <button
+                  id="add-blog-btn"
+                  type="button"
+                  class="flex cursor-pointer items-center gap-1.5 bg-[#14110f] px-4 py-2 text-[10px] font-medium uppercase tracking-[0.12em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                  <span>New Article</span>
+                </button>
+              </div>
+            </div>
+
+            <div id="admin-blogs-list" class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <p class="col-span-full py-8 text-center text-xs text-gray-400">Loading journal articles...</p>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -1059,7 +1146,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div>
           <label class="block text-xs font-bold text-gray-700 mb-1">Product Image URL *</label>
           <div class="flex gap-2">
-            <input id="prod-image" type="url" required placeholder="https://images.unsplash.com/..." class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
+            <input id="prod-image" type="url" placeholder="https://res.cloudinary.com/..." class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
             <button
               type="button"
               class="cloudinary-upload-btn shrink-0 bg-[#f4efe7] hover:bg-[#f0e6d8] text-[#8d3f3d] border border-[#e5ded3] px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
@@ -1069,15 +1156,30 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
               </svg>
-              <span>Upload via Cloudinary</span>
+              <span>Upload Primary</span>
             </button>
           </div>
           <img id="prod-img-preview" src="" alt="Product Preview" class="w-16 h-20 rounded-xl object-cover border border-gray-200 mt-2 hidden" />
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-gray-700 mb-1">Gallery image URLs <span class="font-normal text-gray-400">(one per line — 2nd image becomes the hover shot)</span></label>
-          <textarea id="prod-gallery" rows="2" placeholder="https://…/front.webp&#10;https://…/detail.webp" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"></textarea>
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <label for="prod-gallery" class="block text-xs font-bold text-gray-700">
+              Gallery Images <span class="font-normal text-gray-400">(optional extra shots — 2nd image becomes the hover shot)</span>
+            </label>
+            <button
+              type="button"
+              id="prod-gallery-upload-btn"
+              class="shrink-0 bg-[#f4efe7] hover:bg-[#f0e6d8] text-[#8d3f3d] border border-[#e5ded3] px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              <span>Upload Gallery Images</span>
+            </button>
+          </div>
+          <textarea id="prod-gallery" rows="2" placeholder="Paste one image URL per line or click 'Upload Gallery Images' above" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"></textarea>
+          <div id="prod-gallery-previews" class="mt-2 flex flex-wrap gap-2 hidden"></div>
         </div>
 
         <div>
@@ -1328,6 +1430,152 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL: ADD / EDIT BLOG ARTICLE             -->
+  <!-- ========================================== -->
+  <div id="blog-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-4xl p-6 sm:p-8 shadow-2xl border border-[#e5ded3] space-y-5 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-[#e5ded3] pb-3">
+        <div>
+          <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">Editorial Desk</p>
+          <h3 id="blog-modal-title" class="font-display text-xl text-[#14110f]">Write New Journal Article</h3>
+        </div>
+        <button id="close-blog-modal" type="button" class="text-gray-400 hover:text-black cursor-pointer" aria-label="Close blog editor">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="blog-form" class="space-y-4">
+        <input type="hidden" id="blog-id" />
+
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-gray-700 mb-1">Article Title *</label>
+            <input id="blog-title" type="text" required placeholder="e.g. How to Style Waterproof 18K Gold PVD Jewellery with Silk Sarees" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">URL Slug <span class="font-normal text-gray-400">(/journal/...)</span></label>
+            <input id="blog-slug" type="text" placeholder="auto-generated-from-title" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs font-mono rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Category *</label>
+            <select id="blog-category" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]">
+              <option value="Styling Guide">Styling Guide</option>
+              <option value="Jewellery Care">Jewellery Care</option>
+              <option value="Materials & Craft">Materials &amp; Craft</option>
+              <option value="Gifting">Gifting</option>
+              <option value="Trends & Stories">Trends &amp; Stories</option>
+              <option value="Behind the Atelier">Behind the Atelier</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Author</label>
+            <input id="blog-author" type="text" value="Satvastones Editorial" placeholder="Satvastones Editorial" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 mb-1">Tags <span class="font-normal text-gray-400">(comma-separated)</span></label>
+            <input id="blog-tags" type="text" placeholder="anti-tarnish, saree styling, gold pvd, gift guide" class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
+          </div>
+        </div>
+
+        <!-- Cover Image + Direct Upload -->
+        <div class="space-y-2">
+          <label class="block text-xs font-bold text-gray-700">Cover Image</label>
+          <div class="flex flex-col gap-2 sm:flex-row">
+            <input id="blog-cover" type="text" placeholder="Paste image URL or upload directly →" class="flex-1 bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]" />
+            <label class="inline-flex cursor-pointer items-center justify-center gap-1.5 border border-[#14110f] bg-[#f4efe7] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#14110f] hover:bg-[#14110f] hover:text-white rounded-xl transition-colors">
+              <span id="blog-cover-upload-label">Upload Image</span>
+              <input id="blog-cover-file" type="file" accept="image/jpeg,image/png,image/webp,image/avif" class="hidden" />
+            </label>
+          </div>
+          <div id="blog-cover-preview-wrap" class="hidden overflow-hidden border border-[#e5ded3] bg-[#f4efe7] max-h-44">
+            <img id="blog-cover-preview" src="" alt="Cover preview" class="h-40 w-full object-cover" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 mb-1">Short Excerpt / Summary</label>
+          <textarea id="blog-excerpt" rows="2" placeholder="A concise 1–2 sentence hook shown on Journal cards and Google search results..." class="w-full bg-gray-50 border border-gray-200 px-3.5 py-2 text-xs rounded-xl focus:outline-none focus:border-[#8d3f3d]"></textarea>
+        </div>
+
+        <!-- Markdown Editor + Live Preview -->
+        <div class="space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <label class="block text-xs font-bold text-gray-700">Article Content * <span class="font-normal text-gray-400">(Supports headings, bold, lists, quotes, links)</span></label>
+            <div class="flex items-center gap-1 text-[10px]">
+              <button type="button" id="blog-mode-write" class="cursor-pointer rounded-lg bg-[#14110f] px-2.5 py-1 font-semibold text-white">Write</button>
+              <button type="button" id="blog-mode-preview" class="cursor-pointer rounded-lg bg-gray-100 px-2.5 py-1 font-semibold text-gray-600 hover:bg-gray-200">Preview</button>
+            </div>
+          </div>
+
+          <div id="blog-toolbar" class="flex flex-wrap gap-1.5 border border-gray-200 bg-gray-50 p-2 rounded-t-xl">
+            <button type="button" data-md-prefix="## " class="blog-md-btn cursor-pointer rounded border border-gray-200 bg-white px-2 py-1 text-[10px] font-bold hover:border-[#14110f]">H2</button>
+            <button type="button" data-md-prefix="### " class="blog-md-btn cursor-pointer rounded border border-gray-200 bg-white px-2 py-1 text-[10px] font-bold hover:border-[#14110f]">H3</button>
+            <button type="button" data-md-wrap="**" class="blog-md-btn cursor-pointer rounded border border-gray-200 bg-white px-2 py-1 text-[10px] font-bold hover:border-[#14110f]">Bold</button>
+            <button type="button" data-md-wrap="*" class="blog-md-btn cursor-pointer rounded border border-gray-200 bg-white px-2 py-1 text-[10px] italic hover:border-[#14110f]">Italic</button>
+            <button type="button" data-md-prefix="- " class="blog-md-btn cursor-pointer rounded border border-gray-200 bg-white px-2 py-1 text-[10px] hover:border-[#14110f]">• List</button>
+            <button type="button" data-md-prefix="> " class="blog-md-btn cursor-pointer rounded border border-gray-200 bg-white px-2 py-1 text-[10px] hover:border-[#14110f]">Quote</button>
+            <button type="button" data-md-link="1" class="blog-md-btn cursor-pointer rounded border border-gray-200 bg-white px-2 py-1 text-[10px] hover:border-[#14110f]">Link</button>
+          </div>
+
+          <textarea
+            id="blog-content"
+            rows="11"
+            required
+            placeholder="Write your article here...&#10;&#10;## Why 18K Gold PVD Lasts Through Indian Summers&#10;Explain the craft, link to your collections like [Explore Necklaces](/collections/necklaces), and help your readers!"
+            class="w-full bg-gray-50 border border-gray-200 border-t-0 px-3.5 py-3 text-xs leading-relaxed font-mono rounded-b-xl focus:outline-none focus:border-[#8d3f3d]"
+          ></textarea>
+
+          <div id="blog-preview-pane" class="hidden min-h-[240px] max-h-[380px] overflow-y-auto border border-[#e5ded3] bg-[#fbf9f5] p-6 rounded-b-xl"></div>
+        </div>
+
+        <!-- Optional SEO Overrides -->
+        <details class="border border-[#e5ded3] bg-[#fbf9f5] p-3.5 rounded-xl">
+          <summary class="cursor-pointer text-xs font-bold text-[#14110f]">SEO Overrides (Optional — auto-generated if left blank)</summary>
+          <div class="mt-3 grid gap-3 sm:grid-cols-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-700 mb-1">Custom SEO Title</label>
+              <input id="blog-seo-title" type="text" placeholder="Defaults to Article Title | Satvastones Journal" class="w-full bg-white border border-gray-200 px-3 py-2 text-xs rounded-lg focus:outline-none focus:border-[#8d3f3d]" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-700 mb-1">Custom SEO Meta Description</label>
+              <input id="blog-seo-desc" type="text" placeholder="Defaults to Excerpt" class="w-full bg-white border border-gray-200 px-3 py-2 text-xs rounded-lg focus:outline-none focus:border-[#8d3f3d]" />
+            </div>
+          </div>
+        </details>
+
+        <div class="flex flex-wrap items-center justify-between gap-4 border-t border-[#e5ded3] pt-4">
+          <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2 text-xs font-semibold text-gray-700">
+              <span>Status:</span>
+              <select id="blog-status" class="border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-xs rounded-lg focus:outline-none focus:border-[#8d3f3d]">
+                <option value="published">Published (Live &amp; Indexed)</option>
+                <option value="draft">Draft (Hidden)</option>
+              </select>
+            </label>
+            <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+              <input id="blog-featured" type="checkbox" class="rounded border-gray-300" />
+              <span>Feature on Journal Hero</span>
+            </label>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="cancel-blog-modal" type="button" class="border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-600 rounded-xl hover:bg-gray-50 cursor-pointer">Cancel</button>
+            <button id="save-blog-btn" type="submit" class="bg-[#14110f] hover:bg-[#8d3f3d] text-[#f6f1e8] px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-xl cursor-pointer transition-colors">Save Article</button>
+          </div>
+        </div>
+        <p id="blog-form-error" class="hidden text-xs font-semibold text-red-600"></p>
+      </form>
+    </div>
+  </div>
+
 </BaseLayout>
 
 <script>
@@ -1367,6 +1615,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     syncReviewsFromCloudflare,
     deleteCustomerReview
   } from '../../stores/reviewStore';
+  import {
+    fetchAllAdminBlogs,
+    saveAdminBlog,
+    deleteAdminBlog,
+    type BlogPost
+  } from '../../stores/blogStore';
+  import { renderEditorialMarkdown } from '../../lib/markdown';
   import { openCloudinaryWidget, optimizeCloudinaryUrl, testCloudinaryConnection, uploadToCloudinaryDirect } from '../../utils/cloudinary';
   import {
     fetchAllOrdersFromCloudflare,
@@ -1568,7 +1823,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     setInterval(updateClock, 1000);
 
     // Tab Navigation
-    const tabs = ['orders', 'products', 'coupons', 'categories', 'stackstudio', 'settings', 'claims', 'reviews'];
+    const tabs = ['orders', 'products', 'blogs', 'coupons', 'categories', 'stackstudio', 'settings', 'claims', 'reviews'];
     tabs.forEach((tab) => {
       const btn = document.getElementById(`tab-btn-${tab}`);
       const panel = document.getElementById(`panel-${tab}`);
@@ -1586,6 +1841,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 
     renderOrders();
     renderProducts();
+    renderBlogs();
     renderCoupons();
     renderCategories();
     renderStackStudio();
@@ -2085,6 +2341,97 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   const prodSeoDescriptionInput = document.getElementById('prod-seo-description') as HTMLTextAreaElement;
 
   const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=800&q=80';
+  const prodImgPreview = document.getElementById('prod-img-preview') as HTMLImageElement | null;
+  const prodGalleryPreviews = document.getElementById('prod-gallery-previews');
+  const prodGalleryUploadBtn = document.getElementById('prod-gallery-upload-btn');
+
+  function isMockDefaultImage(url: string): boolean {
+    return !url || url.includes('photo-1599643478518-a784e5dc4c8f');
+  }
+
+  function syncProductImagePreviews() {
+    const primaryUrl = prodImageInput?.value.trim() || '';
+    if (prodImgPreview) {
+      if (primaryUrl) {
+        prodImgPreview.src = primaryUrl;
+        prodImgPreview.classList.remove('hidden');
+      } else {
+        prodImgPreview.src = '';
+        prodImgPreview.classList.add('hidden');
+      }
+    }
+
+    if (!prodGalleryPreviews) return;
+    const urls = linesToArray(prodGalleryInput?.value || '');
+    if (!urls.length) {
+      prodGalleryPreviews.innerHTML = '';
+      prodGalleryPreviews.classList.add('hidden');
+      return;
+    }
+
+    prodGalleryPreviews.classList.remove('hidden');
+    prodGalleryPreviews.innerHTML = urls
+      .map(
+        (url, idx) => `
+          <div class="relative group w-16 h-20 rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
+            <img src="${url.replace(/"/g, '&quot;')}" alt="Gallery ${idx + 1}" class="w-full h-full object-cover" />
+            <button
+              type="button"
+              data-remove-gallery-idx="${idx}"
+              title="Remove image"
+              class="absolute top-1 right-1 w-5 h-5 rounded-full bg-black/75 text-white text-[11px] leading-none flex items-center justify-center hover:bg-red-600 cursor-pointer"
+            >×</button>
+          </div>
+        `
+      )
+      .join('');
+
+    prodGalleryPreviews.querySelectorAll('[data-remove-gallery-idx]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const idx = Number((btn as HTMLElement).dataset.removeGalleryIdx);
+        const next = linesToArray(prodGalleryInput?.value || '').filter((_u, i) => i !== idx);
+        if (prodGalleryInput) prodGalleryInput.value = next.join('\n');
+        syncProductImagePreviews();
+      });
+    });
+  }
+
+  prodImageInput?.addEventListener('input', syncProductImagePreviews);
+  prodGalleryInput?.addEventListener('input', syncProductImagePreviews);
+
+  prodGalleryUploadBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const settings = getSiteSettings();
+    const cloudName = settings.cloudinaryCloudName || '';
+    const uploadPreset = settings.cloudinaryUploadPreset || '';
+
+    openCloudinaryWidget(
+      cloudName,
+      uploadPreset,
+      (secureUrl: string) => {
+        const optimized = optimizeCloudinaryUrl(secureUrl, { quality: 'auto', format: 'auto' });
+        const currentPrimary = prodImageInput?.value.trim() || '';
+
+        // If the primary image field is empty (e.g. after extension pre-fill) or holds the mock fallback,
+        // automatically promote the first uploaded image to be the primary product image.
+        if (isMockDefaultImage(currentPrimary) && prodImageInput) {
+          prodImageInput.value = optimized;
+          prodImageInput.dispatchEvent(new Event('input', { bubbles: true }));
+        } else if (prodGalleryInput) {
+          const existing = linesToArray(prodGalleryInput.value);
+          if (optimized !== currentPrimary && !existing.includes(optimized)) {
+            existing.push(optimized);
+            prodGalleryInput.value = existing.join('\n');
+          }
+          syncProductImagePreviews();
+        }
+      },
+      (err) => {
+        console.error('Cloudinary gallery upload failure:', err);
+      },
+      { multiple: true }
+    );
+  });
 
   function slugify(value: string): string {
     return value
@@ -2182,6 +2529,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       prodStockInput.checked = true;
       prodPublishedInput.checked = true;
     }
+    syncProductImagePreviews();
     productModal.classList.remove('hidden');
   }
 
@@ -2230,8 +2578,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       return;
     }
 
-    const image = prodImageInput.value.trim() || DEFAULT_IMAGE;
-    const gallery = linesToArray(prodGalleryInput.value).filter((url) => url !== image);
+    const rawPrimary = prodImageInput.value.trim();
+    const rawGallery = linesToArray(prodGalleryInput.value);
+    const allRealImages = [rawPrimary, ...rawGallery].filter(
+      (url, index, all) => Boolean(url) && !isMockDefaultImage(url) && all.indexOf(url) === index
+    );
+    const image = allRealImages[0] || rawPrimary || DEFAULT_IMAGE;
+    const gallery = allRealImages.slice(1);
 
     const prodData: AdminProduct = {
       id,
@@ -3141,6 +3494,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   document.getElementById('admin-refresh-btn')?.addEventListener('click', () => {
     renderOrders();
     renderProducts();
+    renderBlogs();
     renderCoupons();
     populateSettingsForm();
     renderClaims();
@@ -3149,6 +3503,383 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     syncProductsFromCloudflare().then(() => renderProducts());
     syncCouponsFromCloudflare().then(() => renderCoupons());
     syncReviewsFromCloudflare().then(() => renderReviews());
+  });
+
+  // ==========================================
+  // 7. JOURNAL & BLOGS CRUD LOGIC
+  // ==========================================
+  let adminBlogsCache: BlogPost[] = [];
+  let blogSlugTouched = false;
+
+  const blogModal = document.getElementById('blog-modal');
+  const blogModalTitle = document.getElementById('blog-modal-title');
+  const blogForm = document.getElementById('blog-form') as HTMLFormElement | null;
+  const blogIdInput = document.getElementById('blog-id') as HTMLInputElement | null;
+  const blogTitleInput = document.getElementById('blog-title') as HTMLInputElement | null;
+  const blogSlugInput = document.getElementById('blog-slug') as HTMLInputElement | null;
+  const blogCategoryInput = document.getElementById('blog-category') as HTMLSelectElement | null;
+  const blogAuthorInput = document.getElementById('blog-author') as HTMLInputElement | null;
+  const blogTagsInput = document.getElementById('blog-tags') as HTMLInputElement | null;
+  const blogCoverInput = document.getElementById('blog-cover') as HTMLInputElement | null;
+  const blogCoverFile = document.getElementById('blog-cover-file') as HTMLInputElement | null;
+  const blogCoverUploadLabel = document.getElementById('blog-cover-upload-label');
+  const blogCoverPreviewWrap = document.getElementById('blog-cover-preview-wrap');
+  const blogCoverPreview = document.getElementById('blog-cover-preview') as HTMLImageElement | null;
+  const blogExcerptInput = document.getElementById('blog-excerpt') as HTMLTextAreaElement | null;
+  const blogContentInput = document.getElementById('blog-content') as HTMLTextAreaElement | null;
+  const blogPreviewPane = document.getElementById('blog-preview-pane');
+  const blogToolbar = document.getElementById('blog-toolbar');
+  const blogModeWrite = document.getElementById('blog-mode-write');
+  const blogModePreview = document.getElementById('blog-mode-preview');
+  const blogSeoTitleInput = document.getElementById('blog-seo-title') as HTMLInputElement | null;
+  const blogSeoDescInput = document.getElementById('blog-seo-desc') as HTMLInputElement | null;
+  const blogStatusInput = document.getElementById('blog-status') as HTMLSelectElement | null;
+  const blogFeaturedInput = document.getElementById('blog-featured') as HTMLInputElement | null;
+  const blogFormError = document.getElementById('blog-form-error');
+  const saveBlogBtn = document.getElementById('save-blog-btn') as HTMLButtonElement | null;
+  const blogSearchInput = document.getElementById('blog-search-input') as HTMLInputElement | null;
+  const blogStatusFilter = document.getElementById('blog-status-filter') as HTMLSelectElement | null;
+
+  function escapeBlogHtml(v: unknown): string {
+    return String(v ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function blogSlugify(value: string): string {
+    return String(value || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '')
+      .slice(0, 120);
+  }
+
+  function syncCoverPreview() {
+    const url = blogCoverInput?.value.trim() || '';
+    if (url && blogCoverPreview && blogCoverPreviewWrap) {
+      blogCoverPreview.src = url;
+      blogCoverPreviewWrap.classList.remove('hidden');
+    } else {
+      blogCoverPreviewWrap?.classList.add('hidden');
+    }
+  }
+
+  function setBlogEditorMode(mode: 'write' | 'preview') {
+    if (mode === 'preview') {
+      blogContentInput?.classList.add('hidden');
+      blogToolbar?.classList.add('hidden');
+      blogPreviewPane?.classList.remove('hidden');
+      if (blogPreviewPane) {
+        blogPreviewPane.innerHTML =
+          renderEditorialMarkdown(blogContentInput?.value || '') ||
+          '<p class="text-xs text-gray-400">Nothing to preview yet.</p>';
+      }
+      blogModePreview?.classList.add('bg-[#14110f]', 'text-white');
+      blogModePreview?.classList.remove('bg-gray-100', 'text-gray-600');
+      blogModeWrite?.classList.remove('bg-[#14110f]', 'text-white');
+      blogModeWrite?.classList.add('bg-gray-100', 'text-gray-600');
+    } else {
+      blogContentInput?.classList.remove('hidden');
+      blogToolbar?.classList.remove('hidden');
+      blogPreviewPane?.classList.add('hidden');
+      blogModeWrite?.classList.add('bg-[#14110f]', 'text-white');
+      blogModeWrite?.classList.remove('bg-gray-100', 'text-gray-600');
+      blogModePreview?.classList.remove('bg-[#14110f]', 'text-white');
+      blogModePreview?.classList.add('bg-gray-100', 'text-gray-600');
+    }
+  }
+
+  blogModeWrite?.addEventListener('click', () => setBlogEditorMode('write'));
+  blogModePreview?.addEventListener('click', () => setBlogEditorMode('preview'));
+
+  // Markdown quick formatting toolbar
+  document.querySelectorAll<HTMLButtonElement>('.blog-md-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (!blogContentInput) return;
+      const start = blogContentInput.selectionStart || 0;
+      const end = blogContentInput.selectionEnd || 0;
+      const val = blogContentInput.value;
+      const selected = val.slice(start, end);
+      let replacement = selected;
+
+      if (btn.dataset.mdPrefix) {
+        replacement = `${btn.dataset.mdPrefix}${selected || 'Heading or item'}`;
+      } else if (btn.dataset.mdWrap) {
+        const w = btn.dataset.mdWrap;
+        replacement = `${w}${selected || 'emphasized text'}${w}`;
+      } else if (btn.dataset.mdLink) {
+        const url = prompt('Enter destination URL (e.g. /collections/necklaces or https://...):', '/shop');
+        if (!url) return;
+        replacement = `[${selected || 'Explore the collection'}](${url.trim()})`;
+      }
+
+      blogContentInput.value = val.slice(0, start) + replacement + val.slice(end);
+      blogContentInput.focus();
+      blogContentInput.setSelectionRange(start + replacement.length, start + replacement.length);
+    });
+  });
+
+  blogTitleInput?.addEventListener('input', () => {
+    if (!blogSlugTouched && blogSlugInput && blogTitleInput) {
+      blogSlugInput.value = blogSlugify(blogTitleInput.value);
+    }
+  });
+  blogSlugInput?.addEventListener('input', () => {
+    blogSlugTouched = Boolean(blogSlugInput.value.trim());
+  });
+  blogCoverInput?.addEventListener('input', syncCoverPreview);
+
+  // Direct Cover Image Upload to Cloudflare R2 (/api/upload)
+  blogCoverFile?.addEventListener('change', async () => {
+    const file = blogCoverFile.files?.[0];
+    if (!file) return;
+    if (blogCoverUploadLabel) blogCoverUploadLabel.textContent = 'Uploading...';
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const token = getSavedToken();
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        credentials: 'include',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        body: formData
+      });
+      const data = await res.json();
+      if (res.ok && data?.url && blogCoverInput) {
+        blogCoverInput.value = data.url;
+        syncCoverPreview();
+      } else {
+        alert(data?.error || 'Could not upload cover image.');
+      }
+    } catch {
+      alert('Network error while uploading cover image.');
+    } finally {
+      if (blogCoverUploadLabel) blogCoverUploadLabel.textContent = 'Upload Image';
+      blogCoverFile.value = '';
+    }
+  });
+
+  function openBlogModal(blog?: BlogPost) {
+    if (!blogModal || !blogForm) return;
+    blogForm.reset();
+    blogFormError?.classList.add('hidden');
+    setBlogEditorMode('write');
+
+    if (blog) {
+      if (blogModalTitle) blogModalTitle.textContent = 'Edit Journal Article';
+      if (blogIdInput) blogIdInput.value = blog.id;
+      if (blogTitleInput) blogTitleInput.value = blog.title;
+      if (blogSlugInput) blogSlugInput.value = blog.slug;
+      blogSlugTouched = true;
+      if (blogCategoryInput) blogCategoryInput.value = blog.category || 'Styling Guide';
+      if (blogAuthorInput) blogAuthorInput.value = blog.author || 'Satvastones Editorial';
+      if (blogTagsInput) blogTagsInput.value = (blog.tags || []).join(', ');
+      if (blogCoverInput) blogCoverInput.value = blog.coverImage || '';
+      if (blogExcerptInput) blogExcerptInput.value = blog.excerpt || '';
+      if (blogContentInput) blogContentInput.value = blog.content || '';
+      if (blogSeoTitleInput) blogSeoTitleInput.value = blog.seoTitle || '';
+      if (blogSeoDescInput) blogSeoDescInput.value = blog.seoDescription || '';
+      if (blogStatusInput) blogStatusInput.value = blog.status || 'published';
+      if (blogFeaturedInput) blogFeaturedInput.checked = Boolean(blog.isFeatured);
+      if (saveBlogBtn) saveBlogBtn.textContent = 'Update Article';
+    } else {
+      if (blogModalTitle) blogModalTitle.textContent = 'Write New Journal Article';
+      if (blogIdInput) blogIdInput.value = '';
+      blogSlugTouched = false;
+      if (blogAuthorInput) blogAuthorInput.value = 'Satvastones Editorial';
+      if (blogStatusInput) blogStatusInput.value = 'published';
+      if (saveBlogBtn) saveBlogBtn.textContent = 'Publish Article';
+    }
+
+    syncCoverPreview();
+    blogModal.classList.remove('hidden');
+  }
+
+  function closeBlogModal() {
+    blogModal?.classList.add('hidden');
+  }
+
+  document.getElementById('add-blog-btn')?.addEventListener('click', () => openBlogModal());
+  document.getElementById('close-blog-modal')?.addEventListener('click', closeBlogModal);
+  document.getElementById('cancel-blog-modal')?.addEventListener('click', closeBlogModal);
+
+  blogForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!blogTitleInput || !blogContentInput) return;
+    blogFormError?.classList.add('hidden');
+
+    const title = blogTitleInput.value.trim();
+    const content = blogContentInput.value.trim();
+    if (saveBlogBtn) {
+      saveBlogBtn.disabled = true;
+      saveBlogBtn.textContent = 'Saving...';
+    }
+
+    const result = await saveAdminBlog({
+      id: blogIdInput?.value.trim() || undefined,
+      title,
+      slug: blogSlugInput?.value.trim() || undefined,
+      category: blogCategoryInput?.value || 'Styling Guide',
+      author: blogAuthorInput?.value.trim() || 'Satvastones Editorial',
+      tags: (blogTagsInput?.value || '')
+        .split(',')
+        .map((t) => t.trim())
+        .filter(Boolean),
+      coverImage: blogCoverInput?.value.trim() || '',
+      excerpt: blogExcerptInput?.value.trim() || '',
+      content,
+      seoTitle: blogSeoTitleInput?.value.trim() || '',
+      seoDescription: blogSeoDescInput?.value.trim() || '',
+      status: (blogStatusInput?.value === 'draft' ? 'draft' : 'published') as 'published' | 'draft',
+      isFeatured: Boolean(blogFeaturedInput?.checked)
+    });
+
+    if (saveBlogBtn) {
+      saveBlogBtn.disabled = false;
+      saveBlogBtn.textContent = blogIdInput?.value ? 'Update Article' : 'Publish Article';
+    }
+
+    if (!result.ok) {
+      if (blogFormError) {
+        blogFormError.textContent = result.error || 'Could not save article.';
+        blogFormError.classList.remove('hidden');
+      }
+      return;
+    }
+
+    closeBlogModal();
+    await renderBlogs();
+  });
+
+  function drawBlogsList() {
+    const container = document.getElementById('admin-blogs-list');
+    const countEl = document.getElementById('tab-blogs-count');
+    if (countEl) countEl.textContent = String(adminBlogsCache.length);
+    if (!container) return;
+
+    const q = (blogSearchInput?.value || '').trim().toLowerCase();
+    const statusVal = blogStatusFilter?.value || 'all';
+
+    const filtered = adminBlogsCache.filter((b) => {
+      if (statusVal !== 'all' && b.status !== statusVal) return false;
+      if (!q) return true;
+      return (
+        b.title.toLowerCase().includes(q) ||
+        b.category.toLowerCase().includes(q) ||
+        b.excerpt.toLowerCase().includes(q) ||
+        (b.tags || []).some((t) => t.toLowerCase().includes(q))
+      );
+    });
+
+    if (!filtered.length) {
+      container.innerHTML = `
+        <div class="col-span-full border border-dashed border-[#d8d0c4] bg-[#f4efe7]/60 p-10 text-center">
+          <p class="font-display text-xl text-[#14110f]">No articles yet</p>
+          <p class="mt-1.5 text-xs text-[#6f675f]">Write styling guides, anti-tarnish care tips, or gifting stories to bring organic Google traffic to your store.</p>
+          <button type="button" id="empty-new-blog-btn" class="mt-4 cursor-pointer bg-[#14110f] px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-[#f6f1e8] hover:bg-[#8d3f3d]">+ Write First Article</button>
+        </div>
+      `;
+      document.getElementById('empty-new-blog-btn')?.addEventListener('click', () => openBlogModal());
+      return;
+    }
+
+    container.innerHTML = filtered
+      .map((b) => {
+        const statusBadge =
+          b.status === 'published'
+            ? '<span class="bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">Published</span>'
+            : '<span class="bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">Draft</span>';
+        const featuredBadge = b.isFeatured
+          ? '<span class="bg-[#14110f] text-[#e3c98d] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider">Featured</span>'
+          : '';
+        const dateLabel = b.publishedAt
+          ? new Date(b.publishedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+          : '';
+        return `
+          <div class="flex flex-col overflow-hidden border border-[#e5ded3] bg-white">
+            ${
+              b.coverImage
+                ? `<div class="aspect-[16/9] overflow-hidden bg-[#f1ece3]"><img src="${escapeBlogHtml(b.coverImage)}" alt="${escapeBlogHtml(b.title)}" class="h-full w-full object-cover" /></div>`
+                : `<div class="flex aspect-[16/9] items-center justify-center bg-[#f4efe7] text-[10px] uppercase tracking-[0.18em] text-[#8a8279]">No cover image</div>`
+            }
+            <div class="flex flex-1 flex-col justify-between p-4 space-y-3">
+              <div>
+                <div class="flex flex-wrap items-center gap-1.5">
+                  ${statusBadge}
+                  ${featuredBadge}
+                  <span class="text-[9.5px] uppercase tracking-[0.14em] text-[#8d3f3d]">${escapeBlogHtml(b.category)}</span>
+                </div>
+                <h3 class="font-display mt-2 text-lg leading-snug text-[#14110f]">${escapeBlogHtml(b.title)}</h3>
+                <p class="mt-1 line-clamp-2 text-[11.5px] leading-relaxed text-[#5f5851]">${escapeBlogHtml(b.excerpt)}</p>
+                <p class="mt-2 text-[10px] text-[#8a8279]">${escapeBlogHtml(b.author)} · ${b.readTimeMinutes} min read ${dateLabel ? `· ${escapeBlogHtml(dateLabel)}` : ''}</p>
+              </div>
+              <div class="flex items-center justify-between gap-2 border-t border-[#efe9df] pt-3">
+                ${
+                  b.status === 'published'
+                    ? `<a href="/journal/${encodeURIComponent(b.slug)}" target="_blank" rel="noopener noreferrer" class="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#8d3f3d] hover:underline">View Live ↗</a>`
+                    : `<span class="text-[10px] text-gray-400">Draft only</span>`
+                }
+                <div class="flex items-center gap-1.5">
+                  <button type="button" data-edit-blog="${escapeBlogHtml(b.id)}" class="edit-blog-btn cursor-pointer border border-[#e5ded3] px-2.5 py-1 text-[10px] font-semibold text-[#14110f] hover:border-[#14110f]">Edit</button>
+                  <button type="button" data-delete-blog="${escapeBlogHtml(b.id)}" data-delete-title="${escapeBlogHtml(b.title)}" class="delete-blog-btn cursor-pointer border border-red-200 bg-red-50 px-2.5 py-1 text-[10px] font-semibold text-red-700 hover:bg-red-600 hover:text-white">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      })
+      .join('');
+
+    container.querySelectorAll<HTMLButtonElement>('.edit-blog-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const found = adminBlogsCache.find((item) => item.id === btn.dataset.editBlog);
+        if (found) openBlogModal(found);
+      });
+    });
+
+    container.querySelectorAll<HTMLButtonElement>('.delete-blog-btn').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.deleteBlog;
+        const title = btn.dataset.deleteTitle || 'this article';
+        if (!id) return;
+        if (!confirm(`Delete "${title}"? This will also remove it from /journal and /sitemap.xml.`)) return;
+        const res = await deleteAdminBlog(id);
+        if (!res.ok) {
+          alert(res.error || 'Could not delete article.');
+          return;
+        }
+        await renderBlogs();
+      });
+    });
+  }
+
+  async function renderBlogs() {
+    adminBlogsCache = await fetchAllAdminBlogs();
+    drawBlogsList();
+  }
+
+  blogSearchInput?.addEventListener('input', drawBlogsList);
+  blogStatusFilter?.addEventListener('change', drawBlogsList);
+
+  // Copy Feed / Sitemap URL buttons
+  document.querySelectorAll<HTMLButtonElement>('.seo-copy-btn').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const targetUrl = btn.dataset.copyUrl;
+      if (!targetUrl) return;
+      try {
+        await navigator.clipboard.writeText(targetUrl);
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => {
+          btn.textContent = orig;
+        }, 1600);
+      } catch {
+        prompt('Copy URL:', targetUrl);
+      }
+    });
   });
 
   // Check auth and mount

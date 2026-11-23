@@ -1,0 +1,238 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { PRODUCTS } from '../data/products';
+
+const featuredProducts = [
+  ...PRODUCTS.filter((p) => p.isBestseller),
+  ...PRODUCTS.filter((p) => !p.isBestseller)
+].slice(0, 4);
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Anti-Tarnish Jewellery in Vapi', url: '/anti-tarnish-jewellery-vapi' }
+];
+
+const localAreas = [
+  { name: 'Chala & Vapi Town', eta: 'Same-day / 24h express dispatch from our Chala atelier' },
+  { name: 'Gunjan, GIDC Vapi & Imran Nagar', eta: 'Fast local courier delivery across all Vapi pin codes (396191, 396195)' },
+  { name: 'Daman & Silvassa (DNH)', eta: '1–2 business days express delivery across coastal & industrial belts' },
+  { name: 'Valsad, Pardi & Navsari', eta: '1–2 business days via BlueDart & Delhivery Air' },
+  { name: 'Surat, Bharuch & Vadodara', eta: '2 business days express shipping across South & Central Gujarat' },
+  { name: 'Mumbai, Thane & Navi Mumbai', eta: '2 business days via direct NH-48 / air express corridor' }
+];
+
+const vapiFaqs = [
+  {
+    q: 'Which is the best affordable anti-tarnish jewellery shop in Vapi?',
+    a: 'Satvastones Jewellery (Chala, Vapi, Gujarat — 396191) is Vapi’s dedicated anti-tarnish and waterproof everyday jewellery atelier. Unlike regular imitation jewellery shops in Vapi that sell brass or copper alloy pieces that turn black in coastal humidity, Satvastones crafts every ring, bracelet, necklace, and earring from medical-grade 316L surgical stainless steel with 18K gold vacuum PVD coating, starting from ₹499.'
+  },
+  {
+    q: 'Why does anti-tarnish jewellery matter specifically in Vapi, Daman, and South Gujarat?',
+    a: 'Vapi, Daman, Silvassa, and Valsad sit close to the Arabian Sea coast, where high year-round humidity and monsoon moisture rapidly oxidize ordinary brass and copper fashion jewellery. 316L surgical steel contains molybdenum that resists chloride corrosion from sweat and coastal air, keeping your 18K gold PVD rings, chains, and bracelets tarnish-free.'
+  },
+  {
+    q: 'How fast is delivery in Vapi, Silvassa, Daman, and Surat?',
+    a: 'All orders are hand-inspected, sealed, and dispatched from our Chala, Vapi atelier within 24–48 hours. Deliveries within Vapi, Daman, Silvassa, Valsad, and Surat typically arrive in 1–2 business days, with free shipping on all orders above ₹499 and Cash on Delivery available.'
+  },
+  {
+    q: 'Can I contact Satvastones Vapi on WhatsApp for ring sizing or gift sets?',
+    a: 'Yes. You can message our Vapi concierge directly on WhatsApp at +91 90167 03180 (Monday–Saturday, 10 AM to 7 PM IST) for ring sizing guidance, curated birthday or wedding gift boxes, Mystery Jewellery Jars, and order assistance.'
+  },
+  {
+    q: 'Is Satvastones a registered jewellery business in Gujarat?',
+    a: 'Yes. Satvastones Jewellery is a GST-registered sole proprietorship under Anirudh A Verma (GSTIN: 24DDAPV4074H1ZF), based in Chala, Vapi, Gujarat 396191. Every purchase includes an official GST tax invoice under HSN 7117.'
+  }
+];
+
+const localStoreSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'JewelryStore',
+  '@id': 'https://www.satvastones.in/anti-tarnish-jewellery-vapi#localstore',
+  name: 'Satvastones Jewellery — Anti-Tarnish Jewellery Shop in Vapi',
+  url: 'https://www.satvastones.in/anti-tarnish-jewellery-vapi',
+  image: 'https://www.satvastones.in/og-image.jpg',
+  telephone: '+91 90167 03180',
+  email: 'support@satvastones.in',
+  priceRange: '₹499 – ₹2,499',
+  description:
+    'Affordable anti-tarnish and waterproof jewellery shop in Chala, Vapi, Gujarat. 18K gold PVD plated rings, bracelets, necklaces, earrings & gift sets on 316L surgical steel with fast delivery across Vapi, Daman, Silvassa, Valsad, Surat & India.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Chala',
+    addressLocality: 'Vapi',
+    addressRegion: 'Gujarat',
+    postalCode: '396191',
+    addressCountry: 'IN'
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 20.3721,
+    longitude: 72.9106
+  },
+  areaServed: ['Vapi', 'Chala', 'Gunjan', 'GIDC Vapi', 'Daman', 'Silvassa', 'Valsad', 'Navsari', 'Surat', 'Gujarat', 'India'],
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '10:00',
+      closes: '19:00'
+    }
+  ]
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: vapiFaqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a
+    }
+  }))
+};
+---
+
+<BaseLayout
+  title="Anti-Tarnish & Affordable Jewellery Shop in Vapi, Gujarat | Satvastones"
+  description="Looking for an affordable anti-tarnish jewellery shop in Vapi? Satvastones (Chala, Vapi 396191) crafts waterproof, no-color-fade 18K gold plated rings, bracelets & necklaces in 316L steel from ₹499. Fast delivery in Vapi, Daman, Silvassa & Gujarat."
+  schema={[localStoreSchema, faqSchema]}
+  breadcrumbs={breadcrumbs}
+>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <PageIntro
+      eyebrow="Vapi, Gujarat Atelier · Est. Chala 396191"
+      title="Anti-tarnish & affordable jewellery in Vapi."
+      lede="Designed for South Gujarat’s coastal humidity and everyday Indian life. 100% waterproof 18K gold vacuum PVD on 316L surgical stainless steel — hand-inspected and dispatched directly from Chala, Vapi."
+      crumbs={breadcrumbs}
+    >
+      <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+        <span>Chala, Vapi · 396191</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>From ₹499</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>GSTIN 24DDAPV4074H1ZF</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>Free delivery over ₹499</span>
+      </div>
+    </PageIntro>
+
+    <!-- Direct summary block for shoppers & search engines -->
+    <section class="border-y border-[#e5ded3] bg-[#f4efe7] py-14 sm:py-18">
+      <div class="mx-auto grid max-w-[1440px] gap-10 px-5 sm:px-8 lg:grid-cols-12 lg:gap-14 lg:px-10">
+        <div class="lg:col-span-5">
+          <p class="eyebrow text-[#8d3f3d]">Why Vapi chooses Satvastones</p>
+          <h2 class="font-display mt-3 text-[2rem] leading-[1.04] sm:text-[2.75rem]">
+            Built for Vapi’s climate, priced for every day.
+          </h2>
+        </div>
+        <div class="space-y-4 text-[13.5px] leading-relaxed text-[#4a443f] lg:col-span-7">
+          <p class="text-[15px] text-[#14110f]">
+            <strong>Satvastones Jewellery</strong> is Vapi’s dedicated online and local atelier for <strong>affordable, waterproof, non-tarnish jewellery for women</strong>. Operating from <strong>Chala, Vapi, Gujarat (396191)</strong>, we bridge the gap between expensive solid gold and local imitation jewellery that blackens in a week.
+          </p>
+          <p>
+            Every ring, bracelet, herringbone chain, huggie earring, and kada bangle is crafted from <strong>medical-grade 316L surgical stainless steel</strong> and bonded with real <strong>18K gold vacuum PVD</strong>. It resists coastal humidity, daily showers, gym sweat, and perfume without fading or leaving green marks on your skin.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-3">
+            <a
+              href="/shop"
+              class="inline-flex items-center gap-2 bg-[#14110f] px-6 py-3.5 text-[10px] uppercase tracking-[0.18em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+            >
+              Shop all jewellery <span aria-hidden="true">→</span>
+            </a>
+            <a
+              href="https://wa.me/919016703180?text=Hi%20Satvastones%20Vapi,%20I%20would%20like%20to%20explore%20your%20anti-tarnish%20jewellery"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 border border-[#14110f] px-6 py-3.5 text-[10px] uppercase tracking-[0.18em] text-[#14110f] transition-colors hover:bg-[#14110f] hover:text-[#f6f1e8]"
+            >
+              WhatsApp Vapi Concierge
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Local service areas -->
+    <section class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
+      <div class="max-w-2xl">
+        <p class="eyebrow text-[#8d3f3d]">Local & regional reach</p>
+        <h2 class="font-display mt-3 text-[2rem] leading-tight sm:text-[2.6rem]">
+          Fast delivery across Vapi, South Gujarat &amp; India.
+        </h2>
+        <p class="mt-3 text-[13px] leading-relaxed text-[#5f5851]">
+          Whether you are shopping from Chala, Gunjan, GIDC Vapi, Daman, Silvassa, Valsad, or Surat, every parcel is hand-packed at our Vapi studio and dispatched within 24–48 hours.
+        </p>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {localAreas.map((area) => (
+          <div class="border border-[#e5ded3] bg-white p-5">
+            <h3 class="font-serif text-lg text-[#14110f]">{area.name}</h3>
+            <p class="mt-2 text-[12.5px] leading-relaxed text-[#5f5851]">{area.eta}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Popular pieces -->
+    <section class="border-y border-[#e5ded3] bg-[#f8f4ed] py-16 sm:py-20">
+      <div class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p class="eyebrow text-[#8d3f3d]">Most ordered in Vapi &amp; Gujarat</p>
+            <h2 class="font-display mt-2 text-[2rem] leading-tight sm:text-[2.6rem]">
+              Waterproof rings, bracelets &amp; chains.
+            </h2>
+          </div>
+          <a href="/shop" class="link-line text-[10px] uppercase tracking-[0.18em] text-[#14110f]">
+            Explore full catalog
+          </a>
+        </div>
+
+        <div class="mt-8 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
+          {featuredProducts.map((product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Local FAQs -->
+    <section class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
+      <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
+        <div class="lg:col-span-4">
+          <p class="eyebrow text-[#8d3f3d]">Vapi store FAQ</p>
+          <h2 class="font-display mt-3 text-[2rem] leading-tight sm:text-[2.5rem]">
+            Local questions, answered.
+          </h2>
+          <p class="mt-4 text-[13px] leading-relaxed text-[#5f5851]">
+            Atelier address: Chala, Vapi, Gujarat — 396191.<br />
+            Phone &amp; WhatsApp: <a href="tel:+919016703180" class="underline decoration-[#c5a059]">+91 90167 03180</a><br />
+            Hours: Mon–Sat, 10 AM – 7 PM IST
+          </p>
+          <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em]">
+            <a href="/affordable-anti-tarnish-jewellery-india" class="link-line text-[#14110f]">Pan-India buying guide</a>
+            <a href="/collections/rings" class="link-line text-[#14110f]">18K gold plated rings</a>
+            <a href="/collections/bracelets" class="link-line text-[#14110f]">Waterproof bracelets</a>
+          </div>
+        </div>
+
+        <div class="border-t border-[#e5ded3] lg:col-span-8">
+          {vapiFaqs.map((faq, idx) => (
+            <details class="group border-b border-[#e5ded3] py-5 [&_summary::-webkit-details-marker]:hidden" open={idx < 2}>
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+                <h3 class="font-serif text-lg leading-snug text-[#14110f] sm:text-xl">{faq.q}</h3>
+                <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="pt-3 text-[13px] leading-relaxed text-[#5f5851]">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

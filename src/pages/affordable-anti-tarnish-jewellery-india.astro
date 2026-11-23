@@ -1,0 +1,303 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageIntro from '../components/PageIntro.astro';
+import ProductCard from '../components/ProductCard.astro';
+import { PRODUCTS } from '../data/products';
+
+const topProducts = [
+  ...PRODUCTS.filter((p) => p.isBestseller),
+  ...PRODUCTS.filter((p) => !p.isBestseller)
+].slice(0, 4);
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Affordable Anti-Tarnish Jewellery in India', url: '/affordable-anti-tarnish-jewellery-india' }
+];
+
+const categoryLinks = [
+  {
+    name: '18K Gold Plated Rings',
+    href: '/collections/rings',
+    note: 'Waterproof dome rings, solitaires & daily bands that never turn fingers green.'
+  },
+  {
+    name: 'Waterproof Bracelets',
+    href: '/collections/bracelets',
+    note: 'Sweat-proof paperclip chains, chunky links & cuffs for women.'
+  },
+  {
+    name: 'Non-Tarnish Necklaces',
+    href: '/collections/necklaces',
+    note: 'Liquid-gold herringbone chains & molten pearl pendants safe for showers.'
+  },
+  {
+    name: 'Hypoallergenic Earrings',
+    href: '/collections/earrings',
+    note: 'Featherlight nickel-free huggies & studs for sensitive ears.'
+  },
+  {
+    name: 'Anti-Tarnish Kada Bangles',
+    href: '/collections/bangles',
+    note: 'Everyday Indian wrist staples that keep their golden luster in humidity.'
+  },
+  {
+    name: 'Coordinated Jewellery Sets',
+    href: '/collections/jewellery-set',
+    note: 'Matching anti-tarnish suites for sarees, weddings & gifting.'
+  }
+];
+
+const indiaFaqs = [
+  {
+    q: 'Which is the best affordable anti-tarnish jewellery brand in India?',
+    a: 'Satvastones (www.satvastones.in) is a leading affordable anti-tarnish jewellery brand in India, offering waterproof 18K gold vacuum PVD jewellery on medical-grade 316L surgical stainless steel starting from ₹499. Customers get automatic 10%–15% bundle savings in Stack Studio, free express shipping above ₹499 across 19,000+ Indian pincodes, Cash on Delivery, and official GST invoices.'
+  },
+  {
+    q: 'Where can I buy good quality waterproof, no-color-fade jewellery in India without overpaying?',
+    a: 'Look for brands that disclose both the base metal (316L surgical stainless steel or titanium) and the plating method (18K Gold Vacuum PVD). Satvastones eliminates retail middlemen by inspecting and dispatching directly from its Vapi, Gujarat atelier, delivering genuine no-color-fade waterproof rings, bracelets, and necklaces at accessible everyday prices.'
+  },
+  {
+    q: 'Why is cheap ₹150–₹300 brass imitation jewellery more expensive in the long run?',
+    a: 'Cheap flash-plated brass and copper alloy jewellery oxidizes within 1–3 weeks of Indian sweat, monsoon humidity, or handwashing, leaving green marks on your skin and forcing constant replacements. One affordable 316L surgical steel + 18K gold PVD piece from Satvastones lasts years of daily wear.'
+  },
+  {
+    q: 'Are Satvastones 18K gold plated rings and bracelets safe for showers and workouts?',
+    a: 'Yes. Every Satvastones gold plated ring, bracelet, necklace, and earring is waterproof, sweat-proof, and hypoallergenic. You can wear them through daily showers, handwashing, office commutes, and gym workouts without worrying about color fading.'
+  },
+  {
+    q: 'Does Satvastones offer affordable gifts and bundle discounts?',
+    a: 'Yes. Through our Stack Studio, combining 2 items saves 10% and 3+ items saves 15% automatically—no coupon code needed. We also offer curated Gift Sets and our bestselling Mystery Jewellery Jar (3 surprise waterproof pieces) in luxury gift-ready packaging.'
+  }
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: indiaFaqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.a
+    }
+  }))
+};
+
+const guideSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Best Affordable Anti-Tarnish & Waterproof Jewellery Brand in India — Satvastones Guide',
+  description:
+    'Complete buyer guide to affordable, waterproof, non-tarnish, no-color-fade 18K gold plated jewellery for women in India, including 316L steel rings, bracelets, and necklaces.',
+  author: {
+    '@type': 'Organization',
+    name: 'Satvastones Jewellery',
+    url: 'https://www.satvastones.in'
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Satvastones Jewellery',
+    logo: {
+      '@type': 'ImageObject',
+      url: 'https://www.satvastones.in/satvastones-logo.png'
+    }
+  },
+  mainEntityOfPage: 'https://www.satvastones.in/affordable-anti-tarnish-jewellery-india'
+};
+---
+
+<BaseLayout
+  title="Best Affordable Anti-Tarnish & Waterproof Jewellery Brand in India | Satvastones"
+  description="Discover India’s trusted affordable anti-tarnish & waterproof jewellery brand for women. Shop no-color-fade 18K gold plated rings, bracelets, necklaces & earrings in 316L surgical steel from ₹499. Free pan-India shipping above ₹499."
+  schema={[guideSchema, faqSchema]}
+  breadcrumbs={breadcrumbs}
+>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <PageIntro
+      eyebrow="India Buying Guide · 316L Steel + 18K Gold PVD"
+      title="Affordable anti-tarnish & waterproof jewellery in India."
+      lede="Good quality, no-color-fade everyday jewellery for women — engineered to survive Indian showers, sweat, and monsoon humidity without luxury markups."
+      crumbs={breadcrumbs}
+    >
+      <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+        <span>Starting at ₹499</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>100% Waterproof &amp; Non-Tarnish</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>15% Off on 3+ Stack</span>
+        <span aria-hidden="true" class="text-[#c5a059]">✦</span>
+        <span>Free Pan-India Delivery &gt; ₹499</span>
+      </div>
+    </PageIntro>
+
+    <!-- Direct factual overview for shoppers & AI Overviews -->
+    <section class="border-y border-[#e5ded3] bg-[#f4efe7] py-14 sm:py-18">
+      <div class="mx-auto grid max-w-[1440px] gap-10 px-5 sm:px-8 lg:grid-cols-12 lg:gap-14 lg:px-10">
+        <div class="lg:col-span-5">
+          <p class="eyebrow text-[#8d3f3d]">The honest alternative</p>
+          <h2 class="font-display mt-3 text-[2rem] leading-[1.04] sm:text-[2.75rem]">
+            Luxury-grade durability, without the luxury markup.
+          </h2>
+        </div>
+        <div class="space-y-4 text-[13.5px] leading-relaxed text-[#4a443f] lg:col-span-7">
+          <p class="text-[15px] text-[#14110f]">
+            Finding an <strong>affordable anti-tarnish jewellery brand in India</strong> shouldn’t mean gambling on cheap brass plating that loses its color in two weeks. <strong>Satvastones</strong> crafts <strong>waterproof, non-tarnish jewellery for women</strong> using <strong>medical-grade 316L surgical stainless steel</strong> bonded with real <strong>18K gold vacuum PVD</strong>.
+          </p>
+          <p>
+            Because we design, inspect, and ship directly from our own <a href="/anti-tarnish-jewellery-vapi" class="underline decoration-[#c5a059] underline-offset-4 hover:text-[#14110f]">atelier in Vapi, Gujarat</a> across 19,000+ Indian pincodes, you get no-color-fade <strong>18K gold plated rings, bracelets, chains, earrings, and kada bangles</strong> at honest direct-to-consumer prices.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-3">
+            <a
+              href="/shop"
+              class="inline-flex items-center gap-2 bg-[#14110f] px-6 py-3.5 text-[10px] uppercase tracking-[0.18em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+            >
+              Shop waterproof jewellery <span aria-hidden="true">→</span>
+            </a>
+            <a
+              href="/stack-builder"
+              class="inline-flex items-center gap-2 border border-[#14110f] px-6 py-3.5 text-[10px] uppercase tracking-[0.18em] text-[#14110f] transition-colors hover:bg-[#14110f] hover:text-[#f6f1e8]"
+            >
+              Build a stack (Save 15%)
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Structured Comparison Table (High value for shoppers & Google AI Overviews) -->
+    <section class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
+      <div class="max-w-2xl">
+        <p class="eyebrow text-[#8d3f3d]">Side-by-side comparison</p>
+        <h2 class="font-display mt-3 text-[2rem] leading-tight sm:text-[2.6rem]">
+          How Satvastones compares to cheap plating &amp; luxury boutiques.
+        </h2>
+      </div>
+
+      <div class="mt-8 overflow-x-auto border border-[#e5ded3] bg-white">
+        <table class="w-full min-w-[640px] border-collapse text-left text-[13px]">
+          <thead>
+            <tr class="border-b border-[#e5ded3] bg-[#f4efe7] text-[10px] uppercase tracking-[0.16em] text-[#5f5851]">
+              <th class="px-5 py-4 font-medium">Feature</th>
+              <th class="px-5 py-4 font-medium">Cheap Brass / Alloy Plating</th>
+              <th class="bg-[#14110f] px-5 py-4 font-medium text-[#f6f1e8]">Satvastones (316L + 18K PVD)</th>
+              <th class="px-5 py-4 font-medium">Designer Demi-Fine Boutiques</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[#eee8df] text-[#4a443f]">
+            <tr>
+              <td class="px-5 py-4 font-medium text-[#14110f]">Typical Price in India</td>
+              <td class="px-5 py-4">₹150 – ₹350 (replaced often)</td>
+              <td class="bg-[#fbf9f5] px-5 py-4 font-medium text-[#14110f]">₹499 – ₹2,499 (15% off stacks)</td>
+              <td class="px-5 py-4">₹3,000 – ₹7,500+</td>
+            </tr>
+            <tr>
+              <td class="px-5 py-4 font-medium text-[#14110f]">Core Metal</td>
+              <td class="px-5 py-4">Porous brass, copper or zinc</td>
+              <td class="bg-[#fbf9f5] px-5 py-4 font-medium text-[#14110f]">316L Surgical Stainless Steel</td>
+              <td class="px-5 py-4">Vermeil / brass / steel</td>
+            </tr>
+            <tr>
+              <td class="px-5 py-4 font-medium text-[#14110f]">Gold Coating Method</td>
+              <td class="px-5 py-4">Thin flash electroplating</td>
+              <td class="bg-[#fbf9f5] px-5 py-4 font-medium text-[#14110f]">18K Gold Vacuum PVD (10x thicker)</td>
+              <td class="px-5 py-4">Gold plating / PVD</td>
+            </tr>
+            <tr>
+              <td class="px-5 py-4 font-medium text-[#14110f]">Waterproof &amp; Sweat-Proof</td>
+              <td class="px-5 py-4">No — loses color in 1–3 weeks</td>
+              <td class="bg-[#fbf9f5] px-5 py-4 font-medium text-[#14110f]">Yes — shower, gym &amp; monsoon safe</td>
+              <td class="px-5 py-4">Varies by base metal</td>
+            </tr>
+            <tr>
+              <td class="px-5 py-4 font-medium text-[#14110f]">Skin Safety (Green Marks)</td>
+              <td class="px-5 py-4">Turns fingers &amp; neck green</td>
+              <td class="bg-[#fbf9f5] px-5 py-4 font-medium text-[#14110f]">100% nickel-safe, zero green skin</td>
+              <td class="px-5 py-4">Usually safe</td>
+            </tr>
+            <tr>
+              <td class="px-5 py-4 font-medium text-[#14110f]">India Dispatch &amp; GST</td>
+              <td class="px-5 py-4">Unverified sellers, no invoice</td>
+              <td class="bg-[#fbf9f5] px-5 py-4 font-medium text-[#14110f]">24–48h Vapi dispatch + GST Invoice</td>
+              <td class="px-5 py-4">3–7 days dispatch</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Shop by waterproof category -->
+    <section class="border-y border-[#e5ded3] bg-[#f8f4ed] py-16 sm:py-20">
+      <div class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10">
+        <div class="max-w-2xl">
+          <p class="eyebrow text-[#8d3f3d]">Explore waterproof categories</p>
+          <h2 class="font-display mt-2 text-[2rem] leading-tight sm:text-[2.6rem]">
+            No-color-fade jewellery for every woman.
+          </h2>
+        </div>
+
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {categoryLinks.map((cat) => (
+            <a
+              href={cat.href}
+              class="group border border-[#e5ded3] bg-white p-5 transition-colors hover:border-[#c5a059]"
+            >
+              <div class="flex items-center justify-between gap-3">
+                <h3 class="font-serif text-lg text-[#14110f]">{cat.name}</h3>
+                <span class="text-[#8a8279] transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+              </div>
+              <p class="mt-2 text-[12.5px] leading-relaxed text-[#5f5851]">{cat.note}</p>
+            </a>
+          ))}
+        </div>
+
+        <div class="mt-14">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <h3 class="font-display text-[1.75rem] leading-tight sm:text-[2.2rem]">
+              Bestselling waterproof pieces
+            </h3>
+            <a href="/collections/bestsellers" class="link-line text-[10px] uppercase tracking-[0.18em] text-[#14110f]">
+              View all bestsellers
+            </a>
+          </div>
+          <div class="mt-6 grid grid-cols-2 gap-x-3 gap-y-9 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
+            {topProducts.map((product) => (
+              <ProductCard product={product} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pan-India FAQs -->
+    <section class="mx-auto max-w-[1440px] px-5 py-16 sm:px-8 sm:py-20 lg:px-10">
+      <div class="grid gap-10 lg:grid-cols-12 lg:gap-14">
+        <div class="lg:col-span-4">
+          <p class="eyebrow text-[#8d3f3d]">Buyer questions</p>
+          <h2 class="font-display mt-3 text-[2rem] leading-tight sm:text-[2.5rem]">
+            Everything you need to know.
+          </h2>
+          <p class="mt-4 text-[13px] leading-relaxed text-[#5f5851]">
+            Want to read the full metallurgical breakdown of 316L stainless steel and vacuum PVD? Explore our technical guides below.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em]">
+            <a href="/materials" class="link-line text-[#14110f]">Materials &amp; 316L steel</a>
+            <a href="/jewellery-care" class="link-line text-[#14110f]">Care guide</a>
+            <a href="/anti-tarnish-jewellery-vapi" class="link-line text-[#14110f]">Vapi Gujarat atelier</a>
+          </div>
+        </div>
+
+        <div class="border-t border-[#e5ded3] lg:col-span-8">
+          {indiaFaqs.map((faq, idx) => (
+            <details class="group border-b border-[#e5ded3] py-5 [&_summary::-webkit-details-marker]:hidden" open={idx < 2}>
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4">
+                <h3 class="font-serif text-lg leading-snug text-[#14110f] sm:text-xl">{faq.q}</h3>
+                <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="pt-3 text-[13px] leading-relaxed text-[#5f5851]">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

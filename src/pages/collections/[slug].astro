@@ -58,29 +58,29 @@ const { category, products } = Astro.props;
 
 // Keyword-targeted SEO titles & meta descriptions
 const seoTitles: Record<string, string> = {
-  'bracelets': 'Buy Anti Tarnish Jewellery Bracelets Online in India at Best Prices | Satvastones',
-  'jewellery-set': 'Buy Anti Tarnish Jewellery Sets Online in India at Best Prices | Satvastones',
-  'mystery-jewellery-jar': 'Buy Mystery Jewellery Jar Online in India at Best Prices | Satvastones',
-  'necklaces': 'Buy Waterproof Anti Tarnish Necklaces Online in India at Best Prices | Satvastones',
-  'rings': 'Buy Anti Tarnish Rings Online in India at Best Prices | Satvastones',
-  'earrings': 'Buy Hypoallergenic Anti Tarnish Earrings Online in India at Best Prices | Satvastones',
-  'bangles': 'Buy Anti Tarnish Kada Bangles Online in India at Best Prices | Satvastones',
-  'gift-sets': 'Buy Anti Tarnish Jewellery Gift Sets Online in India at Best Prices | Satvastones',
-  'bestsellers': 'Buy Bestselling Anti Tarnish Jewellery in India at Best Prices | Satvastones',
-  'new-arrivals': 'Buy New Arrival Anti Tarnish Jewellery Online in India | Satvastones'
+  'bracelets': 'Buy Affordable Anti Tarnish & Waterproof Bracelets for Women in India | Satvastones',
+  'jewellery-set': 'Buy Affordable Anti Tarnish Jewellery Sets for Women in India | Satvastones',
+  'mystery-jewellery-jar': 'Buy Mystery Jewellery Jar Online in India — Waterproof Anti-Tarnish | Satvastones',
+  'necklaces': 'Buy Waterproof & Non-Tarnish Necklaces for Women in India | Satvastones',
+  'rings': 'Buy Anti Tarnish & 18K Gold Plated Rings for Women in India | Satvastones',
+  'earrings': 'Buy Waterproof & Hypoallergenic Anti Tarnish Earrings for Women | Satvastones',
+  'bangles': 'Buy Anti Tarnish & Gold Plated Kada Bangles for Women in India | Satvastones',
+  'gift-sets': 'Buy Affordable Anti Tarnish Jewellery Gift Sets in India | Satvastones',
+  'bestsellers': 'Best Affordable Anti Tarnish & Waterproof Jewellery for Women in India | Satvastones',
+  'new-arrivals': 'New Arrival Waterproof & Non-Tarnish Jewellery for Women India | Satvastones'
 };
 
 const seoDescriptions: Record<string, string> = {
-  'bracelets': 'Shop waterproof anti tarnish jewellery bracelet styles in India. Chunky link chains, delicate paperclips, and kada cuffs in 18K gold PVD and 316L steel. Free delivery > ₹499.',
-  'jewellery-set': 'Explore coordinated anti tarnish jewellery set collections for women. Perfectly matching necklaces, bracelets, and earrings for sarees, weddings, and daily wear.',
-  'mystery-jewellery-jar': 'Unbox 3 surprise handcrafted waterproof pieces worth ₹4,999+ in the SatvaStones Mystery Jewellery Jar. 100% anti-tarnish, dispatched from our Vapi atelier.',
-  'necklaces': 'Discover waterproof and tarnish free necklaces in India. From herringbone snake chains to baroque molten pearl pendants engineered for showers and workouts.',
-  'rings': 'Browse waterproof, anti tarnish rings for women. 316L surgical steel with 18K gold vacuum PVD that never leaves green skin marks. Free ring sizer available.',
-  'earrings': 'Explore featherlight, 100% hypoallergenic anti-tarnish earrings and huggies. Nickel-free 316L surgical stainless steel safe for sensitive ears.',
-  'bangles': 'Shop everyday anti tarnish kada bangles and structured torque cuffs. Contemporary Indian designs that never lose their golden luster in humidity.',
-  'gift-sets': 'Curated anti tarnish jewellery gift sets in luxury keepsake boxes. Ideal gifts for birthdays, anniversaries, and festive celebrations in India.',
-  'bestsellers': 'Discover the highest rated anti tarnish jewellery pieces in India. Adored by thousands for daily shower-safe, gym-safe durability.',
-  'new-arrivals': 'The latest drops in women’s anti tarnish jewellery. Hand-inspected and dispatched in 24–48 hours from our Vapi store location in Gujarat.'
+  'bracelets': 'Shop affordable waterproof anti-tarnish & 18K gold plated bracelets for women in India. Chunky link chains, delicate paperclips & cuffs in 316L steel that never lose color. Free delivery above ₹499.',
+  'jewellery-set': 'Explore affordable coordinated anti-tarnish & waterproof jewellery sets for women. Matching 18K gold PVD necklaces, bracelets & earrings for sarees, weddings & daily wear.',
+  'mystery-jewellery-jar': 'Unbox 3 surprise handcrafted waterproof, non-tarnish pieces worth ₹4,999+ in the Satvastones Mystery Jewellery Jar. Dispatched from our Vapi, Gujarat atelier.',
+  'necklaces': 'Discover affordable waterproof & non-tarnish necklaces for women in India. 18K gold PVD herringbone chains & pearl pendants that never fade in showers or sweat.',
+  'rings': 'Shop affordable waterproof, non-tarnish 18K gold plated rings for women in India. 316L surgical steel rings that never lose color or turn fingers green. Free ring sizer included.',
+  'earrings': 'Explore affordable featherlight, waterproof & 100% hypoallergenic anti-tarnish earrings and huggies for women. Nickel-free 316L steel safe for sensitive ears.',
+  'bangles': 'Shop affordable everyday anti-tarnish kada bangles & 18K gold plated cuffs for women in India. Waterproof designs that never lose their golden color in humidity.',
+  'gift-sets': 'Curated affordable anti-tarnish jewellery gift sets in luxury keepsake boxes. Waterproof, non-tarnish gifts for birthdays, anniversaries & festive occasions in India.',
+  'bestsellers': 'Shop the best affordable anti-tarnish & waterproof jewellery for women in India. Top-rated 18K gold plated rings, bracelets & chains that never lose color.',
+  'new-arrivals': 'Explore the latest drops in affordable women’s anti-tarnish & waterproof jewellery. Hand-inspected and dispatched in 24–48 hours from Vapi, Gujarat across India.'
 };
 
 const pageTitle = seoTitles[category.slug] || `Buy ${category.name} Online in India at Best Prices | Satvastones`;

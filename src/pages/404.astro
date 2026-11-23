@@ -6,6 +6,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   title="Page Not Found | Satvastones Anti-Tarnish Jewellery"
   description="That page could not be found. Browse anti-tarnish 18K gold PVD jewellery, or track an existing order."
 >
+  <!-- Prevent 404 flash on /products/* while client fallback resolves (e.g. in local dev) -->
+  <script is:inline>
+    if (window.location.pathname.startsWith('/products/')) {
+      document.documentElement.classList.add('resolving-dynamic-product');
+    }
+  </script>
+
+  <!-- Minimal loading state shown only while resolving a /products/* fallback -->
+  <div id="dynamic-product-loading" class="hidden min-h-[70vh] bg-[#fbf9f5] px-5 py-14 sm:px-8">
+    <div class="mx-auto grid max-w-[1240px] animate-pulse gap-10 lg:grid-cols-12">
+      <div class="aspect-[4/5] bg-[#efe9df] lg:col-span-7"></div>
+      <div class="space-y-4 lg:col-span-5">
+        <div class="h-3 w-32 bg-[#efe9df]"></div>
+        <div class="h-9 w-3/4 bg-[#efe9df]"></div>
+        <div class="h-6 w-28 bg-[#efe9df]"></div>
+        <div class="h-24 w-full bg-[#efe9df]"></div>
+        <div class="h-12 w-full bg-[#e5ded3]"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Standard 404 Display -->
   <section
     id="default-404-view"
@@ -82,6 +103,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
 <style is:global>
+  html.resolving-dynamic-product #default-404-view {
+    display: none !important;
+  }
+  html.resolving-dynamic-product #dynamic-product-loading {
+    display: block !important;
+  }
+
   #dynamic-product-view .rounded-full,
   #dynamic-product-view .rounded-xl,
   #dynamic-product-view .rounded-2xl,
@@ -170,9 +198,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       } catch (_) {}
     }
 
-    if (!product) return;
+    if (!product) {
+      document.documentElement.classList.remove('resolving-dynamic-product');
+      document.getElementById('dynamic-product-loading')?.remove();
+      return;
+    }
 
-    // Found dynamic product: Remove 404 view from DOM completely, show dynamic container
+    // Found dynamic product: Remove 404 view & skeleton from DOM completely, show dynamic container
+    document.documentElement.classList.remove('resolving-dynamic-product');
+    document.getElementById('dynamic-product-loading')?.remove();
     const defaultView = document.getElementById('default-404-view');
     const dynamicView = document.getElementById('dynamic-product-view');
 

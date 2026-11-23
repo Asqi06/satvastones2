@@ -1,0 +1,312 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BLOG_CATEGORIES } from '../../stores/blogStore';
+
+const title = 'The Satvastones Journal — Jewellery Styling, Care & Craft Guides';
+const description =
+  'Read expert guides on anti-tarnish 18K gold PVD jewellery, saree & everyday layering tips, gifting ideas, and care rituals from the Satvastones atelier in India.';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Journal', url: '/journal' }
+];
+
+const blogListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Satvastones Editorial Journal',
+  description,
+  numberOfItems: 0,
+  itemListElement: []
+};
+---
+
+<BaseLayout title={title} description={description} schema={blogListSchema} breadcrumbs={breadcrumbs}>
+  <div class="bg-[#fbf9f5] text-[#14110f]">
+    <!-- Editorial header -->
+    <header class="mx-auto max-w-[1440px] px-5 pb-10 pt-6 sm:px-8 sm:pb-12 sm:pt-8 lg:px-10">
+      <nav aria-label="Breadcrumb" class="mb-8">
+        <ol class="flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
+          <li><a href="/" class="transition-colors hover:text-[#14110f]">Home</a></li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li aria-current="page" class="text-[#14110f]">Journal</li>
+        </ol>
+      </nav>
+
+      <div class="grid gap-6 lg:grid-cols-12 lg:items-end">
+        <div class="lg:col-span-8">
+          <p class="eyebrow text-[#8d3f3d]">The Satvastones Journal</p>
+          <h1 class="font-display mt-3 text-[2.75rem] leading-[0.95] tracking-[-0.035em] sm:text-[4.25rem] lg:text-[5rem]">
+            Notes on gold, craft<br class="hidden sm:block" /> &amp; everyday styling.
+          </h1>
+        </div>
+        <div class="lg:col-span-4 lg:pb-2">
+          <p class="max-w-sm text-[13px] leading-relaxed text-[#5f5851]">
+            Practical guides on waterproof 18K gold PVD metallurgy, effortless layering, gifting rituals, and caring for jewellery built for Indian weather.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Category filter & search rail -->
+    <div class="border-y border-[#e5ded3]">
+      <div class="mx-auto flex max-w-[1440px] flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-10">
+        <div id="journal-category-tabs" class="scrollbar-none flex items-center gap-6 overflow-x-auto text-[10px] uppercase tracking-[0.16em]">
+          <button
+            type="button"
+            data-cat="ALL"
+            class="journal-cat-btn cursor-pointer whitespace-nowrap border-b border-[#14110f] pb-0.5 text-[#14110f] transition-colors"
+          >
+            All stories
+          </button>
+          {BLOG_CATEGORIES.map((cat) => (
+            <button
+              type="button"
+              data-cat={cat}
+              class="journal-cat-btn cursor-pointer whitespace-nowrap border-b border-transparent pb-0.5 text-[#7d756c] transition-colors hover:text-[#14110f]"
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div class="relative shrink-0 sm:w-64">
+          <input
+            id="journal-search-input"
+            type="search"
+            placeholder="Search articles..."
+            class="w-full border border-[#e0d7c9] bg-white px-3.5 py-2 text-[12px] text-[#14110f] placeholder:text-[#9a9288] focus:border-[#14110f] focus:outline-none"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Journal Content -->
+    <main class="mx-auto max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10">
+      <!-- Loading skeleton -->
+      <div id="journal-loading" class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {[0, 1, 2].map(() => (
+          <div class="animate-pulse space-y-4 border border-[#e5ded3] bg-[#f6f1e8]/60 p-5">
+            <div class="aspect-[16/10] bg-[#ebe4d9]"></div>
+            <div class="h-3 w-24 bg-[#ebe4d9]"></div>
+            <div class="h-6 w-4/5 bg-[#ebe4d9]"></div>
+            <div class="h-4 w-full bg-[#ebe4d9]"></div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Featured article hero -->
+      <section id="journal-featured-slot" class="mb-14 hidden"></section>
+
+      <!-- Articles grid -->
+      <section id="journal-grid" class="hidden grid gap-8 md:grid-cols-2 lg:grid-cols-3"></section>
+
+      <!-- Empty state -->
+      <section id="journal-empty" class="hidden border border-[#e5ded3] bg-[#f4efe7] px-6 py-16 text-center">
+        <p class="text-[10px] uppercase tracking-[0.22em] text-[#8d3f3d]">Editorial Desk</p>
+        <h2 class="font-display mt-3 text-3xl text-[#14110f] sm:text-4xl">Fresh stories coming soon.</h2>
+        <p id="journal-empty-msg" class="mx-auto mt-3 max-w-md text-[13px] leading-relaxed text-[#5f5851]">
+          We are curating styling guides, metallurgy deep-dives, and gifting notes from our Vapi atelier. In the meantime, explore our permanent waterproof collection.
+        </p>
+        <a
+          href="/shop"
+          class="mt-7 inline-block bg-[#14110f] px-7 py-3.5 text-[10px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+        >
+          Explore the collection
+        </a>
+      </section>
+    </main>
+
+    <!-- Bottom Shop CTA -->
+    <section class="border-t border-[#e5ded3] bg-[#f4efe7] py-14 sm:py-20">
+      <div class="mx-auto flex max-w-[1440px] flex-col items-start justify-between gap-6 px-5 sm:px-8 md:flex-row md:items-center lg:px-10">
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.2em] text-[#8d3f3d]">Everyday Waterproof Gold</p>
+          <h2 class="font-display mt-2 text-3xl text-[#14110f] sm:text-4xl">
+            Jewellery you never have to take off.
+          </h2>
+          <p class="mt-2 max-w-lg text-[13px] text-[#5f5851]">
+            316L surgical steel bonded with 18K vacuum gold PVD. Free PAN-India shipping above ₹499.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a
+            href="/shop"
+            class="bg-[#14110f] px-7 py-3.5 text-[10px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+          >
+            Shop all pieces
+          </a>
+          <a
+            href="/stack-builder"
+            class="border border-[#14110f] px-7 py-3.5 text-[10px] font-medium uppercase tracking-[0.18em] text-[#14110f] transition-colors hover:bg-[#14110f] hover:text-[#f6f1e8]"
+          >
+            Build a stack (15% off)
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<script>
+  import { fetchPublishedBlogs, type BlogPost } from '../../stores/blogStore';
+
+  const loadingEl = document.getElementById('journal-loading');
+  const featuredEl = document.getElementById('journal-featured-slot');
+  const gridEl = document.getElementById('journal-grid');
+  const emptyEl = document.getElementById('journal-empty');
+  const emptyMsgEl = document.getElementById('journal-empty-msg');
+  const searchInput = document.getElementById('journal-search-input') as HTMLInputElement | null;
+  const catButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.journal-cat-btn'));
+
+  let allBlogs: BlogPost[] = [];
+  let activeCategory = 'ALL';
+  let searchQuery = '';
+
+  function esc(v: unknown): string {
+    return String(v ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function formatDate(iso?: string): string {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function render() {
+    loadingEl?.classList.add('hidden');
+
+    const q = searchQuery.trim().toLowerCase();
+    const filtered = allBlogs.filter((b) => {
+      const catMatch = activeCategory === 'ALL' || b.category.toLowerCase() === activeCategory.toLowerCase();
+      if (!catMatch) return false;
+      if (!q) return true;
+      return (
+        b.title.toLowerCase().includes(q) ||
+        b.excerpt.toLowerCase().includes(q) ||
+        b.category.toLowerCase().includes(q) ||
+        (b.tags || []).some((t) => t.toLowerCase().includes(q))
+      );
+    });
+
+    if (!filtered.length) {
+      featuredEl?.classList.add('hidden');
+      gridEl?.classList.add('hidden');
+      emptyEl?.classList.remove('hidden');
+      if (emptyMsgEl) {
+        emptyMsgEl.textContent = allBlogs.length
+          ? 'No articles match your current filter. Try another category or clear your search.'
+          : 'We are curating styling guides, metallurgy deep-dives, and gifting notes from our Vapi atelier. In the meantime, explore our permanent waterproof collection.';
+      }
+      return;
+    }
+
+    emptyEl?.classList.add('hidden');
+
+    const showFeatured = activeCategory === 'ALL' && !q && filtered.length > 0;
+    const featured = showFeatured ? filtered.find((b) => b.isFeatured) || filtered[0] : null;
+    const rest = featured ? filtered.filter((b) => b.id !== featured.id) : filtered;
+
+    if (featured && featuredEl) {
+      const cover = featured.coverImage || '/satvastones-logo.png';
+      featuredEl.innerHTML = `
+        <a href="/journal/${encodeURIComponent(featured.slug)}" class="group grid overflow-hidden border border-[#e5ded3] bg-[#f4efe7] transition-colors hover:border-[#c5a059] lg:grid-cols-12">
+          <div class="relative aspect-[16/10] overflow-hidden bg-[#ebe4d9] lg:col-span-7 lg:aspect-auto lg:min-h-[380px]">
+            <img src="${esc(cover)}" alt="${esc(featured.title)}" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="eager" />
+            <span class="absolute left-4 top-4 bg-[#14110f] px-3 py-1 text-[9px] uppercase tracking-[0.2em] text-[#f6f1e8]">Featured story</span>
+          </div>
+          <div class="flex flex-col justify-between p-7 sm:p-10 lg:col-span-5">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[#8d3f3d]">
+                <span>${esc(featured.category)}</span>
+                <span class="text-[#c5a059]">·</span>
+                <span class="text-[#7d756c]">${featured.readTimeMinutes} min read</span>
+              </div>
+              <h2 class="font-display mt-4 text-3xl leading-[1.08] text-[#14110f] transition-colors group-hover:text-[#8d3f3d] sm:text-4xl">
+                ${esc(featured.title)}
+              </h2>
+              <p class="mt-4 line-clamp-3 text-[13.5px] leading-relaxed text-[#5f5851]">
+                ${esc(featured.excerpt)}
+              </p>
+            </div>
+            <div class="mt-8 flex items-center justify-between border-t border-[#e0d7c9] pt-5 text-[10px] uppercase tracking-[0.16em]">
+              <span class="text-[#7d756c]">${esc(featured.author)} · ${esc(formatDate(featured.publishedAt))}</span>
+              <span class="font-medium text-[#14110f] transition-transform group-hover:translate-x-1">Read story →</span>
+            </div>
+          </div>
+        </a>
+      `;
+      featuredEl.classList.remove('hidden');
+    } else if (featuredEl) {
+      featuredEl.classList.add('hidden');
+    }
+
+    if (gridEl) {
+      if (!rest.length) {
+        gridEl.classList.add('hidden');
+      } else {
+        gridEl.innerHTML = rest
+          .map((b) => {
+            const cover = b.coverImage || '/satvastones-logo.png';
+            return `
+              <article class="group flex flex-col overflow-hidden border border-[#e5ded3] bg-white transition-colors hover:border-[#c5a059]">
+                <a href="/journal/${encodeURIComponent(b.slug)}" class="block aspect-[16/10] overflow-hidden bg-[#f1ece3]">
+                  <img src="${esc(cover)}" alt="${esc(b.title)}" class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" loading="lazy" />
+                </a>
+                <div class="flex flex-1 flex-col justify-between p-6">
+                  <div>
+                    <div class="flex items-center gap-2 text-[9.5px] uppercase tracking-[0.18em]">
+                      <span class="text-[#8d3f3d]">${esc(b.category)}</span>
+                      <span class="text-[#c5a059]">·</span>
+                      <span class="text-[#8a8279]">${b.readTimeMinutes} min read</span>
+                    </div>
+                    <h3 class="font-display mt-3 text-2xl leading-snug text-[#14110f] transition-colors group-hover:text-[#8d3f3d]">
+                      <a href="/journal/${encodeURIComponent(b.slug)}">${esc(b.title)}</a>
+                    </h3>
+                    <p class="mt-2.5 line-clamp-3 text-[13px] leading-relaxed text-[#5f5851]">
+                      ${esc(b.excerpt)}
+                    </p>
+                  </div>
+                  <div class="mt-6 flex items-center justify-between border-t border-[#efe9df] pt-4 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
+                    <span>${esc(formatDate(b.publishedAt))}</span>
+                    <a href="/journal/${encodeURIComponent(b.slug)}" class="font-medium text-[#14110f] hover:text-[#8d3f3d]">Read →</a>
+                  </div>
+                </div>
+              </article>
+            `;
+          })
+          .join('');
+        gridEl.classList.remove('hidden');
+      }
+    }
+  }
+
+  catButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activeCategory = btn.dataset.cat || 'ALL';
+      catButtons.forEach((b) => {
+        b.classList.remove('border-[#14110f]', 'text-[#14110f]');
+        b.classList.add('border-transparent', 'text-[#7d756c]');
+      });
+      btn.classList.add('border-[#14110f]', 'text-[#14110f]');
+      btn.classList.remove('border-transparent', 'text-[#7d756c]');
+      render();
+    });
+  });
+
+  searchInput?.addEventListener('input', () => {
+    searchQuery = searchInput.value;
+    render();
+  });
+
+  fetchPublishedBlogs().then((blogs) => {
+    allBlogs = blogs;
+    render();
+  });
+</script>

@@ -16,8 +16,8 @@ export interface Props {
 }
 
 const {
-  title = 'Satvastones – Anti Tarnish & Waterproof Everyday Jewellery in India',
-  description = 'Shop luxury everyday anti tarnish jewellery in India. 18K gold vacuum PVD & 316L surgical steel necklaces, rings, bracelets & sets. Free express shipping above ₹499.',
+  title = 'Satvastones – Affordable Anti-Tarnish & Waterproof Jewellery for Women in India',
+  description = 'Shop affordable, waterproof & non-tarnish 18K gold plated jewellery for women in India. 316L surgical steel rings, bracelets, necklaces & earrings that never lose color. Dispatched from Vapi, Gujarat — free shipping above ₹499.',
   canonicalUrl = Astro.url.href.replace('satvastonesjewellery.in', 'www.satvastones.in').split('?')[0],
   ogImage = 'https://www.satvastones.in/og-image.jpg',
   type = 'website',
@@ -28,13 +28,19 @@ const {
 
 const siteUrl = 'https://www.satvastones.in';
 
-// Enhanced Google-compliant Organization / JewelryStore Schema with Local SEO for Vapi, Gujarat
+// Enhanced Google-compliant Organization / JewelryStore Schema with Local SEO (Vapi, Gujarat) & Pan-India GEO
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': ['JewelryStore', 'Organization'],
   '@id': `${siteUrl}/#store`,
   'name': 'Satvastones Jewellery',
-  'alternateName': ['SatvaStones', 'Satvastones Anti Tarnish Jewellery', 'Satvastones India', 'satvastones.in'],
+  'alternateName': [
+    'SatvaStones',
+    'Satvastones Anti Tarnish Jewellery',
+    'Satvastones India',
+    'Satvastones Vapi',
+    'satvastones.in'
+  ],
   'legalName': 'Satvastones Jewellery (Proprietor: Anirudh A Verma)',
   'taxID': '24DDAPV4074H1ZF',
   'url': siteUrl,
@@ -44,7 +50,7 @@ const organizationSchema = {
   ],
   'logo': `${siteUrl}/satvastones-logo.png`,
   'image': `${siteUrl}/og-image.jpg`,
-  'description': 'India’s premier anti-tarnish jewellery atelier offering waterproof, sweat-resistant 18K gold vacuum PVD and 316L surgical stainless steel jewellery. Dispatched within 24-48 hours from Chala, Vapi, Gujarat.',
+  'description': 'Affordable anti-tarnish, waterproof, and non-tarnish jewellery brand in India offering 18K gold PVD plated rings, bracelets, necklaces, earrings, and bangles on 316L surgical stainless steel that never lose color. Based in Chala, Vapi, Gujarat with 24–48 hour express delivery across India.',
   'telephone': '+91 90167 03180',
   'email': 'support@satvastones.in',
   'contactPoint': [
@@ -54,7 +60,7 @@ const organizationSchema = {
       'contactType': 'customer service',
       'email': 'support@satvastones.in',
       'areaServed': 'IN',
-      'availableLanguage': ['en', 'hi']
+      'availableLanguage': ['en', 'hi', 'gu']
     }
   ],
   'address': {
@@ -79,11 +85,37 @@ const organizationSchema = {
     }
   ],
   'currenciesAccepted': 'INR',
-  'paymentAccepted': 'UPI, Google Pay, PhonePe, Paytm, RuPay, Visa, Mastercard, NetBanking, Razorpay',
-  'priceRange': '₹₹',
-  'areaServed': {
-    '@type': 'Country',
-    'name': 'India'
+  'paymentAccepted': 'UPI, Google Pay, PhonePe, Paytm, RuPay, Visa, Mastercard, NetBanking, Razorpay, Cash on Delivery',
+  'priceRange': '₹499 – ₹2,499',
+  'areaServed': [
+    { '@type': 'City', 'name': 'Vapi' },
+    { '@type': 'City', 'name': 'Daman' },
+    { '@type': 'City', 'name': 'Silvassa' },
+    { '@type': 'City', 'name': 'Valsad' },
+    { '@type': 'City', 'name': 'Surat' },
+    { '@type': 'State', 'name': 'Gujarat' },
+    { '@type': 'Country', 'name': 'India' }
+  ],
+  'knowsAbout': [
+    'Anti-tarnish jewellery for women',
+    'Waterproof jewellery in India',
+    'Affordable non-tarnish jewellery',
+    '18K gold PVD plated rings and bracelets',
+    '316L surgical stainless steel jewellery',
+    'Hypoallergenic no-color-fade daily wear jewellery',
+    'Anti-tarnish jewellery shop in Vapi, Gujarat'
+  ],
+  'hasOfferCatalog': {
+    '@type': 'OfferCatalog',
+    'name': 'Satvastones Anti-Tarnish & Waterproof Jewellery Catalog',
+    'itemListElement': [
+      { '@type': 'OfferCatalog', 'name': '18K Gold Plated Anti-Tarnish Rings', 'url': `${siteUrl}/collections/rings` },
+      { '@type': 'OfferCatalog', 'name': 'Waterproof Anti-Tarnish Bracelets', 'url': `${siteUrl}/collections/bracelets` },
+      { '@type': 'OfferCatalog', 'name': 'Waterproof Anti-Tarnish Necklaces', 'url': `${siteUrl}/collections/necklaces` },
+      { '@type': 'OfferCatalog', 'name': 'Hypoallergenic Anti-Tarnish Earrings', 'url': `${siteUrl}/collections/earrings` },
+      { '@type': 'OfferCatalog', 'name': 'Anti-Tarnish Kada Bangles', 'url': `${siteUrl}/collections/bangles` },
+      { '@type': 'OfferCatalog', 'name': 'Anti-Tarnish Jewellery Sets', 'url': `${siteUrl}/collections/jewellery-set` }
+    ]
   },
   'hasMerchantReturnPolicy': {
     '@type': 'MerchantReturnPolicy',

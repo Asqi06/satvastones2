@@ -228,10 +228,64 @@ export function devApi() {
         store.claims ||= [];
         store.consent ||= [];
         store.privacyRequests ||= [];
+        store.blogs ||= [];
         return store;
       }
 
       async function handle(req, res, next) {
+        const reqPath = (req.url || '').split('?')[0];
+        if (reqPath.startsWith('/journal/') && reqPath !== '/journal/' && reqPath !== '/journal/_template') {
+          req.url = '/journal/_template';
+          return next();
+        }
+        if (reqPath === '/sitemap.xml' || reqPath === '/feeds/google-merchant.xml' || reqPath === '/google-merchant.xml') {
+          try {
+            const db = await getStore();
+            const published = (db.products || []).filter((p) => p.isPublished !== false && p.slug);
+            const blogs = (db.blogs || []).filter((b) => b.status !== 'draft' && b.slug);
+            const esc = (v) =>
+              String(v ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&apos;');
+            const absUrl = (u) => (!u ? 'https://www.satvastones.in/satvastones-logo.png' : u.startsWith('http') ? u : `https://www.satvastones.in${u.startsWith('/') ? '' : '/'}${u}`);
+
+            if (reqPath === '/sitemap.xml') {
+              const today = new Date().toISOString().slice(0, 10);
+              const urls = [
+                '/', '/shop', '/journal', '/stack-builder', '/about', '/materials', '/jewellery-care', '/faqs', '/contact',
+                ...published.map((p) => `/products/${p.slug}`),
+                ...blogs.map((b) => `/journal/${b.slug}`)
+              ];
+              const xml =
+                `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+                urls.map((u) => `  <url><loc>https://www.satvastones.in${esc(u)}</loc><lastmod>${today}</lastmod></url>`).join('\n') +
+                `\n</urlset>\n`;
+              res.statusCode = 200;
+              res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+              res.end(xml);
+              return;
+            }
+
+            const items = published
+              .map((p) => {
+                const price = (Number(p.pricePaise || 0) / 100).toFixed(2);
+                const img = absUrl(p.image || p.images?.[0]?.url);
+                return `    <item>\n      <g:id>${esc(p.sku || p.id)}</g:id>\n      <g:title>${esc(p.seoTitle || p.name)}</g:title>\n      <g:description>${esc(p.description || p.headline || p.name)}</g:description>\n      <g:link>https://www.satvastones.in/products/${esc(p.slug)}</g:link>\n      <g:image_link>${esc(img)}</g:image_link>\n      <g:availability>${p.inStock === false ? 'out_of_stock' : 'in_stock'}</g:availability>\n      <g:price>${price} INR</g:price>\n      <g:brand>Satvastones</g:brand>\n      <g:condition>new</g:condition>\n      <g:identifier_exists>no</g:identifier_exists>\n    </item>`;
+              })
+              .join('\n');
+            const feedXml = `<?xml version="1.0" encoding="UTF-8"?>\n<rss xmlns:g="http://base.google.com/ns/1.0" version="2.0">\n  <channel>\n    <title>Satvastones Jewellery — Live Product Catalog</title>\n    <link>https://www.satvastones.in</link>\n${items}\n  </channel>\n</rss>\n`;
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/xml; charset=utf-8');
+            res.end(feedXml);
+            return;
+          } catch {
+            return next();
+          }
+        }
+
         if (!req.url?.startsWith(API_PREFIX)) return next();
         const url = new URL(req.url, 'http://localhost');
         const route = url.pathname.replace(/\/+$/, '');
@@ -478,6 +532,71 @@ export function devApi() {
               db.orders = db.orders.filter((o) => o.orderNumber !== ref && o.id !== ref);
               await persist();
               return send(json(200, { success: true }));
+            }
+          }
+
+          // ---- Blogs / Journal --------------------------------------------
+          if (route === '/api/blogs') {
+            if (method === 'GET') {
+              const slug = url.searchParams.get('slug');
+              const id = url.searchParams.get('id');
+              const includeAll = url.searchParams.get('all') === '1' || url.searchParams.get('all') === 'true';
+              const isAdmin = includeAll && isAuthed(req);
+              let rows = isAdmin ? db.blogs : db.blogs.filter((b) => b.status !== 'draft');
+              if (slug || id) {
+                const found = rows.find((b) => (slug ? b.slug === slug : b.id === id));
+                if (!found) return send(json(404, { success: false, error: 'Article not found.' }));
+                return send(json(200, { success: true, blog: found }));
+              }
+              return send(json(200, { success: true, blogs: rows, source: 'dev' }));
+            }
+            if (!isAuthed(req)) return send(json(401, { success: false, error: 'Unauthorized' }));
+            if (method === 'POST' || method === 'PUT') {
+              const payload = parseJsonBody(bodyText);
+              const b = payload.blog || payload;
+              const title = String(b?.title || '').trim();
+              const content = String(b?.content || '').trim();
+              if (!title || title.length < 3) return send(json(400, { success: false, error: 'Article title is required.' }));
+              if (!content || content.length < 20) return send(json(400, { success: false, error: 'Article content is required.' }));
+              const id = String(b.id || `blog-${Date.now()}`).trim();
+              const slug = slugify(b.slug || title) || `article-${Date.now()}`;
+              const clash = db.blogs.find((item) => item.slug === slug && item.id !== id);
+              if (clash) return send(json(409, { success: false, error: `Slug "${slug}" already belongs to "${clash.title}".` }));
+              const nowIso = new Date().toISOString();
+              const words = content.split(/\s+/).filter(Boolean).length;
+              const blog = {
+                id,
+                title,
+                slug,
+                excerpt: String(b.excerpt || '').trim() || content.replace(/[#*_`>\-\[\]()]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 180),
+                content,
+                coverImage: String(b.coverImage || '').trim(),
+                category: String(b.category || 'Styling Guide').trim() || 'Styling Guide',
+                tags: Array.isArray(b.tags)
+                  ? b.tags.map((t) => String(t).trim()).filter(Boolean)
+                  : String(b.tags || '').split(',').map((t) => t.trim()).filter(Boolean),
+                author: String(b.author || 'Satvastones Editorial').trim() || 'Satvastones Editorial',
+                status: b.status === 'draft' ? 'draft' : 'published',
+                isFeatured: Boolean(b.isFeatured),
+                seoTitle: String(b.seoTitle || '').trim(),
+                seoDescription: String(b.seoDescription || '').trim(),
+                readTimeMinutes: Math.max(1, Math.ceil(words / 200)),
+                publishedAt: b.publishedAt || nowIso,
+                createdAt: b.createdAt || nowIso,
+                updatedAt: nowIso
+              };
+              const idx = db.blogs.findIndex((item) => item.id === id);
+              if (idx >= 0) db.blogs[idx] = { ...db.blogs[idx], ...blog };
+              else db.blogs.unshift(blog);
+              await persist();
+              return send(json(200, { success: true, blog, message: 'Article saved.' }));
+            }
+            if (method === 'DELETE') {
+              const id = url.searchParams.get('id');
+              const slug = url.searchParams.get('slug');
+              db.blogs = db.blogs.filter((b) => b.id !== id && b.slug !== slug);
+              await persist();
+              return send(json(200, { success: true, message: 'Article deleted.' }));
             }
           }
 

@@ -1,0 +1,268 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export function getStaticPaths() {
+  return [{ params: { slug: '_template' } }];
+}
+
+const siteUrl = 'https://www.satvastones.in';
+const title = 'Satvastones Journal — Anti-Tarnish Jewellery Stories & Guides';
+const description =
+  'Read styling guides, care advice, and craft notes on waterproof 18K gold PVD jewellery from Satvastones India.';
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Journal', url: '/journal' },
+  { name: 'Article', url: '/journal' }
+];
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  image: [`${siteUrl}/satvastones-logo.png`],
+  datePublished: new Date().toISOString(),
+  dateModified: new Date().toISOString(),
+  articleSection: 'Styling Guide',
+  author: {
+    '@type': 'Person',
+    name: 'Satvastones Editorial'
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Satvastones Jewellery',
+    logo: {
+      '@type': 'ImageObject',
+      url: `${siteUrl}/satvastones-logo.png`
+    }
+  },
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': `${siteUrl}/journal`
+  }
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  schema={articleSchema}
+  breadcrumbs={breadcrumbs}
+>
+  <article class="bg-[#fbf9f5] text-[#14110f]">
+    <!-- Breadcrumb -->
+    <div class="mx-auto max-w-4xl px-5 pt-6 sm:px-8 sm:pt-8">
+      <nav aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 overflow-x-auto whitespace-nowrap text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">
+          <li><a href="/" class="transition-colors hover:text-[#14110f]">Home</a></li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li><a href="/journal" class="transition-colors hover:text-[#14110f]">Journal</a></li>
+          <li aria-hidden="true" class="text-[#c5a059]">/</li>
+          <li data-blog-breadcrumb-title aria-current="page" class="max-w-[220px] truncate text-[#14110f] sm:max-w-md">
+            Article
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <!-- Article Header -->
+    <header class="mx-auto max-w-4xl px-5 pb-8 pt-8 sm:px-8 sm:pt-10">
+      <div class="flex flex-wrap items-center gap-3 text-[10px] uppercase tracking-[0.18em]">
+        <span data-blog-category class="border border-[#c5a059]/40 bg-[#f4efe7] px-3 py-1 text-[#8d3f3d]">
+          Styling Guide
+        </span>
+        <span data-blog-readtime class="text-[#7d756c]">4 min read</span>
+      </div>
+
+      <h1
+        data-blog-title
+        class="font-display mt-5 text-[2.25rem] leading-[1.06] tracking-[-0.025em] text-[#14110f] sm:text-[3.5rem]"
+      >
+        Loading article…
+      </h1>
+
+      <p data-blog-excerpt class="mt-5 max-w-2xl text-[15px] leading-relaxed text-[#5f5851] sm:text-[17px]">
+        Editorial notes from the Satvastones atelier.
+      </p>
+
+      <div class="mt-7 flex flex-wrap items-center justify-between gap-4 border-y border-[#e5ded3] py-4 text-[11px] text-[#6f675f]">
+        <div class="flex flex-wrap items-center gap-3">
+          <span>By <strong data-blog-author class="font-medium text-[#14110f]">Satvastones Editorial</strong></span>
+          <span aria-hidden="true" class="text-[#c5a059]">·</span>
+          <time data-blog-date class="text-[#7d756c]"></time>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            id="blog-share-whatsapp"
+            type="button"
+            class="cursor-pointer border border-[#e0d7c9] bg-white px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#14110f]"
+          >
+            Share on WhatsApp
+          </button>
+          <button
+            id="blog-copy-link"
+            type="button"
+            class="cursor-pointer border border-[#e0d7c9] bg-white px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-[#14110f] transition-colors hover:border-[#14110f]"
+          >
+            Copy link
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Cover image -->
+    <figure data-blog-cover-figure class="mx-auto mb-10 max-w-5xl px-5 sm:px-8">
+      <div data-blog-cover-wrap class="aspect-[16/9] overflow-hidden border border-[#e5ded3] bg-[#f1ece3]"></div>
+    </figure>
+
+    <!-- Article Body -->
+    <div class="mx-auto max-w-3xl px-5 pb-14 sm:px-8">
+      <div data-blog-body class="editorial-prose"></div>
+
+      <!-- Tags -->
+      <div data-blog-tags class="mt-10 flex flex-wrap gap-2 border-t border-[#e5ded3] pt-6"></div>
+
+      <!-- Shop-the-Story Banner -->
+      <div class="mt-12 border border-[#e0d7c9] bg-[#f4efe7] p-7 sm:p-9">
+        <p class="text-[10px] uppercase tracking-[0.2em] text-[#8d3f3d]">Wear it every day</p>
+        <h2 class="font-display mt-2 text-2xl text-[#14110f] sm:text-3xl">
+          Discover waterproof 18K gold PVD jewellery built for Indian weather.
+        </h2>
+        <p class="mt-2.5 text-[13.5px] leading-relaxed text-[#5f5851]">
+          Crafted from 316L surgical steel that never turns your skin green — safe for showers, workouts, and monsoon humidity. Dispatched in 24–48 hours from Vapi.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a
+            href="/shop"
+            class="bg-[#14110f] px-6 py-3 text-[10px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+          >
+            Shop the collection
+          </a>
+          <a
+            href="/journal"
+            class="border border-[#14110f] px-6 py-3 text-[10px] font-medium uppercase tracking-[0.18em] text-[#14110f] transition-colors hover:bg-[#14110f] hover:text-[#f6f1e8]"
+          >
+            ← Back to Journal
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Stories -->
+    <section id="blog-related-section" class="hidden border-t border-[#e5ded3] bg-[#f4efe7]/60 py-14 sm:py-16">
+      <div class="mx-auto max-w-[1440px] px-5 sm:px-8 lg:px-10">
+        <div class="mb-8 flex items-end justify-between">
+          <div>
+            <p class="text-[10px] uppercase tracking-[0.2em] text-[#8d3f3d]">Keep reading</p>
+            <h2 class="font-display mt-1.5 text-3xl text-[#14110f]">More from the Journal</h2>
+          </div>
+          <a href="/journal" class="text-[10px] uppercase tracking-[0.16em] text-[#14110f] underline underline-offset-4 hover:text-[#8d3f3d]">
+            View all →
+          </a>
+        </div>
+        <div id="blog-related-grid" class="grid gap-6 md:grid-cols-3"></div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<script>
+  import { fetchBlogBySlug, fetchPublishedBlogs } from '../../stores/blogStore';
+  import { renderEditorialMarkdown } from '../../lib/markdown';
+
+  const copyBtn = document.getElementById('blog-copy-link');
+  const waBtn = document.getElementById('blog-share-whatsapp');
+
+  copyBtn?.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      copyBtn.textContent = 'Copied!';
+      setTimeout(() => {
+        copyBtn.textContent = 'Copy link';
+      }, 1800);
+    } catch {
+      /* ignore */
+    }
+  });
+
+  waBtn?.addEventListener('click', () => {
+    const title = document.querySelector('[data-blog-title]')?.textContent || document.title;
+    const url = `https://wa.me/?text=${encodeURIComponent(`${title} — ${window.location.href}`)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  });
+
+  function esc(v: unknown): string {
+    return String(v ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Client-side hydration for local dev (`astro dev`) when Worker SSR is not running
+  const currentSlug = window.location.pathname.replace(/^\/journal\//, '').replace(/\/$/, '').trim();
+  const bodyEl = document.querySelector('[data-blog-body]');
+  const needsClientHydration = bodyEl && !bodyEl.innerHTML.trim() && currentSlug && currentSlug !== '_template';
+
+  if (needsClientHydration) {
+    fetchBlogBySlug(currentSlug).then((blog) => {
+      if (!blog) return;
+      document.title = blog.seoTitle || `${blog.title} | Satvastones Journal`;
+      const set = (sel: string, text: string) => {
+        const el = document.querySelector(sel);
+        if (el) el.textContent = text;
+      };
+      set('[data-blog-category]', blog.category);
+      set('[data-blog-breadcrumb-title]', blog.title);
+      set('[data-blog-title]', blog.title);
+      set('[data-blog-excerpt]', blog.excerpt);
+      set('[data-blog-author]', blog.author);
+      set('[data-blog-readtime]', `${blog.readTimeMinutes} min read`);
+      const d = new Date(blog.publishedAt);
+      if (!Number.isNaN(d.getTime())) {
+        set('[data-blog-date]', d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }));
+      }
+      const coverWrap = document.querySelector('[data-blog-cover-wrap]');
+      const coverFig = document.querySelector('[data-blog-cover-figure]');
+      if (blog.coverImage && coverWrap) {
+        coverWrap.innerHTML = `<img src="${esc(blog.coverImage)}" alt="${esc(blog.title)}" class="h-full w-full object-cover" />`;
+      } else {
+        coverFig?.classList.add('hidden');
+      }
+      if (bodyEl) bodyEl.innerHTML = renderEditorialMarkdown(blog.content);
+      const tagsEl = document.querySelector('[data-blog-tags]');
+      if (tagsEl && blog.tags?.length) {
+        tagsEl.innerHTML = blog.tags
+          .map(
+            (t) =>
+              `<span class="border border-[#e5ded3] bg-[#f4efe7] px-3 py-1 text-[10px] uppercase tracking-[0.14em] text-[#5f5851]">#${esc(t)}</span>`
+          )
+          .join('');
+      }
+    });
+  }
+
+  // Load related stories
+  fetchPublishedBlogs().then((blogs) => {
+    const others = blogs.filter((b) => b.slug !== currentSlug).slice(0, 3);
+    const section = document.getElementById('blog-related-section');
+    const grid = document.getElementById('blog-related-grid');
+    if (!others.length || !section || !grid) return;
+    grid.innerHTML = others
+      .map(
+        (b) => `
+          <a href="/journal/${encodeURIComponent(b.slug)}" class="group block border border-[#e5ded3] bg-white p-5 transition-colors hover:border-[#c5a059]">
+            <p class="text-[9.5px] uppercase tracking-[0.18em] text-[#8d3f3d]">${esc(b.category)} · ${b.readTimeMinutes} min</p>
+            <h3 class="font-display mt-2.5 text-xl leading-snug text-[#14110f] group-hover:text-[#8d3f3d]">${esc(b.title)}</h3>
+            <p class="mt-2 line-clamp-2 text-[12.5px] text-[#5f5851]">${esc(b.excerpt)}</p>
+          </a>
+        `
+      )
+      .join('');
+    section.classList.remove('hidden');
+  });
+</script>

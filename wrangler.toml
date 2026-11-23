@@ -7,6 +7,21 @@ compatibility_flags = ["nodejs_compat"]
 directory = "./dist"
 binding = "ASSETS"
 not_found_handling = "404-page"
+run_worker_first = [
+  "/api/*",
+  "/products/*",
+  "/journal",
+  "/journal/*",
+  "/blog",
+  "/blog/*",
+  "/shop",
+  "/shop/*",
+  "/collections/*",
+  "/sitemap.xml",
+  "/feeds/*",
+  "/google-merchant.xml",
+  "/feed.xml"
+]
 
 [[d1_databases]]
 binding = "DB"

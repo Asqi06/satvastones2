@@ -165,6 +165,32 @@ CREATE TABLE IF NOT EXISTS customers (
 CREATE INDEX IF NOT EXISTS idx_customers_email ON customers(email);
 CREATE INDEX IF NOT EXISTS idx_customers_phone ON customers(phone);
 
+-- 10. BLOGS / EDITORIAL JOURNAL TABLE
+CREATE TABLE IF NOT EXISTS blogs (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    slug TEXT UNIQUE NOT NULL,
+    excerpt TEXT,
+    content TEXT NOT NULL,
+    cover_image TEXT,
+    category TEXT NOT NULL DEFAULT 'Styling Guide',
+    tags_json TEXT DEFAULT '[]',
+    author TEXT NOT NULL DEFAULT 'Satvastones Editorial',
+    status TEXT NOT NULL DEFAULT 'published',
+    is_featured INTEGER NOT NULL DEFAULT 0,
+    seo_title TEXT,
+    seo_description TEXT,
+    read_time_minutes INTEGER NOT NULL DEFAULT 4,
+    published_at TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'utc')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now', 'utc'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_blogs_slug ON blogs(slug);
+CREATE INDEX IF NOT EXISTS idx_blogs_status ON blogs(status);
+CREATE INDEX IF NOT EXISTS idx_blogs_category ON blogs(category);
+CREATE INDEX IF NOT EXISTS idx_blogs_published ON blogs(published_at);
+
 -- ==============================================================================
 -- INITIAL SEED DATA
 -- ==============================================================================

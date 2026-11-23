@@ -147,9 +147,11 @@ export function openCloudinaryWidget(
   cloudName: string,
   uploadPreset: string,
   onSuccess: (url: string) => void,
-  onError?: (error: any) => void
+  onError?: (error: any) => void,
+  options: { multiple?: boolean } = {}
 ): void {
   if (typeof window === 'undefined') return;
+  const allowMultiple = Boolean(options.multiple);
 
   if (!cloudName || !uploadPreset || cloudName.includes('your-cloud') || uploadPreset.includes('your-preset')) {
     const inputCloud = prompt('Enter your Cloudinary Cloud Name:', cloudName || '');
@@ -165,11 +167,12 @@ export function openCloudinaryWidget(
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/png,image/jpeg,image/webp,image/avif,image/gif';
+    input.multiple = allowMultiple;
     input.style.display = 'none';
 
     input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) return;
+      const files = Array.from(input.files || []);
+      if (!files.length) return;
 
       const progressToast = document.createElement('div');
       progressToast.className = 'fixed bottom-6 right-6 z-50 bg-[#111111] text-white text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-gray-700 animate-in fade-in slide-in-from-bottom-2';
@@ -178,16 +181,18 @@ export function openCloudinaryWidget(
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
         </svg>
-        <span>Uploading <strong>${file.name}</strong> directly to Cloudinary...</span>
+        <span>Uploading ${files.length > 1 ? `<strong>${files.length} images</strong>` : `<strong>${files[0].name}</strong>`} to Cloudinary...</span>
       `;
       document.body.appendChild(progressToast);
 
       try {
-        const secureUrl = await uploadToCloudinaryDirect(file, cloudName, uploadPreset);
+        for (const file of files) {
+          const secureUrl = await uploadToCloudinaryDirect(file, cloudName, uploadPreset);
+          onSuccess(secureUrl);
+        }
         progressToast.className = 'fixed bottom-6 right-6 z-50 bg-emerald-900 text-white text-xs px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2 border border-emerald-700';
-        progressToast.innerHTML = `<span>✓ Uploaded to Cloudinary successfully!</span>`;
+        progressToast.innerHTML = `<span>✓ Uploaded ${files.length > 1 ? `${files.length} images` : 'image'} to Cloudinary!</span>`;
         setTimeout(() => progressToast.remove(), 2500);
-        onSuccess(secureUrl);
       } catch (err: any) {
         progressToast.remove();
         alert(err.message || 'Direct upload to Cloudinary failed.');
@@ -215,7 +220,7 @@ export function openCloudinaryWidget(
         cloudName: cloudName.trim(),
         uploadPreset: uploadPreset.trim(),
         sources: ['local', 'url', 'camera', 'unsplash'],
-        multiple: false,
+        multiple: allowMultiple,
         cropping: false, // Disabling iframe cropping prevents cross-origin canvas errors & grey screens
         showSkipCropButton: true,
         resourceType: 'image',
