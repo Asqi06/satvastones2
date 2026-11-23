@@ -93,6 +93,7 @@ export function generateSitemapXml(products: FeedProduct[], blogs: FeedBlog[]): 
   const staticPages: Array<{ path: string; changefreq: string; priority: string }> = [
     { path: '/', changefreq: 'daily', priority: '1.0' },
     { path: '/shop', changefreq: 'daily', priority: '0.9' },
+    { path: '/gifts-for-girlfriend-under-500', changefreq: 'weekly', priority: '0.9' },
     { path: '/affordable-anti-tarnish-jewellery-india', changefreq: 'weekly', priority: '0.9' },
     { path: '/anti-tarnish-jewellery-vapi', changefreq: 'weekly', priority: '0.9' },
     { path: '/journal', changefreq: 'daily', priority: '0.9' },
