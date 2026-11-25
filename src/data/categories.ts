@@ -5,8 +5,9 @@ export const CATEGORIES: Category[] = [
     id: 'rings',
     name: 'Rings',
     slug: 'rings',
-    tagline: 'Minimalist bands & statement signets',
-    description: 'Anti-tarnish rings sculpted in durable 316L stainless steel with rich 18K gold PVD finish.',
+    tagline: '18K Gold Plated · Anti-Tarnish · Starting at ₹149',
+    description:
+      'Looking for a simple gold ring for women at a low price? Explore our waterproof, 18K gold-plated anti-tarnish rings starting at ₹149—designed to give you the timeless look of real gold for everyday wear.',
     image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=240&fm=webp&q=80',
     itemCount: 14
   },
@@ -32,8 +33,9 @@ export const CATEGORIES: Category[] = [
     id: 'earrings',
     name: 'Earrings',
     slug: 'earrings',
-    tagline: 'Sculptural huggies & understated studs',
-    description: 'Featherlight, hypoallergenic studs and hoops that never irritate sensitive ears. 100% nickel-free.',
+    tagline: 'Safe for Sensitive Ears · Gold-Plated Bali Hoops & Crystal Studs · From ₹149',
+    description:
+      'Nickel-Free & Hypoallergenic (Safe for Sensitive Ears) earrings starting at ₹149 — including 18K gold-plated Bali hoop earrings (sona bali daily hoops), Korean crystal drops, and featherlight waterproof studs.',
     image: 'https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=240&fm=webp&q=80',
     itemCount: 16
   },

@@ -253,10 +253,15 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
 
       <!-- Buy box -->
       <div class="lg:col-span-5">
-        <div class="flex flex-wrap items-center gap-2">
+        <div data-pdp-badges class="flex flex-wrap items-center gap-2">
           <span class="bg-[#f4efe7] px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-[#8d3f3d]">
-            ✦ Anti-tarnish atelier
+            ✦ 18K Gold Plated · Anti-Tarnish
           </span>
+          {product.category === 'earrings' && (
+            <span class="border border-[#d8c3a6] bg-[#fbf9f5] px-2.5 py-1 text-[9px] uppercase tracking-[0.16em] text-[#14110f]">
+              Nickel-Free &amp; Hypoallergenic (Safe for Sensitive Ears)
+            </span>
+          )}
           {product.isBestseller && (
             <span class="border border-[#e5ded3] px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-[#5f5851]">
               Bestseller
@@ -410,25 +415,25 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
           </p>
         </div>
 
-        <!-- Trust list -->
-        <ul class="mt-7 grid grid-cols-2 gap-x-5 gap-y-4 border-y border-[#e5ded3] py-5 text-[11px]">
+        <!-- Key Features / Trust list -->
+        <ul data-pdp-highlights class="mt-7 grid grid-cols-2 gap-x-5 gap-y-4 border-y border-[#e5ded3] py-5 text-[11px]">
           <li class="flex gap-2.5">
             <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
             </svg>
-            <span><strong class="block font-medium text-[#14110f]">18K PVD gold</strong>Waterproof daily shine</span>
+            <span><strong class="block font-medium text-[#14110f]">18K Gold Plated</strong>Anti-tarnish &amp; waterproof</span>
           </li>
           <li class="flex gap-2.5">
             <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
             </svg>
-            <span><strong class="block font-medium text-[#14110f]">Hypoallergenic 316L</strong>Nickel &amp; lead free</span>
+            <span><strong class="block font-medium text-[#14110f]">Nickel-Free &amp; Hypoallergenic</strong>Safe for sensitive ears &amp; skin</span>
           </li>
           <li class="flex gap-2.5">
             <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
             </svg>
-            <span><strong class="block font-medium text-[#14110f]">Free express shipping</strong>On orders over ₹499</span>
+            <span><strong class="block font-medium text-[#14110f]">Free express shipping</strong>Above ₹499 · COD available</span>
           </li>
           <li class="flex gap-2.5">
             <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#c5a059]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.4" aria-hidden="true">

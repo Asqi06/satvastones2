@@ -541,7 +541,8 @@ export default {
         '/policies/privacy': '/privacy-policy',
         '/policies/returns': '/refund-policy',
         '/policies/shipping': '/shipping-policy',
-        '/policies/terms': '/terms-and-conditions'
+        '/policies/terms': '/terms-and-conditions',
+        '/gifts-for-girlfriend-under-500': '/collections/gifts-for-girlfriend-under-500'
       };
       const cleanPath = url.pathname.length > 1 && url.pathname.endsWith('/') ? url.pathname.slice(0, -1) : url.pathname;
       const aliasTarget = policyAliasMap[cleanPath];
@@ -851,14 +852,36 @@ export default {
               : rawImageUrl;
           const effectiveImageUrl = escapeHtml(effectiveRawImageUrl);
 
-          const generatedTitle = `${name} – 18K Gold PVD | Buy Online at Satvastones India`;
+          const lowerNameDesc = `${rawName} ${rawDescription}`.toLowerCase();
+          const isHoopOrBali =
+            category === 'earrings' &&
+            (lowerNameDesc.includes('hoop') ||
+              lowerNameDesc.includes('bali') ||
+              lowerNameDesc.includes('huggie') ||
+              lowerNameDesc.includes('ring') ||
+              lowerNameDesc.includes('cuff'));
+
+          const generatedTitle =
+            category === 'earrings'
+              ? isHoopOrBali
+                ? `${name} — Gold-Plated Bali Hoop & Nickel-Free Earrings (₹${priceRupees.toLocaleString('en-IN')}) | Satvastones`
+                : `${name} — Nickel-Free & Hypoallergenic Earrings (₹${priceRupees.toLocaleString('en-IN')}) | Satvastones`
+              : category === 'rings'
+                ? `${name} — 18K Gold Plated Anti-Tarnish Ring (₹${priceRupees.toLocaleString('en-IN')}) | Satvastones`
+                : `${name} – 18K Gold Plated & Anti-Tarnish (₹${priceRupees.toLocaleString('en-IN')}) | Satvastones`;
+
           const title =
             typeof meta.seoTitle === 'string' && meta.seoTitle.trim()
               ? escapeHtml(meta.seoTitle.trim())
               : generatedTitle;
-          const generatedDescription = `Buy ${name} online in India for ₹${priceRupees.toLocaleString(
-            'en-IN'
-          )}. Waterproof 18K gold PVD steel. Free PAN-India delivery > ₹499 &amp; 7-day returns.`;
+
+          const generatedDescription =
+            category === 'earrings'
+              ? `Buy ${name} at ₹${priceRupees.toLocaleString('en-IN')} INR. Nickel-Free &amp; Hypoallergenic (Safe for Sensitive Ears), waterproof 18K gold-plated${isHoopOrBali ? ' Bali hoop' : ''} earrings. Free shipping &gt; ₹499 &amp; COD.`
+              : category === 'rings'
+                ? `Simple gold-look ring for women at a low price: ₹${priceRupees.toLocaleString('en-IN')} INR. 18K Gold Plated, Anti-Tarnish &amp; waterproof ring that never turns fingers green. COD available.`
+                : `Buy ${name} online in India for ₹${priceRupees.toLocaleString('en-IN')}. Waterproof 18K gold-plated anti-tarnish finish. Free PAN-India delivery &gt; ₹499 &amp; COD.`;
+
           const seoDescription =
             typeof meta.seoDescription === 'string' && meta.seoDescription.trim()
               ? escapeHtml(meta.seoDescription.trim())
@@ -1012,6 +1035,29 @@ export default {
           const nextYearDate = new Date();
           nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
           const priceValidUntil = nextYearDate.toISOString().slice(0, 10);
+
+          // Hydrate category-specific badges & key feature bullets (Nickel-Free & Hypoallergenic / 18K Gold Plated / Sona Bali)
+          const pdpBadgesHtml =
+            category === 'earrings'
+              ? `<span class="bg-[#f4efe7] px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-[#8d3f3d]">✦ Nickel-Free &amp; Hypoallergenic (Safe for Sensitive Ears)</span><span class="border border-[#d8c3a6] bg-[#fbf9f5] px-2.5 py-1 text-[9px] uppercase tracking-[0.16em] text-[#14110f]">${isHoopOrBali ? 'Gold-Plated Bali Hoop Style' : '18K Gold-Plated · Anti-Tarnish'}</span>`
+              : category === 'rings'
+                ? `<span class="bg-[#f4efe7] px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-[#8d3f3d]">✦ 18K Gold Plated · Anti-Tarnish</span><span class="border border-[#d8c3a6] bg-[#fbf9f5] px-2.5 py-1 text-[9px] uppercase tracking-[0.16em] text-[#14110f]">Real-Gold Daily Look · ₹${priceRupees.toLocaleString('en-IN')}</span>`
+                : `<span class="bg-[#f4efe7] px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-[#8d3f3d]">✦ 18K Gold Plated · Anti-Tarnish</span><span class="border border-[#d8c3a6] bg-[#fbf9f5] px-2.5 py-1 text-[9px] uppercase tracking-[0.16em] text-[#14110f]">Waterproof &amp; Skin-Safe</span>`;
+          html = replaceBalancedDiv(html, /<div[^>]*data-pdp-badges[^>]*>/, pdpBadgesHtml);
+
+          if (category === 'earrings') {
+            const earringHighlights = `<li class="flex gap-2.5"><span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span><span><strong class="block font-medium text-[#14110f]">Nickel-Free &amp; Hypoallergenic</strong>Safe for Sensitive Ears · Zero itch</span></li><li class="flex gap-2.5"><span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span><span><strong class="block font-medium text-[#14110f]">${isHoopOrBali ? 'Gold-Plated Bali Hoop Earrings' : '18K Gold-Plated &amp; Anti-Tarnish'}</strong>Waterproof daily shine at ₹${priceRupees.toLocaleString('en-IN')}</span></li><li class="flex gap-2.5"><span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span><span><strong class="block font-medium text-[#14110f]">Featherlight All-Day Comfort</strong>Gentle on sensitive piercings</span></li><li class="flex gap-2.5"><span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span><span><strong class="block font-medium text-[#14110f]">Free Shipping &gt; ₹499 &amp; COD</strong>24–48h dispatch · 7-day returns</span></li>`;
+            html = html.replace(
+              /(<ul[^>]*data-pdp-highlights[^>]*>)[\s\S]*?(<\/ul>)/,
+              (_m, o: string, c: string) => `${o}${earringHighlights}${c}`
+            );
+          } else if (category === 'rings') {
+            const ringHighlights = `<li class="flex gap-2.5"><span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span><span><strong class="block font-medium text-[#14110f]">18K Gold Plated</strong>Real-gold everyday look at ₹${priceRupees.toLocaleString('en-IN')}</span></li><li class="flex gap-2.5"><span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span><span><strong class="block font-medium text-[#14110f]">Anti-Tarnish &amp; Waterproof</strong>Zero green finger marks</span></li><li class="flex gap-2.5"><span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span><span><strong class="block font-medium text-[#14110f]">Nickel-Free 316L Steel</strong>Handwash &amp; shower safe</span></li><li class="flex gap-2.5"><span class="mt-0.5 text-[#c5a059]" aria-hidden="true">✦</span><span><strong class="block font-medium text-[#14110f]">7-Day Size Exchange</strong>COD &amp; free shipping &gt; ₹499</span></li>`;
+            html = html.replace(
+              /(<ul[^>]*data-pdp-highlights[^>]*>)[\s\S]*?(<\/ul>)/,
+              (_m, o: string, c: string) => `${o}${ringHighlights}${c}`
+            );
+          }
 
           // Hydrate Buy Box rating block honestly (only display stars when verified reviews exist)
           const ratingMarkup =
@@ -1421,28 +1467,31 @@ export default {
                     node.offers.availability = 'https://schema.org/InStock';
                   }
                 });
+                html = html.replace(
+                  /(<span[^>]*data-collection-starting-price[^>]*>)[\s\S]*?(<\/span>)/,
+                  (_m, o: string, c: string) => `${o}Starting at ₹${Number(lowPrice).toLocaleString('en-IN')}${c}`
+                );
+                html = html.replace(
+                  /(<strong[^>]*data-collection-low-inline[^>]*>)[\s\S]*?(<\/strong>)/g,
+                  (_m, o: string, c: string) => `${o}₹${Number(lowPrice).toLocaleString('en-IN')}${c}`
+                );
               }
             }
 
-            if (normalizedPath === '/gifts-for-girlfriend-under-500') {
-              const under500 = allProducts
-                .filter((p) => p.inStock && p.pricePaise <= 50000)
-                .sort((a, b) => a.pricePaise - b.pricePaise);
-              matching = under500.length ? under500 : allProducts.slice(0, 8);
-            } else if (isLiveLandingPage || normalizedPath === '/') {
+            if (isLiveLandingPage || normalizedPath === '/') {
               matching = allProducts.filter((p) => p.inStock).slice(0, 8);
             }
 
+            const cardBadgeFor = (p: FeedProduct) => {
+              if (colSlug === 'gifts-for-girlfriend-under-500' && p.pricePaise <= 49900) return 'Under ₹500';
+              if (colSlug === 'earrings' || p.category === 'earrings') return 'Nickel-Free';
+              if (colSlug === 'rings' || colSlug === 'anti-tarnish-minimal-rings') return '18K Gold Plated';
+              return '';
+            };
+
             const buildCards = (items: FeedProduct[]) =>
               items.length
-                ? items
-                    .map((p) =>
-                      renderSsrProductCard(
-                        p,
-                        normalizedPath === '/gifts-for-girlfriend-under-500' && p.pricePaise <= 50000 ? 'Under ₹500' : ''
-                      )
-                    )
-                    .join('')
+                ? items.map((p) => renderSsrProductCard(p, cardBadgeFor(p))).join('')
                 : `<p class="col-span-full py-10 text-center text-sm text-[#5f5851]">New handcrafted pieces are arriving shortly. Browse our <a href="/shop" class="underline">live shop</a>.</p>`;
 
             if (normalizedPath === '/') {

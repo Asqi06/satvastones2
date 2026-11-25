@@ -68,11 +68,11 @@ export function getStaticPaths() {
       props: {
         category: {
           id: 'gifts-for-girlfriend-under-500',
-          name: 'Gifts for Girlfriend Under ₹500',
+          name: 'Best Jewelry Gifts for Girlfriend Under ₹500',
           slug: 'gifts-for-girlfriend-under-500',
-          tagline: 'Birthday & Anniversary Picks · Starting ₹179',
+          tagline: 'Birthday & Anniversary Picks · Starting at ₹149 · Anti-Tarnish & Waterproof',
           description:
-            'Shop the best waterproof & anti-tarnish jewellery gifts for your girlfriend under ₹500 — 18K gold plated necklaces, minimal rings, bracelets & nickel-free earrings with fast India delivery and COD.',
+            'Looking for the best gift for your girlfriend under ₹500 or a thoughtful birthday gift under ₹500? Explore our waterproof, 18K gold-plated anti-tarnish jewellery and everyday jewelry gifts for your girlfriend starting at ₹149—nickel-free earrings, bracelets, minimal rings & pendants with COD and fast India delivery.',
           image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=800&q=80',
           itemCount: 0
         },
@@ -109,35 +109,35 @@ const { category, products } = Astro.props;
 
 // Keyword-targeted high-CTR SEO titles & meta descriptions (aligned with live Search Console demand)
 const seoTitles: Record<string, string> = {
-  'rings-under-100': 'Rings Under ₹99 & Budget Anti-Tarnish Rings (Starting ₹49–₹99) | Satvastones',
-  'gifts-for-girlfriend-under-500': 'Best Gifts for Girlfriend Under ₹500 — Necklaces, Rings & Earrings | Satvastones',
-  'anti-tarnish-minimal-rings': 'Anti-Tarnish Minimal Rings for Women — 18K Gold Plated & Waterproof | Satvastones',
+  'rings-under-100': 'Rings Under ₹99 & Low-Price 18K Gold Plated Rings (From ₹149) | Satvastones',
+  'gifts-for-girlfriend-under-500': 'Best Jewellery Gifts for Girlfriend Under ₹500 | Anti-Tarnish & Waterproof',
+  'anti-tarnish-minimal-rings': 'Simple Gold Ring for Women Low Price — 18K Gold Plated Minimal Rings | Satvastones',
   'mystery-jewellery-jar': 'Mystery Jewellery Jar Online India — Waterproof 18K Gold Pieces | Satvastones',
   'bracelets': 'Waterproof & Anti-Tarnish Bracelets for Women (From ₹179) | Satvastones India',
   'jewellery-set': 'Affordable Anti-Tarnish & Traditional Jewellery Sets Online India | Satvastones',
   'necklaces': 'Waterproof Anti-Tarnish Necklaces, Oval & Clover Pendants India | Satvastones',
-  'rings': 'Minimal Anti-Tarnish & 18K Gold Plated Rings for Women Under ₹500 | Satvastones',
-  'earrings': 'Nickel-Free & Hypoallergenic Korean Crystal Earrings for Sensitive Ears (From ₹199) | Satvastones',
+  'rings': 'Gold Ring for Women Low Price — Simple 18K Gold Plated & Anti-Tarnish Rings (From ₹149) | Satvastones',
+  'earrings': 'Nickel-Free & Hypoallergenic Earrings & Gold-Plated Bali Hoops (From ₹149) | Satvastones',
   'bangles': 'Anti-Tarnish & 18K Gold Plated Kada Bangles for Women (From ₹179) | Satvastones',
-  'gift-sets': 'Best Jewellery Gifts for Girlfriend Under ₹500 & Gift Sets India | Satvastones',
-  'bestsellers': 'Best Affordable Anti-Tarnish & Waterproof Jewellery Under ₹500 India | Satvastones',
-  'new-arrivals': 'New Korean Aesthetic & Waterproof Anti-Tarnish Jewellery India | Satvastones'
+  'gift-sets': 'Best Jewelry & Birthday Gifts for Girlfriend — Curated Anti-Tarnish Gift Sets | Satvastones',
+  'bestsellers': 'Best Affordable Anti-Tarnish & Waterproof Jewellery Under ₹500 (From ₹149) | Satvastones',
+  'new-arrivals': 'New Korean Aesthetic & Waterproof Anti-Tarnish Jewellery (From ₹149) | Satvastones'
 };
 
 const seoDescriptions: Record<string, string> = {
-  'rings-under-100': 'Looking for aesthetic rings under ₹100 or ₹50? Compare budget rings & shop waterproof 18K gold plated anti-tarnish rings for women in India. Free shipping above ₹499 & COD available.',
-  'gifts-for-girlfriend-under-500': 'Shop the best birthday & anniversary gifts for girlfriend under ₹500 in India. 18K gold plated waterproof & anti-tarnish necklaces, minimal rings & earrings from ₹179. Free shipping > ₹499 & COD.',
-  'anti-tarnish-minimal-rings': 'Shop anti-tarnish minimal rings for women in India. 18K gold plated 316L surgical steel rings — 100% waterproof, sweat-proof & nickel-free. Free shipping above ₹499 & COD available.',
+  'rings-under-100': 'Looking for aesthetic rings under ₹100 or a low-price gold ring for women? Compare budget rings & shop waterproof 18K gold-plated anti-tarnish rings starting at ₹149. Free shipping > ₹499 & COD.',
+  'gifts-for-girlfriend-under-500': 'Looking for the best gift or birthday gift for your girlfriend under ₹500? Shop waterproof 18K gold-plated anti-tarnish jewellery & jewelry gifts starting at ₹149. Free shipping > ₹499 & COD.',
+  'anti-tarnish-minimal-rings': 'Looking for a simple gold ring for women at a low price? Shop 18K gold-plated anti-tarnish minimal rings in waterproof 316L steel starting at ₹149. Never turns fingers green · COD available.',
   'mystery-jewellery-jar': 'Unbox the viral Satvastones Mystery Jewellery Jar in India. Surprise waterproof & anti-tarnish 18K gold plated rings, necklaces & earrings in a keepsake jar. Free shipping & COD available.',
   'bracelets': 'Shop bracelets that don’t tarnish from ₹179. Waterproof 18K gold plated bracelets, daisy cuffs & link chains for women in India. Sweat-proof 316L steel, COD & free delivery above ₹499.',
   'jewellery-set': 'Explore affordable anti-tarnish & traditional Indian jewellery sets for women. Waterproof 18K gold PVD necklaces, bracelets & earrings for sarees, weddings & daily wear.',
   'necklaces': 'Shop waterproof, non-tarnish necklaces for women in India — oval pendants, viral clover chains, herringbone snakes & necklace gifts for girlfriend under ₹500. Free delivery above ₹499.',
-  'rings': 'Shop minimal anti-tarnish & budget 18K gold plated rings for women under ₹500. Aesthetic, non-tarnish daisy & dome rings in 316L steel that never turn fingers green. Fast India delivery.',
-  'earrings': 'Shop nickel-free & hypoallergenic earrings for sensitive ears in India from ₹199. Korean crystal fringe earrings, floral drop earrings, pavé studs & non-tarnish gold hoops.',
+  'rings': 'Looking for a simple gold ring for women at a low price? Explore waterproof 18K gold-plated anti-tarnish rings starting at ₹149—the real-gold everyday look without bullion prices. COD available.',
+  'earrings': 'Shop Nickel-Free & Hypoallergenic (Safe for Sensitive Ears) earrings from ₹149 — 18K gold-plated Bali hoop earrings (sona bali price friendly), Korean crystal drops & waterproof daily studs.',
   'bangles': 'Shop waterproof anti-tarnish kada bangles & daisy solitaire cuffs for women from ₹179. 18K gold PVD 316L steel bangles that never lose color in Indian humidity.',
-  'gift-sets': 'Find the best birthday & anniversary jewellery gifts for girlfriend under ₹500 in India. Waterproof, anti-tarnish rings, earrings, necklaces & curated gift boxes with fast delivery.',
-  'bestsellers': 'Shop India’s most loved affordable anti-tarnish & waterproof jewellery for women starting ₹179. Non-tarnish rings, bracelets, Korean crystal earrings & gift sets.',
-  'new-arrivals': 'Explore new Korean aesthetic & waterproof anti-tarnish jewellery drops from ₹179. Hand-inspected and dispatched in 24–48 hours from Vapi, Gujarat across India.'
+  'gift-sets': 'Shop curated anti-tarnish jewelry & jewellery gift sets for birthdays, anniversaries & festive gifting in India. Waterproof 18K gold PVD with express Vapi dispatch & COD.',
+  'bestsellers': 'Shop India’s most loved affordable anti-tarnish & waterproof jewellery for women starting at ₹149. Non-tarnish rings, bracelets, nickel-free earrings & gifts under ₹500.',
+  'new-arrivals': 'Explore new Korean aesthetic & waterproof anti-tarnish jewellery drops from ₹149. Hand-inspected and dispatched in 24–48 hours from Vapi, Gujarat across India.'
 };
 
 const pageTitle = seoTitles[category.slug] || `Buy ${category.name} Online in India at Best Prices | Satvastones`;
@@ -169,9 +169,7 @@ const itemListSchema = {
 const defaultLowPrice =
   category.slug === 'rings-under-100'
     ? '99'
-    : category.slug === 'gifts-for-girlfriend-under-500'
-      ? '179'
-      : '179';
+    : '149';
 const defaultHighPrice =
   category.slug === 'gifts-for-girlfriend-under-500' ? '499' : '2499';
 
@@ -203,9 +201,19 @@ const collectionBuyingGuides: Record<string, string[]> = {
     'Every order is hand-inspected at our Vapi, Gujarat atelier and dispatched within 24–48 hours across 19,000+ Indian pin codes with Cash on Delivery and free express shipping above ₹499. Combine 2+ pieces in Stack Studio to unlock an automatic 15% discount and bring your per-piece cost even lower.'
   ],
   'gifts-for-girlfriend-under-500': [
-    'Finding the best birthday or anniversary gift for your girlfriend under ₹500 in India does not have to mean settling for generic keychains or imitation jewellery that blackens in two weeks. Everyday waterproof jewellery is personal, wearable from college to office to festive dinners, and reminds her of you every single day.',
-    'Satvastones curates waterproof 18K gold plated gifts under ₹500—including Korean crystal fringe earrings, floral drop studs, daisy solitaire cuffs, minimal anti-tarnish rings, and delicate necklace gifts for girlfriends. Every piece is built on hypoallergenic, nickel-free 316L surgical stainless steel so it is completely safe for sensitive ears and skin.',
-    'Want to elevate your gift? Pair any two pieces under ₹500 in our Stack Studio for an automatic 15% bundle discount plus free pan-India express shipping above ₹499. Every parcel is hand-inspected in Vapi, Gujarat, dispatched in 24–48 hours, and available with both UPI and Cash on Delivery.'
+    'Searching for the best gift for your girlfriend under ₹500 or the best birthday gift for your girlfriend under ₹500 in India? Whether you spell it jewelry or jewellery, everyday waterproof 18K gold-plated pieces starting at ₹149 beat generic novelty gifts that get forgotten in a drawer.',
+    'Satvastones curates the best jewelry gifts for girlfriends on a budget—including Nickel-Free & Hypoallergenic Korean crystal earrings (from ₹149), daisy solitaire cuff bracelets (₹179), minimal anti-tarnish rings, and dainty pendants priced at ₹499 or less. Every piece is crafted to resist sweat, water, and daily wear without turning skin green.',
+    'Want to turn two budget picks into a luxury gift box? Pair any 2+ pieces under ₹500 in our Stack Studio for an automatic 15% bundle discount and free pan-India express shipping above ₹499, with both UPI and Cash on Delivery available from our Vapi, Gujarat atelier.'
+  ],
+  rings: [
+    'Looking for a simple gold ring for women at a low price without paying ₹20,000–₹45,000+ for solid-gold bullion? Satvastones 18K gold-plated anti-tarnish rings give you the rich, mirror-polished look of real 18K gold for everyday wear at accessible Indian prices starting from ₹149–₹499.',
+    'Unlike ₹50–₹99 street brass rings that react with handwashing soap, sanitizer, and summer sweat to turn your finger green in days, our rings pair a corrosion-proof 316L surgical stainless steel core with vacuum 18K gold PVD bonding—10× more durable than flash electroplating.',
+    'Check your fit in seconds with our on-screen Ring Sizer, enjoy 7-day hassle-free size exchanges, Cash on Delivery, and 24–48 hour express dispatch across 19,000+ Indian pin codes.'
+  ],
+  earrings: [
+    'If regular fashion studs make your earlobes itch, burn, or turn red within an hour, nickel leaching is the culprit. Every pair in our collection is engineered as Nickel-Free & Hypoallergenic (Safe for Sensitive Ears), starting at just ₹149.',
+    'Alongside our featherlight Korean crystal drop studs and floral enamel dangles, shoppers comparing sona bali price in India choose our 18K Gold-Plated Bali Hoop Earrings and daily huggie hoops as the smart, skin-safe alternative to ₹10,000+ solid gold sona balis—giving you classic everyday gold hoop elegance for office, college, and festive wear.',
+    '100% waterproof, sweat-proof, and lightweight (under 6g) so they never pull on sensitive piercings. Dispatched in 24–48 hours from Vapi, Gujarat with Cash on Delivery and free shipping above ₹499.'
   ],
   'anti-tarnish-minimal-rings': [
     'Minimalist gold rings take more daily abuse than any other piece of jewellery—constant handwashing, soap, alcohol sanitizers, desk friction, and Indian summer sweat quickly strip conventional flash-plated brass rings down to dull copper.',
@@ -252,18 +260,22 @@ const extraFaqsBySlug: Record<string, Array<{ q: string; a: string }>> = {
   ],
   rings: [
     {
-      q: 'How much does a good quality anti-tarnish gold plated ring cost in India?',
-      a: 'Cheap ₹50–₹100 brass rings usually oxidize and turn your finger green within a week. Genuine 316L surgical stainless steel + 18K gold vacuum PVD minimal anti-tarnish rings cost between ₹199 and ₹1,299 — giving you years of waterproof, non-tarnish daily wear at a fraction of solid gold ring prices.'
+      q: 'What is a good simple gold ring for women price in India if I want daily wear on a budget?',
+      a: 'While a solid 18K or 22K gold ring for women costs ₹18,000 to ₹45,000+, an authentic 18K gold-plated anti-tarnish ring on 316L surgical stainless steel costs ₹149–₹499—giving you the exact warm look of real gold with waterproof, sweat-proof durability and zero green finger marks.'
     },
     {
-      q: 'Are minimal aesthetic rings from Satvastones safe for daily handwashing?',
-      a: 'Yes. Every minimal ring, dome band, and solitaire ring in our collection is 100% waterproof, sweat-proof, and nickel-free so you never have to take it off while washing hands or commuting.'
+      q: 'Are Satvastones 18K gold-plated rings safe for daily handwashing and showers?',
+      a: 'Yes. Every minimal ring, dome band, and solitaire ring in our collection is 100% waterproof, anti-tarnish, and nickel-free so you never have to take it off while washing hands, working out, or commuting.'
     }
   ],
   earrings: [
     {
-      q: 'Are Satvastones Korean crystal, floral drop & pavé stud earrings nickel-free for sensitive ears?',
-      a: 'Yes. All Satvastones earrings — including Korean aesthetic crystal fringe earrings, floral drops, pavé studs, and huggies — are built on medical-grade 316L surgical stainless steel that is 100% nickel-safe, hypoallergenic, and comfortable for sensitive ears all day.'
+      q: 'Are Satvastones earrings genuinely Nickel-Free & Hypoallergenic for sensitive ears?',
+      a: 'Yes. Our earrings are Nickel-Free & Hypoallergenic (Safe for Sensitive Ears), crafted to prevent itching, redness, and irritation during all-day wear—starting at ₹149.'
+    },
+    {
+      q: 'What is the price of Gold-Plated Bali Hoop Earrings vs traditional sona bali price?',
+      a: 'Traditional solid-gold sona bali hoops typically cost ₹8,000–₹22,000+, whereas Satvastones 18K Gold-Plated Bali Hoop Earrings and daily anti-tarnish hoops give you the same classic golden bali look starting from ₹149–₹399—waterproof, lightweight, and tarnish-free.'
     }
   ],
   'gift-sets': [
@@ -329,6 +341,27 @@ const collectionPageSchema = {
   url: `https://www.satvastones.in/collections/${category.slug}`
 };
 
+const collectionH1s: Record<string, string> = {
+  'gifts-for-girlfriend-under-500': 'Best Jewelry Gifts for Girlfriend Under ₹500',
+  'rings': '18K Gold Plated & Anti-Tarnish Rings for Women',
+  'anti-tarnish-minimal-rings': 'Simple 18K Gold Plated Minimal Rings for Women',
+  'rings-under-100': 'Budget Aesthetic & 18K Gold Plated Rings',
+  'earrings': 'Nickel-Free & Hypoallergenic Gold-Plated Earrings'
+};
+
+const collectionHighlightPills: Record<string, string[]> = {
+  'gifts-for-girlfriend-under-500': ['Priced ₹149–₹499', '18K Gold Plated', 'Waterproof & Anti-Tarnish', 'COD Available'],
+  'rings': ['18K Gold Plated', 'Anti-Tarnish', 'Starting at ₹149', 'Real-Gold Daily Look'],
+  'anti-tarnish-minimal-rings': ['18K Gold Plated', 'Anti-Tarnish', 'Starting at ₹149', 'Zero Green Marks'],
+  'rings-under-100': ['18K Gold Plated', 'Anti-Tarnish', 'Starting at ₹149', '15% Off 2+ Stack'],
+  'earrings': ['Nickel-Free & Hypoallergenic (Safe for Sensitive Ears)', 'Gold-Plated Bali Hoop & Stud Styles', 'Starting at ₹149']
+};
+
+const displayH1 = collectionH1s[category.slug] || category.name;
+const highlightPills = collectionHighlightPills[category.slug] || [];
+const isRingCluster = ['rings', 'anti-tarnish-minimal-rings', 'rings-under-100'].includes(category.slug);
+const isEarringCluster = category.slug === 'earrings';
+
 const heroImage = category.image.replace(/w=\d+/, 'w=900');
 const staticSignature = products.map((p) => `${p.id}:${p.pricePaise}`).join('|');
 const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug).slice(0, 4);
@@ -356,18 +389,27 @@ const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug
       <div class="grid items-center gap-8 pb-9 lg:grid-cols-12 lg:gap-12 lg:pb-12">
         <div class="lg:col-span-7">
           <p id="collection-tagline" class="eyebrow text-[#8d3f3d]">✦ {category.tagline}</p>
-          <h1 id="collection-title" class="font-display mt-3 text-[2.75rem] leading-[0.95] tracking-[-0.035em] sm:text-[4.25rem] lg:text-[5rem]">
-            {category.name}
+          <h1 id="collection-title" class="font-display mt-3 text-[2.65rem] leading-[0.96] tracking-[-0.035em] sm:text-[4rem] lg:text-[4.65rem]">
+            {displayH1}
           </h1>
-          <p id="collection-desc" data-speakable class="mt-5 max-w-xl text-[13px] leading-relaxed text-[#5f5851]">
+          <p id="collection-desc" data-speakable class="mt-5 max-w-xl text-[13.5px] leading-relaxed text-[#5f5851]">
             {category.description}
           </p>
+          {highlightPills.length > 0 && (
+            <div data-collection-pills class="mt-4 flex flex-wrap gap-2">
+              {highlightPills.map((pill) => (
+                <span class="border border-[#d8c3a6] bg-[#f4efe7] px-3 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-[#14110f]">
+                  {pill}
+                </span>
+              ))}
+            </div>
+          )}
           <p class="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
-            <span>{products.length} pieces</span>
+            <span data-collection-starting-price>Starting at ₹149</span>
             <span aria-hidden="true" class="text-[#c5a059]">✦</span>
             <span>Free delivery over ₹499</span>
             <span aria-hidden="true" class="text-[#c5a059]">✦</span>
-            <span>24–48h dispatch</span>
+            <span>24–48h dispatch · COD</span>
           </p>
         </div>
 
@@ -412,6 +454,71 @@ const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug
     </div>
 
     <div class="mx-auto max-w-[1440px] px-5 pb-16 pt-8 sm:px-8 lg:px-10">
+      {isRingCluster && (
+        <aside class="mb-8 border border-[#e0d7c9] bg-[#f4efe7] p-5 sm:p-6" aria-label="Gold ring price transparency guide">
+          <div class="grid gap-5 lg:grid-cols-12 lg:items-center">
+            <div class="lg:col-span-7">
+              <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">Smart real-gold alternative · Price transparency</p>
+              <h2 class="font-display mt-1.5 text-xl text-[#14110f] sm:text-2xl">
+                Simple gold ring look for everyday wear — without ₹25,000+ bullion prices.
+              </h2>
+              <p class="mt-2 text-[12.5px] leading-relaxed text-[#5f5851]">
+                Looking for a <strong>simple gold ring for women at a low price</strong>? Our <strong>18K Gold Plated</strong>, <strong>Anti-Tarnish</strong> rings start at <strong data-collection-low-inline>₹149</strong>—crafted on waterproof, skin-safe 316L steel so you get warm real-gold brilliance through showers and handwashing without green finger marks.
+              </p>
+            </div>
+            <div class="overflow-x-auto lg:col-span-5">
+              <table class="w-full border-collapse border border-[#ded5c7] bg-white text-left text-[11px]">
+                <thead>
+                  <tr class="border-b border-[#ded5c7] bg-[#fbf9f5] text-[9px] uppercase tracking-[0.14em] text-[#6f675f]">
+                    <th scope="col" class="px-3 py-2">Ring Type</th>
+                    <th scope="col" class="px-3 py-2">Typical Price</th>
+                    <th scope="col" class="px-3 py-2">Daily Wear</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-[#ded5c7]">
+                  <tr class="font-medium text-[#14110f]">
+                    <td class="px-3 py-2 text-[#8d3f3d]">Satvastones 18K PVD</td>
+                    <td class="px-3 py-2">₹149 – ₹499</td>
+                    <td class="px-3 py-2">Waterproof · Anti-tarnish</td>
+                  </tr>
+                  <tr class="text-[#5f5851]">
+                    <td class="px-3 py-2">Solid 18K/22K Gold</td>
+                    <td class="px-3 py-2">₹18,000 – ₹45,000+</td>
+                    <td class="px-3 py-2">High theft/loss risk</td>
+                  </tr>
+                  <tr class="text-[#5f5851]">
+                    <td class="px-3 py-2">Local Brass Ring</td>
+                    <td class="px-3 py-2">₹50 – ₹99</td>
+                    <td class="px-3 py-2">Turns finger green</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </aside>
+      )}
+
+      {isEarringCluster && (
+        <aside class="mb-8 border border-[#e0d7c9] bg-[#f4efe7] p-5 sm:p-6" aria-label="Sensitive ears and Sona Bali hoop guide">
+          <div class="grid gap-4 lg:grid-cols-12 lg:items-center">
+            <div class="lg:col-span-8">
+              <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">Sensitive-ear certified · Daily hoop &amp; stud edit</p>
+              <h2 class="font-display mt-1.5 text-xl text-[#14110f] sm:text-2xl">
+                Nickel-Free &amp; Hypoallergenic (Safe for Sensitive Ears) + Gold-Plated Bali Hoop Earrings.
+              </h2>
+              <p class="mt-2 text-[12.5px] leading-relaxed text-[#5f5851]">
+                Every pair—from featherlight Korean crystal studs to classic <strong>Gold-Plated Bali Hoop Earrings</strong> (the smart everyday alternative to ₹10,000+ traditional <em>sona bali price</em>)—is 100% nickel-free, waterproof, and comfortable for all-day wear starting at <strong data-collection-low-inline>₹149</strong>.
+              </p>
+            </div>
+            <ul class="space-y-1.5 border-t border-[#ded5c7] pt-3 text-[11px] text-[#14110f] lg:col-span-4 lg:border-l lg:border-t-0 lg:pl-5 lg:pt-0">
+              <li>✓ <strong>Nickel-Free &amp; Hypoallergenic</strong> (Zero ear redness)</li>
+              <li>✓ <strong>18K Gold-Plated Bali Hoops</strong> &amp; Crystal Drops</li>
+              <li>✓ <strong>Featherlight (&lt;6g)</strong> · Waterproof &amp; Sweat-Proof</li>
+            </ul>
+          </div>
+        </aside>
+      )}
+
       <!-- Toolbar -->
       <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
         <p id="collection-count-badge" class="text-[10px] uppercase tracking-[0.16em] text-[#8a8279]">

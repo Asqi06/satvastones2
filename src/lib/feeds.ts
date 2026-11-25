@@ -99,15 +99,13 @@ export function filterCollectionProducts(allProducts: FeedProduct[], colSlug: st
   if (!colSlug) return allProducts;
   if (colSlug === 'bestsellers' || colSlug === 'new-arrivals') return allProducts;
   if (colSlug === 'gifts-for-girlfriend-under-500') {
-    return allProducts.filter((p) => p.inStock && p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise);
+    return allProducts.filter((p) => p.inStock && p.pricePaise <= 49900).sort((a, b) => a.pricePaise - b.pricePaise);
   }
-  if (colSlug === 'rings-under-100') {
+  if (colSlug === 'rings' || colSlug === 'rings-under-100' || colSlug === 'anti-tarnish-minimal-rings') {
     const rings = allProducts.filter((p) => p.category === 'rings').sort((a, b) => a.pricePaise - b.pricePaise);
-    return rings.length ? rings : allProducts.filter((p) => p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise);
-  }
-  if (colSlug === 'anti-tarnish-minimal-rings') {
-    const rings = allProducts.filter((p) => p.category === 'rings');
-    return rings.length ? rings : allProducts;
+    return rings.length
+      ? rings
+      : allProducts.filter((p) => p.inStock && p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise);
   }
   return allProducts.filter((p) => p.category === colSlug);
 }
@@ -128,7 +126,6 @@ export function generateSitemapXml(products: FeedProduct[], blogs: FeedBlog[]): 
   const staticPages: Array<{ path: string; changefreq: string; priority: string }> = [
     { path: '/', changefreq: 'daily', priority: '1.0' },
     { path: '/shop', changefreq: 'daily', priority: '0.9' },
-    { path: '/gifts-for-girlfriend-under-500', changefreq: 'weekly', priority: '0.9' },
     { path: '/affordable-anti-tarnish-jewellery-india', changefreq: 'weekly', priority: '0.9' },
     { path: '/anti-tarnish-jewellery-vapi', changefreq: 'weekly', priority: '0.9' },
     { path: '/journal', changefreq: 'daily', priority: '0.9' },
@@ -359,7 +356,9 @@ ${productLines}
 
 ## High-Intent Pillar Guides & Collections
 - [All Anti-Tarnish Jewellery](${SITE_URL}/shop): Complete live catalogue with instant sorting & category filters.
-- [Best Jewellery Gifts for Girlfriend Under ₹500](${SITE_URL}/gifts-for-girlfriend-under-500): Waterproof rings, Korean crystal earrings, bracelets & pendants under ₹500.
+- [Best Jewelry & Jewellery Gifts for Girlfriend Under ₹500](${SITE_URL}/collections/gifts-for-girlfriend-under-500): Waterproof 18K gold-plated rings, Nickel-Free & Hypoallergenic earrings, bracelets & pendants under ₹500.
+- [18K Gold Plated & Anti-Tarnish Rings for Women](${SITE_URL}/collections/rings): Simple gold-look rings for women at a low price (starting ₹${minPrice.toLocaleString('en-IN')}).
+- [Nickel-Free & Hypoallergenic Earrings & Gold-Plated Bali Hoops](${SITE_URL}/collections/earrings): Safe for sensitive ears + classic daily sona bali hoop styles.
 - [Affordable Anti-Tarnish Jewellery in India — Buying Guide](${SITE_URL}/affordable-anti-tarnish-jewellery-india): Metallurgy comparison (316L + 18K PVD vs brass vs silver) and price guide.
 - [Anti-Tarnish Jewellery Shop in Vapi, Gujarat](${SITE_URL}/anti-tarnish-jewellery-vapi): Local Chala/Vapi, Daman, Silvassa, Valsad & Surat express delivery details.
 - [Materials & 316L PVD Metallurgy](${SITE_URL}/materials): Scientific breakdown of 316L surgical steel and 18K vacuum PVD.
@@ -442,7 +441,7 @@ ${detailedProducts}
 No. Green skin discoloration is caused by copper and brass reacting with sweat. Satvastones uses 316L surgical stainless steel (zero copper/brass) with 18K vacuum gold PVD, making it waterproof, sweat-resistant, and safe for daily handwashing, showers, and workouts.
 
 ### Q: What are the best jewellery gifts for a girlfriend under ₹500 in India?
-Waterproof 18K gold PVD Korean crystal earrings, minimal bands, daisy cuff bracelets, and dainty pendants under ₹500 (available at ${SITE_URL}/gifts-for-girlfriend-under-500 and ${SITE_URL}/collections/gifts-for-girlfriend-under-500) make lasting birthday and anniversary gifts because they are hypoallergenic, tarnish-free, and ship in a keepsake pouch with Cash on Delivery and express pan-India delivery.
+Waterproof 18K gold PVD Korean crystal earrings, minimal bands, daisy cuff bracelets, and dainty pendants under ₹500 (available at ${SITE_URL}/collections/gifts-for-girlfriend-under-500) make lasting birthday and anniversary jewelry & jewellery gifts because they are hypoallergenic, tarnish-free, and ship in a keepsake pouch with Cash on Delivery and express pan-India delivery.
 
 ### Q: How to clean 18K gold PVD anti-tarnish jewellery at home?
 Soak in lukewarm water with 2–3 drops of mild ammonia-free dish soap or baby shampoo for 10–15 minutes, gently brush crevices with a soft baby toothbrush, rinse in clean warm water, and pat dry with a lint-free microfiber cloth. Avoid toothpaste, baking soda, bleach, or acetone.
