@@ -4,12 +4,28 @@ import ProductCard from '../components/ProductCard.astro';
 import { PRODUCTS } from '../data/products';
 import { CATEGORIES } from '../data/categories';
 
-const title = 'Shop Affordable Anti-Tarnish & Waterproof Jewellery for Women in India | Satvastones';
-const description = 'Browse affordable, waterproof & non-tarnish 18K gold plated jewellery for women in India — rings, bracelets, necklaces, earrings & sets in 316L surgical steel that never lose color. Free delivery above ₹499.';
+const title = 'Shop Anti-Tarnish & Waterproof 18K Gold Jewellery in India (From ₹179) | Satvastones';
+const description = 'Shop 100% waterproof & anti-tarnish 18K gold PVD jewellery for women in India starting at ₹179 — hypoallergenic Korean crystal earrings, minimal rings, bracelets, bangles & necklaces in 316L steel. Free shipping above ₹499 & COD.';
+
+const shopFaqs = [
+  {
+    q: 'What makes Satvastones anti-tarnish jewellery waterproof and sweat-proof?',
+    a: 'Every Satvastones piece uses medical-grade 316L surgical stainless steel bonded with real 18K gold via high-vacuum Physical Vapor Deposition (PVD) — making it 10x harder than ordinary flash electroplating and completely safe for daily showers, gym sweat, and humid Indian weather.'
+  },
+  {
+    q: 'What is the price range of Satvastones jewellery, and is Cash on Delivery available?',
+    a: 'Our live anti-tarnish jewellery catalogue starts at ₹179, with curated everyday pieces under ₹500. You also save 15% automatically on any 2+ items in Stack Studio, enjoy free express shipping across India above ₹499, and can pay via UPI, Cards, NetBanking, or Cash on Delivery.'
+  },
+  {
+    q: 'Is Satvastones jewellery safe for sensitive ears and skin allergies?',
+    a: 'Yes. Because we use nickel-safe, lead-free 316L surgical stainless steel with zero brass or copper base alloys, our Korean crystal earrings, rings, bracelets, and necklaces never turn skin green or trigger irritation.'
+  }
+];
 
 const itemListSchema = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
+  '@id': 'https://www.satvastones.in/shop#catalog',
   name: 'Satvastones anti-tarnish jewellery collection',
   numberOfItems: PRODUCTS.length,
   itemListElement: PRODUCTS.map((product, index) => ({
@@ -17,6 +33,25 @@ const itemListSchema = {
     position: index + 1,
     url: `https://www.satvastones.in/products/${product.slug}`,
     name: product.name
+  }))
+};
+
+const collectionPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: title,
+  description,
+  url: 'https://www.satvastones.in/shop',
+  mainEntity: { '@id': 'https://www.satvastones.in/shop#catalog' }
+};
+
+const shopFaqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: shopFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a }
   }))
 };
 
@@ -29,7 +64,7 @@ const staticSignature = PRODUCTS.map((p) => `${p.id}:${p.pricePaise}`).join('|')
 const totalPieces = PRODUCTS.length;
 ---
 
-<BaseLayout title={title} description={description} schema={itemListSchema} breadcrumbs={breadcrumbs}>
+<BaseLayout title={title} description={description} schema={[collectionPageSchema, itemListSchema, shopFaqSchema]} breadcrumbs={breadcrumbs}>
   <div class="bg-[#fbf9f5] text-[#14110f]">
     <!-- Editorial header -->
     <header class="mx-auto max-w-[1440px] px-5 pb-8 pt-6 sm:px-8 sm:pb-10 sm:pt-8 lg:px-10">
@@ -49,8 +84,8 @@ const totalPieces = PRODUCTS.length;
           </h1>
         </div>
         <div class="lg:col-span-4 lg:pb-2">
-          <p class="max-w-sm text-[13px] leading-relaxed text-[#5f5851]">
-            100% waterproof 18K gold PVD over 316L surgical steel. Shower-safe, sweat-safe, and made for the way you actually live.
+          <p data-speakable class="max-w-sm text-[13px] leading-relaxed text-[#5f5851]">
+            100% waterproof 18K gold PVD over 316L surgical steel — starting at ₹179. Shower-safe, sweat-safe, hypoallergenic, and dispatched from Vapi in 24–48 hours.
           </p>
           <p class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">
             <span>{totalPieces} pieces</span>
@@ -308,6 +343,74 @@ const totalPieces = PRODUCTS.length;
           <p>
             Choose from sculptural <a href="/collections/rings" class="underline decoration-[#d8c3a6] underline-offset-4 hover:text-[#14110f]">rings</a>, herringbone <a href="/collections/necklaces" class="underline decoration-[#d8c3a6] underline-offset-4 hover:text-[#14110f]">necklaces</a>, chunky <a href="/collections/bracelets" class="underline decoration-[#d8c3a6] underline-offset-4 hover:text-[#14110f]">bracelets</a>, huggies and <a href="/collections/earrings" class="underline decoration-[#d8c3a6] underline-offset-4 hover:text-[#14110f]">earrings</a>, or start with a curated <a href="/collections/gift-sets" class="underline decoration-[#d8c3a6] underline-offset-4 hover:text-[#14110f]">gift set</a>. Curious about the finish? Read <a href="/materials" class="underline decoration-[#d8c3a6] underline-offset-4 hover:text-[#14110f]">our materials</a> or the <a href="/jewellery-care" class="underline decoration-[#d8c3a6] underline-offset-4 hover:text-[#14110f]">jewellery care guide</a>.
           </p>
+        </div>
+      </section>
+
+      <!-- AEO Comparison Table + Buyer FAQs -->
+      <section class="mt-16 border-t border-[#e5ded3] pt-12" aria-labelledby="shop-comparison-title">
+        <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+          <div class="lg:col-span-5">
+            <p class="eyebrow text-[#8d3f3d]">Material comparison</p>
+            <h2 id="shop-comparison-title" class="font-display mt-2 text-[1.9rem] leading-tight sm:text-[2.4rem]">
+              Why 316L + 18K PVD wins daily wear.
+            </h2>
+            <p class="mt-3 text-[13px] leading-relaxed text-[#5f5851]">
+              Ordinary brass imitation jewellery oxidizes in Indian sweat and monsoon humidity within days. Here is how Satvastones compares side by side:
+            </p>
+            <div class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.14em]">
+              <a href="/gifts-for-girlfriend-under-500" class="link-line text-[#14110f]">Gifts under ₹500</a>
+              <a href="/affordable-anti-tarnish-jewellery-india" class="link-line text-[#14110f]">India buying guide</a>
+              <a href="/materials" class="link-line text-[#14110f]">316L metallurgy</a>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto lg:col-span-7">
+            <table class="w-full min-w-[480px] border-collapse border border-[#e5ded3] bg-white text-left text-[12px]">
+              <thead>
+                <tr class="border-b border-[#e5ded3] bg-[#f4efe7] text-[10px] uppercase tracking-[0.14em] text-[#14110f]">
+                  <th scope="col" class="px-4 py-3 font-medium">Feature</th>
+                  <th scope="col" class="px-4 py-3 font-medium text-[#8d3f3d]">Satvastones (316L + 18K PVD)</th>
+                  <th scope="col" class="px-4 py-3 font-medium text-[#6f675f]">Flash-Plated Brass</th>
+                  <th scope="col" class="px-4 py-3 font-medium text-[#6f675f]">925 Silver</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#e5ded3] text-[#4a443f]">
+                <tr>
+                  <th scope="row" class="px-4 py-3 font-medium text-[#14110f]">Water &amp; sweat</th>
+                  <td class="px-4 py-3 font-medium text-[#14110f]">100% waterproof · shower &amp; gym safe</td>
+                  <td class="px-4 py-3">Tarnishes in 1–3 weeks</td>
+                  <td class="px-4 py-3">Oxidizes dark in humidity</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="px-4 py-3 font-medium text-[#14110f]">Skin safety</th>
+                  <td class="px-4 py-3 font-medium text-[#14110f]">Nickel-safe · zero green marks</td>
+                  <td class="px-4 py-3">Leaves green copper stains</td>
+                  <td class="px-4 py-3">Hypoallergenic</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="px-4 py-3 font-medium text-[#14110f]">Plating bond</th>
+                  <td class="px-4 py-3 font-medium text-[#14110f]">Vacuum plasma PVD (10× harder)</td>
+                  <td class="px-4 py-3">Thin wet electroplating</td>
+                  <td class="px-4 py-3">Soft, needs regular polish</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="px-4 py-3 font-medium text-[#14110f]">Typical price</th>
+                  <td class="px-4 py-3 font-medium text-[#14110f]">From ₹179 (15% off stacks)</td>
+                  <td class="px-4 py-3">₹99–₹350 (frequent re-buy)</td>
+                  <td class="px-4 py-3">₹1,500–₹6,000+</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="mt-10 grid gap-4 border-t border-[#e5ded3] pt-8 md:grid-cols-3">
+          {shopFaqs.map((faq) => (
+            <div class="border border-[#e5ded3] bg-white p-5">
+              <h3 class="font-display text-[1.1rem] leading-snug text-[#14110f]">{faq.q}</h3>
+              <p class="mt-2 text-[12.5px] leading-relaxed text-[#5f5851]">{faq.a}</p>
+            </div>
+          ))}
         </div>
       </section>
 

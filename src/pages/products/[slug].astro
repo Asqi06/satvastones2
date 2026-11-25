@@ -269,17 +269,25 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
         </h1>
 
         <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px] text-[#6f675f]">
-          <a href="#reviews" class="flex items-center gap-1.5" aria-label="Read verified customer reviews">
-            <span class="flex gap-0.5 text-[#c5a059]">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <svg class={`h-3 w-3 ${i < Math.round(product.rating) ? 'fill-current' : 'fill-[#ddd5c9]'}`} viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-              ))}
-            </span>
-            <span class="font-medium text-[#14110f]">{product.rating}</span>
-            <span class="underline decoration-[#d8d0c4] underline-offset-2">({product.reviewCount} reviews)</span>
-          </a>
+          <div data-pdp-rating class="flex items-center gap-1.5">
+            {product.reviewCount > 0 ? (
+              <a href="#reviews" class="flex items-center gap-1.5" aria-label="Read verified customer reviews">
+                <span class="flex gap-0.5 text-[#c5a059]">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg class={`h-3 w-3 ${i < Math.round(product.rating) ? 'fill-current' : 'fill-[#ddd5c9]'}`} viewBox="0 0 20 20" aria-hidden="true">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </span>
+                <span class="font-medium text-[#14110f]">{product.rating}</span>
+                <span class="underline decoration-[#d8d0c4] underline-offset-2">({product.reviewCount} reviews)</span>
+              </a>
+            ) : (
+              <a href="#reviews" class="text-[10px] uppercase tracking-[0.14em] text-[#8d3f3d] underline decoration-[#d8c3a6] underline-offset-2">
+                Be the first to review
+              </a>
+            )}
+          </div>
           <span class="hidden h-3 w-px bg-[#d8d0c4] sm:block" aria-hidden="true"></span>
           <span class="text-[10px] uppercase tracking-[0.14em]">SKU {product.sku}</span>
         </div>
@@ -297,7 +305,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
           <span class="ml-auto text-[10px] uppercase tracking-[0.12em] text-[#8a8279]">Incl. all taxes</span>
         </div>
 
-        <p class="mt-5 text-[14px] leading-relaxed text-[#4a443f]">{product.headline}</p>
+        <p data-speakable class="mt-5 text-[14px] leading-relaxed text-[#4a443f]">{product.headline}</p>
 
         <!-- Honest dispatch urgency -->
         <div class="mt-5 flex items-start gap-2.5 border-l-2 border-[#c5a059] pl-3.5 text-[11px] leading-relaxed text-[#5f5851]">
@@ -310,27 +318,29 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
         </div>
 
         <!-- Stacking nudge -->
-        {stackPartner && (
-          <a
-            href="#complete-the-stack"
-            class="group mt-6 flex items-center gap-4 border border-[#e0d7c9] bg-[#f4efe7] p-3 transition-colors hover:border-[#c5a059]"
-          >
-            <img
-              src={stackPartner.images[0]?.url}
-              alt={stackPartner.name}
-              width="64"
-              height="80"
-              loading="lazy"
-              class="h-16 w-14 shrink-0 object-cover"
-            />
-            <div class="min-w-0 flex-1">
-              <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">The stacking edit</p>
-              <p class="mt-0.5 truncate text-[13px] text-[#14110f]">Add {stackPartner.name}</p>
-              <p class="text-[11px] text-[#6f675f]">Stack any two pieces and save 15%</p>
-            </div>
-            <span class="text-[#14110f] transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
-          </a>
-        )}
+        <div data-pdp-stack-partner>
+          {stackPartner && (
+            <a
+              href="#complete-the-stack"
+              class="group mt-6 flex items-center gap-4 border border-[#e0d7c9] bg-[#f4efe7] p-3 transition-colors hover:border-[#c5a059]"
+            >
+              <img
+                src={stackPartner.images[0]?.url}
+                alt={stackPartner.name}
+                width="64"
+                height="80"
+                loading="lazy"
+                class="h-16 w-14 shrink-0 object-cover"
+              />
+              <div class="min-w-0 flex-1">
+                <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">The stacking edit</p>
+                <p class="mt-0.5 truncate text-[13px] text-[#14110f]">Add {stackPartner.name}</p>
+                <p class="text-[11px] text-[#6f675f]">Stack any two pieces and save 15%</p>
+              </div>
+              <span class="text-[#14110f] transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+            </a>
+          )}
+        </div>
 
         {showSizeGuide && (
           <div class="mt-5 flex flex-wrap items-center justify-between gap-2 border-y border-[#e5ded3] py-3 text-[11px]">
@@ -479,7 +489,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
           </span>
         </div>
 
-        <div class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div data-pdp-bundle-grid class="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
           {bundleItems.map((item, idx) => (
             <label class="group relative flex cursor-pointer items-center gap-4 border border-[#ded5c7] bg-[#fbf9f5] p-3 transition-colors has-[:checked]:border-[#14110f]">
               <input
@@ -572,7 +582,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
               <span class="text-lg text-[#8a8279] transition-transform duration-300 group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <div class="pt-3 text-[13px] leading-relaxed text-[#5f5851]">
-              <p data-pdp-description>{product.description}</p>
+              <p data-pdp-description data-speakable>{product.description}</p>
               <p class="mt-2">
                 Hand-curated for daily wear — a coffee run, a work meeting, or an evening celebration.
               </p>
@@ -696,6 +706,7 @@ const productMetaDescription = `Buy ${product.name} online in India for ₹${(pr
       </div>
 
       <div
+        data-pdp-related-grid
         class="mt-8 grid grid-cols-2 gap-x-3 gap-y-8 md:grid-cols-4 md:gap-6"
         data-catalog-grid={product.category}
         data-catalog-limit="4"

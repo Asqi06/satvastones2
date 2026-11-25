@@ -12,7 +12,16 @@ import * as reviewsHandler from '../functions/api/reviews';
 import * as uploadHandler from '../functions/api/upload';
 import * as blogsHandler from '../functions/api/blogs';
 import { applyCorsPolicy, escapeHtml, isAllowedOrigin, safeHttpUrl } from './lib/http';
-import { generateGoogleMerchantFeedXml, generateSitemapXml, type FeedBlog, type FeedProduct } from './lib/feeds';
+import {
+  filterCollectionProducts,
+  generateGoogleMerchantFeedXml,
+  generateLlmsFullTxt,
+  generateLlmsTxt,
+  generateSitemapXml,
+  inferProductColor,
+  type FeedBlog,
+  type FeedProduct
+} from './lib/feeds';
 import { estimateReadTimeMinutes, renderEditorialMarkdown } from './lib/markdown';
 
 export interface Env {
@@ -597,6 +606,9 @@ export default {
                 '/',
                 '/api/products',
                 '/shop',
+                '/stack-builder',
+                '/llms.txt',
+                '/llms-full.txt',
                 '/gifts-for-girlfriend-under-500',
                 '/anti-tarnish-jewellery-vapi',
                 '/affordable-anti-tarnish-jewellery-india',
@@ -635,6 +647,8 @@ export default {
                 '/api/blogs',
                 '/journal',
                 '/sitemap.xml',
+                '/llms.txt',
+                '/llms-full.txt',
                 ...(slugParam ? [`/journal/${slugParam}`] : [])
               ];
               try {
@@ -692,6 +706,27 @@ export default {
           status: 200,
           headers: {
             'Content-Type': 'application/xml; charset=utf-8',
+            'X-Content-Type-Options': 'nosniff'
+          }
+        });
+      });
+    }
+
+    // 2b. Dynamic /llms.txt & /llms-full.txt directly from live Cloudflare D1 (GEO for ChatGPT, Perplexity, Claude, Gemini)
+    if ((url.pathname === '/llms.txt' || url.pathname === '/llms-full.txt') && env.DB) {
+      return withEdgeCache(request, ctx, FEED_CACHE_CONTROL, false, async () => {
+        const [products, blogs] = await Promise.all([
+          loadLivePublishedProducts(env.DB),
+          loadLivePublishedBlogs(env.DB)
+        ]);
+        const body =
+          url.pathname === '/llms-full.txt'
+            ? generateLlmsFullTxt(products, blogs)
+            : generateLlmsTxt(products, blogs);
+        return new Response(body, {
+          status: 200,
+          headers: {
+            'Content-Type': 'text/plain; charset=utf-8',
             'X-Content-Type-Options': 'nosniff'
           }
         });
@@ -971,22 +1006,93 @@ export default {
               `${open}01 / ${String(gallery.length).padStart(2, '0')}${close}`
           );
 
-          // Structured data: keep Product & BreadcrumbList schema 100% accurate for Google Merchant Center
+          // Structured data & live D1 related/bundle hydration: zero mock 404 links & zero fake reviews
           const ratingValue = Number(meta.rating);
           const reviewCount = Math.floor(Number(meta.reviewCount) || 0);
           const nextYearDate = new Date();
           nextYearDate.setFullYear(nextYearDate.getFullYear() + 1);
           const priceValidUntil = nextYearDate.toISOString().slice(0, 10);
 
+          // Hydrate Buy Box rating block honestly (only display stars when verified reviews exist)
+          const ratingMarkup =
+            Number.isFinite(ratingValue) && ratingValue > 0 && reviewCount > 0
+              ? `<a href="#reviews" class="flex items-center gap-1.5" aria-label="Read verified customer reviews"><span class="font-medium text-[#14110f]">★ ${ratingValue.toFixed(1)}</span><span class="underline decoration-[#d8d0c4] underline-offset-2">(${reviewCount} reviews)</span></a>`
+              : `<a href="#reviews" class="text-[10px] uppercase tracking-[0.14em] text-[#8d3f3d] underline decoration-[#d8c3a6] underline-offset-2">Be the first to review</a>`;
+          html = replaceBalancedDiv(html, /<div[^>]*data-pdp-rating[^>]*>/, ratingMarkup);
+
+          // Hydrate stack partner, bundle checkboxes, and related products from live D1 (eliminating 404 mock links)
+          const allLiveProducts = await loadLivePublishedProducts(env.DB);
+          const otherLive = allLiveProducts.filter((p) => p.id !== String(row.id) && p.slug !== safeSlug && p.inStock);
+          const sameCatLive = otherLive.filter((p) => p.category === category);
+          const relatedLive = (sameCatLive.length >= 2 ? sameCatLive : otherLive).slice(0, 4);
+          const bundleComp = otherLive.slice(0, 2);
+
+          const stackPartnerMarkup = bundleComp[0]
+            ? `<a href="#complete-the-stack" class="group mt-6 flex items-center gap-4 border border-[#e0d7c9] bg-[#f4efe7] p-3 transition-colors hover:border-[#c5a059]"><img src="${escapeHtml(optimizeSsrImage(bundleComp[0].imageUrl, 160))}" alt="${escapeHtml(bundleComp[0].name)}" width="64" height="80" loading="lazy" class="h-16 w-14 shrink-0 object-cover" /><div class="min-w-0 flex-1"><p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">The stacking edit</p><p class="mt-0.5 truncate text-[13px] text-[#14110f]">Add ${escapeHtml(bundleComp[0].name)}</p><p class="text-[11px] text-[#6f675f]">Stack any two pieces and save 15%</p></div><span class="text-[#14110f] transition-transform group-hover:translate-x-1" aria-hidden="true">→</span></a>`
+            : '';
+          html = replaceBalancedDiv(html, /<div[^>]*data-pdp-stack-partner[^>]*>/, stackPartnerMarkup);
+
+          const currentAsFeed: FeedProduct = {
+            id: String(row.id),
+            name: rawName,
+            slug: safeSlug,
+            sku: rawSku,
+            category,
+            pricePaise,
+            imageUrl: effectiveRawImageUrl,
+            material: materialRaw,
+            finish: finishRaw,
+            inStock: Number(row.in_stock) !== 0
+          };
+          const liveBundleItems = [currentAsFeed, ...bundleComp];
+          const bundleGridMarkup = liveBundleItems
+            .map((item, idx) => {
+              const itemImg = escapeHtml(optimizeSsrImage(item.imageUrl, 200));
+              const itemRupees = Math.round(item.pricePaise / 100).toLocaleString('en-IN');
+              return `<label class="group relative flex cursor-pointer items-center gap-4 border border-[#ded5c7] bg-[#fbf9f5] p-3 transition-colors has-[:checked]:border-[#14110f]"><input type="checkbox" checked ${idx === 0 ? 'disabled' : ''} class="bundle-item-check h-4 w-4 shrink-0 accent-[#14110f]" data-item-id="${escapeHtml(item.id)}" data-item-name="${escapeHtml(item.name)}" data-item-slug="${escapeHtml(item.slug)}" data-item-price="${item.pricePaise}" data-item-image="${itemImg}" aria-label="Include ${escapeHtml(item.name)} in the bundle" /><img src="${itemImg}" alt="${escapeHtml(item.name)}" width="80" height="100" loading="lazy" class="h-[84px] w-[68px] shrink-0 object-cover" /><div class="min-w-0 flex-1"><p class="text-[9px] uppercase tracking-[0.16em] text-[#8d3f3d]">${idx === 0 ? 'This piece' : 'Pairs with'}</p><p class="mt-0.5 line-clamp-2 text-[12px] leading-snug text-[#14110f]">${escapeHtml(item.name)}</p><p class="mt-1 text-[12px] font-medium">₹${itemRupees}</p></div></label>`;
+            })
+            .join('');
+          html = replaceBalancedDiv(html, /<div[^>]*data-pdp-bundle-grid[^>]*>/, bundleGridMarkup);
+
+          const rawBundleSum = liveBundleItems.reduce((sum, it) => sum + it.pricePaise, 0);
+          const bundleDisc = liveBundleItems.length >= 2 ? Math.round(rawBundleSum * 0.15) : 0;
+          const bundleFinal = rawBundleSum - bundleDisc;
+          html = html.replace(
+            /(<span[^>]*id="bundle-raw-val"[^>]*>)[\s\S]*?(<\/span>)/,
+            (_m, o: string, c: string) => `${o}₹${Math.round(rawBundleSum / 100).toLocaleString('en-IN')}${c}`
+          );
+          html = html.replace(
+            /(<span[^>]*id="bundle-savings-val"[^>]*>)[\s\S]*?(<\/span>)/,
+            (_m, o: string, c: string) => `${o}− ₹${Math.round(bundleDisc / 100).toLocaleString('en-IN')}${c}`
+          );
+          html = html.replace(
+            /(<span[^>]*id="bundle-final-val"[^>]*>)[\s\S]*?(<\/span>)/,
+            (_m, o: string, c: string) => `${o}₹${Math.round(bundleFinal / 100).toLocaleString('en-IN')}${c}`
+          );
+
+          html = html.replace(/data-catalog-exclude="[^"]*"/, `data-catalog-exclude="${idValue}"`);
+          html = html.replace(/data-catalog-grid="[^"]*"/, `data-catalog-grid="${escapeHtml(category)}"`);
+          html = replaceBalancedDiv(
+            html,
+            /<div[^>]*data-pdp-related-grid[^>]*>/,
+            relatedLive.map((p) => renderSsrProductCard(p)).join(''),
+            'data-ssr-hydrated="true"'
+          );
+
+          const canonicalPdpUrl = `${SITE_URL}/products/${safeSlug}`;
+
           html = updateJsonLdNodes(html, 'Product', (node) => {
             node.name = rawName;
             node.description = rawDescription;
             node.sku = rawSku;
             node.mpn = rawSku;
+            node.category = category;
+            node.color = inferProductColor(currentAsFeed);
             node.image = gallery.map((img) => img.url);
             node.material = materialRaw;
+            node.audience = { '@type': 'PeopleAudience', suggestedGender: 'female' };
             node.offers = node.offers && typeof node.offers === 'object' ? node.offers : {};
-            node.offers.url = `${SITE_URL}/products/${safeSlug}`;
+            node.offers.url = canonicalPdpUrl;
             node.offers.price = (pricePaise / 100).toFixed(2);
             node.offers.priceValidUntil = priceValidUntil;
             node.offers.availability =
@@ -1007,6 +1113,13 @@ export default {
             } else {
               delete node.aggregateRating;
             }
+          });
+
+          html = updateJsonLdNodes(html, 'WebPage', (node) => {
+            node['@id'] = `${canonicalPdpUrl}#webpage`;
+            node.url = canonicalPdpUrl;
+            node.name = rawName;
+            node.description = rawDescription;
           });
 
           html = updateJsonLdNodes(html, 'BreadcrumbList', (node) => {
@@ -1171,6 +1284,22 @@ export default {
               { '@type': 'ListItem', position: 3, name: rawTitle, item: canonical }
             ];
           });
+          html = updateJsonLdNodes(html, 'WebPage', (node) => {
+            if (node['@id'] && String(node['@id']).endsWith('#webpage')) {
+              node['@id'] = `${canonical}#webpage`;
+              node.url = canonical;
+              node.name = rawSeoTitle;
+              node.description = rawSeoDesc;
+            }
+          });
+          html = html.replace(
+            /<link rel="alternate" hreflang="en-in" href="[^"]*">/,
+            () => `<link rel="alternate" hreflang="en-in" href="${escapeHtml(canonical)}">`
+          );
+          html = html.replace(
+            /<link rel="alternate" hreflang="x-default" href="[^"]*">/,
+            () => `<link rel="alternate" hreflang="x-default" href="${escapeHtml(canonical)}">`
+          );
 
           return new Response(html, {
             status: 200,
@@ -1186,7 +1315,7 @@ export default {
       }
     }
 
-    // 5. Dynamic Live D1 Products & ItemList JSON-LD for /, /shop, /collections/*, /journal, and SEO landing pages
+    // 5. Dynamic Live D1 Products & ItemList JSON-LD for /, /shop, /stack-builder, /collections/*, /journal, and SEO landing pages
     const normalizedPath = url.pathname.replace(/\/$/, '') || '/';
     const isLiveLandingPage =
       normalizedPath === '/gifts-for-girlfriend-under-500' ||
@@ -1197,6 +1326,7 @@ export default {
       env.DB &&
       (normalizedPath === '/' ||
         normalizedPath === '/shop' ||
+        normalizedPath === '/stack-builder' ||
         url.pathname.startsWith('/collections/') ||
         normalizedPath === '/journal' ||
         isLiveLandingPage)
@@ -1209,6 +1339,26 @@ export default {
 
           if (normalizedPath === '/journal') {
             const blogs = await loadLivePublishedBlogs(env.DB);
+            if (blogs.length > 0) {
+              const articlesHtml = blogs
+                .map((b) => {
+                  const dateLabel = formatReadableDate(b.publishedAt || b.updatedAt);
+                  const imgHtml = b.coverImage
+                    ? `<a href="/journal/${encodeURIComponent(b.slug)}" class="block aspect-[16/10] overflow-hidden bg-[#ebe4d9]"><img src="${escapeHtml(optimizeSsrImage(b.coverImage, 600))}" alt="${escapeHtml(b.title)}" loading="lazy" decoding="async" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" /></a>`
+                    : '';
+                  return `<article class="group flex flex-col border border-[#e5ded3] bg-white transition-colors hover:border-[#c5a059]">${imgHtml}<div class="flex flex-1 flex-col p-5"><div class="flex items-center gap-2 text-[9px] uppercase tracking-[0.18em] text-[#8d3f3d]"><span>${escapeHtml(b.category || 'Styling Guide')}</span>${dateLabel ? `<span class="text-[#c5a059]">·</span><time class="text-[#8a8279]">${escapeHtml(dateLabel)}</time>` : ''}</div><h2 class="mt-2 font-display text-2xl leading-snug text-[#14110f] group-hover:text-[#8d3f3d]"><a href="/journal/${encodeURIComponent(b.slug)}">${escapeHtml(b.title)}</a></h2><p class="mt-2 line-clamp-3 text-[13px] leading-relaxed text-[#5f5851]">${escapeHtml(b.excerpt || '')}</p><a href="/journal/${encodeURIComponent(b.slug)}" class="mt-auto pt-4 text-[10px] uppercase tracking-[0.16em] text-[#14110f] underline decoration-[#d8c3a6] underline-offset-4">Read guide →</a></div></article>`;
+                })
+                .join('');
+              html = html.replace(
+                /<div id="journal-loading" class="([^"]*)"/,
+                (_m, cls: string) => `<div id="journal-loading" class="${cls} hidden"`
+              );
+              html = html.replace(
+                /(<section id="journal-grid" class=")([^"]*)(">)[\s\S]*?(<\/section>)/,
+                (_m, o: string, cls: string, mid: string, c: string) =>
+                  `${o}${cls.replace(/\bhidden\b\s*/g, '')}${mid}${articlesHtml}${c}`
+              );
+            }
             html = updateJsonLdNodes(html, 'ItemList', (node) => {
               node.numberOfItems = blogs.length;
               node.itemListElement = blogs.map((b, idx) => ({
@@ -1218,28 +1368,45 @@ export default {
                 name: b.title
               }));
             });
+          } else if (normalizedPath === '/stack-builder') {
+            const allProducts = await loadLivePublishedProducts(env.DB);
+            const liveInStock = allProducts.filter((p) => p.inStock);
+            const stepMap: Array<{ key: string; cat: string }> = [
+              { key: 'necklace', cat: 'necklaces' },
+              { key: 'ring', cat: 'rings' },
+              { key: 'earring', cat: 'earrings' }
+            ];
+            stepMap.forEach(({ key, cat }, stepIdx) => {
+              const exact = liveInStock.filter((p) => p.category === cat);
+              const fallbackSlice = liveInStock.slice(stepIdx, stepIdx + 3);
+              const stepItems = exact.length ? exact : fallbackSlice.length ? fallbackSlice : liveInStock.slice(0, 3);
+              const stepMarkup = stepItems
+                .map((item, idx) => {
+                  const img = escapeHtml(optimizeSsrImage(item.imageUrl, 300));
+                  const inr = Math.round(item.pricePaise / 100).toLocaleString('en-IN');
+                  return `<label class="stack-option-card group relative flex cursor-pointer flex-col border border-[#ded5c7] bg-[#fbf9f5] p-2 transition-colors hover:border-[#b9ae9f] has-[:checked]:border-[#14110f] has-[:checked]:bg-[#f4efe7]"><input type="radio" name="stack-${key}" value="${escapeHtml(item.id)}" ${idx === 0 ? 'checked' : ''} data-name="${escapeHtml(item.name)}" data-price="${item.pricePaise}" data-image="${img}" data-slug="${escapeHtml(item.slug)}" class="sr-only stack-radio" aria-label="${escapeHtml(item.name)} — ₹${inr}" /><img src="${img}" alt="${escapeHtml(item.name)}" width="300" height="300" loading="${stepIdx === 0 ? 'eager' : 'lazy'}" decoding="async" class="aspect-square w-full bg-[#f1ece3] object-cover transition-opacity group-hover:opacity-90" /><div class="mt-2 min-w-0"><p class="line-clamp-1 text-[11px] leading-snug text-[#14110f]">${escapeHtml(item.name)}</p><p class="mt-0.5 text-[11px] font-medium text-[#8d3f3d]">₹${inr}</p></div><span class="selected-check absolute right-2 top-2 ${idx === 0 ? 'flex' : 'hidden'} h-5 w-5 items-center justify-center bg-[#14110f] text-[#f6f1e8]">✓</span></label>`;
+                })
+                .join('');
+              html = replaceBalancedDiv(
+                html,
+                new RegExp(`<div[^>]*data-stack-group="${key}"[^>]*>`),
+                stepMarkup
+              );
+            });
+            const wristItems = liveInStock.filter((p) => p.category === 'bracelets' || p.category === 'bangles');
+            const wristCards = (wristItems.length ? wristItems : liveInStock).slice(0, 4).map((p) => renderSsrProductCard(p)).join('');
+            html = replaceBalancedDiv(
+              html,
+              /<div[^>]*data-stack-bracelets-grid[^>]*>/,
+              wristCards,
+              'data-ssr-hydrated="true"'
+            );
           } else {
             const allProducts = await loadLivePublishedProducts(env.DB);
             const colSlug = url.pathname.startsWith('/collections/')
               ? url.pathname.replace('/collections/', '').replace(/\/$/, '').trim()
               : '';
-            let matching = colSlug
-              ? colSlug === 'bestsellers' || colSlug === 'new-arrivals'
-                ? allProducts
-                : colSlug === 'gifts-for-girlfriend-under-500'
-                  ? allProducts.filter((p) => p.inStock && p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise)
-                  : colSlug === 'rings-under-100'
-                    ? (() => {
-                        const rings = allProducts.filter((p) => p.category === 'rings').sort((a, b) => a.pricePaise - b.pricePaise);
-                        return rings.length ? rings : allProducts.filter((p) => p.pricePaise <= 50000).sort((a, b) => a.pricePaise - b.pricePaise);
-                      })()
-                    : colSlug === 'anti-tarnish-minimal-rings'
-                      ? (() => {
-                          const rings = allProducts.filter((p) => p.category === 'rings');
-                          return rings.length ? rings : allProducts;
-                        })()
-                      : allProducts.filter((p) => p.category === colSlug)
-              : allProducts;
+            let matching = colSlug ? filterCollectionProducts(allProducts, colSlug) : allProducts;
 
             if (colSlug && matching.length > 0) {
               const prices = matching.map((p) => Math.round(p.pricePaise / 100)).filter((n) => n > 0);

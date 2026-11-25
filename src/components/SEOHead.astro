@@ -37,7 +37,7 @@ const {
 
 const siteUrl = 'https://www.satvastones.in';
 
-// Enhanced Google-compliant Organization / JewelryStore Schema with Local SEO (Vapi, Gujarat) & Pan-India GEO
+// Enhanced Google, AEO & GEO Organization / JewelryStore Entity Graph
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': ['JewelryStore', 'Organization'],
@@ -45,21 +45,33 @@ const organizationSchema = {
   'name': 'Satvastones Jewellery',
   'alternateName': [
     'SatvaStones',
+    'Satvastones Fine Jewellery',
     'Satvastones Anti Tarnish Jewellery',
     'Satvastones India',
-    'Satvastones Vapi',
-    'satvastones.in'
+    'Satvastones Vapi'
   ],
   'legalName': 'Satvastones Jewellery (Proprietor: Anirudh A Verma)',
+  'slogan': 'Jewellery you never have to take off — 100% waterproof 18K gold PVD on 316L surgical steel.',
   'taxID': '24DDAPV4074H1ZF',
+  'foundingDate': '2024',
+  'founder': {
+    '@type': 'Person',
+    'name': 'Anirudh A Verma'
+  },
+  'foundingLocation': {
+    '@type': 'Place',
+    'name': 'Chala, Vapi, Gujarat, India'
+  },
   'url': siteUrl,
-  'sameAs': [
-    'https://satvastones.in',
-    'https://www.satvastones.in'
-  ],
-  'logo': `${siteUrl}/satvastones-logo.png`,
+  'logo': {
+    '@type': 'ImageObject',
+    '@id': `${siteUrl}/#logo`,
+    'url': `${siteUrl}/satvastones-logo.png`,
+    'contentUrl': `${siteUrl}/satvastones-logo.png`,
+    'caption': 'Satvastones Jewellery'
+  },
   'image': `${siteUrl}/satvastones-logo-clean.png`,
-  'description': 'Affordable anti-tarnish, waterproof, and non-tarnish jewellery brand in India offering 18K gold PVD plated rings, bracelets, necklaces, earrings, and bangles on 316L surgical stainless steel that never lose color. Based in Chala, Vapi, Gujarat with 24–48 hour express delivery across India.',
+  'description': 'Affordable anti-tarnish, waterproof, and non-tarnish jewellery brand in India offering 18K gold PVD plated rings, bracelets, necklaces, Korean crystal earrings, and bangles on medical-grade 316L surgical stainless steel starting from ₹179. Dispatched from Chala, Vapi, Gujarat in 24–48 hours across 19,000+ Indian pincodes.',
   'telephone': '+91 90167 03180',
   'email': 'support@satvastones.in',
   'contactPoint': [
@@ -139,14 +151,15 @@ const organizationSchema = {
   }
 };
 
-// WebSite Schema with Sitelinks Searchbox
+// WebSite Schema with Sitelinks Searchbox & Language
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   '@id': `${siteUrl}/#website`,
   'url': siteUrl,
   'name': 'Satvastones Jewellery',
-  'description': 'Anti-Tarnish and Waterproof Jewellery in India',
+  'inLanguage': 'en-IN',
+  'description': 'Affordable Anti-Tarnish and Waterproof 18K Gold PVD Jewellery in India',
   'publisher': {
     '@id': `${siteUrl}/#store`
   },
@@ -159,6 +172,23 @@ const websiteSchema = {
     'query-input': 'required name=search_term_string'
   }
 };
+
+// WebPage Schema with SpeakableSpecification for AEO (Google AI Overviews, Featured Snippets & Voice Search)
+const webPageSchema = !noindex ? {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${canonicalUrl}#webpage`,
+  'url': canonicalUrl,
+  'name': title,
+  'description': description,
+  'inLanguage': 'en-IN',
+  'isPartOf': { '@id': `${siteUrl}/#website` },
+  'about': { '@id': `${siteUrl}/#store` },
+  'speakable': {
+    '@type': 'SpeakableSpecification',
+    'cssSelector': ['h1', '[data-speakable]']
+  }
+} : null;
 
 // BreadcrumbList Schema (if breadcrumbs prop provided)
 const breadcrumbSchema = breadcrumbs && breadcrumbs.length > 0 ? {
@@ -183,6 +213,10 @@ const customSchemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 <meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large"} />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="canonical" href={canonicalUrl} />
+{!noindex && <link rel="alternate" hreflang="en-in" href={canonicalUrl} />}
+{!noindex && <link rel="alternate" hreflang="x-default" href={canonicalUrl} />}
+<link rel="alternate" type="text/plain" href={`${siteUrl}/llms.txt`} title="Satvastones AI & LLM Knowledge Summary" />
+<link rel="alternate" type="application/rss+xml" href={`${siteUrl}/feeds/google-merchant.xml`} title="Satvastones Live Product Catalog Feed" />
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
@@ -198,6 +232,7 @@ const customSchemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={title} />
 <meta property="og:site_name" content="Satvastones" />
 <meta property="og:locale" content="en_IN" />
 
@@ -207,6 +242,7 @@ const customSchemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content={ogImage} />
+<meta property="twitter:image:alt" content={title} />
 
 <!-- Zero-Render-Blocking Google Fonts (Instrument Serif & Instrument Sans) -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -229,9 +265,12 @@ const customSchemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
   />
 </noscript>
 
-<!-- Core Structured Data: Organization & Website -->
+<!-- Core Structured Data: Organization, Website & Speakable WebPage -->
 <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
 <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+{webPageSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify(webPageSchema)} />
+)}
 
 <!-- Breadcrumbs Structured Data -->
 {breadcrumbSchema && (

@@ -321,6 +321,14 @@ const categoryFaqSchema = {
   }))
 };
 
+const collectionPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: pageTitle,
+  description: pageDescription,
+  url: `https://www.satvastones.in/collections/${category.slug}`
+};
+
 const heroImage = category.image.replace(/w=\d+/, 'w=900');
 const staticSignature = products.map((p) => `${p.id}:${p.pricePaise}`).join('|');
 const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug).slice(0, 4);
@@ -329,7 +337,7 @@ const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug
 <BaseLayout
   title={pageTitle}
   description={pageDescription}
-  schema={[itemListSchema, aggregateOfferSchema, categoryFaqSchema]}
+  schema={[collectionPageSchema, itemListSchema, aggregateOfferSchema, categoryFaqSchema]}
   breadcrumbs={breadcrumbs}
 >
   <div class="bg-[#fbf9f5] text-[#14110f]">
@@ -351,7 +359,7 @@ const siblingCollections = CATEGORIES.filter((cat) => cat.slug !== category.slug
           <h1 id="collection-title" class="font-display mt-3 text-[2.75rem] leading-[0.95] tracking-[-0.035em] sm:text-[4.25rem] lg:text-[5rem]">
             {category.name}
           </h1>
-          <p id="collection-desc" class="mt-5 max-w-xl text-[13px] leading-relaxed text-[#5f5851]">
+          <p id="collection-desc" data-speakable class="mt-5 max-w-xl text-[13px] leading-relaxed text-[#5f5851]">
             {category.description}
           </p>
           <p class="mt-5 flex flex-wrap gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.14em] text-[#8a8279]">

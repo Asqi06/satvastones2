@@ -1,13 +1,18 @@
 # Robots.txt for Satvastones Jewellery (https://www.satvastones.in)
+# SEO, Google Shopping, Answer Engine (AEO) & Generative AI Search (GEO) Policy
+
 User-agent: *
 Allow: /
+Allow: /shop
 Allow: /collections/
 Allow: /products/
+Allow: /journal
 Allow: /journal/
-Allow: /blog/
+Allow: /stack-builder
 Allow: /feeds/
+Allow: /google-merchant.xml
+Allow: /feed.xml
 Allow: /api/upload
-Allow: /legal/
 Allow: /about
 Allow: /contact
 Allow: /faqs
@@ -19,7 +24,7 @@ Allow: /anti-tarnish-jewellery-vapi
 Allow: /llms.txt
 Allow: /llms-full.txt
 
-# Crawl traps and dynamic private routes
+# Private, transactional & non-indexable crawl traps
 Disallow: /admin
 Disallow: /admin/
 Disallow: /api/
@@ -29,22 +34,29 @@ Disallow: /checkout
 Disallow: /checkout/
 Disallow: /account
 Disallow: /account/
+Disallow: /wishlist
+Disallow: /wishlist/
+Disallow: /track-order
+Disallow: /track-order/
 Disallow: /orders
 Disallow: /orders/
 Disallow: /search
 Disallow: /search/
+Disallow: /journal/_template
 Disallow: /*?*sort=
 Disallow: /*?*filter=
 
-# AI Search & LLM Bots (Explicitly Permitted for Generative Answers & Search Overviews)
-User-agent: GPTBot
+# Google Shopping & Merchant Center Crawlers
+User-agent: Storebot-Google
 Allow: /
-Allow: /llms.txt
-Allow: /llms-full.txt
 Disallow: /admin
-Disallow: /api/
 Disallow: /checkout
 
+User-agent: Googlebot-Image
+Allow: /
+Allow: /api/upload
+
+# Generative AI & Answer Engine Search Bots (GEO / AEO Explicitly Permitted)
 User-agent: OAI-SearchBot
 Allow: /
 Allow: /llms.txt
@@ -52,6 +64,25 @@ Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api/
 Disallow: /checkout
+Disallow: /account
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /account
+
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /account
 
 User-agent: Google-Extended
 Allow: /
@@ -60,6 +91,7 @@ Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api/
 Disallow: /checkout
+Disallow: /account
 
 User-agent: PerplexityBot
 Allow: /
@@ -68,6 +100,25 @@ Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api/
 Disallow: /checkout
+Disallow: /account
+
+User-agent: Perplexity-User
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /account
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /account
 
 User-agent: Claude-Web
 Allow: /
@@ -76,6 +127,16 @@ Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api/
 Disallow: /checkout
+Disallow: /account
+
+User-agent: anthropic-ai
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /account
 
 User-agent: Applebot-Extended
 Allow: /
@@ -84,6 +145,34 @@ Allow: /llms-full.txt
 Disallow: /admin
 Disallow: /api/
 Disallow: /checkout
+Disallow: /account
 
-# XML Sitemap Index
+User-agent: Amazonbot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /account
+
+User-agent: DuckAssistBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /account
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout
+Disallow: /account
+
+# XML Sitemap
 Sitemap: https://www.satvastones.in/sitemap.xml

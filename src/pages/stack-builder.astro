@@ -144,7 +144,7 @@ const steps = [
               <p class="mt-2 max-w-md text-[12px] leading-relaxed text-[#5f5851]">
                 Stack a second piece on the same wrist — or pair a kada with the set. Every extra piece still counts toward the 15%.
               </p>
-              <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div data-stack-bracelets-grid data-catalog-grid="bangles" data-catalog-limit="4" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                 {bracelets.map((item) => (
                   <ProductCard product={item} />
                 ))}
@@ -333,10 +333,12 @@ const steps = [
       const products = await ensureCatalog();
       if (!products.length) return;
       let changed = false;
-      document.querySelectorAll<HTMLElement>('[data-stack-group]').forEach((group) => {
+      document.querySelectorAll<HTMLElement>('[data-stack-group]').forEach((group, groupIdx) => {
         const category = STEP_CATEGORY[group.dataset.stackGroup || ''];
         if (!category) return;
-        const items = products.filter((p) => p.category === category && p.inStock !== false);
+        const exact = products.filter((p) => p.category === category && p.inStock !== false);
+        const livePool = products.filter((p) => p.inStock !== false);
+        const items = exact.length ? exact : livePool.slice(groupIdx, groupIdx + 3).length ? livePool.slice(groupIdx, groupIdx + 3) : livePool.slice(0, 3);
         if (!items.length) return;
         const currentValue =
           (group.querySelector('.stack-radio:checked') as HTMLInputElement | null)?.value || '';
