@@ -316,6 +316,7 @@ async function routeApi(request: Request, env: Env, ctx: any): Promise<Response 
     if (request.method === 'OPTIONS') return adminAuthHandler.onRequestOptions();
     if (request.method === 'GET') return adminAuthHandler.onRequestGet(context as any);
     if (request.method === 'POST') return adminAuthHandler.onRequestPost(context as any);
+    if (request.method === 'DELETE') return adminAuthHandler.onRequestDelete();
   }
 
   if (url.pathname === '/api/orders' || url.pathname.startsWith('/api/orders/')) {
@@ -401,6 +402,84 @@ function formatReadableDate(value?: string): string {
   }
 }
 
+const HTML_CSP =
+  "default-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://widget.cloudinary.com https://upload-widget.cloudinary.com https://*.cloudinary.com https://www.googletagmanager.com https://accounts.google.com; frame-src 'self' https://upload-widget.cloudinary.com https://widget.cloudinary.com https://*.cloudinary.com https://api.razorpay.com https://checkout.razorpay.com https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com https://*.cloudinary.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https: https://*.cloudinary.com https://res.cloudinary.com; media-src 'self' blob: https: https://*.cloudinary.com https://res.cloudinary.com; connect-src 'self' https://api.razorpay.com https://lumberjack.razorpay.com https://api.cloudinary.com https://upload-widget.cloudinary.com https://widget.cloudinary.com https://*.cloudinary.com https://res.cloudinary.com https://*.supabase.co https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://accounts.google.com; child-src 'self' blob: https://upload-widget.cloudinary.com https://widget.cloudinary.com https://*.cloudinary.com;";
+
+function optimizeSsrImage(url: string, width = 450): string {
+  if (!url) return url;
+  if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
+    const parts = url.split('/image/upload/');
+    if (parts.length === 2) {
+      const rest = parts[1].replace(/^(?:[^/]*,)?w_\d+[^/]*\//, '');
+      return `${parts[0]}/image/upload/f_auto,q_auto,w_${width},c_limit/${rest}`;
+    }
+  }
+  return url;
+}
+
+function replaceBalancedDiv(html: string, openTagRegex: RegExp, newInnerHtml: string, addAttr?: string): string {
+  const match = openTagRegex.exec(html);
+  if (!match) return html;
+  const openStart = match.index;
+  const openEnd = openStart + match[0].length;
+  let depth = 1;
+  const tagRegex = /<\/?div\b[^>]*>/gi;
+  tagRegex.lastIndex = openEnd;
+  let closeStart = -1;
+  let m: RegExpExecArray | null;
+  while ((m = tagRegex.exec(html)) !== null) {
+    if (m[0].startsWith('</')) {
+      depth -= 1;
+      if (depth === 0) {
+        closeStart = m.index;
+        break;
+      }
+    } else if (!m[0].endsWith('/>')) {
+      depth += 1;
+    }
+  }
+  if (closeStart === -1) return html;
+  const openTag = addAttr && !match[0].includes(addAttr) ? match[0].replace(/>$/, ` ${addAttr}>`) : match[0];
+  return html.slice(0, openStart) + openTag + newInnerHtml + html.slice(closeStart);
+}
+
+function renderSsrProductCard(p: FeedProduct, badgeText = ''): string {
+  const priceRupees = Math.round(p.pricePaise / 100);
+  const compareRupees = p.compareAtPricePaise ? Math.round(p.compareAtPricePaise / 100) : null;
+  const discountPercent =
+    p.compareAtPricePaise && p.compareAtPricePaise > p.pricePaise
+      ? Math.round(((p.compareAtPricePaise - p.pricePaise) / p.compareAtPricePaise) * 100)
+      : 0;
+  const badgeHtml = badgeText
+    ? `<span class="bg-[#14110f] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8]">${escapeHtml(badgeText)}</span>`
+    : '';
+  const discHtml =
+    discountPercent > 0
+      ? `<span class="bg-[#c5a059] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-white">−${discountPercent}%</span>`
+      : '';
+  const img450 = escapeHtml(optimizeSsrImage(p.imageUrl, 450));
+  const srcset = `${escapeHtml(optimizeSsrImage(p.imageUrl, 300))} 300w, ${img450} 450w, ${escapeHtml(optimizeSsrImage(p.imageUrl, 600))} 600w`;
+  return `
+    <div class="shop-item" data-price="${p.pricePaise}" data-name="${escapeHtml(p.name)}">
+      <div class="product-card group relative flex flex-col" data-product-card>
+        <a href="/products/${encodeURIComponent(p.slug)}" class="relative block aspect-[3/4] overflow-hidden bg-[#f1ece3]" aria-label="${escapeHtml(p.name)}">
+          ${badgeHtml || discHtml ? `<div class="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">${badgeHtml}${discHtml}</div>` : ''}
+          <img src="${img450}" srcset="${srcset}" sizes="(max-width: 640px) 48vw, (max-width: 1024px) 30vw, 320px" alt="${escapeHtml(p.name)}" width="400" height="533" loading="lazy" decoding="async" class="product-card-image h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        </a>
+        <div class="flex flex-1 flex-col gap-2 pt-3.5">
+          <h3 class="font-serif text-[15px] leading-snug text-[#14110f] sm:text-base">
+            <a href="/products/${encodeURIComponent(p.slug)}">${escapeHtml(p.name)}</a>
+          </h3>
+          <p class="line-clamp-1 text-[9px] uppercase tracking-[0.14em] text-[#8b837a]">${escapeHtml(p.material || '316L Surgical Stainless Steel + 18K Gold PVD')}</p>
+          <div class="mt-auto flex items-baseline gap-2">
+            <span class="text-sm font-medium text-[#14110f]">₹${priceRupees.toLocaleString('en-IN')}</span>
+            ${compareRupees && compareRupees > priceRupees ? `<span class="text-[11px] text-[#a39a91] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
 function withSecurityHeaders(response: Response): Response {
   const headers = new Headers(response.headers);
   if (!headers.has('Strict-Transport-Security')) {
@@ -417,6 +496,13 @@ function withSecurityHeaders(response: Response): Response {
   }
   if (!headers.has('Permissions-Policy')) {
     headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), interest-cohort=()');
+  }
+  if (!headers.has('Cross-Origin-Opener-Policy')) {
+    headers.set('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+  }
+  const contentType = headers.get('Content-Type') || '';
+  if (contentType.includes('text/html') && !headers.has('Content-Security-Policy')) {
+    headers.set('Content-Security-Policy', HTML_CSP);
   }
   return new Response(response.body, {
     status: response.status,
@@ -508,6 +594,7 @@ export default {
             if (url.pathname === '/api/products' || url.pathname.startsWith('/api/products/')) {
               const slugParam = url.searchParams.get('slug');
               const purgeTargets = [
+                '/',
                 '/api/products',
                 '/shop',
                 '/gifts-for-girlfriend-under-500',
@@ -1099,7 +1186,7 @@ export default {
       }
     }
 
-    // 5. Dynamic Live D1 Products & ItemList JSON-LD for /shop, /collections/*, /journal, and SEO landing pages
+    // 5. Dynamic Live D1 Products & ItemList JSON-LD for /, /shop, /collections/*, /journal, and SEO landing pages
     const normalizedPath = url.pathname.replace(/\/$/, '') || '/';
     const isLiveLandingPage =
       normalizedPath === '/gifts-for-girlfriend-under-500' ||
@@ -1108,7 +1195,8 @@ export default {
 
     if (
       env.DB &&
-      (normalizedPath === '/shop' ||
+      (normalizedPath === '/' ||
+        normalizedPath === '/shop' ||
         url.pathname.startsWith('/collections/') ||
         normalizedPath === '/journal' ||
         isLiveLandingPage)
@@ -1174,52 +1262,64 @@ export default {
                 .filter((p) => p.inStock && p.pricePaise <= 50000)
                 .sort((a, b) => a.pricePaise - b.pricePaise);
               matching = under500.length ? under500 : allProducts.slice(0, 8);
-            } else if (isLiveLandingPage) {
+            } else if (isLiveLandingPage || normalizedPath === '/') {
               matching = allProducts.filter((p) => p.inStock).slice(0, 8);
             }
 
-            if (isLiveLandingPage) {
-              const cardsHtml = matching.length
-                ? matching
-                    .map((p) => {
-                      const priceRupees = Math.round(p.pricePaise / 100);
-                      const compareRupees = p.compareAtPricePaise ? Math.round(p.compareAtPricePaise / 100) : null;
-                      const discountPercent =
-                        p.compareAtPricePaise && p.compareAtPricePaise > p.pricePaise
-                          ? Math.round(((p.compareAtPricePaise - p.pricePaise) / p.compareAtPricePaise) * 100)
-                          : 0;
-                      const badgeHtml =
-                        normalizedPath === '/gifts-for-girlfriend-under-500' && priceRupees <= 500
-                          ? `<span class="bg-[#14110f] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-[#f6f1e8]">Under ₹500</span>`
-                          : '';
-                      const discHtml =
-                        discountPercent > 0
-                          ? `<span class="bg-[#c5a059] px-2.5 py-1 text-[8px] font-medium uppercase tracking-[0.18em] text-white">−${discountPercent}%</span>`
-                          : '';
-                      return `
-                        <div class="product-card group relative flex flex-col">
-                          <a href="/products/${encodeURIComponent(p.slug)}" class="relative block aspect-[3/4] overflow-hidden bg-[#f1ece3]" aria-label="${escapeHtml(p.name)}">
-                            ${badgeHtml || discHtml ? `<div class="absolute left-3 top-3 z-10 flex flex-col items-start gap-1.5">${badgeHtml}${discHtml}</div>` : ''}
-                            <img src="${escapeHtml(p.imageUrl)}" alt="${escapeHtml(p.name)}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" decoding="async" />
-                          </a>
-                          <div class="flex flex-1 flex-col gap-2 pt-3.5">
-                            <h3 class="font-serif text-[15px] leading-snug text-[#14110f] sm:text-base">
-                              <a href="/products/${encodeURIComponent(p.slug)}">${escapeHtml(p.name)}</a>
-                            </h3>
-                            <div class="mt-auto flex items-baseline gap-2">
-                              <span class="text-sm font-medium text-[#14110f]">₹${priceRupees.toLocaleString('en-IN')}</span>
-                              ${compareRupees ? `<span class="text-[11px] text-[#a39a91] line-through">₹${compareRupees.toLocaleString('en-IN')}</span>` : ''}
-                            </div>
-                          </div>
-                        </div>`;
-                    })
+            const buildCards = (items: FeedProduct[]) =>
+              items.length
+                ? items
+                    .map((p) =>
+                      renderSsrProductCard(
+                        p,
+                        normalizedPath === '/gifts-for-girlfriend-under-500' && p.pricePaise <= 50000 ? 'Under ₹500' : ''
+                      )
+                    )
                     .join('')
-                : `<p class="col-span-full py-10 text-center text-sm text-[#5f5851]">Browse our latest pieces in the <a href="/shop" class="underline">live shop</a>.</p>`;
+                : `<p class="col-span-full py-10 text-center text-sm text-[#5f5851]">New handcrafted pieces are arriving shortly. Browse our <a href="/shop" class="underline">live shop</a>.</p>`;
 
+            if (normalizedPath === '/') {
+              html = replaceBalancedDiv(
+                html,
+                /<div[^>]*data-catalog-grid="bestsellers"[^>]*>/,
+                buildCards(matching),
+                'data-ssr-hydrated="true"'
+              );
+            } else if (normalizedPath === '/shop') {
+              html = replaceBalancedDiv(
+                html,
+                /<div[^>]*id="shop-products-grid"[^>]*>/,
+                buildCards(matching),
+                'data-ssr-hydrated="true"'
+              );
               html = html.replace(
-                /(<div[^>]*data-live-products="[^"]*"[^>]*>)[\s\S]*?(<\/div>)/,
-                (_m, open: string, close: string) =>
-                  `${open.replace(/>$/, ' data-ssr-hydrated="true">')}${cardsHtml}${close}`
+                /(<span[^>]*id="shop-all-count"[^>]*>)[\s\S]*?(<\/span>)/,
+                (_m, open: string, close: string) => `${open}${matching.length}${close}`
+              );
+            } else if (colSlug) {
+              html = replaceBalancedDiv(
+                html,
+                /<div[^>]*id="collection-products-grid"[^>]*>/,
+                buildCards(matching),
+                'data-ssr-hydrated="true"'
+              );
+              // Prevent empty category collections from triggering Soft 404 in Google Search Console
+              if (matching.length === 0) {
+                html = html.replace(
+                  /<meta name="robots" content="[^"]*">/,
+                  '<meta name="robots" content="noindex, follow">'
+                );
+                html = html.replace(
+                  /<meta name="googlebot" content="[^"]*">/,
+                  '<meta name="googlebot" content="noindex, follow">'
+                );
+              }
+            } else if (isLiveLandingPage) {
+              html = replaceBalancedDiv(
+                html,
+                /<div[^>]*data-live-products="[^"]*"[^>]*>/,
+                buildCards(matching),
+                'data-ssr-hydrated="true"'
               );
             }
 

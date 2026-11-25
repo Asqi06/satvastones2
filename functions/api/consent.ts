@@ -1,5 +1,6 @@
 // Cloudflare Pages Function: /api/consent
 // Compliant with DPDP Rules 2025 (Rule 3 & Rule 4 - Proof of Consent & 1-Year Retention)
+import { isRateLimited, readJsonBody } from '../../src/lib/http';
 
 interface Env {
   DB: any; // D1Database
@@ -27,15 +28,29 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     );
   }
 
-  try {
-    const data = await request.json() as any;
+  const clientIp =
+    request.headers.get('CF-Connecting-IP') ||
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    '127.0.0.1';
 
-    const consentId = data.consent_id || ('dpdp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8));
-    const timestampUtc = data.timestamp_utc || new Date().toISOString();
-    const categoriesAccepted = JSON.stringify(data.categories_accepted || ['necessary']);
-    const policyVersion = data.policy_version || '2026.1-DPDP';
-    const sessionHash = data.session_hash || ('anon-' + Math.random().toString(36).substring(2, 12));
-    const userAgent = request.headers.get('user-agent') || 'Unknown';
+  if (isRateLimited(`consent:${clientIp}`, 20, 60 * 1000)) {
+    return new Response(
+      JSON.stringify({ success: false, error: 'Too many consent log requests. Please try again shortly.' }),
+      { status: 429, headers: corsHeaders }
+    );
+  }
+
+  try {
+    const data = await readJsonBody<Record<string, any>>(request, 16 * 1024);
+
+    const consentId = String(data.consent_id || ('dpdp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8))).slice(0, 128);
+    const timestampUtc = String(data.timestamp_utc || new Date().toISOString()).slice(0, 64);
+    const categoriesAccepted = JSON.stringify(
+      Array.isArray(data.categories_accepted) ? data.categories_accepted.slice(0, 10) : ['necessary']
+    );
+    const policyVersion = String(data.policy_version || '2026.1-DPDP').slice(0, 64);
+    const sessionHash = String(data.session_hash || ('anon-' + Math.random().toString(36).substring(2, 12))).slice(0, 128);
+    const userAgent = (request.headers.get('user-agent') || 'Unknown').slice(0, 256);
     const id = 'cns-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6);
 
     await db.prepare(`
@@ -55,8 +70,9 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       { status: 201, headers: corsHeaders }
     );
   } catch (err: any) {
+    console.error('[api/consent POST]', err);
     return new Response(
-      JSON.stringify({ success: false, error: err.message || 'Failed to log consent' }),
+      JSON.stringify({ success: false, error: 'Failed to log consent.' }),
       { status: 500, headers: corsHeaders }
     );
   }

@@ -85,47 +85,46 @@ alter table public.damage_claims enable row level security;
 alter table public.products enable row level security;
 alter table public.coupons enable row level security;
 
--- Public customers can insert orders (checkout)
+-- Public customers can only insert orders/claims; all reads & admin writes restricted to service_role
 create policy "Public customer can insert orders"
   on public.orders for insert
+  to anon, authenticated
   with check (true);
 
--- Public customer can view their own order by order_number for order tracking & invoice
-create policy "Public customer can track orders"
-  on public.orders for select
-  using (true);
-
--- Public customer can submit 360 video claims
 create policy "Public customer can submit claims"
   on public.damage_claims for insert
+  to anon, authenticated
   with check (true);
 
--- Public can view catalog products and coupons
+-- Public can view active catalog products only
 create policy "Public read products"
   on public.products for select
-  using (true);
+  to anon, authenticated
+  using (in_stock = true);
 
-create policy "Public read coupons"
-  on public.coupons for select
-  using (true);
-
--- Enable full read/write for service role & authenticated admin
-create policy "Admin manage all orders"
+-- Restrict full read/write management strictly to service_role (never public anon)
+create policy "Service role manage all orders"
   on public.orders for all
-  using (true);
+  to service_role
+  using (true)
+  with check (true);
 
-create policy "Admin manage claims"
+create policy "Service role manage claims"
   on public.damage_claims for all
-  using (true);
+  to service_role
+  using (true)
+  with check (true);
 
-create policy "Admin manage products"
+create policy "Service role manage products"
   on public.products for all
-  using (true);
+  to service_role
+  using (true)
+  with check (true);
 
-create policy "Admin manage coupons"
+create policy "Service role manage coupons"
   on public.coupons for all
-  using (true);
+  to service_role
+  using (true)
+  with check (true);
 
--- 6. ENABLE REALTIME NOTIFICATIONS (Vapi Store live order alerts)
-alter publication supabase_realtime add table public.orders;
-alter publication supabase_realtime add table public.damage_claims;
+-- Realtime publications intentionally disabled on orders/claims to prevent PII broadcast.

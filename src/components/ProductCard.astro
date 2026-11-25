@@ -10,6 +10,13 @@ const { product } = Astro.props;
 
 function getOptimizedImageUrl(url: string, width = 450): string {
   if (!url) return url;
+  if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
+    const parts = url.split('/image/upload/');
+    if (parts.length === 2) {
+      const rest = parts[1].replace(/^(?:[^/]*,)?w_\d+[^/]*\//, '');
+      return `${parts[0]}/image/upload/f_auto,q_auto,w_${width},c_limit/${rest}`;
+    }
+  }
   if (url.includes('images.unsplash.com')) {
     let clean = url.replace(/w=\d+/, `w=${width}`).replace(/&q=\d+/, '&q=80');
     if (!clean.includes('fm=')) clean += '&fm=webp';

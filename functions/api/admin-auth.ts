@@ -11,7 +11,7 @@ import {
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
   'Content-Type': 'application/json'
 };
@@ -134,4 +134,18 @@ export async function onRequestPost(context: { request: Request; env: any }) {
       { status: 400, headers: corsHeaders }
     );
   }
+}
+
+// DELETE /api/admin/auth — Revoke admin session cookie & clear client storage
+export async function onRequestDelete() {
+  const responseHeaders = new Headers(corsHeaders);
+  responseHeaders.append(
+    'Set-Cookie',
+    'satva_admin_session=; HttpOnly; Secure; SameSite=Strict; Max-Age=0; Path=/'
+  );
+  responseHeaders.set('Clear-Site-Data', '"cookies", "storage"');
+  return new Response(
+    JSON.stringify({ success: true, message: 'Admin session terminated.' }),
+    { status: 200, headers: responseHeaders }
+  );
 }

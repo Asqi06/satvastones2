@@ -29,6 +29,13 @@ export function esc(value: unknown): string {
 
 function optimizedImage(url: string, width = 450): string {
   if (!url) return url;
+  if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
+    const parts = url.split('/image/upload/');
+    if (parts.length === 2) {
+      const rest = parts[1].replace(/^(?:[^/]*,)?w_\d+[^/]*\//, '');
+      return `${parts[0]}/image/upload/f_auto,q_auto,w_${width},c_limit/${rest}`;
+    }
+  }
   if (!url.includes('images.unsplash.com')) return url;
   let clean = url.replace(/w=\d+/, `w=${width}`).replace(/&q=\d+/, '&q=80');
   if (!clean.includes('fm=')) clean += '&fm=webp';
@@ -75,8 +82,8 @@ export function renderProductCard(product: Product): string {
         <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
       </svg>
     </button>
-    <img src="${esc(primary)}" alt="${esc(product.images?.[0]?.alt || product.name)}" width="400" height="533" loading="lazy" decoding="async" class="product-card-image absolute inset-0 h-full w-full object-cover transition-opacity duration-500 group-hover:opacity-0" />
-    <img src="${esc(secondary)}" alt="${esc(product.images?.[1]?.alt || product.name)}" width="400" height="533" loading="lazy" decoding="async" class="product-card-image absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+    <img src="${esc(primary)}" srcset="${esc(optimizedImage(rawPrimary, 300))} 300w, ${esc(optimizedImage(rawPrimary, 450))} 450w, ${esc(optimizedImage(rawPrimary, 600))} 600w" sizes="(max-width: 640px) 48vw, (max-width: 1024px) 30vw, 320px" alt="${esc(product.images?.[0]?.alt || product.name)}" width="400" height="533" loading="lazy" decoding="async" class="product-card-image absolute inset-0 h-full w-full object-cover transition-opacity duration-500 group-hover:opacity-0" />
+    <img src="${esc(secondary)}" srcset="${esc(optimizedImage(rawSecondary, 300))} 300w, ${esc(optimizedImage(rawSecondary, 450))} 450w, ${esc(optimizedImage(rawSecondary, 600))} 600w" sizes="(max-width: 640px) 48vw, (max-width: 1024px) 30vw, 320px" alt="${esc(product.images?.[1]?.alt || product.name)}" width="400" height="533" loading="lazy" decoding="async" class="product-card-image absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
   </a>
 
   <div class="flex flex-1 flex-col gap-2.5 pt-3.5">
@@ -87,11 +94,15 @@ export function renderProductCard(product: Product): string {
         </h3>
         <p class="mt-1 line-clamp-1 text-[9px] uppercase tracking-[0.14em] text-[#8b837a]">${esc(product.material)}</p>
       </div>
-      <div class="mt-0.5 flex shrink-0 items-center gap-1 text-[10px] text-[#8b837a]">
+      ${
+        Number(product.reviewCount) > 0 && Number(product.rating) > 0
+          ? `<div class="mt-0.5 flex shrink-0 items-center gap-1 text-[10px] text-[#8b837a]">
         <svg class="h-2.5 w-2.5 fill-[#c5a059]" viewBox="0 0 20 20" aria-hidden="true"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
         <span>${esc(product.rating)}</span>
         <span class="text-[#b3aaa1]">(${esc(product.reviewCount)})</span>
-      </div>
+      </div>`
+          : ''
+      }
     </div>
 
     <div class="mt-auto space-y-2.5">

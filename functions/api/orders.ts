@@ -319,14 +319,30 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     const codFeePaise = isCod ? 2500 : 0;
     const totalPaise = Math.max(0, subtotalPaise - discountPaise + shippingPaise + codFeePaise);
 
-    // Server-controlled payment verification (never blindly trust client paymentStatus = 'PAID')
+    // Server-controlled payment verification + replay protection
     let paymentStatus: 'PENDING_ON_DELIVERY' | 'PAID' | 'PENDING' = 'PENDING_ON_DELIVERY';
+    let verifiedPaymentRef: string | null = null;
     if (!isCod) {
       const rzpKeyId = String(env?.RAZORPAY_KEY_ID || env?.PUBLIC_RAZORPAY_KEY_ID || settings.razorpayKeyId || '').trim();
       const rzpSecret = String(env?.RAZORPAY_KEY_SECRET || settings.razorpayKeySecret || '').trim();
       const rzpOrderId = String(data.razorpayOrderId || '').trim();
       const rzpPaymentId = String(data.razorpayPaymentId || '').trim();
       const rzpSignature = String(data.razorpaySignature || '').trim();
+
+      if (rzpPaymentId && /^pay_[A-Za-z0-9]+$/.test(rzpPaymentId)) {
+        const paymentTag = `rzp:${rzpPaymentId}`;
+        const existingReplay = await db
+          .prepare('SELECT id FROM orders WHERE internal_notes = ? LIMIT 1')
+          .bind(paymentTag)
+          .first();
+        if (existingReplay) {
+          return new Response(
+            JSON.stringify({ success: false, error: 'This payment reference has already been used for an order.' }),
+            { status: 409, headers: corsHeaders }
+          );
+        }
+        verifiedPaymentRef = paymentTag;
+      }
 
       if (rzpSecret && rzpOrderId && rzpPaymentId && rzpSignature) {
         // Cryptographic HMAC-SHA256 verification
@@ -383,17 +399,17 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
     const courierPartner = 'BlueDart Express (Vapi Hub)';
     const trackingNumber = `VAP-${Math.floor(10000000 + Math.random() * 90000000)}`;
 
-    // Plain INSERT (never ON CONFLICT UPDATE) so existing orders cannot be tampered with
+    // Plain INSERT (never ON CONFLICT UPDATE) with payment replay tag in internal_notes
     await db.prepare(`
       INSERT INTO orders (
         id, order_number, customer_name, email, phone, address, city, state, pincode,
         items_json, subtotal_paise, shipping_paise, discount_paise, total_paise,
-        payment_method, payment_status, fulfillment_status, courier_partner, tracking_number
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        payment_method, payment_status, fulfillment_status, courier_partner, tracking_number, internal_notes
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       id, orderNumber, customerName, email, phone, address, city, state, pincode,
       itemsJson, subtotalPaise, shippingPaise, discountPaise, totalPaise,
-      paymentMethod, paymentStatus, fulfillmentStatus, courierPartner, trackingNumber
+      paymentMethod, paymentStatus, fulfillmentStatus, courierPartner, trackingNumber, verifiedPaymentRef
     ).run();
 
     // Decrement product_meta stockQuantity & flip in_stock to 0 when depleted

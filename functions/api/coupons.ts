@@ -82,7 +82,10 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       return new Response(JSON.stringify({ success: true, coupon }), { status: 200, headers: corsHeaders });
     }
 
-    const result = await db.prepare('SELECT * FROM coupons ORDER BY created_at DESC').all();
+    const isAdmin = await verifyAdminAuth(request, env);
+    const result = isAdmin
+      ? await db.prepare('SELECT * FROM coupons ORDER BY created_at DESC').all()
+      : await db.prepare('SELECT * FROM coupons WHERE is_active = 1 ORDER BY created_at DESC').all();
     const rows = result.results || [];
 
     // A fresh deployment with no coupon rows still advertises the launch offers.
@@ -105,8 +108,9 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 
     return new Response(JSON.stringify({ success: true, coupons }), { status: 200, headers: corsHeaders });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, coupons: [], error: err.message }), {
-      status: 200,
+    console.error('[api/coupons GET]', err);
+    return new Response(JSON.stringify({ success: false, coupons: [], error: 'Unable to load coupons.' }), {
+      status: 500,
       headers: corsHeaders
     });
   }
@@ -166,7 +170,8 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
+    console.error('[api/coupons POST]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Unable to save coupon.' }), { status: 500, headers: corsHeaders });
   }
 }
 
@@ -206,6 +211,7 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
+    console.error('[api/coupons POST]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Unable to save coupon.' }), { status: 500, headers: corsHeaders });
   }
 }

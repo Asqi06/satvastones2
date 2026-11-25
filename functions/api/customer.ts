@@ -367,8 +367,8 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
         { status: 200, headers: corsHeaders }
       );
     } catch (err: any) {
-      console.error('[api/customer/profile PUT]', err);
-      return new Response(JSON.stringify({ success: false, error: 'Unable to update profile.' }), { status: 500, headers: corsHeaders });
+      console.error('[api/customer/orders GET]', err);
+      return new Response(JSON.stringify({ success: false, error: 'Unable to load orders.' }), { status: 500, headers: corsHeaders });
     }
   }
 
@@ -376,9 +376,16 @@ export async function handleCustomerRequest(request: Request, env: any): Promise
   // 6. LOGOUT: POST /api/customer/logout
   // ----------------------------------------------------
   if (pathname === '/api/customer/logout') {
+    if (request.method !== 'POST') {
+      return new Response(
+        JSON.stringify({ success: false, error: 'Method Not Allowed. Use POST to sign out.' }),
+        { status: 405, headers: { ...corsHeaders, Allow: 'POST, OPTIONS' } }
+      );
+    }
     const cookieVal = `satva_customer_session=; HttpOnly; Secure; SameSite=Lax; Max-Age=0; Path=/`;
     const responseHeaders = new Headers(corsHeaders);
     responseHeaders.append('Set-Cookie', cookieVal);
+    responseHeaders.set('Clear-Site-Data', '"cookies", "storage"');
 
     return new Response(
       JSON.stringify({ success: true, message: 'Signed out successfully.' }),

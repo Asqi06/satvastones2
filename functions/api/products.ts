@@ -127,8 +127,7 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
         finish: r.finish || 'Mirror Polished',
         inStock: Boolean(r.in_stock),
         isBestseller: Boolean(r.is_bestseller),
-        rating: 4.9,
-        reviewCount: 12
+        reviewCount: 0
       };
       return { ...base, ...(metaMap.get(String(r.id)) || {}) };
     });
@@ -138,9 +137,10 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
+    console.error('[api/products GET]', err);
     return new Response(
-      JSON.stringify({ success: true, products: PRODUCTS, error: err.message, source: 'fallback_on_error' }),
-      { status: 200, headers: corsHeaders }
+      JSON.stringify({ success: false, products: [], error: 'Unable to load products.' }),
+      { status: 500, headers: corsHeaders }
     );
   }
 }
@@ -317,7 +317,8 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
+    console.error('[api/products mutation]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Unable to process product request.' }), { status: 500, headers: corsHeaders });
   }
 }
 
@@ -390,6 +391,7 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err.message }), { status: 500, headers: corsHeaders });
+    console.error('[api/products mutation]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Unable to process product request.' }), { status: 500, headers: corsHeaders });
   }
 }

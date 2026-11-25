@@ -84,11 +84,28 @@ function resolveAbsoluteImage(url?: string): string {
   return safeHttpUrl(url, DEFAULT_FALLBACK_IMAGE);
 }
 
+function inferProductColor(p: FeedProduct): string {
+  const haystack = `${p.name || ''} ${p.material || ''} ${p.finish || ''}`.toLowerCase();
+  if (haystack.includes('rose gold')) return 'Rose Gold';
+  if (haystack.includes('silver') || haystack.includes('rhodium') || haystack.includes('platinum')) return 'Silver';
+  if (haystack.includes('pearl') || haystack.includes('ivory') || haystack.includes('white')) return 'Pearl / Gold';
+  if (haystack.includes('black') || haystack.includes('onyx')) return 'Black / Gold';
+  if (haystack.includes('emerald') || haystack.includes('green')) return 'Green / Gold';
+  if (haystack.includes('ruby') || haystack.includes('red') || haystack.includes('pink')) return 'Pink / Gold';
+  return 'Gold';
+}
+
 /**
  * Generates a live XML Sitemap with Google Image extensions from D1 products & blogs.
  */
 export function generateSitemapXml(products: FeedProduct[], blogs: FeedBlog[]): string {
-  const today = new Date().toISOString().slice(0, 10);
+  const allDates = [
+    ...products.map((p) => p.updatedAt).filter(Boolean),
+    ...blogs.map((b) => b.updatedAt || b.publishedAt).filter(Boolean)
+  ]
+    .map((d) => toIsoDate(d))
+    .sort();
+  const latestCatalogMod = allDates.length ? allDates[allDates.length - 1] : new Date().toISOString().slice(0, 10);
 
   const staticPages: Array<{ path: string; changefreq: string; priority: string }> = [
     { path: '/', changefreq: 'daily', priority: '1.0' },
@@ -132,7 +149,7 @@ export function generateSitemapXml(products: FeedProduct[], blogs: FeedBlog[]): 
     entries.push(
       `  <url>\n` +
         `    <loc>${SITE_URL}${page.path}</loc>\n` +
-        `    <lastmod>${today}</lastmod>\n` +
+        `    <lastmod>${latestCatalogMod}</lastmod>\n` +
         `    <changefreq>${page.changefreq}</changefreq>\n` +
         `    <priority>${page.priority}</priority>\n` +
         `  </url>`
@@ -242,7 +259,7 @@ export function generateGoogleMerchantFeedXml(products: FeedProduct[]): string {
         `      <g:google_product_category>${escapeXml(mapGoogleProductCategory(p.category))}</g:google_product_category>`,
         `      <g:product_type>${escapeXml(`Jewellery > ${formatCategoryLabel(p.category)}`)}</g:product_type>`,
         `      <g:material>${escapeXml(p.material || '316L Surgical Stainless Steel, 18K Gold PVD')}</g:material>`,
-        `      <g:color>Gold</g:color>`,
+        `      <g:color>${escapeXml(inferProductColor(p))}</g:color>`,
         `      <g:gender>female</g:gender>`,
         `      <g:age_group>adult</g:age_group>`,
         ...(p.weightGrams && p.weightGrams > 0 ? [`      <g:shipping_weight>${p.weightGrams} g</g:shipping_weight>`] : []),

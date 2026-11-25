@@ -133,7 +133,8 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err?.message || 'Failed to load articles.' }), {
+    console.error('[api/blogs GET]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Failed to load articles.' }), {
       status: 500,
       headers: corsHeaders
     });
@@ -278,7 +279,8 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       { status: 200, headers: corsHeaders }
     );
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err?.message || 'Failed to save article.' }), {
+    console.error('[api/blogs POST]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Failed to save article.' }), {
       status: 500,
       headers: corsHeaders
     });
@@ -327,7 +329,8 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
       headers: corsHeaders
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ success: false, error: err?.message || 'Failed to delete article.' }), {
+    console.error('[api/blogs DELETE]', err);
+    return new Response(JSON.stringify({ success: false, error: 'Failed to delete article.' }), {
       status: 500,
       headers: corsHeaders
     });

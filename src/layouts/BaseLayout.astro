@@ -27,20 +27,45 @@ export interface Props {
 
 const props = Astro.props;
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/index';
+const isSensitiveRoute =
+  Astro.url.pathname.startsWith('/checkout') ||
+  Astro.url.pathname.startsWith('/admin');
+const heroPosterUrl =
+  'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1920&q=80&fm=webp';
 ---
 
 <!doctype html>
 <html lang="en-IN">
   <head>
     <SEOHead {...props} />
-    <!-- Google tag (gtag.js) — GA4 Analytics -->
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-WPQLV3GX0Y"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-WPQLV3GX0Y');
-    </script>
+    {isHome && (
+      <link rel="preload" as="image" href={heroPosterUrl} fetchpriority="high" />
+    )}
+    {!isSensitiveRoute && (
+      <>
+        <!-- Google Consent Mode v2 (DPDP Default Denied) + GA4 Analytics (excluded on /checkout & /admin per PCI/secure-checkout) -->
+        <script is:inline>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          var analyticsGranted = false;
+          var marketingGranted = false;
+          try {
+            var saved = JSON.parse(localStorage.getItem('satvastones_dpdp_consent') || 'null');
+            if (saved && saved.analytics) analyticsGranted = true;
+            if (saved && saved.marketing) marketingGranted = true;
+          } catch (e) {}
+          gtag('consent', 'default', {
+            analytics_storage: analyticsGranted ? 'granted' : 'denied',
+            ad_storage: marketingGranted ? 'granted' : 'denied',
+            ad_user_data: marketingGranted ? 'granted' : 'denied',
+            ad_personalization: marketingGranted ? 'granted' : 'denied'
+          });
+          gtag('js', new Date());
+          gtag('config', 'G-WPQLV3GX0Y');
+        </script>
+        <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-WPQLV3GX0Y"></script>
+      </>
+    )}
     <script is:inline>
       if ('IntersectionObserver' in window) {
         document.documentElement.classList.add('has-js');
