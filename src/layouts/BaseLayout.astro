@@ -33,6 +33,14 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/index';
 <html lang="en-IN">
   <head>
     <SEOHead {...props} />
+    <!-- Google tag (gtag.js) — GA4 Analytics -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-WPQLV3GX0Y"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-WPQLV3GX0Y');
+    </script>
     <script is:inline>
       if ('IntersectionObserver' in window) {
         document.documentElement.classList.add('has-js');
