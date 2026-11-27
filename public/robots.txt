@@ -18,7 +18,6 @@ Allow: /contact
 Allow: /faqs
 Allow: /materials
 Allow: /jewellery-care
-Allow: /gifts-for-girlfriend-under-500
 Allow: /affordable-anti-tarnish-jewellery-india
 Allow: /anti-tarnish-jewellery-vapi
 Allow: /llms.txt

@@ -13,6 +13,7 @@ import * as uploadHandler from '../functions/api/upload';
 import * as blogsHandler from '../functions/api/blogs';
 import { applyCorsPolicy, escapeHtml, isAllowedOrigin, safeHttpUrl } from './lib/http';
 import {
+  computeLatestContentDate,
   filterCollectionProducts,
   generateGoogleMerchantFeedXml,
   generateLlmsFullTxt,
@@ -22,6 +23,7 @@ import {
   type FeedBlog,
   type FeedProduct
 } from './lib/feeds';
+import { notifyIndexNow } from './lib/indexnow';
 import { estimateReadTimeMinutes, renderEditorialMarkdown } from './lib/markdown';
 
 export interface Env {
@@ -29,6 +31,7 @@ export interface Env {
   DB: any;
   R2_BUCKET?: any;
   ENVIRONMENT?: string;
+  INDEXNOW_KEY?: string;
   BRAND_NAME?: string;
   PROPRIETOR_NAME?: string;
   GSTIN?: string;
@@ -73,6 +76,63 @@ function buildEdgeCacheKey(requestUrl: string, preserveSearch = false): Request 
   return new Request(keyUrl, { method: 'GET' });
 }
 
+async function computeStrongEtag(body: ArrayBuffer): Promise<string> {
+  const hashBuffer = await crypto.subtle.digest('SHA-256', body);
+  const bytes = new Uint8Array(hashBuffer);
+  let hex = '';
+  for (let i = 0; i < 12; i++) {
+    hex += bytes[i].toString(16).padStart(2, '0');
+  }
+  return `"${hex}"`;
+}
+
+function toHttpDate(value?: string | Date | null): string | null {
+  if (!value) return null;
+  const d = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d.toUTCString();
+}
+
+function normalizeEtagValue(tag: string): string {
+  return tag.trim().replace(/^W\//i, '');
+}
+
+function isConditionalNotModified(
+  request: Request,
+  etag: string | null,
+  lastModified: string | null
+): boolean {
+  const ifNoneMatch = request.headers.get('If-None-Match');
+  if (ifNoneMatch) {
+    if (!etag) return false;
+    const normalizedTarget = normalizeEtagValue(etag);
+    return ifNoneMatch
+      .split(',')
+      .some((candidate) => candidate.trim() === '*' || normalizeEtagValue(candidate) === normalizedTarget);
+  }
+
+  const ifModifiedSince = request.headers.get('If-Modified-Since');
+  if (ifModifiedSince && lastModified) {
+    const imsMs = Date.parse(ifModifiedSince);
+    const lmMs = Date.parse(lastModified);
+    if (!Number.isNaN(imsMs) && !Number.isNaN(lmMs)) {
+      return Math.floor(lmMs / 1000) <= Math.floor(imsMs / 1000);
+    }
+  }
+
+  return false;
+}
+
+function buildNotModifiedResponse(sourceHeaders: Headers, cacheStatus: string): Response {
+  const headers = new Headers();
+  const preserved = ['ETag', 'Last-Modified', 'Cache-Control', 'Vary'];
+  for (const name of preserved) {
+    const val = sourceHeaders.get(name);
+    if (val) headers.set(name, val);
+  }
+  headers.set('X-Satva-Cache', cacheStatus);
+  return new Response(null, { status: 304, headers });
+}
+
 async function withEdgeCache(
   request: Request,
   ctx: any,
@@ -91,6 +151,15 @@ async function withEdgeCache(
     try {
       const cached = await cache.match(cacheKey);
       if (cached) {
+        if (
+          isConditionalNotModified(
+            request,
+            cached.headers.get('ETag'),
+            cached.headers.get('Last-Modified')
+          )
+        ) {
+          return buildNotModifiedResponse(cached.headers, 'HIT');
+        }
         const hitHeaders = new Headers(cached.headers);
         hitHeaders.set('X-Satva-Cache', 'HIT');
         return new Response(cached.body, {
@@ -109,20 +178,26 @@ async function withEdgeCache(
     return fresh;
   }
 
+  const bodyBuf = await fresh.arrayBuffer();
   const headers = new Headers(fresh.headers);
   headers.set('Cache-Control', cacheControl);
   headers.delete('Cloudflare-CDN-Cache-Control');
+  if (!headers.has('ETag')) {
+    try {
+      headers.set('ETag', await computeStrongEtag(bodyBuf));
+    } catch {
+      /* ignore hashing failure */
+    }
+  }
   headers.set('X-Satva-Cache', 'MISS');
-
-  const responseToServe = new Response(fresh.body, {
-    status: fresh.status,
-    statusText: fresh.statusText,
-    headers
-  });
 
   if (cache) {
     try {
-      const toStore = responseToServe.clone();
+      const toStore = new Response(bodyBuf, {
+        status: fresh.status,
+        statusText: fresh.statusText,
+        headers: new Headers(headers)
+      });
       const putPromise = cache.put(cacheKey, toStore).catch(() => {});
       if (ctx?.waitUntil) ctx.waitUntil(putPromise);
       else await putPromise;
@@ -131,7 +206,15 @@ async function withEdgeCache(
     }
   }
 
-  return responseToServe;
+  if (isConditionalNotModified(request, headers.get('ETag'), headers.get('Last-Modified'))) {
+    return buildNotModifiedResponse(headers, 'MISS');
+  }
+
+  return new Response(bodyBuf, {
+    status: fresh.status,
+    statusText: fresh.statusText,
+    headers
+  });
 }
 
 async function purgeEdgePaths(origin: string, paths: string[]): Promise<void> {
@@ -401,6 +484,27 @@ async function routeApi(request: Request, env: Env, ctx: any): Promise<Response 
   return null;
 }
 
+function clampMetaText(value: string, maxLen: number): string {
+  const clean = String(value || '').replace(/\s+/g, ' ').trim();
+  if (clean.length <= maxLen) return clean;
+  const sliced = clean.slice(0, maxLen - 1);
+  const lastSpace = sliced.lastIndexOf(' ');
+  const trimmed = lastSpace > Math.floor(maxLen * 0.6) ? sliced.slice(0, lastSpace) : sliced;
+  return `${trimmed.replace(/[,;:\-–—]+$/, '').trim()}…`;
+}
+
+function buildBrandedTitle(primary: string, suffix = ' | Satvastones', maxLen = 60): string {
+  const clean = String(primary || '').replace(/\s+/g, ' ').trim();
+  if (`${clean}${suffix}`.length <= maxLen) return `${clean}${suffix}`;
+  const budget = Math.max(18, maxLen - suffix.length);
+  const sliced = clean.slice(0, budget);
+  const lastSpace = sliced.lastIndexOf(' ');
+  const base = (lastSpace > Math.floor(budget * 0.55) ? sliced.slice(0, lastSpace) : sliced)
+    .replace(/[,;:\-–—]+$/, '')
+    .trim();
+  return `${base}${suffix}`;
+}
+
 function formatReadableDate(value?: string): string {
   try {
     const d = value ? new Date(value) : new Date();
@@ -419,7 +523,7 @@ function optimizeSsrImage(url: string, width = 450): string {
   if (url.includes('res.cloudinary.com') && url.includes('/image/upload/')) {
     const parts = url.split('/image/upload/');
     if (parts.length === 2) {
-      const rest = parts[1].replace(/^(?:[^/]*,)?w_\d+[^/]*\//, '');
+      const rest = parts[1].replace(/^(?:(?:[a-z]{1,3}_[^/]+)(?:\/|$))+/i, '');
       return `${parts[0]}/image/upload/f_auto,q_auto,w_${width},c_limit/${rest}`;
     }
   }
@@ -596,7 +700,7 @@ export default {
 
         const apiResponse = await routeApi(request, env, ctx);
         if (apiResponse) {
-          // Automatically purge edge cache whenever an admin mutates products or blogs
+          // Automatically purge edge cache & stream IndexNow pings whenever an admin mutates products or blogs
           if (
             apiResponse.status < 400 &&
             (request.method === 'POST' || request.method === 'PUT' || request.method === 'DELETE')
@@ -610,7 +714,6 @@ export default {
                 '/stack-builder',
                 '/llms.txt',
                 '/llms-full.txt',
-                '/gifts-for-girlfriend-under-500',
                 '/anti-tarnish-jewellery-vapi',
                 '/affordable-anti-tarnish-jewellery-india',
                 '/sitemap.xml',
@@ -632,16 +735,44 @@ export default {
                 '/collections/new-arrivals',
                 ...(slugParam ? [`/products/${slugParam}`] : [])
               ];
+              const indexNowTargets: string[] = ['/', '/shop'];
+              if (slugParam) indexNowTargets.push(`/products/${slugParam}`);
               try {
                 const cloned = apiResponse.clone();
                 const data: any = await cloned.json().catch(() => null);
-                if (data?.slug) purgeTargets.push(`/products/${data.slug}`);
-                if (data?.product?.slug) purgeTargets.push(`/products/${data.product.slug}`);
+                const slugsToTouch = [
+                  data?.slug,
+                  data?.product?.slug,
+                  data?.previousSlug,
+                  data?.deletedSlug,
+                  ...(Array.isArray(data?.deletedSlugs) ? data.deletedSlugs : [])
+                ].filter((s: unknown): s is string => typeof s === 'string' && s.trim().length > 0);
+                for (const s of slugsToTouch) {
+                  purgeTargets.push(`/products/${s}`);
+                  indexNowTargets.push(`/products/${s}`);
+                }
+                const categoriesToTouch = [
+                  data?.product?.category,
+                  data?.previousCategory,
+                  data?.deletedCategory
+                ].filter((c: unknown): c is string => typeof c === 'string' && ALLOWED_CATEGORIES.has(c));
+                for (const cat of categoriesToTouch) {
+                  indexNowTargets.push(`/collections/${cat}`);
+                  if (cat === 'rings') {
+                    indexNowTargets.push('/collections/anti-tarnish-minimal-rings', '/collections/rings-under-100');
+                  }
+                }
+                if (Number(data?.product?.pricePaise) > 0 && Number(data?.product?.pricePaise) <= 49900) {
+                  indexNowTargets.push('/collections/gifts-for-girlfriend-under-500');
+                }
               } catch {
                 /* ignore */
               }
-              const purgeJob = purgeEdgePaths(url.origin, purgeTargets);
-              if (ctx?.waitUntil) ctx.waitUntil(purgeJob);
+              const backgroundJob = Promise.all([
+                purgeEdgePaths(url.origin, purgeTargets),
+                notifyIndexNow(env, request.url, indexNowTargets)
+              ]);
+              if (ctx?.waitUntil) ctx.waitUntil(backgroundJob);
             } else if (url.pathname === '/api/blogs' || url.pathname.startsWith('/api/blogs/')) {
               const slugParam = url.searchParams.get('slug');
               const purgeTargets = [
@@ -652,15 +783,46 @@ export default {
                 '/llms-full.txt',
                 ...(slugParam ? [`/journal/${slugParam}`] : [])
               ];
+              const indexNowTargets: string[] = [];
               try {
                 const cloned = apiResponse.clone();
                 const data: any = await cloned.json().catch(() => null);
-                if (data?.blog?.slug) purgeTargets.push(`/journal/${data.blog.slug}`);
+                const currentSlug = typeof data?.blog?.slug === 'string' ? data.blog.slug.trim() : '';
+                const currentStatus = String(data?.blog?.status || '');
+                const prevSlug = typeof data?.previousSlug === 'string' ? data.previousSlug.trim() : '';
+                const prevStatus = String(data?.previousStatus || '');
+                const deletedSlug = typeof data?.deletedSlug === 'string' ? data.deletedSlug.trim() : '';
+                const deletedStatus = String(data?.deletedStatus || '');
+
+                if (currentSlug) purgeTargets.push(`/journal/${currentSlug}`);
+                if (prevSlug) purgeTargets.push(`/journal/${prevSlug}`);
+                if (deletedSlug) purgeTargets.push(`/journal/${deletedSlug}`);
+
+                if (request.method === 'DELETE') {
+                  const removedSlug = deletedSlug || slugParam || '';
+                  if (removedSlug && deletedStatus !== 'draft') {
+                    indexNowTargets.push(`/journal/${removedSlug}`, '/journal');
+                  }
+                } else {
+                  if (currentSlug && currentStatus === 'published') {
+                    indexNowTargets.push(`/journal/${currentSlug}`, '/journal');
+                  }
+                  if (prevStatus === 'published' && currentStatus === 'draft') {
+                    const unpublishedSlug = prevSlug || currentSlug;
+                    if (unpublishedSlug) indexNowTargets.push(`/journal/${unpublishedSlug}`, '/journal');
+                  }
+                  if (prevSlug && prevStatus === 'published') {
+                    indexNowTargets.push(`/journal/${prevSlug}`);
+                  }
+                }
               } catch {
                 /* ignore */
               }
-              const purgeJob = purgeEdgePaths(url.origin, purgeTargets);
-              if (ctx?.waitUntil) ctx.waitUntil(purgeJob);
+              const backgroundJob = Promise.all([
+                purgeEdgePaths(url.origin, purgeTargets),
+                notifyIndexNow(env, request.url, indexNowTargets)
+              ]);
+              if (ctx?.waitUntil) ctx.waitUntil(backgroundJob);
             }
           }
           return applyCorsPolicy(request, apiResponse);
@@ -684,12 +846,15 @@ export default {
           loadLivePublishedBlogs(env.DB)
         ]);
         const xml = generateSitemapXml(products, blogs);
+        const lastMod = toHttpDate(computeLatestContentDate(products, blogs));
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/xml; charset=utf-8',
+          'X-Content-Type-Options': 'nosniff'
+        };
+        if (lastMod) headers['Last-Modified'] = lastMod;
         return new Response(xml, {
           status: 200,
-          headers: {
-            'Content-Type': 'application/xml; charset=utf-8',
-            'X-Content-Type-Options': 'nosniff'
-          }
+          headers
         });
       });
     }
@@ -861,31 +1026,34 @@ export default {
               lowerNameDesc.includes('ring') ||
               lowerNameDesc.includes('cuff'));
 
-          const generatedTitle =
+          const priceText = `₹${priceRupees.toLocaleString('en-IN')}`;
+          const candidatePdpTitle =
             category === 'earrings'
               ? isHoopOrBali
-                ? `${name} — Gold-Plated Bali Hoop & Nickel-Free Earrings (₹${priceRupees.toLocaleString('en-IN')}) | Satvastones`
-                : `${name} — Nickel-Free & Hypoallergenic Earrings (₹${priceRupees.toLocaleString('en-IN')}) | Satvastones`
+                ? `${rawName} — Gold Bali Hoops (${priceText})`
+                : `${rawName} — Nickel-Free Earrings (${priceText})`
               : category === 'rings'
-                ? `${name} — 18K Gold Plated Anti-Tarnish Ring (₹${priceRupees.toLocaleString('en-IN')}) | Satvastones`
-                : `${name} – 18K Gold Plated & Anti-Tarnish (₹${priceRupees.toLocaleString('en-IN')}) | Satvastones`;
+                ? `${rawName} — 18K Gold Ring (${priceText})`
+                : `${rawName} — 18K Gold PVD (${priceText})`;
 
-          const title =
-            typeof meta.seoTitle === 'string' && meta.seoTitle.trim()
-              ? escapeHtml(meta.seoTitle.trim())
-              : generatedTitle;
+          const rawCustomTitle = typeof meta.seoTitle === 'string' ? meta.seoTitle.trim() : '';
+          const finalRawTitle = rawCustomTitle
+            ? clampMetaText(rawCustomTitle, 60)
+            : candidatePdpTitle.length + ' | Satvastones'.length <= 60
+              ? `${candidatePdpTitle} | Satvastones`
+              : buildBrandedTitle(`${rawName} (${priceText})`, ' | Satvastones', 60);
+          const title = escapeHtml(finalRawTitle);
 
-          const generatedDescription =
+          const generatedRawDescription =
             category === 'earrings'
-              ? `Buy ${name} at ₹${priceRupees.toLocaleString('en-IN')} INR. Nickel-Free &amp; Hypoallergenic (Safe for Sensitive Ears), waterproof 18K gold-plated${isHoopOrBali ? ' Bali hoop' : ''} earrings. Free shipping &gt; ₹499 &amp; COD.`
+              ? `Buy ${rawName} for ${priceText}. Nickel-free, hypoallergenic 18K gold-plated${isHoopOrBali ? ' Bali hoop' : ''} earrings. Free India shipping > ₹499 & COD.`
               : category === 'rings'
-                ? `Simple gold-look ring for women at a low price: ₹${priceRupees.toLocaleString('en-IN')} INR. 18K Gold Plated, Anti-Tarnish &amp; waterproof ring that never turns fingers green. COD available.`
-                : `Buy ${name} online in India for ₹${priceRupees.toLocaleString('en-IN')}. Waterproof 18K gold-plated anti-tarnish finish. Free PAN-India delivery &gt; ₹499 &amp; COD.`;
+                ? `Buy ${rawName} for ${priceText}. Waterproof 18K gold-plated anti-tarnish ring on 316L steel that never turns fingers green. Free delivery > ₹499 & COD.`
+                : `Buy ${rawName} online in India for ${priceText}. Waterproof 18K gold-plated anti-tarnish 316L steel. Free PAN-India delivery > ₹499 & COD.`;
 
-          const seoDescription =
-            typeof meta.seoDescription === 'string' && meta.seoDescription.trim()
-              ? escapeHtml(meta.seoDescription.trim())
-              : generatedDescription;
+          const rawCustomDesc = typeof meta.seoDescription === 'string' ? meta.seoDescription.trim() : '';
+          const finalRawDesc = clampMetaText(rawCustomDesc || generatedRawDescription, 155);
+          const seoDescription = escapeHtml(finalRawDesc);
 
           html = html.replace(/<title>.*?<\/title>/, () => `<title>${title}</title>`);
           html = html.replace(/<meta name="title" content=".*?">/, () => `<meta name="title" content="${title}">`);
@@ -1177,12 +1345,16 @@ export default {
             ];
           });
 
+          const pdpHeaders: Record<string, string> = {
+            'Content-Type': 'text/html; charset=utf-8',
+            'X-Content-Type-Options': 'nosniff'
+          };
+          const pdpLastMod = toHttpDate(row.updated_at || row.created_at);
+          if (pdpLastMod) pdpHeaders['Last-Modified'] = pdpLastMod;
+
           return new Response(html, {
             status: 200,
-            headers: {
-              'Content-Type': 'text/html; charset=utf-8',
-              'X-Content-Type-Options': 'nosniff'
-            }
+            headers: pdpHeaders
           });
         } catch {
           return render404Response(request, env);
@@ -1220,8 +1392,18 @@ export default {
 
           const rawTitle = String(row.title || 'Satvastones Journal');
           const rawExcerpt = String(row.excerpt || '').trim() || rawTitle;
-          const rawSeoTitle = String(row.seo_title || '').trim() || `${rawTitle} | Satvastones Journal`;
-          const rawSeoDesc = String(row.seo_description || '').trim() || rawExcerpt;
+          const customBlogTitle = String(row.seo_title || '').trim();
+          const rawSeoTitle = customBlogTitle
+            ? clampMetaText(customBlogTitle, 60)
+            : buildBrandedTitle(rawTitle, ' | Satvastones', 60);
+          const customBlogDesc = String(row.seo_description || '').trim();
+          const baseBlogDesc = customBlogDesc || rawExcerpt;
+          const rawSeoDesc = clampMetaText(
+            baseBlogDesc.length < 55
+              ? `${baseBlogDesc} — Read the full anti-tarnish 18K gold PVD jewellery guide from Satvastones India.`
+              : baseBlogDesc,
+            155
+          );
           const rawAuthor = String(row.author || 'Satvastones Editorial');
           const rawCategory = String(row.category || 'Styling Guide');
           const rawCover = row.cover_image ? safeHttpUrl(row.cover_image, FALLBACK_IMAGE) : FALLBACK_IMAGE;
@@ -1347,12 +1529,16 @@ export default {
             () => `<link rel="alternate" hreflang="x-default" href="${escapeHtml(canonical)}">`
           );
 
+          const blogHeaders: Record<string, string> = {
+            'Content-Type': 'text/html; charset=utf-8',
+            'X-Content-Type-Options': 'nosniff'
+          };
+          const blogLastMod = toHttpDate(modifiedIso);
+          if (blogLastMod) blogHeaders['Last-Modified'] = blogLastMod;
+
           return new Response(html, {
             status: 200,
-            headers: {
-              'Content-Type': 'text/html; charset=utf-8',
-              'X-Content-Type-Options': 'nosniff'
-            }
+            headers: blogHeaders
           });
         } catch {
           return render404Response(request, env);
@@ -1382,9 +1568,11 @@ export default {
         const assetRes = await fetchStaticAssetClean(request);
         if (assetRes.ok && (assetRes.headers.get('content-type') || '').includes('text/html')) {
           let html = await assetRes.text();
+          let listingLastMod: string | null = null;
 
           if (normalizedPath === '/journal') {
             const blogs = await loadLivePublishedBlogs(env.DB);
+            listingLastMod = toHttpDate(computeLatestContentDate([], blogs));
             if (blogs.length > 0) {
               const articlesHtml = blogs
                 .map((b) => {
@@ -1416,6 +1604,7 @@ export default {
             });
           } else if (normalizedPath === '/stack-builder') {
             const allProducts = await loadLivePublishedProducts(env.DB);
+            listingLastMod = toHttpDate(computeLatestContentDate(allProducts, []));
             const liveInStock = allProducts.filter((p) => p.inStock);
             const stepMap: Array<{ key: string; cat: string }> = [
               { key: 'necklace', cat: 'necklaces' },
@@ -1453,6 +1642,9 @@ export default {
               ? url.pathname.replace('/collections/', '').replace(/\/$/, '').trim()
               : '';
             let matching = colSlug ? filterCollectionProducts(allProducts, colSlug) : allProducts;
+            listingLastMod = toHttpDate(
+              computeLatestContentDate(matching.length ? matching : allProducts, [])
+            );
 
             if (colSlug && matching.length > 0) {
               const prices = matching.map((p) => Math.round(p.pricePaise / 100)).filter((n) => n > 0);
@@ -1551,12 +1743,15 @@ export default {
             });
           }
 
+          const listingHeaders: Record<string, string> = {
+            'Content-Type': 'text/html; charset=utf-8',
+            'X-Content-Type-Options': 'nosniff'
+          };
+          if (listingLastMod) listingHeaders['Last-Modified'] = listingLastMod;
+
           return new Response(html, {
             status: 200,
-            headers: {
-              'Content-Type': 'text/html; charset=utf-8',
-              'X-Content-Type-Options': 'nosniff'
-            }
+            headers: listingHeaders
           });
         }
         return assetRes;

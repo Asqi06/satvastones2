@@ -110,26 +110,47 @@ export function filterCollectionProducts(allProducts: FeedProduct[], colSlug: st
   return allProducts.filter((p) => p.category === colSlug);
 }
 
+export function computeLatestContentDate(products: FeedProduct[], blogs: FeedBlog[]): Date | null {
+  let latestMs = 0;
+  for (const p of products) {
+    if (!p.updatedAt) continue;
+    const ms = new Date(p.updatedAt).getTime();
+    if (!Number.isNaN(ms) && ms > latestMs) latestMs = ms;
+  }
+  for (const b of blogs) {
+    const raw = b.updatedAt || b.publishedAt;
+    if (!raw) continue;
+    const ms = new Date(raw).getTime();
+    if (!Number.isNaN(ms) && ms > latestMs) latestMs = ms;
+  }
+  return latestMs > 0 ? new Date(latestMs) : null;
+}
+
 /**
  * Generates a live XML Sitemap with Google Image extensions from D1 products & blogs.
  * Excludes noindex pages (/track-order, /wishlist, /account, /checkout, /admin) and empty collections.
  */
 export function generateSitemapXml(products: FeedProduct[], blogs: FeedBlog[]): string {
-  const allDates = [
-    ...products.map((p) => p.updatedAt).filter(Boolean),
-    ...blogs.map((b) => b.updatedAt || b.publishedAt).filter(Boolean)
-  ]
+  const productDates = products
+    .map((p) => p.updatedAt)
+    .filter(Boolean)
     .map((d) => toIsoDate(d))
     .sort();
-  const latestCatalogMod = allDates.length ? allDates[allDates.length - 1] : new Date().toISOString().slice(0, 10);
+  const blogDates = blogs
+    .map((b) => b.updatedAt || b.publishedAt)
+    .filter(Boolean)
+    .map((d) => toIsoDate(d))
+    .sort();
+  const latestProductMod = productDates.length ? productDates[productDates.length - 1] : null;
+  const latestBlogMod = blogDates.length ? blogDates[blogDates.length - 1] : null;
 
-  const staticPages: Array<{ path: string; changefreq: string; priority: string }> = [
-    { path: '/', changefreq: 'daily', priority: '1.0' },
-    { path: '/shop', changefreq: 'daily', priority: '0.9' },
-    { path: '/affordable-anti-tarnish-jewellery-india', changefreq: 'weekly', priority: '0.9' },
-    { path: '/anti-tarnish-jewellery-vapi', changefreq: 'weekly', priority: '0.9' },
-    { path: '/journal', changefreq: 'daily', priority: '0.9' },
-    { path: '/stack-builder', changefreq: 'weekly', priority: '0.85' },
+  const staticPages: Array<{ path: string; changefreq: string; priority: string; lastmod?: string | null }> = [
+    { path: '/', changefreq: 'daily', priority: '1.0', lastmod: latestProductMod },
+    { path: '/shop', changefreq: 'daily', priority: '0.9', lastmod: latestProductMod },
+    { path: '/affordable-anti-tarnish-jewellery-india', changefreq: 'weekly', priority: '0.9', lastmod: latestProductMod },
+    { path: '/anti-tarnish-jewellery-vapi', changefreq: 'weekly', priority: '0.9', lastmod: latestProductMod },
+    { path: '/journal', changefreq: 'daily', priority: '0.9', lastmod: latestBlogMod },
+    { path: '/stack-builder', changefreq: 'weekly', priority: '0.85', lastmod: latestProductMod },
     { path: '/about', changefreq: 'monthly', priority: '0.7' },
     { path: '/materials', changefreq: 'monthly', priority: '0.8' },
     { path: '/jewellery-care', changefreq: 'monthly', priority: '0.8' },
@@ -161,18 +182,30 @@ export function generateSitemapXml(products: FeedProduct[], blogs: FeedBlog[]): 
   ];
 
   for (const col of collectionSlugs) {
-    if (filterCollectionProducts(products, col.slug).length > 0) {
-      staticPages.push({ path: `/collections/${col.slug}`, changefreq: 'daily', priority: col.priority });
+    const colProducts = filterCollectionProducts(products, col.slug);
+    if (colProducts.length > 0) {
+      const colDates = colProducts
+        .map((p) => p.updatedAt)
+        .filter(Boolean)
+        .map((d) => toIsoDate(d))
+        .sort();
+      staticPages.push({
+        path: `/collections/${col.slug}`,
+        changefreq: 'daily',
+        priority: col.priority,
+        lastmod: colDates.length ? colDates[colDates.length - 1] : latestProductMod
+      });
     }
   }
 
   const entries: string[] = [];
 
   for (const page of staticPages) {
+    const lastmodTag = page.lastmod ? `    <lastmod>${page.lastmod}</lastmod>\n` : '';
     entries.push(
       `  <url>\n` +
         `    <loc>${SITE_URL}${page.path}</loc>\n` +
-        `    <lastmod>${latestCatalogMod}</lastmod>\n` +
+        lastmodTag +
         `    <changefreq>${page.changefreq}</changefreq>\n` +
         `    <priority>${page.priority}</priority>\n` +
         `  </url>`

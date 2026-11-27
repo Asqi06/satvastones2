@@ -140,11 +140,25 @@ if (product.reviewCount && product.reviewCount > 0) {
     worstRating: '1'
   };
 }
-const productMetaDescription = `Buy ${product.name} online in India for ₹${(product.pricePaise / 100).toLocaleString('en-IN')}. Waterproof 18K gold PVD steel. Free PAN-India delivery > ₹499 & 7-day returns.`;
+const formatSeoTitle = (name: string) => {
+  const full = `${name} — 18K Gold PVD | Satvastones`;
+  if (full.length <= 60) return full;
+  const compact = `${name} | Satvastones`;
+  if (compact.length <= 60) return compact;
+  return `${name.slice(0, 43).replace(/\s+\S*$/, '')} | Satvastones`;
+};
+const formatSeoDesc = (name: string, pricePaise: number) => {
+  const priceStr = (pricePaise / 100).toLocaleString('en-IN');
+  const full = `Buy ${name} for ₹${priceStr}. Waterproof 18K gold PVD on 316L steel. Free PAN-India delivery > ₹499, COD & 7-day returns.`;
+  if (full.length <= 155) return full;
+  return `Buy ${name} for ₹${priceStr}. Waterproof 18K gold PVD 316L steel. Free India delivery > ₹499 & COD.`.slice(0, 155);
+};
+const productMetaTitle = formatSeoTitle(product.name);
+const productMetaDescription = formatSeoDesc(product.name, product.pricePaise);
 ---
 
 <BaseLayout
-  title={`${product.name} – 18K Gold PVD | Buy Online at Satvastones India`}
+  title={productMetaTitle}
   description={productMetaDescription}
   schema={productSchema}
   breadcrumbs={productBreadcrumbs}

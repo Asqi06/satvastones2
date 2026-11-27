@@ -197,7 +197,10 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       );
     }
 
-    const existing = await db.prepare('SELECT published_at FROM blogs WHERE id = ? LIMIT 1').bind(id).first();
+    const existing = await db
+      .prepare('SELECT slug, status, published_at FROM blogs WHERE id = ? LIMIT 1')
+      .bind(id)
+      .first();
 
     const excerpt =
       String(b.excerpt || '').trim() ||
@@ -274,6 +277,9 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       JSON.stringify({
         success: true,
         message: status === 'published' ? 'Article published to Journal.' : 'Draft saved.',
+        previousSlug:
+          existing?.slug && String(existing.slug) !== slug ? String(existing.slug) : undefined,
+        previousStatus: existing?.status ? String(existing.status) : undefined,
         blog: saved ? mapBlogRow(saved) : { id, title, slug, status }
       }),
       { status: 200, headers: corsHeaders }
@@ -323,11 +329,24 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
       });
     }
 
+    const existingRow = await db
+      .prepare('SELECT id, slug, status FROM blogs WHERE id = ? OR slug = ? LIMIT 1')
+      .bind(id || '', slug || id || '')
+      .first();
+
     await db.prepare('DELETE FROM blogs WHERE id = ? OR slug = ?').bind(id || '', slug || id || '').run();
-    return new Response(JSON.stringify({ success: true, message: 'Article deleted from Journal.' }), {
-      status: 200,
-      headers: corsHeaders
-    });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        deletedSlug: existingRow?.slug ? String(existingRow.slug) : slug || undefined,
+        deletedStatus: existingRow?.status ? String(existingRow.status) : undefined,
+        message: 'Article deleted from Journal.'
+      }),
+      {
+        status: 200,
+        headers: corsHeaders
+      }
+    );
   } catch (err: any) {
     console.error('[api/blogs DELETE]', err);
     return new Response(JSON.stringify({ success: false, error: 'Failed to delete article.' }), {

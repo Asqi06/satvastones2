@@ -253,6 +253,11 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       );
     }
 
+    const existingProduct = await db
+      .prepare('SELECT slug, category FROM products WHERE id = ? LIMIT 1')
+      .bind(id)
+      .first();
+
     await db.prepare(`
       INSERT INTO products (
         id, name, slug, sku, category, headline, description,
@@ -305,6 +310,12 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       message: 'Product saved to catalogue.',
       id,
       slug,
+      previousSlug:
+        existingProduct?.slug && String(existingProduct.slug) !== slug ? String(existingProduct.slug) : undefined,
+      previousCategory:
+        existingProduct?.category && String(existingProduct.category) !== category
+          ? String(existingProduct.category)
+          : undefined,
       product: {
         id, name, slug, sku, category, headline, description,
         pricePaise, compareAtPricePaise,
@@ -349,6 +360,13 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
     if (/\/api\/products\/demo\/?$/.test(url.pathname)) {
       const demoIds = Array.from({ length: 10 }, (_, index) => `prod-${String(index + 1).padStart(3, '0')}`);
       const placeholders = demoIds.map(() => '?').join(',');
+      const existingDemo = await db
+        .prepare(`SELECT slug, category FROM products WHERE id IN (${placeholders})`)
+        .bind(...demoIds)
+        .all();
+      const deletedSlugs = (existingDemo?.results || [])
+        .map((r: any) => String(r.slug || '').trim())
+        .filter(Boolean);
       const result: any = await db
         .prepare(`DELETE FROM products WHERE id IN (${placeholders})`)
         .bind(...demoIds)
@@ -365,6 +383,7 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
         JSON.stringify({
           success: true,
           removed: Number(result?.meta?.changes) || 0,
+          deletedSlugs,
           message: 'Seeded demo products removed. Owner-created products are untouched.'
         }),
         { status: 200, headers: corsHeaders }
@@ -380,16 +399,29 @@ export async function onRequestDelete(context: { request: Request; env: Env }) {
       });
     }
 
+    const existingRow = await db
+      .prepare('SELECT id, slug, category FROM products WHERE id = ? OR slug = ? LIMIT 1')
+      .bind(id || '', slug || id || '')
+      .first();
+
     await db.prepare('DELETE FROM products WHERE id = ? OR slug = ?').bind(id || '', slug || id || '').run();
     try {
-      await db.prepare('DELETE FROM product_meta WHERE product_id = ?').bind(id || slug || '').run();
+      await db.prepare('DELETE FROM product_meta WHERE product_id = ?').bind(existingRow?.id || id || slug || '').run();
     } catch {
       /* side table may not exist yet */
     }
-    return new Response(JSON.stringify({ success: true, message: 'Product removed from catalogue.' }), {
-      status: 200,
-      headers: corsHeaders
-    });
+    return new Response(
+      JSON.stringify({
+        success: true,
+        deletedSlug: existingRow?.slug ? String(existingRow.slug) : slug || undefined,
+        deletedCategory: existingRow?.category ? String(existingRow.category) : undefined,
+        message: 'Product removed from catalogue.'
+      }),
+      {
+        status: 200,
+        headers: corsHeaders
+      }
+    );
   } catch (err: any) {
     console.error('[api/products mutation]', err);
     return new Response(JSON.stringify({ success: false, error: 'Unable to process product request.' }), { status: 500, headers: corsHeaders });

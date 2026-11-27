@@ -107,40 +107,40 @@ interface Props {
 
 const { category, products } = Astro.props;
 
-// Keyword-targeted high-CTR SEO titles & meta descriptions (aligned with live Search Console demand)
+// Keyword-targeted high-CTR SEO titles (<= 60 chars) & meta descriptions (<= 155 chars)
 const seoTitles: Record<string, string> = {
-  'rings-under-100': 'Rings Under ₹99 & Low-Price 18K Gold Plated Rings (From ₹149) | Satvastones',
-  'gifts-for-girlfriend-under-500': 'Best Jewellery Gifts for Girlfriend Under ₹500 | Anti-Tarnish & Waterproof',
-  'anti-tarnish-minimal-rings': 'Simple Gold Ring for Women Low Price — 18K Gold Plated Minimal Rings | Satvastones',
-  'mystery-jewellery-jar': 'Mystery Jewellery Jar Online India — Waterproof 18K Gold Pieces | Satvastones',
-  'bracelets': 'Waterproof & Anti-Tarnish Bracelets for Women (From ₹179) | Satvastones India',
-  'jewellery-set': 'Affordable Anti-Tarnish & Traditional Jewellery Sets Online India | Satvastones',
-  'necklaces': 'Waterproof Anti-Tarnish Necklaces, Oval & Clover Pendants India | Satvastones',
-  'rings': 'Gold Ring for Women Low Price — Simple 18K Gold Plated & Anti-Tarnish Rings (From ₹149) | Satvastones',
-  'earrings': 'Nickel-Free & Hypoallergenic Earrings & Gold-Plated Bali Hoops (From ₹149) | Satvastones',
-  'bangles': 'Anti-Tarnish & 18K Gold Plated Kada Bangles for Women (From ₹179) | Satvastones',
-  'gift-sets': 'Best Jewelry & Birthday Gifts for Girlfriend — Curated Anti-Tarnish Gift Sets | Satvastones',
-  'bestsellers': 'Best Affordable Anti-Tarnish & Waterproof Jewellery Under ₹500 (From ₹149) | Satvastones',
-  'new-arrivals': 'New Korean Aesthetic & Waterproof Anti-Tarnish Jewellery (From ₹149) | Satvastones'
+  'rings-under-100': 'Rings Under ₹100 & Affordable 18K Gold Rings | Satvastones',
+  'gifts-for-girlfriend-under-500': 'Jewellery Gifts for Girlfriend Under ₹500 | Satvastones',
+  'anti-tarnish-minimal-rings': 'Anti-Tarnish Minimal 18K Gold Plated Rings | Satvastones',
+  'mystery-jewellery-jar': 'Mystery Jewellery Jar Online India | Satvastones',
+  'bracelets': 'Waterproof Anti-Tarnish Bracelets for Women | Satvastones',
+  'jewellery-set': 'Anti-Tarnish & Traditional Jewellery Sets | Satvastones',
+  'necklaces': 'Waterproof Anti-Tarnish Necklaces & Pendants | Satvastones',
+  'rings': '18K Gold Plated Anti-Tarnish Rings for Women | Satvastones',
+  'earrings': 'Nickel-Free Hypoallergenic & Bali Earrings | Satvastones',
+  'bangles': 'Anti-Tarnish 18K Gold Plated Kada Bangles | Satvastones',
+  'gift-sets': 'Anti-Tarnish Jewellery Gift Sets for Women | Satvastones',
+  'bestsellers': 'Bestselling Anti-Tarnish Jewellery Under ₹500 | Satvastones',
+  'new-arrivals': 'New Korean & Waterproof Jewellery Drops | Satvastones'
 };
 
 const seoDescriptions: Record<string, string> = {
-  'rings-under-100': 'Looking for aesthetic rings under ₹100 or a low-price gold ring for women? Compare budget rings & shop waterproof 18K gold-plated anti-tarnish rings starting at ₹149. Free shipping > ₹499 & COD.',
-  'gifts-for-girlfriend-under-500': 'Looking for the best gift or birthday gift for your girlfriend under ₹500? Shop waterproof 18K gold-plated anti-tarnish jewellery & jewelry gifts starting at ₹149. Free shipping > ₹499 & COD.',
-  'anti-tarnish-minimal-rings': 'Looking for a simple gold ring for women at a low price? Shop 18K gold-plated anti-tarnish minimal rings in waterproof 316L steel starting at ₹149. Never turns fingers green · COD available.',
-  'mystery-jewellery-jar': 'Unbox the viral Satvastones Mystery Jewellery Jar in India. Surprise waterproof & anti-tarnish 18K gold plated rings, necklaces & earrings in a keepsake jar. Free shipping & COD available.',
-  'bracelets': 'Shop bracelets that don’t tarnish from ₹179. Waterproof 18K gold plated bracelets, daisy cuffs & link chains for women in India. Sweat-proof 316L steel, COD & free delivery above ₹499.',
-  'jewellery-set': 'Explore affordable anti-tarnish & traditional Indian jewellery sets for women. Waterproof 18K gold PVD necklaces, bracelets & earrings for sarees, weddings & daily wear.',
-  'necklaces': 'Shop waterproof, non-tarnish necklaces for women in India — oval pendants, viral clover chains, herringbone snakes & necklace gifts for girlfriend under ₹500. Free delivery above ₹499.',
-  'rings': 'Looking for a simple gold ring for women at a low price? Explore waterproof 18K gold-plated anti-tarnish rings starting at ₹149—the real-gold everyday look without bullion prices. COD available.',
-  'earrings': 'Shop Nickel-Free & Hypoallergenic (Safe for Sensitive Ears) earrings from ₹149 — 18K gold-plated Bali hoop earrings (sona bali price friendly), Korean crystal drops & waterproof daily studs.',
-  'bangles': 'Shop waterproof anti-tarnish kada bangles & daisy solitaire cuffs for women from ₹179. 18K gold PVD 316L steel bangles that never lose color in Indian humidity.',
-  'gift-sets': 'Shop curated anti-tarnish jewelry & jewellery gift sets for birthdays, anniversaries & festive gifting in India. Waterproof 18K gold PVD with express Vapi dispatch & COD.',
-  'bestsellers': 'Shop India’s most loved affordable anti-tarnish & waterproof jewellery for women starting at ₹149. Non-tarnish rings, bracelets, nickel-free earrings & gifts under ₹500.',
-  'new-arrivals': 'Explore new Korean aesthetic & waterproof anti-tarnish jewellery drops from ₹149. Hand-inspected and dispatched in 24–48 hours from Vapi, Gujarat across India.'
+  'rings-under-100': 'Compare rings under ₹100 with waterproof 18K gold-plated anti-tarnish rings from ₹149. 316L surgical steel that never turns fingers green. COD available.',
+  'gifts-for-girlfriend-under-500': 'Shop the best birthday & everyday jewellery gifts for girlfriend under ₹500 from ₹149. Waterproof 18K gold PVD rings, earrings & bracelets. Free COD.',
+  'anti-tarnish-minimal-rings': 'Shop simple low-price 18K gold-plated minimal rings in waterproof 316L steel from ₹149. Anti-tarnish daily rings that never turn fingers green. COD.',
+  'mystery-jewellery-jar': 'Unbox the Satvastones Mystery Jewellery Jar in India. Waterproof anti-tarnish 18K gold PVD rings, necklaces & earrings in a keepsake jar. COD available.',
+  'bracelets': 'Shop waterproof 18K gold plated bracelets & daisy cuffs for women from ₹179. Sweat-proof 316L surgical steel that never tarnishes. Free delivery > ₹499.',
+  'jewellery-set': 'Explore affordable anti-tarnish & traditional Indian jewellery sets for women. Waterproof 18K gold PVD necklaces, bracelets & earrings for festive wear.',
+  'necklaces': 'Shop waterproof non-tarnish necklaces for women in India — clover chains, oval pendants & herringbone chains from ₹179. Free pan-India delivery > ₹499.',
+  'rings': 'Shop simple gold-look anti-tarnish rings for women from ₹149. Waterproof 18K gold PVD on 316L steel that never turns fingers green. 7-day size exchange.',
+  'earrings': 'Shop nickel-free hypoallergenic earrings for sensitive ears from ₹149 — 18K gold-plated Bali hoops, Korean crystal drops & waterproof daily studs. COD.',
+  'bangles': 'Shop waterproof anti-tarnish kada bangles & daisy solitaire cuffs for women from ₹179. 18K gold PVD 316L steel bangles built for Indian humidity. COD.',
+  'gift-sets': 'Shop curated anti-tarnish jewellery gift sets for birthdays, anniversaries & festive gifting in India. Waterproof 18K gold PVD with Vapi dispatch & COD.',
+  'bestsellers': 'Shop India’s most loved waterproof anti-tarnish jewellery for women from ₹149. Non-tarnish rings, bracelets, nickel-free earrings & gifts under ₹500.',
+  'new-arrivals': 'Explore new Korean aesthetic & waterproof anti-tarnish jewellery drops from ₹149. Hand-inspected and dispatched in 24–48h from Vapi, Gujarat across India.'
 };
 
-const pageTitle = seoTitles[category.slug] || `Buy ${category.name} Online in India at Best Prices | Satvastones`;
+const pageTitle = seoTitles[category.slug] || `Buy ${category.name} Online India | Satvastones`;
 const pageDescription = seoDescriptions[category.slug] || category.description;
 
 const siteUrl = 'https://www.satvastones.in';
