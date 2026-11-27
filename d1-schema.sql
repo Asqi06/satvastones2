@@ -213,6 +213,69 @@ CREATE TABLE IF NOT EXISTS whatsapp_leads (
 CREATE INDEX IF NOT EXISTS idx_wa_leads_consent ON whatsapp_leads(promo_consent);
 CREATE INDEX IF NOT EXISTS idx_wa_leads_email ON whatsapp_leads(email);
 
+-- 12. CONVERSION FUNNEL EVENTS (Customer Intent & Interaction Analytics)
+CREATE TABLE IF NOT EXISTS funnel_events (
+    id TEXT PRIMARY KEY,
+    session_id TEXT NOT NULL,
+    customer_id TEXT,
+    email TEXT,
+    whatsapp_number TEXT,
+    event_type TEXT NOT NULL,
+    page_path TEXT,
+    product_id TEXT,
+    product_slug TEXT,
+    product_name TEXT,
+    value_paise INTEGER NOT NULL DEFAULT 0,
+    metadata_json TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'utc'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_funnel_type_time ON funnel_events(event_type, created_at);
+CREATE INDEX IF NOT EXISTS idx_funnel_product ON funnel_events(product_slug, event_type);
+CREATE INDEX IF NOT EXISTS idx_funnel_session ON funnel_events(session_id);
+
+-- 13. LIVE ABANDONED CARTS & CHECKOUT RECOVERY STATE
+CREATE TABLE IF NOT EXISTS abandoned_carts (
+    id TEXT PRIMARY KEY,
+    session_id TEXT UNIQUE NOT NULL,
+    customer_id TEXT,
+    full_name TEXT,
+    email TEXT,
+    whatsapp_number TEXT,
+    items_json TEXT NOT NULL DEFAULT '[]',
+    subtotal_paise INTEGER NOT NULL DEFAULT 0,
+    stage TEXT NOT NULL DEFAULT 'CART_ACTIVE',
+    checkout_fields_json TEXT,
+    exit_offer_shown INTEGER NOT NULL DEFAULT 0,
+    exit_offer_accepted INTEGER NOT NULL DEFAULT 0,
+    recovery_step INTEGER NOT NULL DEFAULT 0,
+    last_reminded_at TEXT,
+    urgent_alert_sent INTEGER NOT NULL DEFAULT 0,
+    recovered_order_id TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'utc')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now', 'utc'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_abandoned_stage ON abandoned_carts(stage, updated_at);
+
+-- 14. AUTONOMOUS AGENT OUTREACH & OWNER INFORMING LOGS
+CREATE TABLE IF NOT EXISTS agent_outreach_logs (
+    id TEXT PRIMARY KEY,
+    channel TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    trigger_type TEXT NOT NULL,
+    recipient_name TEXT,
+    recipient_contact TEXT NOT NULL,
+    coupon_code TEXT,
+    subject TEXT,
+    message_body TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'QUEUED',
+    error_message TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'utc'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_outreach_time ON agent_outreach_logs(created_at);
+
 -- ==============================================================================
 -- INITIAL SEED DATA
 -- ==============================================================================
@@ -222,7 +285,8 @@ INSERT OR IGNORE INTO coupons (id, code, discount_percent, flat_discount_paise, 
 ('coup-1', 'FIRSTBUY', NULL, 20000, 249900, 1, 'Flat ₹200 OFF on orders above ₹2,499'),
 ('coup-2', 'SATVA10', 10, NULL, 0, 1, '10% OFF on all fine anti-tarnish jewellery'),
 ('coup-3', 'FESTIVE15', 15, NULL, 299900, 1, '15% Privilege savings on festive orders above ₹2,999'),
-('coup-welcome-15-free', 'WELCOME15FREE', 15, NULL, 0, 1, '15% OFF + Free Express Delivery on your first purchase (WhatsApp Welcome Offer)');
+('coup-welcome-15-free', 'WELCOME15FREE', 15, NULL, 0, 1, '15% OFF + Free Express Delivery on your first purchase (WhatsApp Welcome Offer)'),
+('coup-stay-10', 'STAY10', 10, NULL, 0, 1, 'Instant 10% OFF Checkout Save Privilege');
 
 -- Seed Global Site Settings (Pricing, Announcement Bar, Dispatch Timings)
 INSERT OR IGNORE INTO site_settings (key, value_json) VALUES

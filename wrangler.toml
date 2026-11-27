@@ -31,6 +31,9 @@ run_worker_first = [
   "/feed.xml"
 ]
 
+[triggers]
+crons = ["*/10 * * * *"]
+
 [[d1_databases]]
 binding = "DB"
 database_name = "satvastones-db"

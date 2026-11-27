@@ -521,6 +521,55 @@ import DPDPNotice from '../components/DPDPNotice';
       </div>
     </div>
   </div>
+
+  <!-- Instant Checkout Abandonment Rescue Modal (10% OFF STAY10) -->
+  <div
+    id="checkout-exit-rescue-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="exit-rescue-heading"
+    class="fixed inset-0 z-[10000] hidden items-center justify-center bg-[#14110f]/75 p-4 backdrop-blur-xs"
+  >
+    <div class="relative w-full max-w-md border border-[#c5a059] bg-[#fbf9f5] p-6 text-[#14110f] shadow-2xl sm:p-7">
+      <button
+        type="button"
+        id="exit-rescue-close-btn"
+        aria-label="Close offer"
+        class="absolute right-3.5 top-3.5 flex h-8 w-8 cursor-pointer items-center justify-center border border-[#d8d0c4] text-[#6f675f] transition-colors hover:border-[#14110f] hover:text-[#14110f]"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <p class="text-[9px] font-medium uppercase tracking-[0.22em] text-[#8d3f3d]">
+        Before you step away
+      </p>
+      <h2 id="exit-rescue-heading" class="font-display mt-2 text-[2rem] leading-[1.04] text-[#14110f]">
+        Take an instant 10% off right now.
+      </h2>
+      <p id="exit-rescue-copy" class="mt-2.5 text-[12px] leading-relaxed text-[#5f5851]">
+        Your waterproof 18K gold PVD pieces are reserved in checkout. Apply code <strong class="font-mono font-semibold text-[#14110f]">STAY10</strong> now to save <strong id="exit-rescue-savings" class="font-medium text-[#2f7d5a]">10%</strong> instantly — 24–48h dispatch &amp; COD available.
+      </p>
+
+      <div class="mt-5 space-y-2.5">
+        <button
+          type="button"
+          id="exit-rescue-apply-btn"
+          class="flex h-11 w-full cursor-pointer items-center justify-center gap-2 bg-[#14110f] px-5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+        >
+          Apply STAY10 (10% OFF) &amp; Complete Order →
+        </button>
+        <button
+          type="button"
+          id="exit-rescue-dismiss-btn"
+          class="block w-full cursor-pointer py-2 text-center text-[10px] uppercase tracking-[0.14em] text-[#8a8279] underline decoration-[#d8d0c4] underline-offset-4 hover:text-[#14110f]"
+        >
+          No thanks, leave checkout
+        </button>
+      </div>
+    </div>
+  </div>
 </BaseLayout>
 
 <style>
@@ -567,6 +616,7 @@ import DPDPNotice from '../components/DPDPNotice';
   import { addAdminOrder, getSiteSettings, syncSiteSettingsFromCloudflare, type AdminOrder } from '../stores/adminStore';
   import { syncOrderToCloudflare } from '../lib/cloudflare';
   import { syncOrderToSupabase } from '../lib/supabase';
+  import { trackFunnelEvent } from '../lib/funnel-tracker';
 
   declare global {
     interface Window {
@@ -697,8 +747,8 @@ import DPDPNotice from '../components/DPDPNotice';
       }
     } catch (_) {}
 
-    const shippingPaise = couponFreeShipping || subtotalPaise >= 49900 ? 0 : 4900;
-    const baseTotalPaise = Math.max(0, subtotalPaise - discountPaise + shippingPaise);
+    let shippingPaise = couponFreeShipping || subtotalPaise >= 49900 ? 0 : 4900;
+    let baseTotalPaise = Math.max(0, subtotalPaise - discountPaise + shippingPaise);
 
     if (cartList) {
       cartList.innerHTML = items
@@ -751,6 +801,189 @@ import DPDPNotice from '../components/DPDPNotice';
 
     methodRadios.forEach((radio) => {
       radio.addEventListener('change', updatePaymentUI);
+    });
+
+    // =========================================================================
+    // CHECKOUT INTENT TRACKER & INSTANT ABANDONMENT RESCUE PROMPT
+    // =========================================================================
+    let orderCompleted = false;
+    let exitModalShown = false;
+    let hasTypedCheckoutInfo = false;
+    let checkoutSyncTimer: number | null = null;
+    let idleRescueTimer: number | null = null;
+
+    const readCheckoutContact = () => {
+      const n = (document.getElementById('checkout-name') as HTMLInputElement)?.value.trim() || '';
+      const em = (document.getElementById('checkout-email') as HTMLInputElement)?.value.trim() || '';
+      const ph = (document.getElementById('checkout-phone') as HTMLInputElement)?.value.trim() || '';
+      const a1 = (document.getElementById('checkout-addr1') as HTMLInputElement)?.value.trim() || '';
+      return {
+        fullName: n,
+        email: em,
+        phone: ph,
+        checkoutFields: {
+          hasName: n.length >= 2,
+          hasEmail: em.includes('@'),
+          hasPhone: ph.replace(/[^0-9]/g, '').length >= 10,
+          hasAddress: a1.length >= 4
+        }
+      };
+    };
+
+    const emitCheckoutEvent = (
+      eventType:
+        | 'checkout_started'
+        | 'checkout_field_filled'
+        | 'exit_offer_shown'
+        | 'exit_offer_accepted'
+        | 'checkout_abandoned',
+      useBeacon = false
+    ) => {
+      const contact = readCheckoutContact();
+      trackFunnelEvent(
+        {
+          eventType,
+          pagePath: '/checkout',
+          subtotalPaise,
+          valuePaise: baseTotalPaise,
+          fullName: contact.fullName,
+          email: contact.email,
+          phone: contact.phone,
+          checkoutFields: contact.checkoutFields,
+          items
+        },
+        useBeacon
+      );
+    };
+
+    // Log checkout start immediately
+    emitCheckoutEvent('checkout_started');
+
+    const exitModal = document.getElementById('checkout-exit-rescue-modal');
+    const exitApplyBtn = document.getElementById('exit-rescue-apply-btn') as HTMLButtonElement | null;
+    const exitCloseBtn = document.getElementById('exit-rescue-close-btn');
+    const exitDismissBtn = document.getElementById('exit-rescue-dismiss-btn');
+    const exitHeading = document.getElementById('exit-rescue-heading');
+    const exitCopy = document.getElementById('exit-rescue-copy');
+    const exitSavingsEl = document.getElementById('exit-rescue-savings');
+
+    const openExitRescueModal = () => {
+      if (orderCompleted || exitModalShown || !exitModal) return;
+      exitModalShown = true;
+
+      const tenPercentPaise = Math.round(subtotalPaise * 0.1);
+      const alreadyHasBetterOffer = discountPaise >= tenPercentPaise && appliedCouponCode;
+
+      if (alreadyHasBetterOffer) {
+        if (exitHeading) exitHeading.textContent = `Your ${appliedCouponCode} savings are still active.`;
+        if (exitCopy) {
+          exitCopy.innerHTML = `You already unlocked <strong class="font-medium text-[#2f7d5a]">${formatINR(discountPaise)} OFF${couponFreeShipping ? ' + Free Express Delivery' : ''}</strong> on this order. Complete your order in 30 seconds before leaving.`;
+        }
+        if (exitApplyBtn) exitApplyBtn.textContent = 'Stay & Complete My Order →';
+      } else {
+        if (exitSavingsEl) exitSavingsEl.textContent = `${formatINR(tenPercentPaise)} (10% OFF)`;
+      }
+
+      exitModal.classList.remove('hidden');
+      exitModal.classList.add('flex');
+      emitCheckoutEvent('exit_offer_shown');
+    };
+
+    const closeExitRescueModal = (abandoned = false) => {
+      if (!exitModal) return;
+      exitModal.classList.add('hidden');
+      exitModal.classList.remove('flex');
+      if (abandoned && !orderCompleted) {
+        emitCheckoutEvent('checkout_abandoned', true);
+      }
+    };
+
+    exitApplyBtn?.addEventListener('click', () => {
+      const tenPercentPaise = Math.round(subtotalPaise * 0.1);
+      if (discountPaise < tenPercentPaise) {
+        appliedCouponCode = 'STAY10';
+        discountPaise = tenPercentPaise;
+        baseTotalPaise = Math.max(0, subtotalPaise - discountPaise + shippingPaise);
+        try {
+          localStorage.setItem(
+            'satvastones_applied_coupon',
+            JSON.stringify({
+              code: 'STAY10',
+              discountPaise,
+              discountPercent: 10,
+              freeShipping: couponFreeShipping,
+              description: 'Instant 10% OFF Checkout Save Privilege'
+            })
+          );
+        } catch {}
+
+        const discountRow = document.getElementById('checkout-discount-row');
+        const couponCodeEl = document.getElementById('checkout-coupon-code');
+        const discountEl = document.getElementById('checkout-discount');
+        if (discountRow) discountRow.classList.remove('hidden');
+        if (couponCodeEl) couponCodeEl.textContent = 'STAY10 · Instant Save';
+        if (discountEl) discountEl.textContent = `−${formatINR(discountPaise)}`;
+        updatePaymentUI();
+      }
+      emitCheckoutEvent('exit_offer_accepted');
+      closeExitRescueModal(false);
+    });
+
+    exitCloseBtn?.addEventListener('click', () => closeExitRescueModal(true));
+    exitDismissBtn?.addEventListener('click', () => closeExitRescueModal(true));
+
+    // Track field filling (debounced) + start 45s idle rescue countdown once shopper starts entering info
+    const watchedFields = ['checkout-name', 'checkout-email', 'checkout-phone', 'checkout-addr1', 'checkout-pin'];
+    const scheduleCheckoutSync = () => {
+      hasTypedCheckoutInfo = true;
+      if (checkoutSyncTimer) window.clearTimeout(checkoutSyncTimer);
+      checkoutSyncTimer = window.setTimeout(() => {
+        if (!orderCompleted) emitCheckoutEvent('checkout_field_filled');
+      }, 1500);
+
+      if (idleRescueTimer) window.clearTimeout(idleRescueTimer);
+      idleRescueTimer = window.setTimeout(() => {
+        if (!orderCompleted && !exitModalShown && hasTypedCheckoutInfo) {
+          openExitRescueModal();
+        }
+      }, 45000);
+    };
+    watchedFields.forEach((fid) => {
+      const el = document.getElementById(fid);
+      el?.addEventListener('input', scheduleCheckoutSync);
+      el?.addEventListener('blur', scheduleCheckoutSync);
+    });
+
+    // Desktop exit-intent: mouse leaves top edge of viewport
+    document.addEventListener('mouseleave', (e) => {
+      if (e.clientY <= 4 && !orderCompleted && !exitModalShown) {
+        openExitRescueModal();
+      }
+    });
+
+    // Gentle 1-time intercept if shopper tries clicking away from checkout after starting to fill details
+    document.addEventListener('click', (e) => {
+      if (orderCompleted || exitModalShown || !hasTypedCheckoutInfo) return;
+      const link = (e.target as HTMLElement)?.closest('a[href]') as HTMLAnchorElement | null;
+      if (!link) return;
+      const href = link.getAttribute('href') || '';
+      if (href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.target === '_blank') return;
+      if (!href.includes('/checkout')) {
+        e.preventDefault();
+        openExitRescueModal();
+      }
+    });
+
+    // Mobile / tab switch or leaving checkout completely -> beacon abandonment for 10–15 min agent recovery
+    window.addEventListener('pagehide', () => {
+      if (!orderCompleted) {
+        emitCheckoutEvent('checkout_abandoned', true);
+      }
+    });
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden' && !orderCompleted && hasTypedCheckoutInfo) {
+        emitCheckoutEvent('checkout_abandoned', true);
+      }
     });
 
     // Auto-prefill details if a personal customer account is logged in
@@ -831,8 +1064,20 @@ import DPDPNotice from '../components/DPDPNotice';
         trackingNumber
       };
 
+      orderCompleted = true;
       currentCreatedOrder = newOrder;
       addAdminOrder(newOrder);
+      trackFunnelEvent({
+        eventType: 'order_completed',
+        pagePath: '/checkout',
+        orderNumber,
+        subtotalPaise,
+        valuePaise: opts.totalAmountPaise,
+        fullName: newOrder.customerName,
+        email: newOrder.email,
+        phone: newOrder.phone,
+        items
+      });
 
       // Synchronize to Cloudflare D1 edge database (and Supabase if configured)
       syncOrderToCloudflare(newOrder).catch((e) => console.warn('Cloudflare D1 edge sync notice:', e));

@@ -12,6 +12,9 @@ import * as reviewsHandler from '../functions/api/reviews';
 import * as uploadHandler from '../functions/api/upload';
 import * as blogsHandler from '../functions/api/blogs';
 import * as whatsappLeadsHandler from '../functions/api/whatsapp-leads';
+import * as funnelEventsHandler from '../functions/api/funnel-events';
+import * as growthAgentHandler from '../functions/api/growth-agent';
+import { runAutonomousGrowthCycle } from './lib/growth-agent';
 import { applyCorsPolicy, escapeHtml, isAllowedOrigin, safeHttpUrl } from './lib/http';
 import {
   computeLatestContentDate,
@@ -490,6 +493,18 @@ async function routeApi(request: Request, env: Env, ctx: any): Promise<Response 
     if (request.method === 'DELETE') return whatsappLeadsHandler.onRequestDelete(context as any);
   }
 
+  if (url.pathname === '/api/funnel-events') {
+    if (request.method === 'OPTIONS') return funnelEventsHandler.onRequestOptions();
+    if (request.method === 'POST') return funnelEventsHandler.onRequestPost(context as any);
+  }
+
+  if (url.pathname === '/api/growth-agent') {
+    if (request.method === 'OPTIONS') return growthAgentHandler.onRequestOptions();
+    if (request.method === 'GET') return growthAgentHandler.onRequestGet(context as any);
+    if (request.method === 'POST') return growthAgentHandler.onRequestPost(context as any);
+    if (request.method === 'PUT') return growthAgentHandler.onRequestPut(context as any);
+  }
+
   return null;
 }
 
@@ -637,6 +652,15 @@ export default {
   async fetch(request: Request, env: Env, ctx: any): Promise<Response> {
     const res = await this.handleRequest(request, env, ctx);
     return withSecurityHeaders(res);
+  },
+
+  async scheduled(_event: any, env: Env, ctx: any): Promise<void> {
+    if (!env.DB) return;
+    const job = runAutonomousGrowthCycle(env.DB, env).catch((err) => {
+      console.error('[cron growth-agent]', err);
+    });
+    if (ctx?.waitUntil) ctx.waitUntil(job);
+    else await job;
   },
 
   async handleRequest(request: Request, env: Env, ctx: any): Promise<Response> {

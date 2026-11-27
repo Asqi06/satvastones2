@@ -195,6 +195,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               <span>Orders & Fulfillment (<span id="tab-orders-count">0</span>)</span>
             </button>
 
+            <button id="tab-btn-growth" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+              </svg>
+              <span>Analytics &amp; AI Manager (<span id="tab-growth-abandoned-count">0</span>)</span>
+            </button>
+
             <button id="tab-btn-products" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
@@ -1152,6 +1159,277 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             </div>
           </div>
 
+          <!-- ========================================== -->
+          <!-- PANEL 9: ANALYTICS & AUTONOMOUS AI MANAGER -->
+          <!-- ========================================== -->
+          <div id="panel-growth" class="hidden space-y-6 p-5 sm:p-6">
+            <!-- Header & Controls -->
+            <div class="flex flex-col justify-between gap-3 border-b border-[#e5ded3] pb-4 lg:flex-row lg:items-end">
+              <div>
+                <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">Autonomous Conversion &amp; Informing Agent · Cron Every 10 Mins</p>
+                <h2 class="font-display mt-1 text-xl leading-none text-[#14110f]">Funnel Analytics, Customer Intent &amp; Store Manager</h2>
+                <p class="mt-1.5 text-[11px] text-[#6f675f]">
+                  Tracks live shopper interactions, triggers instant checkout exit rescue (<code>STAY10</code>), recovers abandoned carts via WAHA / Webhook / Email in 10–15 mins, and sends you urgent alerts &amp; nightly reports.
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <select
+                  id="growth-days-select"
+                  class="border border-[#e5ded3] bg-white px-3 py-2 text-[11px] text-[#14110f] focus:border-[#14110f] focus:outline-none"
+                >
+                  <option value="1">Last 24 Hours</option>
+                  <option value="7" selected>Last 7 Days</option>
+                  <option value="30">Last 30 Days</option>
+                </select>
+                <button
+                  id="growth-run-cycle-btn"
+                  type="button"
+                  class="cursor-pointer bg-[#14110f] px-3.5 py-2 text-[10px] font-medium uppercase tracking-[0.12em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]"
+                >
+                  Run Agent Cycle Now ▶
+                </button>
+                <button
+                  id="growth-send-report-btn"
+                  type="button"
+                  class="cursor-pointer border border-[#14110f] bg-white px-3.5 py-2 text-[10px] font-medium uppercase tracking-[0.12em] text-[#14110f] transition-colors hover:bg-[#14110f] hover:text-[#f6f1e8]"
+                >
+                  Send Nightly Report Now ✉
+                </button>
+              </div>
+            </div>
+
+            <div id="growth-action-feedback" class="hidden border-l-2 border-[#2f7d5a] bg-[#f0f7f2] px-4 py-3 text-[11.5px] text-[#2f7d5a]"></div>
+
+            <!-- Manager Actionable Insights -->
+            <div class="border border-[#d8c3a6] bg-[#f4efe7] p-4">
+              <p class="text-[9px] font-semibold uppercase tracking-[0.18em] text-[#8d3f3d]">AI Store Manager Brief</p>
+              <ul id="growth-insights-list" class="mt-2 list-disc space-y-1 pl-5 text-[12px] text-[#3b3631]">
+                <li>Loading live funnel intelligence...</li>
+              </ul>
+            </div>
+
+            <!-- Conversion Funnel Bar Visualizer -->
+            <div class="grid gap-5 lg:grid-cols-12">
+              <div class="border border-[#e5ded3] bg-white p-5 lg:col-span-8">
+                <div class="flex items-center justify-between border-b border-[#eee8df] pb-3">
+                  <h3 class="text-xs font-bold uppercase tracking-[0.14em] text-[#14110f]">Live Conversion Funnel</h3>
+                  <span id="growth-recovered-badge" class="border border-[#cfe3d6] bg-[#f0f7f2] px-2.5 py-0.5 text-[10px] font-semibold text-[#2f7d5a]">Recovered: 0 (₹0)</span>
+                </div>
+                <div id="growth-funnel-bars" class="mt-4 space-y-3">
+                  <p class="text-xs text-gray-400">Loading funnel stages...</p>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 lg:col-span-4 lg:grid-cols-1">
+                <div class="border border-[#e5ded3] bg-white p-4">
+                  <p class="text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">Exit Rescue Offers Saved</p>
+                  <p id="growth-stat-exit-saved" class="font-display mt-1 text-2xl leading-none text-[#2f7d5a]">0 / 0</p>
+                  <p class="mt-1 text-[10.5px] text-[#6f675f]">Checkout STAY10 acceptances</p>
+                </div>
+                <div class="border border-[#e5ded3] bg-white p-4">
+                  <p class="text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">Outreach Sent / Drafted</p>
+                  <p id="growth-stat-outreach" class="font-display mt-1 text-2xl leading-none text-[#14110f]">0 / 0</p>
+                  <p class="mt-1 text-[10.5px] text-[#6f675f]">Autopilot sends · Co-Pilot drafts</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Customer Product Intent + Live Interaction Stream -->
+            <div class="grid gap-5 lg:grid-cols-12">
+              <div class="border border-[#e5ded3] bg-white p-5 lg:col-span-7">
+                <h3 class="border-b border-[#eee8df] pb-3 text-xs font-bold uppercase tracking-[0.14em] text-[#14110f]">
+                  Customer Product Intent (Views vs Add-to-Cart)
+                </h3>
+                <div class="mt-3 overflow-x-auto">
+                  <table class="w-full text-left text-xs">
+                    <thead class="border-b border-[#eee8df] text-[9.5px] uppercase tracking-[0.12em] text-[#8a8279]">
+                      <tr>
+                        <th class="py-2 pr-3">Product</th>
+                        <th class="px-2 py-2 text-center">Views</th>
+                        <th class="px-2 py-2 text-center">Cart Adds</th>
+                        <th class="px-2 py-2 text-right">Conv %</th>
+                      </tr>
+                    </thead>
+                    <tbody id="growth-product-intent-list" class="divide-y divide-[#f1ece3]">
+                      <tr><td colspan="4" class="py-6 text-center text-gray-400">Waiting for shopper product views...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="border border-[#e5ded3] bg-white p-5 lg:col-span-5">
+                <h3 class="border-b border-[#eee8df] pb-3 text-xs font-bold uppercase tracking-[0.14em] text-[#14110f]">
+                  Live Shopper Interactions
+                </h3>
+                <div id="growth-recent-events" class="mt-3 max-h-[320px] space-y-2 overflow-y-auto pr-1 text-[11px]">
+                  <p class="py-6 text-center text-gray-400">No interactions logged yet.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Active Abandoned Carts & Checkouts -->
+            <div class="border border-[#e5ded3] bg-white p-5">
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#eee8df] pb-3">
+                <div>
+                  <h3 class="text-xs font-bold uppercase tracking-[0.14em] text-[#14110f]">Active Abandoned Carts &amp; Checkouts</h3>
+                  <p class="mt-0.5 text-[11px] text-[#6f675f]">Shoppers who added items or started filling checkout info without completing payment.</p>
+                </div>
+              </div>
+              <div class="mt-3 overflow-x-auto">
+                <table class="w-full min-w-[740px] text-left text-xs">
+                  <thead class="border-b border-[#eee8df] text-[9.5px] uppercase tracking-[0.12em] text-[#8a8279]">
+                    <tr>
+                      <th class="py-2.5 pr-3">Customer</th>
+                      <th class="px-3 py-2.5">Cart Items &amp; Value</th>
+                      <th class="px-3 py-2.5">Stage &amp; Exit Offer</th>
+                      <th class="px-3 py-2.5">Recovery Step</th>
+                      <th class="py-2.5 pl-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="growth-abandoned-list" class="divide-y divide-[#f1ece3]">
+                    <tr><td colspan="5" class="py-6 text-center text-gray-400">No abandoned carts right now.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Autonomous Agent & Informing Channel Settings -->
+            <form id="growth-config-form" class="space-y-5 border border-[#e5ded3] bg-white p-5">
+              <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[#eee8df] pb-3">
+                <div>
+                  <h3 class="text-xs font-bold uppercase tracking-[0.14em] text-[#14110f]">
+                    Autonomous Agent Channels (WAHA / Webhook / Resend / Brevo) &amp; Owner Alerts
+                  </h3>
+                  <p class="mt-0.5 text-[11px] text-[#6f675f]">
+                    Connect WAHA HTTP API or any webhook for WhatsApp (use a secondary SIM + daily cap) and Resend/Brevo for instant customer recovery + owner daily reports.
+                  </p>
+                </div>
+                <label class="inline-flex cursor-pointer items-center gap-2 text-[11px] font-semibold text-[#14110f]">
+                  <input id="gc-enabled" type="checkbox" checked class="h-4 w-4 accent-[#14110f]" />
+                  <span>Autonomous Cron Agent Active</span>
+                </label>
+              </div>
+
+              <div class="grid gap-4 md:grid-cols-3">
+                <!-- WhatsApp Transport -->
+                <div class="space-y-3 border border-[#e5ded3] bg-[#fbf9f5] p-4">
+                  <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#2f7d5a]">1. WhatsApp Transport</p>
+                  <div>
+                    <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Provider</label>
+                    <select id="gc-wa-provider" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs">
+                      <option value="copilot">Co-Pilot (Draft + 1-Click Manual)</option>
+                      <option value="waha">WAHA (Self-Hosted WhatsApp HTTP API)</option>
+                      <option value="webhook">Custom Webhook (Evolution / n8n / Make)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">WAHA Base URL</label>
+                    <input id="gc-waha-url" type="url" placeholder="https://waha.yourdomain.com" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">WAHA Session</label>
+                      <input id="gc-waha-session" type="text" placeholder="default" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">WAHA API Key</label>
+                      <input id="gc-waha-key" type="password" placeholder="X-Api-Key" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                    </div>
+                  </div>
+                  <div>
+                    <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Custom Webhook URL</label>
+                    <input id="gc-webhook-url" type="url" placeholder="https://hook.make.com/..." class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                  </div>
+                  <div class="flex gap-2 pt-1">
+                    <input id="gc-test-wa-phone" type="tel" placeholder="Test 10-digit WA" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-1.5 text-xs" />
+                    <button id="gc-test-wa-btn" type="button" class="shrink-0 cursor-pointer border border-[#14110f] px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.1em] hover:bg-[#14110f] hover:text-white">Test</button>
+                  </div>
+                </div>
+
+                <!-- Email Transport -->
+                <div class="space-y-3 border border-[#e5ded3] bg-[#fbf9f5] p-4">
+                  <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#14110f]">2. Email Channel (Customer + Owner)</p>
+                  <div>
+                    <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Provider</label>
+                    <select id="gc-email-provider" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs">
+                      <option value="off">Off (Save Drafts in Log)</option>
+                      <option value="resend">Resend (3,000 free emails/mo)</option>
+                      <option value="brevo">Brevo (300 free emails/day)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Email API Key</label>
+                    <input id="gc-email-key" type="password" placeholder="re_... or xkeysib-..." class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                  </div>
+                  <div>
+                    <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Sender From</label>
+                    <input id="gc-email-from" type="text" placeholder="Satvastones <hello@satvastones.in>" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                  </div>
+                  <div>
+                    <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Owner Email (Urgent Pings + Nightly Report)</label>
+                    <input id="gc-owner-email" type="email" placeholder="support@satvastones.in" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                  </div>
+                  <button id="gc-test-email-btn" type="button" class="w-full cursor-pointer border border-[#14110f] py-1.5 text-[10px] font-medium uppercase tracking-[0.1em] hover:bg-[#14110f] hover:text-white">
+                    Send Test Email to Owner
+                  </button>
+                </div>
+
+                <!-- Guardrails & Timing -->
+                <div class="space-y-3 border border-[#e5ded3] bg-[#fbf9f5] p-4">
+                  <p class="text-[10px] font-bold uppercase tracking-[0.14em] text-[#8d3f3d]">3. Timing, Reports &amp; Anti-Ban Limits</p>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Checkout Delay (Mins)</label>
+                      <input id="gc-delay-mins" type="number" min="5" max="60" value="12" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Daily WA Cap</label>
+                      <input id="gc-daily-cap" type="number" min="1" max="200" value="30" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-2 gap-2">
+                    <div>
+                      <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Nightly Report (IST Hr)</label>
+                      <input id="gc-report-hour" type="number" min="0" max="23" value="21" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                    </div>
+                    <div>
+                      <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Urgent Alert Cart (₹)</label>
+                      <input id="gc-urgent-inr" type="number" min="0" value="799" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs" />
+                    </div>
+                  </div>
+                  <label class="flex cursor-pointer items-center gap-2 text-[11px] text-[#3b3631]">
+                    <input id="gc-urgent-enabled" type="checkbox" checked class="h-4 w-4 accent-[#14110f]" />
+                    <span>Urgent Owner Email Pings (Orders, High-Value Abandon, Low Stock)</span>
+                  </label>
+                  <label class="flex cursor-pointer items-center gap-2 text-[11px] text-[#3b3631]">
+                    <input id="gc-daily-enabled" type="checkbox" checked class="h-4 w-4 accent-[#14110f]" />
+                    <span>Nightly Daily Report Email</span>
+                  </label>
+                  <label class="flex cursor-pointer items-center gap-2 text-[11px] text-[#3b3631]">
+                    <input id="gc-quiet-hours" type="checkbox" checked class="h-4 w-4 accent-[#14110f]" />
+                    <span>IST Quiet Hours (No customer pings 9 PM–9:30 AM)</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="flex justify-end">
+                <button type="submit" class="cursor-pointer bg-[#14110f] px-6 py-2.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#f6f1e8] transition-colors hover:bg-[#8d3f3d]">
+                  Save Agent Configuration →
+                </button>
+              </div>
+            </form>
+
+            <!-- Outreach & Informing Agent Log -->
+            <div class="border border-[#e5ded3] bg-white p-5">
+              <h3 class="border-b border-[#eee8df] pb-3 text-xs font-bold uppercase tracking-[0.14em] text-[#14110f]">
+                Agent Activity, Outreach &amp; Owner Reports Log
+              </h3>
+              <div id="growth-outreach-list" class="mt-3 max-h-[380px] divide-y divide-[#f1ece3] overflow-y-auto text-xs">
+                <p class="py-6 text-center text-gray-400">No agent activity logged yet.</p>
+              </div>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -1911,7 +2189,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     setInterval(updateClock, 1000);
 
     // Tab Navigation
-    const tabs = ['orders', 'products', 'blogs', 'coupons', 'categories', 'stackstudio', 'settings', 'claims', 'reviews', 'whatsapp'];
+    const tabs = ['orders', 'growth', 'products', 'blogs', 'coupons', 'categories', 'stackstudio', 'settings', 'claims', 'reviews', 'whatsapp'];
     tabs.forEach((tab) => {
       const btn = document.getElementById(`tab-btn-${tab}`);
       const panel = document.getElementById(`panel-${tab}`);
@@ -1937,6 +2215,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     renderClaims();
     renderReviews();
     renderWhatsappLeads();
+    renderGrowthManager();
 
     // Edge Sync from Cloudflare D1
     syncSiteSettingsFromCloudflare().then(() => populateSettingsForm());
@@ -3589,6 +3868,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     renderClaims();
     renderReviews();
     renderWhatsappLeads();
+    renderGrowthManager();
     syncSiteSettingsFromCloudflare().then(() => populateSettingsForm());
     syncProductsFromCloudflare().then(() => renderProducts());
     syncCouponsFromCloudflare().then(() => renderCoupons());
@@ -4164,6 +4444,435 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     a.download = `satvastones-whatsapp-consented-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
+  });
+
+  // ==========================================
+  // 9. ANALYTICS & AUTONOMOUS AI MANAGER LOGIC
+  // ==========================================
+  const growthDaysSelect = document.getElementById('growth-days-select') as HTMLSelectElement | null;
+  const growthRunBtn = document.getElementById('growth-run-cycle-btn') as HTMLButtonElement | null;
+  const growthReportBtn = document.getElementById('growth-send-report-btn') as HTMLButtonElement | null;
+  const growthFeedback = document.getElementById('growth-action-feedback');
+  const growthConfigForm = document.getElementById('growth-config-form') as HTMLFormElement | null;
+
+  function showGrowthFeedback(msg: string, isError = false) {
+    if (!growthFeedback) return;
+    growthFeedback.textContent = msg;
+    growthFeedback.className = isError
+      ? 'border-l-2 border-[#8d3f3d] bg-[#f8eeee] px-4 py-3 text-[11.5px] text-[#8d3f3d]'
+      : 'border-l-2 border-[#2f7d5a] bg-[#f0f7f2] px-4 py-3 text-[11.5px] text-[#2f7d5a]';
+    growthFeedback.classList.remove('hidden');
+  }
+
+  async function renderGrowthManager() {
+    const token = getSavedToken();
+    if (!token) return;
+    const days = Number(growthDaysSelect?.value || 7);
+
+    try {
+      const res = await fetch(`/api/growth-agent?days=${days}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (!res.ok || !data?.success) return;
+
+      const cfg = data.config || {};
+      const a = data.analytics || {};
+      const f = a.funnel || {};
+
+      // Populate config form
+      const setVal = (id: string, v: any) => {
+        const el = document.getElementById(id) as HTMLInputElement | HTMLSelectElement | null;
+        if (el) el.value = String(v ?? '');
+      };
+      const setChk = (id: string, v: boolean) => {
+        const el = document.getElementById(id) as HTMLInputElement | null;
+        if (el) el.checked = Boolean(v);
+      };
+      setChk('gc-enabled', cfg.enabled !== false);
+      setVal('gc-wa-provider', cfg.whatsappProvider || 'copilot');
+      setVal('gc-waha-url', cfg.wahaBaseUrl || '');
+      setVal('gc-waha-session', cfg.wahaSession || 'default');
+      setVal('gc-waha-key', cfg.wahaApiKey || '');
+      setVal('gc-webhook-url', cfg.webhookUrl || '');
+      setVal('gc-email-provider', cfg.emailProvider || 'off');
+      setVal('gc-email-key', cfg.emailApiKey || '');
+      setVal('gc-email-from', cfg.emailFrom || 'Satvastones Jewellery <hello@satvastones.in>');
+      setVal('gc-owner-email', cfg.ownerEmail || 'support@satvastones.in');
+      setVal('gc-delay-mins', cfg.checkoutAbandonDelayMins ?? 12);
+      setVal('gc-daily-cap', cfg.maxDailyWhatsapp ?? 30);
+      setVal('gc-report-hour', cfg.dailyReportHourIst ?? 21);
+      setVal('gc-urgent-inr', Math.round((Number(cfg.urgentCartThresholdPaise) || 79900) / 100));
+      setChk('gc-urgent-enabled', cfg.ownerUrgentAlertsEnabled !== false);
+      setChk('gc-daily-enabled', cfg.dailyReportEnabled !== false);
+      setChk('gc-quiet-hours', cfg.quietHoursEnabled !== false);
+
+      // Counts & Badges
+      const abandonedCount = Array.isArray(a.abandonedCarts) ? a.abandonedCarts.length : 0;
+      const tabBadge = document.getElementById('tab-growth-abandoned-count');
+      if (tabBadge) tabBadge.textContent = String(abandonedCount);
+
+      const recBadge = document.getElementById('growth-recovered-badge');
+      if (recBadge) {
+        recBadge.textContent = `Recovered: ${f.recoveredCount || 0} (${formatINR(f.recoveredValuePaise || 0)})`;
+      }
+
+      const exitStat = document.getElementById('growth-stat-exit-saved');
+      if (exitStat) exitStat.textContent = `${f.exitOffersAccepted || 0} / ${f.exitOffersShown || 0}`;
+
+      const outStat = document.getElementById('growth-stat-outreach');
+      if (outStat) {
+        outStat.textContent = `${a.outreachStats?.SENT || 0} / ${a.outreachStats?.COPILOT_DRAFT || 0}`;
+      }
+
+      // Insights
+      const insightsEl = document.getElementById('growth-insights-list');
+      if (insightsEl && Array.isArray(a.managerInsights)) {
+        insightsEl.innerHTML = a.managerInsights
+          .map((tip: string) => `<li>${escapeAdminHtml(tip)}</li>`)
+          .join('');
+      }
+
+      // Funnel Bars
+      const funnelEl = document.getElementById('growth-funnel-bars');
+      if (funnelEl) {
+        const stages = [
+          { label: 'Site Visits (Sessions)', val: f.pageViews || 0, color: 'bg-[#14110f]' },
+          { label: 'Product Views', val: f.productViews || 0, color: 'bg-[#4a443f]' },
+          { label: 'Added to Cart', val: f.addToCarts || 0, color: 'bg-[#8d3f3d]' },
+          { label: 'Checkout Started', val: f.checkoutStarts || 0, color: 'bg-[#c5a059]' },
+          { label: 'Orders Completed', val: f.ordersCompleted || 0, color: 'bg-[#2f7d5a]' }
+        ];
+        const maxVal = Math.max(1, ...stages.map((s) => s.val));
+        funnelEl.innerHTML = stages
+          .map((s, idx) => {
+            const pct = Math.max(s.val > 0 ? 4 : 0, Math.round((s.val / maxVal) * 100));
+            const prev = idx > 0 ? stages[idx - 1].val : 0;
+            const stepRate = idx > 0 && prev > 0 ? `${Math.round((s.val / prev) * 100)}% of prev` : '';
+            return `
+              <div>
+                <div class="mb-1 flex items-center justify-between text-[11px]">
+                  <span class="font-medium text-[#14110f]">${s.label}</span>
+                  <span class="tabular-nums text-[#5f5851]"><strong>${s.val}</strong> ${stepRate ? `<span class="ml-1.5 text-[10px] text-[#8a8279]">(${stepRate})</span>` : ''}</span>
+                </div>
+                <div class="h-2.5 w-full bg-[#f1ece3]">
+                  <div class="h-full ${s.color} transition-all duration-500" style="width:${pct}%"></div>
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+      }
+
+      // Product Intent Table
+      const prodEl = document.getElementById('growth-product-intent-list');
+      if (prodEl) {
+        const rows = Array.isArray(a.productIntent) ? a.productIntent : [];
+        prodEl.innerHTML = rows.length
+          ? rows
+              .map(
+                (p: any) => `
+                <tr>
+                  <td class="py-2.5 pr-3">
+                    <a href="/products/${encodeURIComponent(p.slug)}" target="_blank" class="font-medium text-[#14110f] hover:underline">${escapeAdminHtml(p.name)}</a>
+                    ${p.leakAlert ? '<span class="ml-1.5 border border-[#f2d6d6] bg-[#f8eeee] px-1.5 py-0.5 text-[9px] font-semibold uppercase text-[#8d3f3d]">Leak Alert</span>' : ''}
+                  </td>
+                  <td class="px-2 py-2.5 text-center tabular-nums">${p.views}</td>
+                  <td class="px-2 py-2.5 text-center tabular-nums font-medium">${p.adds}</td>
+                  <td class="px-2 py-2.5 text-right tabular-nums ${p.addRate >= 10 ? 'text-[#2f7d5a] font-semibold' : 'text-[#6f675f]'}">${p.addRate}%</td>
+                </tr>
+              `
+              )
+              .join('')
+          : '<tr><td colspan="4" class="py-6 text-center text-gray-400">No product views tracked in this period yet.</td></tr>';
+      }
+
+      // Live Shopper Interactions
+      const eventsEl = document.getElementById('growth-recent-events');
+      if (eventsEl) {
+        const evs = Array.isArray(a.recentEvents) ? a.recentEvents : [];
+        eventsEl.innerHTML = evs.length
+          ? evs
+              .map((ev: any) => {
+                const labelMap: Record<string, string> = {
+                  page_view: 'Visited',
+                  product_view: 'Viewed product',
+                  add_to_cart: 'Added to bag',
+                  checkout_started: 'Started checkout',
+                  checkout_field_filled: 'Filling checkout',
+                  exit_offer_shown: 'Saw 10% exit offer',
+                  exit_offer_accepted: 'Accepted STAY10 ✓',
+                  checkout_abandoned: 'Abandoned checkout!',
+                  order_completed: 'Order completed ✓'
+                };
+                const badgeColor =
+                  ev.eventType === 'order_completed' || ev.eventType === 'exit_offer_accepted'
+                    ? 'text-[#2f7d5a] bg-[#f0f7f2]'
+                    : ev.eventType === 'checkout_abandoned'
+                      ? 'text-[#8d3f3d] bg-[#f8eeee]'
+                      : 'text-[#5f5851] bg-[#f4efe7]';
+                return `
+                  <div class="flex items-start justify-between gap-2 border border-[#f1ece3] bg-[#fbf9f5] px-3 py-2">
+                    <div class="min-w-0">
+                      <span class="inline-block px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.08em] ${badgeColor}">${escapeAdminHtml(labelMap[ev.eventType] || ev.eventType)}</span>
+                      <p class="mt-1 truncate text-[#14110f]">${escapeAdminHtml(ev.productName || ev.pagePath || '/')}</p>
+                      <p class="text-[10px] text-[#8a8279]">${escapeAdminHtml(ev.contact)}</p>
+                    </div>
+                    <span class="shrink-0 text-[10px] tabular-nums text-[#8a8279]">${ev.valuePaise ? formatINR(ev.valuePaise) : ''}</span>
+                  </div>
+                `;
+              })
+              .join('')
+          : '<p class="py-6 text-center text-gray-400">No interactions logged yet.</p>';
+      }
+
+      // Active Abandoned Carts
+      const cartsEl = document.getElementById('growth-abandoned-list');
+      if (cartsEl) {
+        const carts = Array.isArray(a.abandonedCarts) ? a.abandonedCarts : [];
+        cartsEl.innerHTML = carts.length
+          ? carts
+              .map((c: any) => {
+                const itemSummary = (c.items || [])
+                  .slice(0, 2)
+                  .map((it: any) => `${it.name} ×${it.quantity || 1}`)
+                  .join(', ');
+                const waUrl = c.whatsappNumber
+                  ? `https://wa.me/91${encodeURIComponent(c.whatsappNumber)}?text=${encodeURIComponent(`Hi ${c.fullName || 'there'} ✨ Your Satvastones bag (${formatINR(c.subtotalPaise)}) is saved! Use code STAY10 for 10% OFF: https://www.satvastones.in/checkout`)}`
+                  : '';
+                return `
+                  <tr>
+                    <td class="py-3 pr-3">
+                      <p class="font-medium text-[#14110f]">${escapeAdminHtml(c.fullName || 'Guest Shopper')}</p>
+                      <p class="text-[10.5px] text-[#6f675f]">${escapeAdminHtml(c.email || 'No email')} ${c.whatsappNumber ? `· +91 ${escapeAdminHtml(c.whatsappNumber)}` : ''}</p>
+                    </td>
+                    <td class="px-3 py-3">
+                      <p class="max-w-[240px] truncate text-[#14110f]">${escapeAdminHtml(itemSummary || 'Saved items')}</p>
+                      <p class="font-semibold text-[#14110f]">${formatINR(c.subtotalPaise)}</p>
+                    </td>
+                    <td class="px-3 py-3">
+                      <span class="border px-2 py-0.5 text-[9.5px] font-semibold uppercase ${c.stage === 'CHECKOUT_ABANDONED' ? 'border-[#f2d6d6] bg-[#f8eeee] text-[#8d3f3d]' : 'border-[#e5ded3] bg-[#f4efe7] text-[#5f5851]'}">${escapeAdminHtml(c.stage)}</span>
+                      ${c.exitOfferAccepted ? '<span class="ml-1 text-[10px] font-semibold text-[#2f7d5a]">STAY10 ✓</span>' : ''}
+                    </td>
+                    <td class="px-3 py-3 text-[11px] text-[#5f5851]">Step ${c.recoveryStep} / 3</td>
+                    <td class="py-3 pl-3 text-right">
+                      <div class="inline-flex items-center gap-2">
+                        ${waUrl ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="text-[10px] font-semibold uppercase text-[#2f7d5a] underline">WA ↗</a>` : ''}
+                        <button type="button" data-nudge-cart="${escapeAdminHtml(c.id)}" class="cursor-pointer border border-[#14110f] px-2.5 py-1 text-[9.5px] font-medium uppercase tracking-[0.1em] hover:bg-[#14110f] hover:text-white">
+                          Nudge Now
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              })
+              .join('')
+          : '<tr><td colspan="5" class="py-6 text-center text-gray-400">No abandoned carts right now.</td></tr>';
+
+        cartsEl.querySelectorAll<HTMLButtonElement>('[data-nudge-cart]').forEach((btn) => {
+          btn.addEventListener('click', async () => {
+            const cartId = btn.dataset.nudgeCart;
+            if (!cartId) return;
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+            try {
+              const r = await fetch('/api/growth-agent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                credentials: 'include',
+                body: JSON.stringify({ action: 'nudge_cart', cartId })
+              });
+              const j = await r.json();
+              showGrowthFeedback(j.success ? 'Recovery nudge triggered for cart!' : j.error || 'Failed', !j.success);
+              await renderGrowthManager();
+            } catch {
+              showGrowthFeedback('Network error triggering nudge.', true);
+            }
+          });
+        });
+      }
+
+      // Outreach & Owner Reports Log
+      const logEl = document.getElementById('growth-outreach-list');
+      if (logEl) {
+        const logs = Array.isArray(a.outreachLogs) ? a.outreachLogs : [];
+        logEl.innerHTML = logs.length
+          ? logs
+              .map((o: any) => {
+                const statusClass =
+                  o.status === 'SENT'
+                    ? 'border-[#cfe3d6] bg-[#f0f7f2] text-[#2f7d5a]'
+                    : o.status === 'COPILOT_DRAFT'
+                      ? 'border-[#e6d6bb] bg-[#faf3e6] text-[#8a5314]'
+                      : 'border-[#f2d6d6] bg-[#f8eeee] text-[#8d3f3d]';
+                const manualWa =
+                  o.channel === 'whatsapp' && o.status === 'COPILOT_DRAFT'
+                    ? `<a href="https://wa.me/91${encodeURIComponent(o.recipientContact)}?text=${encodeURIComponent(o.messageBody)}" target="_blank" rel="noopener noreferrer" class="ml-2 text-[10px] font-semibold uppercase text-[#2f7d5a] underline">Send via WhatsApp ↗</a>`
+                    : '';
+                return `
+                  <div class="py-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex flex-wrap items-center gap-2">
+                        <span class="border px-2 py-0.5 text-[9px] font-semibold uppercase ${statusClass}">${escapeAdminHtml(o.status)}</span>
+                        <span class="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#14110f]">${escapeAdminHtml(o.channel)} · ${escapeAdminHtml(o.triggerType)}</span>
+                        <span class="text-[11px] text-[#6f675f]">→ ${escapeAdminHtml(o.recipientContact)}</span>
+                        ${manualWa}
+                      </div>
+                      <span class="text-[10px] text-[#8a8279]">${escapeAdminHtml(o.createdAt)}</span>
+                    </div>
+                    ${o.subject ? `<p class="mt-1 font-medium text-[#14110f]">${escapeAdminHtml(o.subject)}</p>` : ''}
+                    <p class="mt-1 whitespace-pre-line text-[11px] text-[#4a443f]">${escapeAdminHtml(o.messageBody)}</p>
+                    ${o.errorMessage ? `<p class="mt-1 text-[10.5px] font-medium text-[#8d3f3d]">Error: ${escapeAdminHtml(o.errorMessage)}</p>` : ''}
+                  </div>
+                `;
+              })
+              .join('')
+          : '<p class="py-6 text-center text-gray-400">No agent activity logged yet.</p>';
+      }
+    } catch {
+      /* offline */
+    }
+  }
+
+  growthDaysSelect?.addEventListener('change', renderGrowthManager);
+
+  growthRunBtn?.addEventListener('click', async () => {
+    const token = getSavedToken();
+    if (!token) return;
+    growthRunBtn.disabled = true;
+    growthRunBtn.textContent = 'Running…';
+    try {
+      const res = await fetch('/api/growth-agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        credentials: 'include',
+        body: JSON.stringify({ action: 'run_cycle', bypassQuietHours: true })
+      });
+      const data = await res.json();
+      if (data.success) {
+        const s = data.summary || {};
+        showGrowthFeedback(
+          `Agent cycle completed: checked ${s.cartsChecked || 0} carts, ${s.whatsappSentOrDrafted || 0} WA + ${s.emailsSentOrDrafted || 0} Email nudges, ${s.urgentOwnerAlerts || 0} urgent alerts.`
+        );
+        await renderGrowthManager();
+      } else {
+        showGrowthFeedback(data.error || 'Cycle failed.', true);
+      }
+    } finally {
+      growthRunBtn.disabled = false;
+      growthRunBtn.textContent = 'Run Agent Cycle Now ▶';
+    }
+  });
+
+  growthReportBtn?.addEventListener('click', async () => {
+    const token = getSavedToken();
+    if (!token) return;
+    growthReportBtn.disabled = true;
+    growthReportBtn.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/growth-agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        credentials: 'include',
+        body: JSON.stringify({ action: 'send_daily_report' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showGrowthFeedback(`Nightly report triggered (${data.report?.status || 'OK'}): ${data.report?.subject || ''}`);
+        await renderGrowthManager();
+      } else {
+        showGrowthFeedback(data.error || 'Report failed.', true);
+      }
+    } finally {
+      growthReportBtn.disabled = false;
+      growthReportBtn.textContent = 'Send Nightly Report Now ✉';
+    }
+  });
+
+  growthConfigForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const token = getSavedToken();
+    if (!token) return;
+    const getVal = (id: string) => (document.getElementById(id) as HTMLInputElement | HTMLSelectElement)?.value || '';
+    const getChk = (id: string) => Boolean((document.getElementById(id) as HTMLInputElement)?.checked);
+
+    try {
+      const res = await fetch('/api/growth-agent', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        credentials: 'include',
+        body: JSON.stringify({
+          enabled: getChk('gc-enabled'),
+          whatsappProvider: getVal('gc-wa-provider'),
+          wahaBaseUrl: getVal('gc-waha-url'),
+          wahaSession: getVal('gc-waha-session'),
+          wahaApiKey: getVal('gc-waha-key'),
+          webhookUrl: getVal('gc-webhook-url'),
+          emailProvider: getVal('gc-email-provider'),
+          emailApiKey: getVal('gc-email-key'),
+          emailFrom: getVal('gc-email-from'),
+          ownerEmail: getVal('gc-owner-email'),
+          checkoutAbandonDelayMins: Number(getVal('gc-delay-mins')) || 12,
+          maxDailyWhatsapp: Number(getVal('gc-daily-cap')) || 30,
+          dailyReportHourIst: Number(getVal('gc-report-hour')) || 21,
+          urgentCartThresholdPaise: Math.round((Number(getVal('gc-urgent-inr')) || 799) * 100),
+          ownerUrgentAlertsEnabled: getChk('gc-urgent-enabled'),
+          dailyReportEnabled: getChk('gc-daily-enabled'),
+          quietHoursEnabled: getChk('gc-quiet-hours')
+        })
+      });
+      const data = await res.json();
+      showGrowthFeedback(data.success ? data.message : data.error || 'Failed to save.', !data.success);
+    } catch {
+      showGrowthFeedback('Network error saving agent settings.', true);
+    }
+  });
+
+  document.getElementById('gc-test-wa-btn')?.addEventListener('click', async () => {
+    const token = getSavedToken();
+    const phone = (document.getElementById('gc-test-wa-phone') as HTMLInputElement)?.value.trim();
+    if (!token || !phone) {
+      showGrowthFeedback('Enter a 10-digit WhatsApp number to test.', true);
+      return;
+    }
+    const res = await fetch('/api/growth-agent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      credentials: 'include',
+      body: JSON.stringify({ action: 'test_whatsapp', phone })
+    });
+    const data = await res.json();
+    showGrowthFeedback(
+      data.success
+        ? `WhatsApp test status: ${data.result?.status}`
+        : `WhatsApp test failed: ${data.result?.error || data.error}`,
+      !data.success
+    );
+    await renderGrowthManager();
+  });
+
+  document.getElementById('gc-test-email-btn')?.addEventListener('click', async () => {
+    const token = getSavedToken();
+    const email = (document.getElementById('gc-owner-email') as HTMLInputElement)?.value.trim();
+    if (!token || !email) {
+      showGrowthFeedback('Enter an owner email address first.', true);
+      return;
+    }
+    const res = await fetch('/api/growth-agent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      credentials: 'include',
+      body: JSON.stringify({ action: 'test_email', email })
+    });
+    const data = await res.json();
+    showGrowthFeedback(
+      data.success
+        ? `Email test status: ${data.result?.status}`
+        : `Email test failed: ${data.result?.error || data.error}`,
+      !data.success
+    );
+    await renderGrowthManager();
   });
 
   // Check auth and mount

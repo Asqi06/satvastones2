@@ -1,4 +1,5 @@
 import type { CartItem } from '../types/ecommerce';
+import { trackFunnelEvent } from '../lib/funnel-tracker';
 
 const CART_STORAGE_KEY = 'satvastones_cart_v1';
 const CART_OPEN_EVENT = 'satvastones:open_cart';
@@ -38,6 +39,16 @@ export function addToCart(item: CartItem): void {
   }
 
   saveCartItems(current);
+  const subtotalPaise = current.reduce((sum, i) => sum + i.pricePaise * i.quantity, 0);
+  trackFunnelEvent({
+    eventType: 'add_to_cart',
+    productId: item.productId,
+    productSlug: item.slug,
+    productName: item.name,
+    valuePaise: item.pricePaise * item.quantity,
+    subtotalPaise,
+    items: current
+  });
   openCartDrawer();
 }
 
@@ -54,6 +65,16 @@ export function addMultipleToCart(items: CartItem[]): void {
     }
   }
   saveCartItems(current);
+  const subtotalPaise = current.reduce((sum, i) => sum + i.pricePaise * i.quantity, 0);
+  trackFunnelEvent({
+    eventType: 'add_to_cart',
+    productId: items[0]?.productId,
+    productSlug: items[0]?.slug,
+    productName: items[0]?.name,
+    valuePaise: subtotalPaise,
+    subtotalPaise,
+    items: current
+  });
   openCartDrawer();
 }
 

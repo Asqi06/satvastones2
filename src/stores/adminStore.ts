@@ -263,6 +263,14 @@ const DEFAULT_COUPONS: AdminCoupon[] = [
     firstOrderOnly: true,
     isActive: true,
     description: '15% OFF + Free Express Delivery on your first purchase'
+  },
+  {
+    id: 'coup-stay-10',
+    code: 'STAY10',
+    discountPercent: 10,
+    minOrderPaise: 0,
+    isActive: true,
+    description: 'Instant 10% OFF Checkout Save Privilege'
   }
 ];
 

@@ -2,6 +2,7 @@
 // Connects directly to Cloudflare D1 (SQLite) binding: context.env.DB
 import { verifyAdminAuth } from '../../src/lib/server-auth';
 import { clientIp, isRateLimited, readJsonBody } from '../../src/lib/http';
+import { formatRupees, notifyOwnerUrgent } from '../../src/lib/growth-agent';
 
 interface Env {
   DB: any; // D1Database
@@ -136,7 +137,8 @@ const FALLBACK_COUPONS: Record<
   FIRSTBUY: { flatDiscountPaise: 20000, minOrderPaise: 249900 },
   SATVA10: { discountPercent: 10, minOrderPaise: 0 },
   FESTIVE15: { discountPercent: 15, minOrderPaise: 299900 },
-  WELCOME15FREE: { discountPercent: 15, minOrderPaise: 0, freeShipping: true, firstOrderOnly: true }
+  WELCOME15FREE: { discountPercent: 15, minOrderPaise: 0, freeShipping: true, firstOrderOnly: true },
+  STAY10: { discountPercent: 10, minOrderPaise: 0 }
 };
 
 /** Owner-configured shipping and stack discount, with safe defaults. */
@@ -465,6 +467,24 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       }
     }
 
+    // Mark matching abandoned carts as CONVERTED so recovery stops immediately & track low stock
+    const lowStockAlerts: string[] = [];
+    try {
+      const cleanOrderEmail = email.toLowerCase();
+      const cleanOrderPhone = phone.replace(/[^0-9]/g, '').slice(-10);
+      await db
+        .prepare(
+          `UPDATE abandoned_carts
+           SET stage = 'CONVERTED', recovered_order_id = ?, updated_at = datetime('now', 'utc')
+           WHERE stage <> 'CONVERTED'
+             AND ((LOWER(email) = ? AND ? <> '') OR (length(?) = 10 AND whatsapp_number = ?))`
+        )
+        .bind(orderNumber, cleanOrderEmail, cleanOrderEmail, cleanOrderPhone, cleanOrderPhone)
+        .run();
+    } catch {
+      /* abandoned_carts may not exist yet */
+    }
+
     // Decrement product_meta stockQuantity & flip in_stock to 0 when depleted
     for (const upd of stockUpdates) {
       try {
@@ -481,6 +501,10 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
               .prepare(`UPDATE product_meta SET meta_json = ?, updated_at = datetime('now', 'utc') WHERE product_id = ?`)
               .bind(JSON.stringify(meta), upd.productId)
               .run();
+            if (nextStock <= 3) {
+              const itemName = items.find((i) => i.productId === upd.productId)?.name || upd.productId;
+              lowStockAlerts.push(`${itemName} (${nextStock === 0 ? 'SOLD OUT' : `${nextStock} left`})`);
+            }
             if (nextStock === 0) {
               await db
                 .prepare(`UPDATE products SET in_stock = 0, updated_at = datetime('now', 'utc') WHERE id = ?`)
@@ -492,6 +516,28 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       } catch {
         /* non-fatal if product_meta is absent */
       }
+    }
+
+    // Immediate Owner Informing Agent ping for new order (and low-stock warning if triggered)
+    try {
+      const itemSummary = items.map((i) => `${i.name} × ${i.quantity}`).join(', ').slice(0, 220);
+      await notifyOwnerUrgent(db, env, {
+        triggerType: 'new_order_confirmed',
+        title: `New Order ${orderNumber} — ${formatRupees(totalPaise)}`,
+        summary: `${customerName} placed an order via ${paymentMethod}${couponCode ? ` using coupon ${couponCode}` : ''}.${lowStockAlerts.length ? ` Low stock alert: ${lowStockAlerts.join(', ')}.` : ''}`,
+        priority: lowStockAlerts.length ? 'HIGH' : 'MEDIUM',
+        details: {
+          OrderNumber: orderNumber,
+          Customer: customerName,
+          Contact: `${phone} · ${email}`,
+          City: `${city}, ${state} (${pincode})`,
+          Items: itemSummary,
+          Total: formatRupees(totalPaise),
+          Payment: `${paymentMethod} (${paymentStatus})`
+        }
+      });
+    } catch {
+      /* non-fatal owner notification */
     }
 
     return new Response(
