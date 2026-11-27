@@ -88,6 +88,8 @@ export interface AdminCoupon {
   discountPercent?: number;
   flatDiscountPaise?: number;
   minOrderPaise: number;
+  freeShipping?: boolean;
+  firstOrderOnly?: boolean;
   isActive: boolean;
   description: string;
 }
@@ -251,6 +253,16 @@ const DEFAULT_COUPONS: AdminCoupon[] = [
     minOrderPaise: 299900,
     isActive: true,
     description: '15% Privilege savings on festive orders above ₹2,999'
+  },
+  {
+    id: 'coup-welcome-15-free',
+    code: 'WELCOME15FREE',
+    discountPercent: 15,
+    minOrderPaise: 0,
+    freeShipping: true,
+    firstOrderOnly: true,
+    isActive: true,
+    description: '15% OFF + Free Express Delivery on your first purchase'
   }
 ];
 
@@ -821,13 +833,15 @@ export async function syncCouponsFromCloudflare(): Promise<AdminCoupon[]> {
 export function validateCouponCode(
   code: string,
   subtotalPaise: number
-): { valid: boolean; discountPaise: number; message: string; coupon?: AdminCoupon } {
+): { valid: boolean; discountPaise: number; freeShipping?: boolean; message: string; coupon?: AdminCoupon } {
   const coupons = getAdminCoupons();
   const normalized = code.trim().toUpperCase();
-  const match = coupons.find((c) => c.code.toUpperCase() === normalized && c.isActive);
+  const match =
+    coupons.find((c) => c.code.toUpperCase() === normalized && c.isActive) ||
+    DEFAULT_COUPONS.find((c) => c.code.toUpperCase() === normalized && c.isActive);
 
   if (!match) {
-    return { valid: false, discountPaise: 0, message: 'Invalid or expired coupon code. Try FIRSTBUY or SATVA10' };
+    return { valid: false, discountPaise: 0, freeShipping: false, message: 'Invalid or expired coupon code. Try FIRSTBUY or SATVA10' };
   }
 
   if (match.minOrderPaise && subtotalPaise < match.minOrderPaise) {
@@ -835,6 +849,7 @@ export function validateCouponCode(
     return {
       valid: false,
       discountPaise: 0,
+      freeShipping: false,
       message: `Minimum order of ₹${minRupees.toLocaleString('en-IN')} required for coupon ${match.code}.`
     };
   }
@@ -846,9 +861,12 @@ export function validateCouponCode(
     discount = Math.min(subtotalPaise, match.flatDiscountPaise);
   }
 
+  const freeShipping = Boolean(match.freeShipping || normalized === 'WELCOME15FREE');
+
   return {
     valid: true,
     discountPaise: discount,
+    freeShipping,
     message: match.description || `Coupon ${match.code} applied successfully!`,
     coupon: match
   };

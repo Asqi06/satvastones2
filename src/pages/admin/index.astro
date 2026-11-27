@@ -252,6 +252,13 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
               </svg>
               <span>Customer Reviews (<span id="tab-reviews-count">0</span>)</span>
             </button>
+
+            <button id="tab-btn-whatsapp" class="admin-tab-btn py-3.5 px-6 text-gray-500 hover:text-black cursor-pointer flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+              </svg>
+              <span>WhatsApp Leads (<span id="tab-whatsapp-count">0</span>)</span>
+            </button>
           </div>
 
           <!-- ========================================== -->
@@ -1064,6 +1071,87 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             </div>
           </div>
 
+          <!-- ========================================== -->
+          <!-- PANEL 8: WHATSAPP LEADS & DPDP CONSENT     -->
+          <!-- ========================================== -->
+          <div id="panel-whatsapp" class="hidden space-y-5 p-5 sm:p-6">
+            <div class="flex flex-col justify-between gap-3 border-b border-[#e5ded3] pb-4 sm:flex-row sm:items-end">
+              <div>
+                <p class="text-[9px] uppercase tracking-[0.2em] text-[#8d3f3d]">DPDP Act 2023 Consent Register</p>
+                <h2 class="font-display mt-1 text-xl leading-none text-[#14110f]">WhatsApp Leads &amp; Promotional Consent</h2>
+                <p class="mt-1.5 text-[11px] text-[#6f675f]">
+                  Every WhatsApp number registered from the first-visit welcome offer, with explicit promotional consent status (<code>YES</code> / <code>NO</code>) and <code>WELCOME15FREE</code> redemption tracking.
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                <input
+                  id="wa-search-input"
+                  type="text"
+                  placeholder="Search name, email or number…"
+                  class="w-52 border border-[#e5ded3] bg-white px-3 py-2 text-[11px] focus:border-[#14110f] focus:outline-none"
+                />
+                <select
+                  id="wa-consent-filter"
+                  class="border border-[#e5ded3] bg-white px-3 py-2 text-[11px] text-[#14110f] focus:border-[#14110f] focus:outline-none"
+                >
+                  <option value="all">All Registered</option>
+                  <option value="yes">Promo Consent: YES only</option>
+                  <option value="no">Promo Consent: NO (Do Not Message)</option>
+                </select>
+                <button
+                  id="wa-export-csv-btn"
+                  type="button"
+                  class="cursor-pointer bg-[#14110f] px-4 py-2 text-[10px] font-medium uppercase tracking-[0.12em] text-[#f6f1e8] transition-colors hover:bg-[#2f7d5a]"
+                >
+                  Export Consented CSV ↓
+                </button>
+              </div>
+            </div>
+
+            <!-- Stats Strip -->
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div class="border border-[#e5ded3] bg-white p-3.5">
+                <p class="text-[9px] uppercase tracking-[0.16em] text-[#8a8279]">Total Numbers</p>
+                <p id="wa-stat-total" class="font-display mt-1 text-2xl leading-none text-[#14110f]">0</p>
+              </div>
+              <div class="border border-[#cfe3d6] bg-[#f0f7f2] p-3.5">
+                <p class="text-[9px] uppercase tracking-[0.16em] text-[#2f7d5a]">Promo Consent: YES</p>
+                <p id="wa-stat-consented" class="font-display mt-1 text-2xl leading-none text-[#2f7d5a]">0</p>
+              </div>
+              <div class="border border-[#f2d6d6] bg-[#f8eeee] p-3.5">
+                <p class="text-[9px] uppercase tracking-[0.16em] text-[#8d3f3d]">Promo Consent: NO</p>
+                <p id="wa-stat-declined" class="font-display mt-1 text-2xl leading-none text-[#8d3f3d]">0</p>
+              </div>
+              <div class="border border-[#e5ded3] bg-[#f4efe7] p-3.5">
+                <p class="text-[9px] uppercase tracking-[0.16em] text-[#6f675f]">1st Order Redeemed</p>
+                <p id="wa-stat-redeemed" class="font-display mt-1 text-2xl leading-none text-[#14110f]">0</p>
+              </div>
+            </div>
+
+            <!-- Leads Table -->
+            <div class="overflow-x-auto border border-[#e5ded3] bg-white">
+              <table class="w-full min-w-[760px] text-left text-xs">
+                <thead class="border-b border-[#e5ded3] bg-[#f4efe7] text-[9.5px] uppercase tracking-[0.14em] text-[#6f675f]">
+                  <tr>
+                    <th class="px-4 py-3">Customer</th>
+                    <th class="px-4 py-3">WhatsApp Number</th>
+                    <th class="px-4 py-3">Promo Consent</th>
+                    <th class="px-4 py-3">Coupon &amp; Status</th>
+                    <th class="px-4 py-3">Consent Logged (IST)</th>
+                    <th class="px-4 py-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-whatsapp-list" class="divide-y divide-[#eee8df]">
+                  <tr>
+                    <td colspan="6" class="px-4 py-8 text-center text-xs text-gray-400">
+                      Loading registered WhatsApp leads...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -1823,7 +1911,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     setInterval(updateClock, 1000);
 
     // Tab Navigation
-    const tabs = ['orders', 'products', 'blogs', 'coupons', 'categories', 'stackstudio', 'settings', 'claims', 'reviews'];
+    const tabs = ['orders', 'products', 'blogs', 'coupons', 'categories', 'stackstudio', 'settings', 'claims', 'reviews', 'whatsapp'];
     tabs.forEach((tab) => {
       const btn = document.getElementById(`tab-btn-${tab}`);
       const panel = document.getElementById(`panel-${tab}`);
@@ -1848,6 +1936,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     populateSettingsForm();
     renderClaims();
     renderReviews();
+    renderWhatsappLeads();
 
     // Edge Sync from Cloudflare D1
     syncSiteSettingsFromCloudflare().then(() => populateSettingsForm());
@@ -3499,6 +3588,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     populateSettingsForm();
     renderClaims();
     renderReviews();
+    renderWhatsappLeads();
     syncSiteSettingsFromCloudflare().then(() => populateSettingsForm());
     syncProductsFromCloudflare().then(() => renderProducts());
     syncCouponsFromCloudflare().then(() => renderCoupons());
@@ -3880,6 +3970,200 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         prompt('Copy URL:', targetUrl);
       }
     });
+  });
+
+  // ==========================================
+  // 8. WHATSAPP LEADS & PROMO CONSENT LOGIC
+  // ==========================================
+  let adminWhatsappLeadsCache: Array<{
+    id: string;
+    fullName: string;
+    email: string;
+    whatsappNumber: string;
+    promoConsent: boolean;
+    consentTimestampUtc: string;
+    couponCode: string | null;
+    firstOrderUsed: boolean;
+    source: string;
+  }> = [];
+
+  const waSearchInput = document.getElementById('wa-search-input') as HTMLInputElement | null;
+  const waConsentFilter = document.getElementById('wa-consent-filter') as HTMLSelectElement | null;
+  const waExportBtn = document.getElementById('wa-export-csv-btn') as HTMLButtonElement | null;
+
+  function drawWhatsappLeads() {
+    const tbody = document.getElementById('admin-whatsapp-list');
+    if (!tbody) return;
+
+    const q = (waSearchInput?.value || '').trim().toLowerCase();
+    const filter = waConsentFilter?.value || 'all';
+
+    const filtered = adminWhatsappLeadsCache.filter((lead) => {
+      if (filter === 'yes' && !lead.promoConsent) return false;
+      if (filter === 'no' && lead.promoConsent) return false;
+      if (!q) return true;
+      return (
+        lead.fullName.toLowerCase().includes(q) ||
+        lead.email.toLowerCase().includes(q) ||
+        lead.whatsappNumber.includes(q)
+      );
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="px-4 py-8 text-center text-xs text-gray-400">No WhatsApp leads match the current filter.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered
+      .map((lead) => {
+        const consentBadge = lead.promoConsent
+          ? `<span class="inline-flex items-center gap-1 border border-[#cfe3d6] bg-[#f0f7f2] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#2f7d5a]">✓ YES · Promo Allowed</span>`
+          : `<span class="inline-flex items-center gap-1 border border-[#f2d6d6] bg-[#f8eeee] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.08em] text-[#8d3f3d]">✕ NO · Do Not Message</span>`;
+
+        const couponLabel = lead.couponCode
+          ? `<span class="font-mono text-[11px] font-semibold text-[#14110f]">${escapeAdminHtml(lead.couponCode)}</span>
+             <span class="ml-1.5 text-[10px] ${lead.firstOrderUsed ? 'text-[#2f7d5a] font-semibold' : 'text-[#8a8279]'}">${lead.firstOrderUsed ? 'Redeemed' : 'Unused'}</span>`
+          : `<span class="text-[11px] text-[#8a8279]">Not issued</span>`;
+
+        let formattedDate = lead.consentTimestampUtc || '—';
+        try {
+          const d = new Date(lead.consentTimestampUtc);
+          if (!Number.isNaN(d.getTime())) {
+            formattedDate = d.toLocaleString('en-IN', {
+              timeZone: 'Asia/Kolkata',
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+          }
+        } catch {}
+
+        const waAction = lead.promoConsent
+          ? `<a href="https://wa.me/91${encodeURIComponent(lead.whatsappNumber)}" target="_blank" rel="noopener noreferrer" class="text-[10px] font-semibold uppercase tracking-[0.08em] text-[#2f7d5a] underline underline-offset-2 hover:text-[#14110f]">WhatsApp ↗</a>`
+          : `<span class="text-[10px] text-[#9a938b]">Promo Blocked</span>`;
+
+        return `
+          <tr class="hover:bg-[#fbf9f5]">
+            <td class="px-4 py-3">
+              <p class="font-medium text-[#14110f]">${escapeAdminHtml(lead.fullName || 'Member')}</p>
+              <p class="text-[11px] text-[#6f675f]">${escapeAdminHtml(lead.email || '—')}</p>
+            </td>
+            <td class="px-4 py-3 font-mono text-[12px] font-medium text-[#14110f]">+91 ${escapeAdminHtml(lead.whatsappNumber)}</td>
+            <td class="px-4 py-3">${consentBadge}</td>
+            <td class="px-4 py-3">${couponLabel}</td>
+            <td class="px-4 py-3 text-[11px] text-[#5f5851]">${escapeAdminHtml(formattedDate)}</td>
+            <td class="px-4 py-3 text-right">
+              <div class="inline-flex items-center gap-3">
+                ${waAction}
+                <button type="button" data-wa-toggle="${escapeAdminHtml(lead.id)}" data-wa-next="${lead.promoConsent ? '0' : '1'}" class="cursor-pointer text-[10px] font-medium uppercase tracking-[0.08em] text-[#6f675f] underline underline-offset-2 hover:text-[#14110f]">
+                  ${lead.promoConsent ? 'Revoke' : 'Grant'}
+                </button>
+                <button type="button" data-wa-delete="${escapeAdminHtml(lead.id)}" class="cursor-pointer text-[10px] font-medium uppercase tracking-[0.08em] text-[#8d3f3d] hover:underline">
+                  Erase
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      })
+      .join('');
+
+    tbody.querySelectorAll<HTMLButtonElement>('[data-wa-toggle]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.waToggle;
+        const nextConsent = btn.dataset.waNext === '1';
+        if (!id) return;
+        const token = getSavedToken();
+        try {
+          const res = await fetch('/api/whatsapp-leads', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+            credentials: 'include',
+            body: JSON.stringify({ id, promoConsent: nextConsent })
+          });
+          if (res.ok) await renderWhatsappLeads();
+        } catch {}
+      });
+    });
+
+    tbody.querySelectorAll<HTMLButtonElement>('[data-wa-delete]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.waDelete;
+        if (!id || !confirm('Permanently erase this WhatsApp lead record (DPDP right to erasure)?')) return;
+        const token = getSavedToken();
+        try {
+          const res = await fetch(`/api/whatsapp-leads?id=${encodeURIComponent(id)}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${token}` },
+            credentials: 'include'
+          });
+          if (res.ok) await renderWhatsappLeads();
+        } catch {}
+      });
+    });
+  }
+
+  async function renderWhatsappLeads() {
+    const token = getSavedToken();
+    if (!token) return;
+    try {
+      const res = await fetch('/api/whatsapp-leads', {
+        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (res.ok && data?.success) {
+        adminWhatsappLeadsCache = Array.isArray(data.leads) ? data.leads : [];
+        const stats = data.stats || { total: adminWhatsappLeadsCache.length, consented: 0, declined: 0, redeemed: 0 };
+        const countEl = document.getElementById('tab-whatsapp-count');
+        const totalEl = document.getElementById('wa-stat-total');
+        const consentedEl = document.getElementById('wa-stat-consented');
+        const declinedEl = document.getElementById('wa-stat-declined');
+        const redeemedEl = document.getElementById('wa-stat-redeemed');
+        if (countEl) countEl.textContent = String(stats.total);
+        if (totalEl) totalEl.textContent = String(stats.total);
+        if (consentedEl) consentedEl.textContent = String(stats.consented);
+        if (declinedEl) declinedEl.textContent = String(stats.declined);
+        if (redeemedEl) redeemedEl.textContent = String(stats.redeemed);
+        drawWhatsappLeads();
+      }
+    } catch {
+      /* offline or unconfigured */
+    }
+  }
+
+  waSearchInput?.addEventListener('input', drawWhatsappLeads);
+  waConsentFilter?.addEventListener('change', drawWhatsappLeads);
+  waExportBtn?.addEventListener('click', () => {
+    const consentedOnly = adminWhatsappLeadsCache.filter((l) => l.promoConsent);
+    if (consentedOnly.length === 0) {
+      alert('No consented WhatsApp numbers available to export yet.');
+      return;
+    }
+    const csvRows = [
+      ['Full Name', 'Email', 'WhatsApp Number', 'Promo Consent', 'Coupon Code', 'First Order Redeemed', 'Consent Timestamp (UTC)'],
+      ...consentedOnly.map((l) => [
+        l.fullName,
+        l.email,
+        `+91${l.whatsappNumber}`,
+        'YES',
+        l.couponCode || '',
+        l.firstOrderUsed ? 'YES' : 'NO',
+        l.consentTimestampUtc
+      ])
+    ];
+    const csvContent = csvRows
+      .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `satvastones-whatsapp-consented-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   });
 
   // Check auth and mount

@@ -663,28 +663,41 @@ import DPDPNotice from '../components/DPDPNotice';
     if (completeBtn) completeBtn.disabled = true;
   } else {
     const subtotalPaise = items.reduce((acc, i) => acc + i.pricePaise * i.quantity, 0);
-    const shippingPaise = subtotalPaise >= 49900 ? 0 : 4900;
 
-    // Applied coupon from the cart drawer
+    // Applied coupon from the cart drawer or welcome offer
     let discountPaise = 0;
     let appliedCouponCode = '';
+    let couponFreeShipping = false;
     try {
       const storedCoupon = localStorage.getItem('satvastones_applied_coupon');
       if (storedCoupon) {
         const parsed = JSON.parse(storedCoupon);
-        if (parsed.discountPaise) {
-          discountPaise = parsed.discountPaise;
-          appliedCouponCode = parsed.code || '';
-          const discountRow = document.getElementById('checkout-discount-row');
-          const couponCodeEl = document.getElementById('checkout-coupon-code');
-          const discountEl = document.getElementById('checkout-discount');
-          if (discountRow) discountRow.classList.remove('hidden');
-          if (couponCodeEl) couponCodeEl.textContent = parsed.code || 'COUPON';
-          if (discountEl) discountEl.textContent = `−${formatINR(discountPaise)}`;
+        const codeUpper = String(parsed.code || '').trim().toUpperCase();
+        if (codeUpper) {
+          appliedCouponCode = codeUpper;
+          couponFreeShipping = Boolean(parsed.freeShipping || codeUpper === 'WELCOME15FREE');
+          if (parsed.discountPercent) {
+            discountPaise = Math.round((subtotalPaise * Number(parsed.discountPercent)) / 100);
+          } else if (codeUpper === 'WELCOME15FREE') {
+            discountPaise = Math.round((subtotalPaise * 15) / 100);
+          } else if (parsed.discountPaise) {
+            discountPaise = Number(parsed.discountPaise) || 0;
+          }
+          if (discountPaise > 0) {
+            const discountRow = document.getElementById('checkout-discount-row');
+            const couponCodeEl = document.getElementById('checkout-coupon-code');
+            const discountEl = document.getElementById('checkout-discount');
+            if (discountRow) discountRow.classList.remove('hidden');
+            if (couponCodeEl) {
+              couponCodeEl.textContent = couponFreeShipping ? `${codeUpper} · Free Delivery` : codeUpper;
+            }
+            if (discountEl) discountEl.textContent = `−${formatINR(discountPaise)}`;
+          }
         }
       }
     } catch (_) {}
 
+    const shippingPaise = couponFreeShipping || subtotalPaise >= 49900 ? 0 : 4900;
     const baseTotalPaise = Math.max(0, subtotalPaise - discountPaise + shippingPaise);
 
     if (cartList) {

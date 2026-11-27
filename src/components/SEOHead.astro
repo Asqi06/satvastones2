@@ -211,7 +211,12 @@ const customSchemas = schema ? (Array.isArray(schema) ? schema : [schema]) : [];
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content={noindex ? "noindex, nofollow, noarchive" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"} />
 <meta name="googlebot" content={noindex ? "noindex, nofollow" : "index, follow, max-snippet:-1, max-image-preview:large"} />
+<link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-title" content="Satvastones" />
+<link rel="manifest" href="/site.webmanifest" />
 <link rel="canonical" href={canonicalUrl} />
 {!noindex && <link rel="alternate" hreflang="en-in" href={canonicalUrl} />}
 {!noindex && <link rel="alternate" hreflang="x-default" href={canonicalUrl} />}

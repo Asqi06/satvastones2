@@ -11,6 +11,7 @@ import * as couponsHandler from '../functions/api/coupons';
 import * as reviewsHandler from '../functions/api/reviews';
 import * as uploadHandler from '../functions/api/upload';
 import * as blogsHandler from '../functions/api/blogs';
+import * as whatsappLeadsHandler from '../functions/api/whatsapp-leads';
 import { applyCorsPolicy, escapeHtml, isAllowedOrigin, safeHttpUrl } from './lib/http';
 import {
   computeLatestContentDate,
@@ -479,6 +480,14 @@ async function routeApi(request: Request, env: Env, ctx: any): Promise<Response 
     if (request.method === 'OPTIONS') return uploadHandler.onRequestOptions();
     if (request.method === 'GET') return uploadHandler.onRequestGet(context as any);
     if (request.method === 'POST') return uploadHandler.onRequestPost(context as any);
+  }
+
+  if (url.pathname === '/api/whatsapp-leads' || url.pathname.startsWith('/api/whatsapp-leads/')) {
+    if (request.method === 'OPTIONS') return whatsappLeadsHandler.onRequestOptions();
+    if (request.method === 'GET') return whatsappLeadsHandler.onRequestGet(context as any);
+    if (request.method === 'POST') return whatsappLeadsHandler.onRequestPost(context as any);
+    if (request.method === 'PUT') return whatsappLeadsHandler.onRequestPut(context as any);
+    if (request.method === 'DELETE') return whatsappLeadsHandler.onRequestDelete(context as any);
   }
 
   return null;

@@ -10,6 +10,7 @@ import SocialProofToast from '../components/SocialProofToast';
 import RingSizeModal from '../components/RingSizeModal';
 import GSTInvoiceModal from '../components/GSTInvoiceModal';
 import CookieConsentManager from '../components/CookieConsentManager';
+import WelcomeOfferPopup from '../components/WelcomeOfferPopup';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import SmoothScroll from '../components/SmoothScroll.astro';
 import ScrollReveal from '../components/ScrollReveal.astro';
@@ -108,6 +109,7 @@ const heroPosterUrl =
     <RingSizeModal client:idle />
     <GSTInvoiceModal client:idle />
     <CookieConsentManager client:idle />
+    {!isSensitiveRoute && <WelcomeOfferPopup client:idle />}
 
     <!-- Motion layer -->
     <SmoothScroll />

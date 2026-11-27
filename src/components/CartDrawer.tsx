@@ -11,6 +11,7 @@ export default function CartDrawer() {
   const [items, setItems] = useState<CartItem[]>([]);
   const [couponCode, setCouponCode] = useState('');
   const [couponDiscountPaise, setCouponDiscountPaise] = useState(0);
+  const [couponFreeShipping, setCouponFreeShipping] = useState(false);
   const [couponApplied, setCouponApplied] = useState(false);
   const [couponError, setCouponError] = useState('');
   const [catalogProducts, setCatalogProducts] = useState<Product[]>([]);
@@ -31,18 +32,21 @@ export default function CartDrawer() {
 
     window.addEventListener('satvastones:products_updated', loadCatalog);
 
-    // Restore a previously applied code
-    try {
-      const savedCoupon = localStorage.getItem('satvastones_applied_coupon');
-      if (savedCoupon) {
-        const parsed = JSON.parse(savedCoupon);
-        if (parsed.code && parsed.discountPaise) {
-          setCouponCode(parsed.code);
-          setCouponDiscountPaise(parsed.discountPaise);
-          setCouponApplied(true);
+    const restoreSavedCoupon = () => {
+      try {
+        const savedCoupon = localStorage.getItem('satvastones_applied_coupon');
+        if (savedCoupon) {
+          const parsed = JSON.parse(savedCoupon);
+          if (parsed.code) {
+            setCouponCode(parsed.code);
+            setCouponDiscountPaise(Number(parsed.discountPaise) || 0);
+            setCouponFreeShipping(Boolean(parsed.freeShipping || String(parsed.code).toUpperCase() === 'WELCOME15FREE'));
+            setCouponApplied(true);
+          }
         }
-      }
-    } catch (_) {}
+      } catch (_) {}
+    };
+    restoreSavedCoupon();
 
     const handleOpen = () => setIsOpen(true);
     const handleUpdate = (e: CustomEvent<CartItem[]>) => {
@@ -54,6 +58,7 @@ export default function CartDrawer() {
 
     window.addEventListener('satvastones:open_cart', handleOpen);
     window.addEventListener('satvastones:cart_updated' as any, handleUpdate);
+    window.addEventListener('satvastones:coupon_applied', restoreSavedCoupon);
     window.addEventListener('keydown', handleKey);
 
     return () => {
@@ -61,6 +66,7 @@ export default function CartDrawer() {
       window.removeEventListener('satvastones:products_updated', loadCatalog);
       window.removeEventListener('satvastones:open_cart', handleOpen);
       window.removeEventListener('satvastones:cart_updated' as any, handleUpdate);
+      window.removeEventListener('satvastones:coupon_applied', restoreSavedCoupon);
       window.removeEventListener('keydown', handleKey);
     };
   }, []);
@@ -78,9 +84,40 @@ export default function CartDrawer() {
   const subtotalPaise = items.reduce((sum, item) => sum + item.pricePaise * item.quantity, 0);
   const itemCount = items.reduce((acc, cur) => acc + cur.quantity, 0);
 
-  const freeShippingRemaining = Math.max(0, FREE_SHIPPING_THRESHOLD_PAISE - subtotalPaise);
-  const shippingProgress = Math.min(100, Math.round((subtotalPaise / FREE_SHIPPING_THRESHOLD_PAISE) * 100));
-  const shippingPaise = subtotalPaise >= FREE_SHIPPING_THRESHOLD_PAISE || subtotalPaise === 0 ? 0 : 4900;
+  // Recalculate percentage/min-order coupon discounts live whenever cart subtotal changes
+  useEffect(() => {
+    if (!couponApplied || !couponCode) return;
+    const code = couponCode.trim().toUpperCase();
+    const res = validateCouponCode(code, subtotalPaise);
+    if (res.valid) {
+      setCouponDiscountPaise(res.discountPaise);
+      setCouponFreeShipping(Boolean(res.freeShipping));
+      try {
+        localStorage.setItem(
+          'satvastones_applied_coupon',
+          JSON.stringify({
+            code,
+            discountPaise: res.discountPaise,
+            discountPercent: res.coupon?.discountPercent,
+            freeShipping: Boolean(res.freeShipping),
+            description: res.message
+          })
+        );
+      } catch (_) {}
+    } else if (subtotalPaise > 0) {
+      setCouponDiscountPaise(0);
+      setCouponFreeShipping(false);
+    }
+  }, [couponApplied, couponCode, subtotalPaise]);
+
+  const freeShippingRemaining = couponFreeShipping
+    ? 0
+    : Math.max(0, FREE_SHIPPING_THRESHOLD_PAISE - subtotalPaise);
+  const shippingProgress = couponFreeShipping
+    ? 100
+    : Math.min(100, Math.round((subtotalPaise / FREE_SHIPPING_THRESHOLD_PAISE) * 100));
+  const shippingPaise =
+    couponFreeShipping || subtotalPaise >= FREE_SHIPPING_THRESHOLD_PAISE || subtotalPaise === 0 ? 0 : 4900;
   const grandTotalPaise = Math.max(0, subtotalPaise - couponDiscountPaise + shippingPaise);
 
   const formatINR = (paise: number) => {
@@ -100,6 +137,7 @@ export default function CartDrawer() {
     const res = validateCouponCode(code, subtotalPaise);
     if (res.valid) {
       setCouponDiscountPaise(res.discountPaise);
+      setCouponFreeShipping(Boolean(res.freeShipping));
       setCouponApplied(true);
       setCouponError('');
       try {
@@ -108,6 +146,8 @@ export default function CartDrawer() {
           JSON.stringify({
             code,
             discountPaise: res.discountPaise,
+            discountPercent: res.coupon?.discountPercent,
+            freeShipping: Boolean(res.freeShipping),
             description: res.message
           })
         );
@@ -120,6 +160,7 @@ export default function CartDrawer() {
   const handleRemoveCoupon = () => {
     setCouponApplied(false);
     setCouponDiscountPaise(0);
+    setCouponFreeShipping(false);
     setCouponCode('');
     try {
       localStorage.removeItem('satvastones_applied_coupon');
@@ -376,7 +417,8 @@ export default function CartDrawer() {
             ) : (
               <div className="flex items-center justify-between border border-[#cfe3d6] bg-[#f0f7f2] px-3 py-2 text-[11px] text-[#2f7d5a]">
                 <span>
-                  <strong className="font-medium">{couponCode}</strong> applied (−{formatINR(couponDiscountPaise)})
+                  <strong className="font-medium">{couponCode}</strong> applied (−{formatINR(couponDiscountPaise)}
+                  {couponFreeShipping ? ' + Free delivery' : ''})
                 </span>
                 <button onClick={handleRemoveCoupon} className="cursor-pointer underline underline-offset-2">
                   Remove

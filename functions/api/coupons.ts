@@ -37,6 +37,16 @@ const DEFAULT_COUPONS = [
     minOrderPaise: 299900,
     isActive: true,
     description: '15% Privilege savings on festive orders above ₹2,999'
+  },
+  {
+    id: 'coup-welcome-15-free',
+    code: 'WELCOME15FREE',
+    discountPercent: 15,
+    minOrderPaise: 0,
+    freeShipping: true,
+    firstOrderOnly: true,
+    isActive: true,
+    description: '15% OFF + Free Express Delivery on your first purchase'
   }
 ];
 
@@ -76,6 +86,8 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
         discountPercent: row.discount_percent || undefined,
         flatDiscountPaise: row.flat_discount_paise || undefined,
         minOrderPaise: Number(row.min_order_paise || 0),
+        freeShipping: String(row.code || '').toUpperCase() === 'WELCOME15FREE',
+        firstOrderOnly: String(row.code || '').toUpperCase() === 'WELCOME15FREE',
         isActive: Boolean(row.is_active),
         description: row.description || ''
       };
@@ -102,9 +114,14 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
       discountPercent: r.discount_percent || undefined,
       flatDiscountPaise: r.flat_discount_paise || undefined,
       minOrderPaise: Number(r.min_order_paise || 0),
+      freeShipping: String(r.code || '').toUpperCase() === 'WELCOME15FREE',
+      firstOrderOnly: String(r.code || '').toUpperCase() === 'WELCOME15FREE',
       isActive: Boolean(r.is_active),
       description: r.description || ''
     }));
+    if (!coupons.some((c: any) => String(c.code || '').toUpperCase() === 'WELCOME15FREE')) {
+      coupons.push(DEFAULT_COUPONS[DEFAULT_COUPONS.length - 1]);
+    }
 
     return new Response(JSON.stringify({ success: true, coupons }), { status: 200, headers: corsHeaders });
   } catch (err: any) {

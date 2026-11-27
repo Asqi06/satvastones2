@@ -129,10 +129,14 @@ export async function onRequestGet(context: { request: Request; env: Env }) {
 }
 
 // Active promo codes used when the D1 coupons table has not been seeded yet.
-const FALLBACK_COUPONS: Record<string, { discountPercent?: number; flatDiscountPaise?: number; minOrderPaise: number }> = {
+const FALLBACK_COUPONS: Record<
+  string,
+  { discountPercent?: number; flatDiscountPaise?: number; minOrderPaise: number; freeShipping?: boolean; firstOrderOnly?: boolean }
+> = {
   FIRSTBUY: { flatDiscountPaise: 20000, minOrderPaise: 249900 },
   SATVA10: { discountPercent: 10, minOrderPaise: 0 },
-  FESTIVE15: { discountPercent: 15, minOrderPaise: 299900 }
+  FESTIVE15: { discountPercent: 15, minOrderPaise: 299900 },
+  WELCOME15FREE: { discountPercent: 15, minOrderPaise: 0, freeShipping: true, firstOrderOnly: true }
 };
 
 /** Owner-configured shipping and stack discount, with safe defaults. */
@@ -153,6 +157,7 @@ async function readGlobalSettings(db: any): Promise<Record<string, any>> {
 
 /** Coupon terms are read from D1 (or the seeded defaults), never from the client. */
 async function lookupCoupon(db: any, code: string) {
+  const isWelcomeCode = code === 'WELCOME15FREE';
   try {
     const row: any = await db
       .prepare('SELECT * FROM coupons WHERE code = ? AND is_active = 1 LIMIT 1')
@@ -162,7 +167,9 @@ async function lookupCoupon(db: any, code: string) {
       return {
         discountPercent: Number(row.discount_percent) || undefined,
         flatDiscountPaise: Number(row.flat_discount_paise) || undefined,
-        minOrderPaise: Number(row.min_order_paise) || 0
+        minOrderPaise: Number(row.min_order_paise) || 0,
+        freeShipping: isWelcomeCode,
+        firstOrderOnly: isWelcomeCode
       };
     }
   } catch {
@@ -300,17 +307,45 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       0,
       Number(settings.shippingChargePaise ?? env?.SHIPPING_CHARGE_PAISE) || 4900
     );
-    const shippingPaise = subtotalPaise >= freeShippingThreshold ? 0 : shippingChargePaise;
+    let shippingPaise = subtotalPaise >= freeShippingThreshold ? 0 : shippingChargePaise;
 
-    // Coupon discounts are recomputed from the code's own terms.
+    // Coupon discounts (and first-order free delivery for WELCOME15FREE) are recomputed server-side.
     const couponCode = String(data.couponCode || '').trim().toUpperCase();
     let discountPaise = 0;
+    let welcomeCouponRedeemed = false;
     if (couponCode) {
       const coupon = await lookupCoupon(db, couponCode);
       if (coupon && subtotalPaise >= coupon.minOrderPaise) {
-        discountPaise = coupon.discountPercent
-          ? Math.round((subtotalPaise * Math.min(100, Math.max(0, coupon.discountPercent))) / 100)
-          : Math.min(subtotalPaise, Math.max(0, coupon.flatDiscountPaise || 0));
+        let couponAllowed = true;
+        if (coupon.firstOrderOnly) {
+          const cleanOrderEmail = email.toLowerCase();
+          const cleanOrderPhone = phone.replace(/[^0-9]/g, '').slice(-10);
+          try {
+            const priorOrder = await db
+              .prepare(
+                `SELECT id FROM orders
+                 WHERE (LOWER(email) = ? AND ? <> '')
+                    OR (length(?) = 10 AND substr(replace(replace(replace(phone, ' ', ''), '-', ''), '+91', ''), -10) = ?)
+                 LIMIT 1`
+              )
+              .bind(cleanOrderEmail, cleanOrderEmail, cleanOrderPhone, cleanOrderPhone)
+              .first();
+            if (priorOrder) couponAllowed = false;
+          } catch {
+            /* ignore if orders query fails */
+          }
+        }
+        if (couponAllowed) {
+          discountPaise = coupon.discountPercent
+            ? Math.round((subtotalPaise * Math.min(100, Math.max(0, coupon.discountPercent))) / 100)
+            : Math.min(subtotalPaise, Math.max(0, coupon.flatDiscountPaise || 0));
+          if (coupon.freeShipping) {
+            shippingPaise = 0;
+          }
+          if (coupon.firstOrderOnly) {
+            welcomeCouponRedeemed = true;
+          }
+        }
       }
     }
 
@@ -411,6 +446,24 @@ export async function onRequestPost(context: { request: Request; env: Env }) {
       itemsJson, subtotalPaise, shippingPaise, discountPaise, totalPaise,
       paymentMethod, paymentStatus, fulfillmentStatus, courierPartner, trackingNumber, verifiedPaymentRef
     ).run();
+
+    // Mark WhatsApp welcome offer as redeemed on first order
+    if (welcomeCouponRedeemed) {
+      try {
+        const cleanOrderEmail = email.toLowerCase();
+        const cleanOrderPhone = phone.replace(/[^0-9]/g, '').slice(-10);
+        await db
+          .prepare(
+            `UPDATE whatsapp_leads
+             SET first_order_used = 1, updated_at = datetime('now', 'utc')
+             WHERE (LOWER(email) = ? AND ? <> '') OR (length(?) = 10 AND whatsapp_number = ?)`
+          )
+          .bind(cleanOrderEmail, cleanOrderEmail, cleanOrderPhone, cleanOrderPhone)
+          .run();
+      } catch {
+        /* whatsapp_leads table may not exist yet */
+      }
+    }
 
     // Decrement product_meta stockQuantity & flip in_stock to 0 when depleted
     for (const upd of stockUpdates) {

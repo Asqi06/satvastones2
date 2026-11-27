@@ -191,6 +191,28 @@ CREATE INDEX IF NOT EXISTS idx_blogs_status ON blogs(status);
 CREATE INDEX IF NOT EXISTS idx_blogs_category ON blogs(category);
 CREATE INDEX IF NOT EXISTS idx_blogs_published ON blogs(published_at);
 
+-- 11. WHATSAPP PROMOTIONAL OPT-IN LEADS & DPDP CONSENT REGISTER
+CREATE TABLE IF NOT EXISTS whatsapp_leads (
+    id TEXT PRIMARY KEY,
+    customer_id TEXT,
+    full_name TEXT,
+    email TEXT,
+    whatsapp_number TEXT UNIQUE NOT NULL,
+    promo_consent INTEGER NOT NULL DEFAULT 0, -- 1 = Consented for promotional WhatsApp messages, 0 = Declined
+    consent_text TEXT NOT NULL,
+    consent_timestamp_utc TEXT NOT NULL,
+    policy_version TEXT NOT NULL DEFAULT '2026.1-DPDP',
+    coupon_code TEXT,
+    first_order_used INTEGER NOT NULL DEFAULT 0,
+    source TEXT NOT NULL DEFAULT 'welcome_popup',
+    user_agent TEXT,
+    created_at TEXT NOT NULL DEFAULT (datetime('now', 'utc')),
+    updated_at TEXT NOT NULL DEFAULT (datetime('now', 'utc'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_wa_leads_consent ON whatsapp_leads(promo_consent);
+CREATE INDEX IF NOT EXISTS idx_wa_leads_email ON whatsapp_leads(email);
+
 -- ==============================================================================
 -- INITIAL SEED DATA
 -- ==============================================================================
@@ -199,7 +221,8 @@ CREATE INDEX IF NOT EXISTS idx_blogs_published ON blogs(published_at);
 INSERT OR IGNORE INTO coupons (id, code, discount_percent, flat_discount_paise, min_order_paise, is_active, description) VALUES
 ('coup-1', 'FIRSTBUY', NULL, 20000, 249900, 1, 'Flat ₹200 OFF on orders above ₹2,499'),
 ('coup-2', 'SATVA10', 10, NULL, 0, 1, '10% OFF on all fine anti-tarnish jewellery'),
-('coup-3', 'FESTIVE15', 15, NULL, 299900, 1, '15% Privilege savings on festive orders above ₹2,999');
+('coup-3', 'FESTIVE15', 15, NULL, 299900, 1, '15% Privilege savings on festive orders above ₹2,999'),
+('coup-welcome-15-free', 'WELCOME15FREE', 15, NULL, 0, 1, '15% OFF + Free Express Delivery on your first purchase (WhatsApp Welcome Offer)');
 
 -- Seed Global Site Settings (Pricing, Announcement Bar, Dispatch Timings)
 INSERT OR IGNORE INTO site_settings (key, value_json) VALUES
