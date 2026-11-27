@@ -1318,9 +1318,37 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                     <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">Provider</label>
                     <select id="gc-wa-provider" class="w-full border border-[#d8d0c4] bg-white px-2.5 py-2 text-xs">
                       <option value="copilot">Co-Pilot (Draft + 1-Click Manual)</option>
+                      <option value="meta">Meta WhatsApp Cloud API (Official)</option>
                       <option value="waha">WAHA (Self-Hosted WhatsApp HTTP API)</option>
                       <option value="webhook">Custom Webhook (Evolution / n8n / Make)</option>
                     </select>
+                  </div>
+                  <div class="space-y-2 border border-[#cfe3d6] bg-white p-2.5">
+                    <p class="text-[9px] font-semibold uppercase tracking-[0.12em] text-[#2f7d5a]">Meta Cloud API (Official)</p>
+                    <div class="grid grid-cols-2 gap-2">
+                      <div>
+                        <label class="mb-0.5 block text-[9px] uppercase text-[#6f675f]">Phone Number ID</label>
+                        <input id="gc-meta-phone-id" type="text" placeholder="1461298180403966" class="w-full border border-[#d8d0c4] bg-white px-2 py-1.5 text-[11px]" />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[9px] uppercase text-[#6f675f]">Access Token</label>
+                        <input id="gc-meta-token" type="password" placeholder="EAA..." class="w-full border border-[#d8d0c4] bg-white px-2 py-1.5 text-[11px]" />
+                      </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                      <div>
+                        <label class="mb-0.5 block text-[9px] uppercase text-[#6f675f]">Template Name</label>
+                        <input id="gc-meta-template" type="text" placeholder="hello_world" class="w-full border border-[#d8d0c4] bg-white px-2 py-1.5 text-[11px]" />
+                      </div>
+                      <div>
+                        <label class="mb-0.5 block text-[9px] uppercase text-[#6f675f]">Template Lang</label>
+                        <input id="gc-meta-lang" type="text" placeholder="en_US or en" class="w-full border border-[#d8d0c4] bg-white px-2 py-1.5 text-[11px]" />
+                      </div>
+                    </div>
+                    <div>
+                      <label class="mb-0.5 block text-[9px] uppercase text-[#6f675f]">Webhook Verify Token (Callback: /api/whatsapp-webhook)</label>
+                      <input id="gc-meta-verify-token" type="text" placeholder="satvastones_wa_verify_2026" class="w-full border border-[#d8d0c4] bg-white px-2 py-1.5 text-[11px]" />
+                    </div>
                   </div>
                   <div>
                     <label class="mb-1 block text-[10px] uppercase tracking-[0.1em] text-[#6f675f]">WAHA Base URL</label>
@@ -4492,6 +4520,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
       };
       setChk('gc-enabled', cfg.enabled !== false);
       setVal('gc-wa-provider', cfg.whatsappProvider || 'copilot');
+      setVal('gc-meta-phone-id', cfg.metaPhoneNumberId || '');
+      setVal('gc-meta-token', cfg.metaAccessToken || '');
+      setVal('gc-meta-template', cfg.metaTemplateName || 'hello_world');
+      setVal('gc-meta-lang', cfg.metaTemplateLang || 'en_US');
+      setVal('gc-meta-verify-token', cfg.metaWebhookVerifyToken || 'satvastones_wa_verify_2026');
       setVal('gc-waha-url', cfg.wahaBaseUrl || '');
       setVal('gc-waha-session', cfg.wahaSession || 'default');
       setVal('gc-waha-key', cfg.wahaApiKey || '');
@@ -4805,6 +4838,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         body: JSON.stringify({
           enabled: getChk('gc-enabled'),
           whatsappProvider: getVal('gc-wa-provider'),
+          metaPhoneNumberId: getVal('gc-meta-phone-id'),
+          metaAccessToken: getVal('gc-meta-token'),
+          metaTemplateName: getVal('gc-meta-template'),
+          metaTemplateLang: getVal('gc-meta-lang'),
+          metaWebhookVerifyToken: getVal('gc-meta-verify-token'),
           wahaBaseUrl: getVal('gc-waha-url'),
           wahaSession: getVal('gc-waha-session'),
           wahaApiKey: getVal('gc-waha-key'),

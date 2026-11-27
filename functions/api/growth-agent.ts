@@ -61,10 +61,12 @@ export async function onRequestGet(context: { request: Request; env: any }) {
         success: true,
         config: {
           ...config,
+          metaAccessTokenSet: Boolean(config.metaAccessToken),
           wahaApiKeySet: Boolean(config.wahaApiKey),
           webhookSecretSet: Boolean(config.webhookSecret),
           emailApiKeySet: Boolean(config.emailApiKey),
           // Never expose raw secrets unnecessarily — send empty placeholders if env-provided
+          metaAccessToken: config.metaAccessToken ? '••••••••' : '',
           wahaApiKey: config.wahaApiKey ? '••••••••' : '',
           webhookSecret: config.webhookSecret ? '••••••••' : '',
           emailApiKey: config.emailApiKey ? '••••••••' : ''
@@ -116,9 +118,23 @@ export async function onRequestPut(context: { request: Request; env: any }) {
 
     const updated = await saveGrowthConfig(db, {
       enabled: body.enabled !== undefined ? Boolean(body.enabled) : current.enabled,
-      whatsappProvider: ['copilot', 'waha', 'webhook'].includes(body.whatsappProvider)
+      whatsappProvider: ['copilot', 'meta', 'waha', 'webhook'].includes(body.whatsappProvider)
         ? body.whatsappProvider
         : current.whatsappProvider,
+      metaPhoneNumberId:
+        body.metaPhoneNumberId !== undefined ? String(body.metaPhoneNumberId).trim() : current.metaPhoneNumberId,
+      metaAccessToken:
+        body.metaAccessToken !== undefined
+          ? keepIfMasked(body.metaAccessToken, current.metaAccessToken)
+          : current.metaAccessToken,
+      metaTemplateName:
+        body.metaTemplateName !== undefined ? String(body.metaTemplateName).trim() || 'hello_world' : current.metaTemplateName,
+      metaTemplateLang:
+        body.metaTemplateLang !== undefined ? String(body.metaTemplateLang).trim() || 'en_US' : current.metaTemplateLang,
+      metaWebhookVerifyToken:
+        body.metaWebhookVerifyToken !== undefined
+          ? String(body.metaWebhookVerifyToken).trim() || 'satvastones_wa_verify_2026'
+          : current.metaWebhookVerifyToken,
       wahaBaseUrl: body.wahaBaseUrl !== undefined ? String(body.wahaBaseUrl).trim() : current.wahaBaseUrl,
       wahaApiKey: body.wahaApiKey !== undefined ? keepIfMasked(body.wahaApiKey, current.wahaApiKey) : current.wahaApiKey,
       wahaSession: body.wahaSession !== undefined ? String(body.wahaSession).trim() || 'default' : current.wahaSession,
@@ -163,6 +179,7 @@ export async function onRequestPut(context: { request: Request; env: any }) {
         message: 'Growth Manager & Informing Agent configuration saved.',
         config: {
           ...updated,
+          metaAccessToken: updated.metaAccessToken ? '••••••••' : '',
           wahaApiKey: updated.wahaApiKey ? '••••••••' : '',
           webhookSecret: updated.webhookSecret ? '••••••••' : '',
           emailApiKey: updated.emailApiKey ? '••••••••' : ''

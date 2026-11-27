@@ -14,6 +14,7 @@ import * as blogsHandler from '../functions/api/blogs';
 import * as whatsappLeadsHandler from '../functions/api/whatsapp-leads';
 import * as funnelEventsHandler from '../functions/api/funnel-events';
 import * as growthAgentHandler from '../functions/api/growth-agent';
+import * as whatsappWebhookHandler from '../functions/api/whatsapp-webhook';
 import { runAutonomousGrowthCycle } from './lib/growth-agent';
 import { applyCorsPolicy, escapeHtml, isAllowedOrigin, safeHttpUrl } from './lib/http';
 import {
@@ -503,6 +504,11 @@ async function routeApi(request: Request, env: Env, ctx: any): Promise<Response 
     if (request.method === 'GET') return growthAgentHandler.onRequestGet(context as any);
     if (request.method === 'POST') return growthAgentHandler.onRequestPost(context as any);
     if (request.method === 'PUT') return growthAgentHandler.onRequestPut(context as any);
+  }
+
+  if (url.pathname === '/api/whatsapp-webhook') {
+    if (request.method === 'GET') return whatsappWebhookHandler.onRequestGet(context as any);
+    if (request.method === 'POST') return whatsappWebhookHandler.onRequestPost(context as any);
   }
 
   return null;

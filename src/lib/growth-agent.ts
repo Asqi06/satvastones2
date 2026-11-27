@@ -6,7 +6,12 @@ const SITE_URL = 'https://www.satvastones.in';
 
 export interface GrowthAgentConfig {
   enabled: boolean;
-  whatsappProvider: 'copilot' | 'waha' | 'webhook';
+  whatsappProvider: 'copilot' | 'meta' | 'waha' | 'webhook';
+  metaPhoneNumberId: string;
+  metaAccessToken: string;
+  metaTemplateName: string;
+  metaTemplateLang: string;
+  metaWebhookVerifyToken: string;
   wahaBaseUrl: string;
   wahaApiKey: string;
   wahaSession: string;
@@ -30,6 +35,11 @@ export interface GrowthAgentConfig {
 export const DEFAULT_GROWTH_CONFIG: GrowthAgentConfig = {
   enabled: true,
   whatsappProvider: 'copilot',
+  metaPhoneNumberId: '',
+  metaAccessToken: '',
+  metaTemplateName: 'hello_world',
+  metaTemplateLang: 'en_US',
+  metaWebhookVerifyToken: 'satvastones_wa_verify_2026',
   wahaBaseUrl: '',
   wahaApiKey: '',
   wahaSession: 'default',
@@ -171,6 +181,13 @@ export async function loadGrowthConfig(db: any, env?: Record<string, any>): Prom
     ...DEFAULT_GROWTH_CONFIG,
     ...stored,
     // Environment secrets override empty UI fields safely
+    metaPhoneNumberId: String(stored.metaPhoneNumberId || env?.META_PHONE_NUMBER_ID || '').trim(),
+    metaAccessToken: String(stored.metaAccessToken || env?.META_WHATSAPP_TOKEN || '').trim(),
+    metaTemplateName: String(stored.metaTemplateName || env?.META_TEMPLATE_NAME || 'hello_world').trim() || 'hello_world',
+    metaTemplateLang: String(stored.metaTemplateLang || env?.META_TEMPLATE_LANG || 'en_US').trim() || 'en_US',
+    metaWebhookVerifyToken:
+      String(stored.metaWebhookVerifyToken || env?.META_WEBHOOK_VERIFY_TOKEN || 'satvastones_wa_verify_2026').trim() ||
+      'satvastones_wa_verify_2026',
     wahaBaseUrl: String(stored.wahaBaseUrl || env?.WAHA_BASE_URL || '').trim().replace(/\/+$/, ''),
     wahaApiKey: String(stored.wahaApiKey || env?.WAHA_API_KEY || '').trim(),
     wahaSession: String(stored.wahaSession || env?.WAHA_SESSION || 'default').trim() || 'default',
@@ -269,6 +286,7 @@ export async function dispatchWhatsapp(
   // Co-pilot mode or unconfigured endpoint -> queue ready-to-send draft in Admin Desk
   if (
     config.whatsappProvider === 'copilot' ||
+    (config.whatsappProvider === 'meta' && (!config.metaPhoneNumberId || !config.metaAccessToken)) ||
     (config.whatsappProvider === 'waha' && !config.wahaBaseUrl) ||
     (config.whatsappProvider === 'webhook' && !config.webhookUrl)
   ) {
@@ -289,6 +307,66 @@ export async function dispatchWhatsapp(
   const timer = setTimeout(() => controller.abort(), 8000);
 
   try {
+    if (config.whatsappProvider === 'meta') {
+      const tplName = (config.metaTemplateName || 'hello_world').trim();
+      const tplLang = (config.metaTemplateLang || (tplName === 'hello_world' ? 'en_US' : 'en')).trim();
+      const isHelloWorld = tplName === 'hello_world';
+
+      const leadItem = String(
+        params.metadata?.items?.[0]?.name || params.metadata?.productSlug || 'your Satvastones piece'
+      ).slice(0, 60);
+      const cartTotal = params.metadata?.subtotalPaise ? formatRupees(Number(params.metadata.subtotalPaise)) : '₹499+';
+      const coupon = params.couponCode || config.exitOfferCouponCode || 'STAY10';
+
+      const templateObj: Record<string, any> = {
+        name: tplName,
+        language: { code: tplLang }
+      };
+      if (!isHelloWorld) {
+        templateObj.components = [
+          {
+            type: 'body',
+            parameters: [
+              { type: 'text', text: String(params.recipientName || 'there').slice(0, 40) },
+              { type: 'text', text: leadItem },
+              { type: 'text', text: cartTotal },
+              { type: 'text', text: coupon }
+            ]
+          }
+        ];
+      }
+
+      const res = await fetch(`https://graph.facebook.com/v22.0/${encodeURIComponent(config.metaPhoneNumberId)}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${config.metaAccessToken}`
+        },
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          to: `91${cleanPhone}`,
+          type: 'template',
+          template: templateObj
+        }),
+        signal: controller.signal
+      });
+
+      const ok = res.ok;
+      const errText = ok ? null : `Meta HTTP ${res.status}: ${(await res.text().catch(() => '')).slice(0, 220)}`;
+      await logOutreach(db, {
+        channel: 'whatsapp',
+        provider: 'meta',
+        triggerType: params.triggerType,
+        recipientName: params.recipientName,
+        recipientContact: cleanPhone,
+        couponCode: params.couponCode,
+        messageBody: `[Meta Template: ${tplName}] ${params.message}`,
+        status: ok ? 'SENT' : 'FAILED',
+        errorMessage: errText
+      });
+      return { ok, status: ok ? 'SENT' : 'FAILED', error: errText || undefined };
+    }
+
     if (config.whatsappProvider === 'waha') {
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (config.wahaApiKey) headers['X-Api-Key'] = config.wahaApiKey;
